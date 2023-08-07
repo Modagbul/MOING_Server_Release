@@ -1,0 +1,31 @@
+[[Auth-API]]
+== Auth API
+
+[[Auth-Kako-소셜-로그인]]
+=== Auth Kakao 소셜 로그인 회원가입 전
+operation::auth-controller-test/kakao_소셜_로그인_회원가입_전[snippets='http-request,request-fields,http-response,response-fields']
+
+=== Auth Kakao 소셜 로그인 회원가입 후
+operation::auth-controller-test/kakao_소셜_로그인_회원가입_후[snippets='http-request,request-fields,http-response,response-fields']
+
+---
+
+[[Auth-Apple-소셜-로그인]]
+=== Auth Apple 소셜 로그인 회원가입 전
+operation::auth-controller-test/apple_소셜_로그인_회원가입_전[snippets='http-request,request-fields,http-response,response-fields']
+
+=== Auth Apple 소셜 로그인 회원가입 후
+operation::auth-controller-test/apple_소셜_로그인_회원가입_후[snippets='http-request,request-fields,http-response,response-fields']
+
+
+[[Auth-회원가입]]
+=== Auth 회원가입
+operation::auth-controller-test/sign_up[snippets='http-request,request-fields,http-response,response-fields']
+
+[[Auth-회원가입]]
+=== Auth 회원가입
+operation::auth-controller-test/sign_up[snippets='http-request,request-fields,http-response,response-fields']
+
+[[Auth-토큰-재발급]]
+=== Auth 토큰 재발급
+operation::auth-controller-test/reissue_token[snippets='http-request,http-response,response-fields']

@@ -1,7 +1,7 @@
-package com.moing.backend.global.config.exception;
+package com.moing.backend.global.exception;
 
-import com.moing.backend.global.config.response.ErrorCode;
-import com.moing.backend.global.config.response.ErrorResponse;
+import com.moing.backend.global.response.ErrorCode;
+import com.moing.backend.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> handleException(Exception ex, ErrorCode errorCode, String message, HttpStatus httpStatus, Consumer<String> logger) {
         logger.accept(String.format(LOG_FORMAT, ex.getClass().getSimpleName(), errorCode.getErrorCode(), ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse(errorCode.getErrorCode(), message);
+        ErrorResponse errorResponse = new ErrorResponse(errorCode);
         return ResponseEntity.status(httpStatus.value()).body(errorResponse);
     }
 

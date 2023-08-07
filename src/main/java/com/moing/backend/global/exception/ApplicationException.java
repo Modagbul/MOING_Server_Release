@@ -1,6 +1,6 @@
-package com.moing.backend.global.config.exception;
+package com.moing.backend.global.exception;
 
-import com.moing.backend.global.config.response.ErrorCode;
+import com.moing.backend.global.response.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public abstract class ApplicationException extends RuntimeException {
@@ -8,8 +8,7 @@ public abstract class ApplicationException extends RuntimeException {
     private final ErrorCode errorCode;
     private final HttpStatus httpStatus;
 
-    protected ApplicationException(ErrorCode errorCode, HttpStatus httpStatus, String message) {
-        super(message);
+    protected ApplicationException(ErrorCode errorCode, HttpStatus httpStatus) {
         this.errorCode = errorCode;
         this.httpStatus = httpStatus;
     }

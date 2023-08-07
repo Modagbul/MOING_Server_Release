@@ -1,4 +1,4 @@
-package com.moing.backend.global.config.response;
+package com.moing.backend.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

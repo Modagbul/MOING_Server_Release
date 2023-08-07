@@ -17,7 +17,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	asciidoctorExt
+	asciidoctorExtensions
 	querydsl.extendsFrom compileClasspath
 }
 
@@ -39,19 +39,44 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework:spring-context:5.3.15'
 
-
-	implementation 'com.google.firebase:firebase-admin:8.2.0'
-	implementation 'com.google.firebase:firebase-messaging:23.0.0'
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 	implementation 'org.springframework:spring-context:5.3.15'
 
 	implementation 'com.google.code.gson:gson:2.8.7'
 
-	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	// Push Alarm
+	implementation 'com.google.firebase:firebase-admin:8.2.0'
+	implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
+	// RestDocs
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
+	// Qeurydsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
+
+	// Jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// Feign
+	implementation 'io.github.openfeign:feign-httpclient:12.1'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.4'
+
+	// Throttling
+	implementation 'com.bucket4j:bucket4j-core:8.1.1'
+	implementation 'com.bucket4j:bucket4j-jcache:8.1.1'
+	implementation 'javax.cache:cache-api:1.1.1'
+	implementation 'org.redisson:redisson:3.19.0'
+
 }
 
 tasks.named('test') {
@@ -67,10 +92,28 @@ test {
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
-	configurations 'asciidoctorExt'
 	dependsOn test
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
+
+	// 특정 .adoc에 다른 adoc 파일을 가져와서(include) 사용하고 싶을 경우 경로를 baseDir로 맞춰주는 설정입니다.
+	// 개별 adoc으로 운영한다면 필요 없는 옵션입니다.
+	baseDirFollowsSourceFile()
 }
+
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
+}
+build {
+	dependsOn copyDocument
+}
+
 
 def querydslDir = "$buildDir/generated/querydsl"
 
