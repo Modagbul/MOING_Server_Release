@@ -6,6 +6,7 @@ import com.moing.backend.global.annotation.DomainService;
 import lombok.AllArgsConstructor;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @DomainService
 @Transactional
@@ -15,9 +16,11 @@ public class MemberSaveService {
     private final MemberRepository memberRepository;
 
     public Member saveMember(Member member) {
-        if(memberRepository.findBySocialIdNotDeleted(member.getSocialId()).isEmpty()){
+        Optional<Member>findMember=memberRepository.findBySocialIdNotDeleted(member.getSocialId());
+        if(findMember.isEmpty()){
             return memberRepository.save(member);
+        } else {
+            return findMember.get();
         }
-        return memberRepository.findBySocialIdNotDeleted(member.getSocialId()).get();
     }
 }
