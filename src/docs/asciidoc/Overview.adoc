@@ -1,0 +1,83 @@
+[[Overview-Response]]
+== ErrorCode
+
+
+=== Error Response DTO
+|===
+| isSuccess(Boolean) | timeStamp(LocalDateTime) | errorCode(String) | message(String)
+|===
+
+=== Common ErrorCode
+|===
+| ErrorCode | Scope | Description
+
+| `400`
+| 전체
+| 요청 형식 자체가 틀리거나 권한이 없음
+
+| `403`
+| 전체
+| 접근 권한이 존재하지 않음 (로그인 안한 경우)
+
+| `405`
+| 전체
+| HTTP 메서드가 리소스에서 허용되지 않음
+
+| `500`
+| 전체
+| 서버오류
+
+| `J0001`
+| 전체
+| 예상치 못한 오류
+
+| `J0002`
+| 전체
+| 잘못된 JWT 서명
+
+|`J0003`
+| 전체
+| 만료된 토큰
+
+| `J0004`
+| 전체
+| 지원되지 않는 토큰
+
+| `J0005`
+| 전체
+| 접근이 거부됨
+
+| `J0006`
+| 전체
+| 토큰이 잘못됨
+
+| `J0007`
+| 전체
+| 추가 정보 입력 (닉네임) 안함
+
+| `J0008`
+| 재발급 시
+| 유효하지 않은 refresh Token
+|===
+
+=== User / Auth ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `U0001`
+| 전체
+| 해당 유저 존재하지 않음
+
+|`AU0001`
+| 로그인할 때
+| 이미 다른 소셜 플랫폼으로 가입함
+
+| `AU0002`
+| 로그인할 때
+| 입력 토큰이 유효하지 않음
+
+| `AU0003`
+| 로그인할 때
+| appId가 일치하지 않음 (유효하지 않음)
+|===
+
+
