@@ -70,7 +70,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/moing:green .
           docker build -t ${{ secrets.DOCKER_USERNAME }}/moing:blue .
-          docker push ${{ secrets.DOCKER_USERNAME }}/moingt:green
+          docker push ${{ secrets.DOCKER_USERNAME }}/moing:green
           docker push ${{ secrets.DOCKER_USERNAME }}/moing:blue
 
     - name: Deploy
