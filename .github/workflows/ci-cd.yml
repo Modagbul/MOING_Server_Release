@@ -82,12 +82,17 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/moing:blue
 
     # EC2로 deploy.sh 전송
-    - name: SCP deploy.sh to EC2
-      run: |
-        scp -i ${{ secrets.PRIVATE_KEY }} deploy.sh ec2-user@${{ secrets.EC2_SERVER_HOST }}:/home/ec2-user/
+    - name: Deploy deploy.sh to EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.EC2_SERVER_HOST }}
+        username: ec2-user
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "./deploy.sh"
+        target: "/home/ec2-user/"
 
     # 배포 스크립트 실행
-    - name: Make deploy.sh executable and Deploy
+    - name: Deploy on EC2
       uses: appleboy/ssh-action@master
       with:
           host: ${{ secrets.EC2_SERVER_HOST }}
@@ -96,6 +101,4 @@ jobs:
           envs: GITHUB_SHA
           script: |
             chmod +x /home/ec2-user/deploy.sh
-            docker pull ${{ secrets.DOCKER_USERNAME }}/moing:green
-            docker pull ${{ secrets.DOCKER_USERNAME }}/moing:blue
             /home/ec2-user/deploy.sh
