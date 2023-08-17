@@ -38,5 +38,9 @@ out/
 
 ### yml ###
 application.yml
+application-local.yml
 .DS_Store
 firebase-key.json
+src/test/resources/
+
+.jpb
