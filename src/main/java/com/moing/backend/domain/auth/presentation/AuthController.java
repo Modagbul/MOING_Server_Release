@@ -68,4 +68,5 @@ public class AuthController {
         return ResponseEntity.ok(SuccessResponse.create(REISSUE_TOKEN_SUCCESS.getMessage(), reissueToken));
     }
 
+    //TODO 닉네임 중복검사
 }
