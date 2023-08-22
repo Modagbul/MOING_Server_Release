@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
+
 @Entity
 public class Feedback extends BaseTimeEntity {
 
@@ -28,4 +27,5 @@ public class Feedback extends BaseTimeEntity {
         this.memberId=memberId;
         this.reason=reason;
     }
+
 }

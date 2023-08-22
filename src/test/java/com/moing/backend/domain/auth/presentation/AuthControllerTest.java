@@ -1,4 +1,4 @@
-package com.moing.backend.domain.auth.representation;
+package com.moing.backend.domain.auth.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
@@ -10,7 +10,6 @@ import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
 import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
 import com.moing.backend.domain.auth.application.service.SignInUserCase;
 import com.moing.backend.domain.auth.application.service.SignUpUserCase;
-import com.moing.backend.domain.auth.presentation.AuthController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -249,6 +248,9 @@ class AuthControllerTest extends CommonControllerTest {
                 .andExpect(status().isOk())
                 .andDo(
                         restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
                                 requestFields(
                                         fieldWithPath("nickName").description("유저 닉네임")
                                 ),
@@ -332,8 +334,8 @@ class AuthControllerTest extends CommonControllerTest {
 
 
         // when
-        ResultActions actions =mockMvc.perform
-                (get("/api/auth/nickname/{nickname}", "NICKNAME"));
+        ResultActions actions =mockMvc.perform(
+                get("/api/auth/nickname/{nickname}", "NICKNAME"));
 
 
         // then

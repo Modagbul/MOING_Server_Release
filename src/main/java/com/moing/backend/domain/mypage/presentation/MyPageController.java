@@ -1,6 +1,5 @@
 package com.moing.backend.domain.mypage.presentation;
 
-import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.application.service.SignOutUserCase;
 import com.moing.backend.domain.mypage.application.service.WithdrawUserCase;
@@ -9,10 +8,7 @@ import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -45,9 +41,9 @@ public class MyPageController {
      * [DELETE] api/auth/mypage/withdrawal
      * 작성자 : 김민수
      */
-    @PostMapping("/withdrawal")
+    @DeleteMapping("/withdrawal")
     public ResponseEntity<SuccessResponse> withdraw(@AuthenticationPrincipal User user,
-                                                                    @Valid @RequestBody WithdrawRequest withdrawRequest) {
+                                                    @Valid @RequestBody WithdrawRequest withdrawRequest) {
         this.withdrawService.withdraw(user.getSocialId(), withdrawRequest);
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAWAL_SUCCESS.getMessage()));
     }
