@@ -1,7 +1,7 @@
 package com.moing.backend.global.config.security.filter;
 
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.jwt.JwtExceptionList;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenUtil tokenUtil;
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {

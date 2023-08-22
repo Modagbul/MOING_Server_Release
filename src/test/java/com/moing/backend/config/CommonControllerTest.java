@@ -3,7 +3,7 @@ package com.moing.backend.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.filter.JwtAccessDeniedHandler;
 import com.moing.backend.global.config.security.filter.JwtAuthenticationEntryPoint;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
@@ -54,7 +54,7 @@ public class CommonControllerTest {
     public JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @MockBean
-    public MemberQueryService memberQueryService;
+    public MemberGetService memberQueryService;
 
     @BeforeEach
     public void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) throws Exception {

@@ -16,8 +16,12 @@ public class MemberSaveService {
     private final MemberRepository memberRepository;
 
     public Member saveMember(Member member) {
-        Optional<Member>findMember=memberRepository.findBySocialIdNotDeleted(member.getSocialId());
+        Optional<Member>findMember=memberRepository.findBySocialId(member.getSocialId());
         if(findMember.isEmpty()){
+            //회원탈퇴회원이라면 재가입
+            if(member.isDeleted()){
+                member.reSignUp();
+            }
             return memberRepository.save(member);
         } else {
             return findMember.get();

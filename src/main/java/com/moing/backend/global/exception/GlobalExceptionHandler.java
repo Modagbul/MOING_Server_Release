@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> handleException(Exception ex, ErrorCode errorCode, String message, HttpStatus httpStatus, Consumer<String> logger) {
         logger.accept(String.format(LOG_FORMAT, ex.getClass().getSimpleName(), errorCode.getErrorCode(), ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse(errorCode);
+        ErrorResponse errorResponse = new ErrorResponse(errorCode, message);
         return ResponseEntity.status(httpStatus.value()).body(errorResponse);
     }
 

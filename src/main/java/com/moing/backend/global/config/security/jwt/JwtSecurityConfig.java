@@ -1,6 +1,6 @@
 package com.moing.backend.global.config.security.jwt;
 
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -13,7 +13,7 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
 
     private final TokenUtil tokenUtil;
 
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
 
     @Override
     public void configure(HttpSecurity http) {
