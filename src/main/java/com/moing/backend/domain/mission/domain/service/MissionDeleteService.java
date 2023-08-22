@@ -12,7 +12,8 @@ public class MissionDeleteService {
 
     private final MissionRepository missionRepository;
 
-    public void deleteMission(Long missionId) {
+    public Long deleteMission(Long missionId) {
         missionRepository.deleteById(missionId);
+        return missionId;
     }
 }

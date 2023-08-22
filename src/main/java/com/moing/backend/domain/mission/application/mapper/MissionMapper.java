@@ -1,7 +1,7 @@
 package com.moing.backend.domain.mission.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.mission.application.dto.req.MissionCreateReq;
+import com.moing.backend.domain.mission.application.dto.req.MissionReq;
 import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
@@ -17,16 +17,16 @@ import java.time.format.DateTimeFormatter;
 @Mapper
 public class MissionMapper {
 
-    public static Mission mapToMission(MissionCreateReq missionCreateReq, Team team, Member member,MissionType type) {
+    public static Mission mapToMission(MissionReq missionReq, Team team, Member member, MissionType type) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         return Mission.builder()
-                .title(missionCreateReq.getTitle())
-                .dueTo(LocalDateTime.parse(missionCreateReq.getDueTo(), formatter))
-                .rule(missionCreateReq.getRule())
-                .content(missionCreateReq.getContent())
-                .way(MissionWay.valueOf(missionCreateReq.getWay()))
+                .title(missionReq.getTitle())
+                .dueTo(LocalDateTime.parse(missionReq.getDueTo(), formatter))
+                .rule(missionReq.getRule())
+                .content(missionReq.getContent())
+                .way(MissionWay.valueOf(missionReq.getWay()))
                 .type(type)
                 .number(1)
                 .status(MissionStatus.WAIT)

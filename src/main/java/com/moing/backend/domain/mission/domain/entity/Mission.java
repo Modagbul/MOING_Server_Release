@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.domain.entity;
 
+import com.moing.backend.domain.mission.application.dto.req.MissionReq;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
@@ -53,5 +54,18 @@ public class Mission extends BaseTimeEntity {
         this.type = type;
         this.status = status;
         this.way = way;
+    }
+
+
+    public Mission updateMission(MissionReq missionReq) {
+        this.title = missionReq.getTitle();
+        this.dueTo = LocalDateTime.parse(missionReq.getDueTo());
+        this.rule = missionReq.getRule();
+        this.content = missionReq.getContent();
+        this.number = missionReq.getNumber();
+        this.type = MissionType.valueOf(missionReq.getType());
+        this.way = MissionWay.valueOf(missionReq.getWay());
+
+        return this;
     }
 }

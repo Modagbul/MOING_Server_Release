@@ -13,8 +13,8 @@ public class MissionDeleteUseCase {
 
     private final MissionDeleteService missionDeleteService;
 
-    public void deleteMission(Long missionId) {
-        missionDeleteService.deleteMission(missionId);
+    public Long deleteMission(Long missionId) {
+        return missionDeleteService.deleteMission(missionId);
     }
 
 }

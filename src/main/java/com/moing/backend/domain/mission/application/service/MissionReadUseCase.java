@@ -21,7 +21,6 @@ public class MissionReadUseCase {
     public MissionReadRes getMission(Long missionId) {
         Member member = SecurityUtils.getLoggedInUser();
         Mission mission = missionQueryService.findMissionById(missionId);
-
         return MissionMapper.mapToMissionReadRes(mission);
     }
 
