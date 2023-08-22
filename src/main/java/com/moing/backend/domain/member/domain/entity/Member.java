@@ -129,6 +129,7 @@ public class Member extends BaseTimeEntity {
     public void deleteAccount() {
         this.isDeleted = true;
     }
+    public void reSignUp(){this.isDeleted=false;}
 
     public void updateNewUploadPush(boolean newUploadPush) {
         this.isNewUploadPush = newUploadPush;

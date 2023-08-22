@@ -27,7 +27,7 @@ public class MyPageController {
 
     /**
      * 로그아웃
-     * [DELETE] api/auth/mypage/signOut
+     * [POST] api/mypage/signOut
      * 작성자 : 김민수
      */
     @PostMapping("/signOut")
@@ -38,7 +38,7 @@ public class MyPageController {
 
     /**
      * 회원탈퇴
-     * [DELETE] api/auth/mypage/withdrawal
+     * [DELETE] api/mypage/withdrawal
      * 작성자 : 김민수
      */
     @DeleteMapping("/withdrawal")
@@ -47,5 +47,4 @@ public class MyPageController {
         this.withdrawService.withdraw(user.getSocialId(), withdrawRequest);
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAWAL_SUCCESS.getMessage()));
     }
-
 }

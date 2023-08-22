@@ -1350,19 +1350,44 @@ Host: localhost:8080
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>[[Mypage-회원탈퇴_ request_fields]]
-==  request fields</p>
 </div>
-<div class="paragraph">
-<p>Snippet  request-fields not found for operation::mypage-controller-test/withdraw</p>
+<div class="sect3">
+<h4 id="Mypage-회원탈퇴_request_fields"><a class="link" href="#Mypage-회원탈퇴_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reason</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회원탈퇴하는 이유</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="paragraph">
-<p>[[Mypage-회원탈퇴_ http_response]]
-==  http response</p>
+<div class="sect3">
+<h4 id="Mypage-회원탈퇴_http_response"><a class="link" href="#Mypage-회원탈퇴_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 70
+
+{
+  "isSuccess" : true,
+  "message" : "회원탈퇴를 했습니다"
+}</code></pre>
 </div>
-<div class="paragraph">
-<p>Snippet  http-response not found for operation::mypage-controller-test/withdraw</p>
 </div>
 </div>
 <div class="sect3">
