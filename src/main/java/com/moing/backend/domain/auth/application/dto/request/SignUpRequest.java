@@ -1,14 +1,14 @@
 package com.moing.backend.domain.auth.application.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotBlank;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class SignUpRequest {
+    @NotBlank(message = "nickName 을 입력해주세요.")
     private String nickName;
 }

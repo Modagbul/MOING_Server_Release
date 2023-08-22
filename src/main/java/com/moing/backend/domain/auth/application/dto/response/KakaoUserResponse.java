@@ -2,22 +2,19 @@ package com.moing.backend.domain.auth.application.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KakaoUserResponse {
     private Long id;
     private Properties properties;
     private KakaoAccount kakaoAccount;
 
-    @Data
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -25,7 +22,7 @@ public class KakaoUserResponse {
 
         private String nickname;
     }
-    @Data
+    @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KakaoAccount {

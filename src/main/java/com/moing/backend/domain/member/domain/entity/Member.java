@@ -126,7 +126,7 @@ public class Member extends BaseTimeEntity {
         this.introduction = introduction;
     }
 
-    public void deleteAccount(String reasonToDelete) {
+    public void deleteAccount() {
         this.isDeleted = true;
     }
 

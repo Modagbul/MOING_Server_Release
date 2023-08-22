@@ -2,9 +2,11 @@ package com.moing.backend.domain.auth.application.service;
 
 import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
+import com.moing.backend.domain.auth.exception.NicknameDuplicationException;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberCheckService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
 import com.moing.backend.global.response.TokenInfoResponse;
@@ -19,7 +21,8 @@ import javax.transaction.Transactional;
 public class SignUpUserCase {
 
     private final TokenUtil tokenUtil;
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
+    private final MemberCheckService memberCheckService;
 
     public SignInResponse signUp(String token, SignUpRequest signUpRequest) {
 
@@ -27,7 +30,9 @@ public class SignUpUserCase {
         String socialId = tokenUtil.getSocialId(token);
         Member member = memberQueryService.getMemberBySocialId(socialId);
         //2. signUp 처리
-        member.signUp(signUpRequest.getNickName());
+        String nickName=signUpRequest.getNickName();
+        if(memberCheckService.checkNickname(nickName)) throw new NicknameDuplicationException(); //닉네임 중복검사 (이중체크)
+        member.signUp(nickName);
         //3. security 처리
         AuthenticationUtil.makeAuthentication(member);
         //4. token 만들기

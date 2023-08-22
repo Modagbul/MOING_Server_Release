@@ -1,6 +1,6 @@
 package com.moing.backend.global.config.security;
 
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.filter.JwtAccessDeniedHandler;
 import com.moing.backend.global.config.security.filter.JwtAuthenticationEntryPoint;
 import com.moing.backend.global.config.security.jwt.JwtSecurityConfig;
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenUtil tokenUtil;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -49,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //Spring Security에서 세션을 사용하지 않도록 설정
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/docs/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/auth/signUp").authenticated()
+                .antMatchers("/api/auth/**", "/docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenUtil, memberQueryService));

@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface MemberCustomRepository {
     Optional<Member> findBySocialIdNotDeleted(String socialId);
+    boolean checkNickname(String nickname);
 }
