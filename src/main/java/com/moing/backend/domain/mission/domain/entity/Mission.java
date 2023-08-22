@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,7 +29,7 @@ public class Mission extends BaseTimeEntity {
     private LocalDateTime dueTo;
     private String rule;
     private String content;
-    private Long number;
+    private int number;
 
     @Enumerated(value = EnumType.STRING)
     private MissionType type;
@@ -44,6 +43,15 @@ public class Mission extends BaseTimeEntity {
     @OneToMany(mappedBy = "mission")
     List<MissionArchive> missionArchiveList = new ArrayList<>();
 
-
-
+    @Builder
+    public Mission(String title, LocalDateTime dueTo, String rule, String content, int number, MissionType type, MissionStatus status, MissionWay way) {
+        this.title = title;
+        this.dueTo = dueTo;
+        this.rule = rule;
+        this.content = content;
+        this.number = number;
+        this.type = type;
+        this.status = status;
+        this.way = way;
+    }
 }
