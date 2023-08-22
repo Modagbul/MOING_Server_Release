@@ -1,6 +1,10 @@
 DOCKER_APP_NAME=meetup
 DOCKER_USERNAME=modagbul
 
+# 최신 이미지 가져오기
+docker pull ${DOCKER_USERNAME}/moing:blue
+docker pull ${DOCKER_USERNAME}/moing:green
+
 # 현재 실행 중인 컨테이너를 확인 (blue 또는 green)
 EXIST_BLUE=$(docker ps --filter name=${DOCKER_APP_NAME}-blue --filter status=running -q)
 EXIST_GREEN=$(docker ps --filter name=${DOCKER_APP_NAME}-green --filter status=running -q)
