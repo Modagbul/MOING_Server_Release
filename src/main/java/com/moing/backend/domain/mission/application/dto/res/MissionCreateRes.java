@@ -12,7 +12,7 @@ public class MissionCreateRes {
 
     private String rule;
     private String content;
-    private Long number;
+    private int number;
 
     private String type;
     private String status;

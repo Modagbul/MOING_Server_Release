@@ -9,6 +9,7 @@ import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase
 import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
 import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
+import com.moing.backend.domain.mission.presentation.MissionController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,27 +27,29 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@WebMvcTest
+@WebMvcTest(MissionController.class)
 public class MissionControllerTest extends CommonControllerTest {
 
     @MockBean
     private MissionCreateUseCase missionCreateUseCase;
+
     @MockBean
     private MissionUpdateUseCase missionUpdateUseCase;
+
     @MockBean
     private MissionReadUseCase missionReadUseCase;
+
     @MockBean
     private MissionDeleteUseCase missionDeleteUseCase;
 
-    @Autowired
-    private MissionRepository missionRepository;
+
 
     @Test
     public void 미션_생성() throws Exception {
         //given
         MissionReq input = MissionReq.builder()
                 .title("title")
-                .dueTo("dueTo")
+                .dueTo("2023-12-31 23:39:22 333")
                 .rule("rule")
                 .content("content")
                 .number(1)
@@ -61,7 +64,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .dueTo("dueTo")
                 .rule("rule")
                 .content("content")
-                .number(1L)
+                .number(1)
                 .type("TEXT")
                 .status("WAIT")
                 .way("TEXT")
@@ -119,7 +122,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .dueTo("dueTo")
                 .rule("rule")
                 .content("content")
-                .number(1L)
+                .number(1)
                 .type("TEXT")
                 .status("WAIT")
                 .way("TEXT")
@@ -175,7 +178,7 @@ public class MissionControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                get("/mission/{missionId}")
+                get("/mission/{missionId}",1)
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -214,7 +217,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .dueTo("dueTo")
                 .rule("rule")
                 .content("content")
-                .number(1L)
+                .number(1)
                 .type("TEXT")
                 .status("WAIT")
                 .way("TEXT")
@@ -224,7 +227,7 @@ public class MissionControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                delete("/mission/{missionId}")
+                delete("/mission/{missionId}",1)
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
