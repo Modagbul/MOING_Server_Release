@@ -27,12 +27,10 @@ public class MissionMapper {
                 .rule(missionReq.getRule())
                 .content(missionReq.getContent())
                 .way(MissionWay.valueOf(missionReq.getWay()))
-                .type(type)
-                .number(1)
+                .type(MissionType.valueOf(missionReq.getType()))
+                .number(missionReq.getNumber())
                 .status(MissionStatus.WAIT)
                 .build();
-
-
 
     }
 
