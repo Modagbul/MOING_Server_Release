@@ -23,4 +23,13 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .where(member.isDeleted.eq(false))
                 .fetchFirst());
     }
+
+    @Override
+    public boolean checkNickname(String nickname) {
+        return queryFactory
+                .selectOne()
+                .from(member)
+                .where(member.nickName.eq(nickname))
+                .fetchFirst() != null;
+    }
 }

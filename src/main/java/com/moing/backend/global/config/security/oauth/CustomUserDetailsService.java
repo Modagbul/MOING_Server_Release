@@ -1,7 +1,7 @@
 package com.moing.backend.global.config.security.oauth;
 
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
 
     @Override
     @Transactional(readOnly = true)

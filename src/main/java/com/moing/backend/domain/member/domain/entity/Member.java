@@ -3,6 +3,7 @@ package com.moing.backend.domain.member.domain.entity;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
+import com.moing.backend.global.entity.BaseTimeEntity;
 import com.moing.backend.global.util.AesConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -41,11 +42,10 @@ public class Member {
     @Convert(converter = AesConverter.class)
     private String profileImage; //없으면 undef
 
-
     private String gender; //없으면 undef
 
-
     private String ageRange; //없으면 undef
+
     private boolean isDeleted;
 
     // 추가정보
@@ -59,10 +59,7 @@ public class Member {
     @Convert(converter = AesConverter.class)
     private String introduction; //없으면 undef
 
-
     private String fcmToken; //없으면 undef
-
-    private String reasonToDelete; //없으면 undef
 
     @ColumnDefault("true")
     private boolean isNewUploadPush;
@@ -97,7 +94,6 @@ public class Member {
         if (nickName == null) nickName = "undef";
         if (introduction == null) introduction = "undef";
         if (fcmToken == null) fcmToken = "undef";
-        if (reasonToDelete == null) reasonToDelete = "undef";
         if (registrationStatus == null) registrationStatus = RegistrationStatus.UNCOMPLETED;
     }
 
@@ -130,10 +126,10 @@ public class Member {
         this.introduction = introduction;
     }
 
-    public void deleteAccount(String reasonToDelete) {
+    public void deleteAccount() {
         this.isDeleted = true;
-        this.reasonToDelete = reasonToDelete;
     }
+    public void reSignUp(){this.isDeleted=false;}
 
     public void updateNewUploadPush(boolean newUploadPush) {
         this.isNewUploadPush = newUploadPush;

@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 @DomainService
 @Transactional
 @RequiredArgsConstructor
-public class MemberQueryService {
+public class MemberGetService {
     private final MemberRepository memberRepository;
 
     public Member getMemberBySocialId(String socialId){

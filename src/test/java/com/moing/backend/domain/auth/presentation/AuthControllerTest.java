@@ -1,15 +1,15 @@
-package com.moing.backend.domain.auth.representation;
+package com.moing.backend.domain.auth.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
+import com.moing.backend.domain.auth.application.dto.response.CheckNicknameResponse;
 import com.moing.backend.domain.auth.application.dto.response.ReissueTokenResponse;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
+import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
 import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
 import com.moing.backend.domain.auth.application.service.SignInUserCase;
 import com.moing.backend.domain.auth.application.service.SignUpUserCase;
-import com.moing.backend.domain.auth.presentation.AuthController;
-import com.moing.backend.global.response.TokenInfoResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,8 +21,12 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+
 
 @WebMvcTest(AuthController.class)
 class AuthControllerTest extends CommonControllerTest {
@@ -35,6 +39,9 @@ class AuthControllerTest extends CommonControllerTest {
 
     @MockBean
     private ReissueTokenUserCase reissueTokenUserCase;
+
+    @MockBean
+    private CheckNicknameUserCase checkNicknameService;
 
     @Test
     public void Kakao_소셜_로그인_회원가입_전() throws Exception {
@@ -55,7 +62,7 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                post("/auth/signIn/kakao")
+                post("/api/auth/signIn/kakao")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -98,7 +105,7 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                post("/auth/signIn/kakao")
+                post("/api/auth/signIn/kakao")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -141,7 +148,7 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                post("/auth/signIn/apple")
+                post("/api/auth/signIn/apple")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -184,7 +191,7 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                post("/auth/signIn/apple")
+                post("/api/auth/signIn/apple")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -229,8 +236,8 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                put("/auth/signUp")
-                        .header("Authorization","ACCESS_TOKEN")
+                put("/api/auth/signUp")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -241,6 +248,9 @@ class AuthControllerTest extends CommonControllerTest {
                 .andExpect(status().isOk())
                 .andDo(
                         restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
                                 requestFields(
                                         fieldWithPath("nickName").description("유저 닉네임")
                                 ),
@@ -254,7 +264,6 @@ class AuthControllerTest extends CommonControllerTest {
                         )
                 );
     }
-
     @Test
     public void reissue_token() throws Exception {
         //given
@@ -267,7 +276,7 @@ class AuthControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(
-                get("/auth/reissue")
+                get("/api/auth/reissue")
                         .header("RefreshToken", "REFRESH_TOKEN")
         );
 
@@ -289,5 +298,59 @@ class AuthControllerTest extends CommonControllerTest {
                 );
     }
 
+    @Test
+    public void check_nickname_중복O() throws Exception {
+        //given
+        CheckNicknameResponse output = new CheckNicknameResponse(true);
+        given(checkNicknameService.checkNickname(any())).willReturn(output);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/api/auth/nickname/{nickname}", "NICKNAME")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("nickname").description("중복검사할 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("isSuccess").description("성공 여부 : true"),
+                                fieldWithPath("message").description("닉네임 중복검사를 했습니다"),
+                                fieldWithPath("data.isDuplicated").description("닉네임 중복 여부 : ture") // 이 부분은 CheckNicknameResponse의 구조에 따라 변경될 수 있습니다.
+                        )
+                ));
+    }
+
+    @Test
+    public void check_nickname_중복X() throws Exception {
+        //given
+        CheckNicknameResponse output = new CheckNicknameResponse(false);
+        given(checkNicknameService.checkNickname(any())).willReturn(output);
+
+
+        // when
+        ResultActions actions =mockMvc.perform(
+                get("/api/auth/nickname/{nickname}", "NICKNAME"));
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("nickname").description("중복검사할 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("isSuccess").description("성공 여부 : true"),
+                                fieldWithPath("message").description("닉네임 중복검사를 했습니다"),
+                                fieldWithPath("data.isDuplicated").description("닉네임 중복 여부 : false") // 이 부분은 CheckNicknameResponse의 구조에 따라 변경될 수 있습니다.
+                        )
+                ));
+    }
 
 }

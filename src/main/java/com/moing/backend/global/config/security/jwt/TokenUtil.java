@@ -1,7 +1,7 @@
 package com.moing.backend.global.config.security.jwt;
 
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberQueryService;
+import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.redis.RedisUtil;
 import com.moing.backend.global.response.TokenInfoResponse;
 import io.jsonwebtoken.*;
@@ -23,7 +23,7 @@ public class TokenUtil implements InitializingBean {
 
     private static final String ADDITIONAL_INFO = "isAdditionalInfoProvided";
     private final RedisUtil redisUtil;
-    private final MemberQueryService memberQueryService;
+    private final MemberGetService memberQueryService;
 
     @Value("${jwt.secret}")
     private String secretKey;

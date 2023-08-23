@@ -30,7 +30,7 @@ public class WebClientConfig {
                 .exchangeStrategies(exchangeStrategies)
                 .filter(logRequest())
                 .filter(logResponse())
-                .defaultHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.3")
+                .defaultHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36")
                 .build();
     }
 

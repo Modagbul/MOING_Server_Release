@@ -2,8 +2,10 @@ package com.moing.backend.domain.auth.presentation;
 
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
+import com.moing.backend.domain.auth.application.dto.response.CheckNicknameResponse;
 import com.moing.backend.domain.auth.application.dto.response.ReissueTokenResponse;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
+import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
 import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
 import com.moing.backend.domain.auth.application.service.SignInUserCase;
 import com.moing.backend.domain.auth.application.service.SignUpUserCase;
@@ -20,7 +22,7 @@ import static com.moing.backend.domain.auth.presentation.constant.AuthResponseMe
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final SignInUserCase authService;
@@ -28,10 +30,11 @@ public class AuthController {
     private final SignUpUserCase signUpService;
 
     private final ReissueTokenUserCase reissueTokenService;
+    private final CheckNicknameUserCase checkNicknameService;
 
     /**
      * 소셜 로그인 (애플/ 카카오)
-     * [POST] /auth/signIn/kakao||apple
+     * [POST] api/auth/signIn/kakao||apple
      * 작성자 : 김민수
      */
     @PostMapping("/signIn/{provider}")
@@ -42,30 +45,33 @@ public class AuthController {
 
     /**
      * 회원가입 (초기 로그인한 사용자 닉네임 입력)
-     * [PUT] /auth/signUp
+     * [PUT] api/auth/signUp
      * 작성자 : 김민수
      */
     @PutMapping("/signUp")
-    public ResponseEntity<SuccessResponse<SignInResponse>> signUp(HttpServletRequest request, @Valid @RequestBody SignUpRequest signUpRequest) {
-        String token = request.getHeader("Authorization");
+    public ResponseEntity<SuccessResponse<SignInResponse>> signUp(@RequestHeader(value = "Authorization") String token,
+                                                                  @Valid @RequestBody SignUpRequest signUpRequest) {
+        token = (token != null && token.startsWith("Bearer ")) ? token.substring(7) : token;
         return ResponseEntity.ok(SuccessResponse.create(SIGN_UP_SUCCESS.getMessage(), this.signUpService.signUp(token, signUpRequest)));
     }
-
-
     /**
      * 토큰 재발급
-     * [GET] /auth/reissue
+     * [GET] api/auth/reissue
      * 작성자 : 김민수
      */
     @GetMapping("/reissue")
-    public ResponseEntity<SuccessResponse<ReissueTokenResponse>> reissue(HttpServletRequest request) {
-
-        // 헤더로부터 RefreshToken 추출.
-        String token = request.getHeader("RefreshToken");
-        // 토큰 재발행
+    public ResponseEntity<SuccessResponse<ReissueTokenResponse>> reissue(@RequestHeader(value = "RefreshToken") String token) {
         ReissueTokenResponse reissueToken = reissueTokenService.reissueToken(token);
-
         return ResponseEntity.ok(SuccessResponse.create(REISSUE_TOKEN_SUCCESS.getMessage(), reissueToken));
     }
 
+    /**
+     * 닉네임 중복검사
+     * [GET] api/auth/nickname
+     * 작성자 : 김민수
+     */
+    @GetMapping("/nickname/{nickname}")
+    public ResponseEntity<SuccessResponse<CheckNicknameResponse>> checkNickname(@PathVariable String nickname){
+        return ResponseEntity.ok(SuccessResponse.create(CHECK_NICKNAME_SUCCESS.getMessage(), checkNicknameService.checkNickname(nickname)));
+    }
 }

@@ -1,0 +1,12 @@
+[[Mypage-API]]
+= Mypage API
+
+[[Mypage-로그아웃]]
+=== Mypage 로그아웃
+operation::mypage-controller-test/sign_out[snippets='http-request,http-response,response-fields']
+
+---
+
+[[Mypage-회원탈퇴]]
+=== Mypage 회원탈퇴
+operation::mypage-controller-test/withdraw[snippets='http-request,request-fields,http-response,response-fields']
