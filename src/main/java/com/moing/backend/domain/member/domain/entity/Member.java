@@ -3,6 +3,7 @@ package com.moing.backend.domain.member.domain.entity;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
+import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import com.moing.backend.global.util.AesConverter;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -33,6 +36,7 @@ public class Member extends BaseTimeEntity {
     private SocialProvider provider;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RegistrationStatus registrationStatus;
 
     @Convert(converter = AesConverter.class)
@@ -40,16 +44,20 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     @Convert(converter = AesConverter.class)
+    @Column(nullable = false)
     private String profileImage; //없으면 undef
 
+    @Column(nullable = false, length = 6)
     private String gender; //없으면 undef
 
+    @Column(nullable = false, length = 10)
     private String ageRange; //없으면 undef
 
     private boolean isDeleted;
 
     // 추가정보
     @Convert(converter = AesConverter.class)
+    @Column(nullable = false, unique = true)
     private String nickName; //없으면 undef
 
     @Column(nullable = false)
@@ -57,8 +65,10 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @Convert(converter = AesConverter.class)
+    @Column(nullable = false)
     private String introduction; //없으면 undef
 
+    @Column(nullable = false)
     private String fcmToken; //없으면 undef
 
     @ColumnDefault("true")
@@ -70,6 +80,8 @@ public class Member extends BaseTimeEntity {
     @ColumnDefault("true")
     private boolean isFirePush;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<TeamMember> teamMembers = new ArrayList<>(); //최대 3개이므로 양방향
 
     //==생성 메서드==//
     public static Member valueOf(OAuth2User oAuth2User) {
@@ -86,6 +98,7 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
+    //==초기화==//
     @PrePersist
     public void prePersist() {
         if (profileImage == null) profileImage = "undef";
@@ -121,7 +134,8 @@ public class Member extends BaseTimeEntity {
         this.fcmToken = fcmToken;
     }
 
-    public void updateMypage(String nickName, String introduction) {
+    public void updateProfile(String profileImage, String nickName, String introduction) {
+        this.profileImage = profileImage;
         this.nickName = nickName;
         this.introduction = introduction;
     }
@@ -129,7 +143,10 @@ public class Member extends BaseTimeEntity {
     public void deleteAccount() {
         this.isDeleted = true;
     }
-    public void reSignUp(){this.isDeleted=false;}
+
+    public void reSignUp() {
+        this.isDeleted = false;
+    }
 
     public void updateNewUploadPush(boolean newUploadPush) {
         this.isNewUploadPush = newUploadPush;
@@ -143,8 +160,10 @@ public class Member extends BaseTimeEntity {
         this.isFirePush = firePush;
     }
 
-    public void updateProfile(String string) {
-        this.profileImage = string;
+    public void updateAllPush(boolean allPush) {
+        this.isNewUploadPush = allPush;
+        this.isRemindPush = allPush;
+        this.isFirePush = allPush;
     }
 
 }

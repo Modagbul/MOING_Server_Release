@@ -12,4 +12,6 @@ include::Auth-API.adoc[]
 
 include::Mypage-API.adoc[]
 
+include::Team-API.adoc[]
+
 
