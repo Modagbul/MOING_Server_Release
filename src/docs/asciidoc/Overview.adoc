@@ -80,4 +80,13 @@
 | appId가 일치하지 않음 (유효하지 않음)
 |===
 
+=== Team / Team_member ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `TM0001`
+| 팀 개설할 때
+| 팀 최대 개수 3을 초과
+|===
+
+
 
