@@ -13,6 +13,8 @@ jobs:
     env:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      DATA_SQL: ${{ secrets.DATA_SQl }}
 
     steps:
     # 소스 코드 체크아웃
