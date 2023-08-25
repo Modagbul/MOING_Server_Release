@@ -27,7 +27,7 @@ else
     AFTER_COMPOSE_COLOR="green"
 fi
 
-sleep 10
+sleep 40
 
 # 새로운 컨테이너가 제대로 실행되었는지 확인
 EXIST_AFTER=$(docker ps --filter name=${DOCKER_APP_NAME}-${AFTER_COMPOSE_COLOR} --filter status=running -q)
