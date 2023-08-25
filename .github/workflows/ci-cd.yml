@@ -43,8 +43,6 @@ jobs:
           cd ./src/main/resources
           touch ./application.yml 
           echo "${{env.APPLICATION}}" > ./application.yml
-          touch ./data.sql
-          echo "${{env.DATA_SQL}}" > ./data.sql
           touch ./firebase-key.json
           echo "${{env.GOOGLE_APPLICATION_CREDENTIALS}}" | base64 --decode > ./firebase-key.json
 
@@ -53,13 +51,6 @@ jobs:
       with:
         name: application.yml
         path: ./src/main/resources/application.yml
-
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: data.sql
-        path: ./src/main/resources/data.sql
-        
 
     - uses: actions/upload-artifact@v2
       with:
