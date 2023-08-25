@@ -15,12 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.ResponseEntity.status;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -49,7 +54,7 @@ public class MissionControllerTest extends CommonControllerTest {
         //given
         MissionReq input = MissionReq.builder()
                 .title("title")
-                .dueTo("2023-12-31 23:39:22 333")
+                .dueTo("2023-12-31 23:39:22.333")
                 .rule("rule")
                 .content("content")
                 .number(1)
@@ -70,11 +75,13 @@ public class MissionControllerTest extends CommonControllerTest {
                 .way("TEXT")
                 .build();
 
-        given(missionCreateUseCase.createMission(any())).willReturn(output);
+        given(missionCreateUseCase.createMission(any(),any())).willReturn(output);
 
+        Long teamId = 2L;
         //when
-        ResultActions actions = mockMvc.perform(
-                post("/mission")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                post("/api/{teamId}/mission",teamId)
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -84,8 +91,20 @@ public class MissionControllerTest extends CommonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(
                         restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
                                 requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
+                                        fieldWithPath("title").description("미션 제목"),
+                                        fieldWithPath("dueTo").description("미션 마감 날짜"),
+                                        fieldWithPath("rule").description("미션 규칙"),
+                                        fieldWithPath("content").description("미션 내용"),
+                                        fieldWithPath("number").description("미션 반복 횟수"),
+                                        fieldWithPath("type").description("미션 타입"),
+                                        fieldWithPath("way").description("미션 진행 방법")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -96,10 +115,13 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
                                         fieldWithPath("data.type").description("미션 타입"),
-                                        fieldWithPath("data.way").description("미션 진행 방법")
+                                        fieldWithPath("data.way").description("미션 진행 방법"),
+                                        fieldWithPath("data.status").description("미션 진행 상태")
                                 )
                         )
-                );
+                )
+                       .andReturn();
+
     }
 
     @Test
@@ -128,11 +150,14 @@ public class MissionControllerTest extends CommonControllerTest {
                 .way("TEXT")
                 .build();
 
-        given(missionCreateUseCase.createMission(any())).willReturn(output);
+        given(missionUpdateUseCase.updateMission(any(),any())).willReturn(output);
+        Long teamId = 2L;
+        Long missionId = 2L;
 
         //when
-        ResultActions actions = mockMvc.perform(
-                put("/mission")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                put("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
         );
@@ -142,8 +167,21 @@ public class MissionControllerTest extends CommonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(
                         restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
                                 requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
+                                        fieldWithPath("title").description("미션 제목"),
+                                        fieldWithPath("dueTo").description("미션 마감 날짜"),
+                                        fieldWithPath("rule").description("미션 규칙"),
+                                        fieldWithPath("content").description("미션 내용"),
+                                        fieldWithPath("number").description("미션 반복 횟수"),
+                                        fieldWithPath("type").description("미션 타입"),
+                                        fieldWithPath("way").description("미션 진행 방법")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -154,10 +192,14 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
                                         fieldWithPath("data.type").description("미션 타입"),
-                                        fieldWithPath("data.way").description("미션 진행 방법")
+                                        fieldWithPath("data.way").description("미션 진행 방법"),
+                                        fieldWithPath("data.status").description("미션 진행 상태")
+
                                 )
                         )
-                );
+                )
+                .andReturn();
+
     }
 
     @Test
@@ -176,10 +218,14 @@ public class MissionControllerTest extends CommonControllerTest {
 
         given(missionReadUseCase.getMission(any())).willReturn(output);
 
+        Long teamId = 2L;
+        Long missionId = 1L;
         //when
-        ResultActions actions = mockMvc.perform(
-                get("/mission/{missionId}",1)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
+
         );
 
         //then
@@ -187,11 +233,12 @@ public class MissionControllerTest extends CommonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(
                         restDocs.document(
-                                pathParameters(
-                                      parameterWithName("missionId").description("미션 아이디")
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
                                 ),
-                                requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -205,29 +252,22 @@ public class MissionControllerTest extends CommonControllerTest {
 
                                 )
                         )
-                );
+                )
+                .andReturn();
+
     }
 
     @Test
     public void 미션_삭제() throws Exception {
         //given
 
-        MissionCreateRes output = MissionCreateRes.builder()
-                .title("title")
-                .dueTo("dueTo")
-                .rule("rule")
-                .content("content")
-                .number(1)
-                .type("TEXT")
-                .status("WAIT")
-                .way("TEXT")
-                .build();
 
-        given(missionCreateUseCase.createMission(any())).willReturn(output);
-
+        Long teamId = 2L;
+        Long missionId = 1L;
         //when
-        ResultActions actions = mockMvc.perform(
-                delete("/mission/{missionId}",1)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -236,16 +276,20 @@ public class MissionControllerTest extends CommonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(
                         restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
                                 pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
                                         parameterWithName("missionId").description("삭제할 미션 아이디")
                                 ),
-                                requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
-                                ),
                                 responseFields(
-                                        fieldWithPath("missionId").description("삭제된 미션 아이디")
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("미션을 삭제 했습니다"),
+                                        fieldWithPath("data").description("삭제된 미션 아이디")
                                 )
                         )
-                );
+                )
+                .andReturn();
     }
 }
