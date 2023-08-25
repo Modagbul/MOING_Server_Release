@@ -50,7 +50,7 @@ jobs:
         name: firebase-key.json
         path: ./src/main/resources/firebase-key.json
     - run: touch ./src/main/resources/data.sql
-    - run: echo "${{env.DATA_SQL}" > ./src/main/resources/data.sql
+    - run: echo "${{env.DATA_SQL}}" > ./src/main/resources/data.sql
     - uses: actions/upload-artifact@v2
       with:
         name: data.sql
