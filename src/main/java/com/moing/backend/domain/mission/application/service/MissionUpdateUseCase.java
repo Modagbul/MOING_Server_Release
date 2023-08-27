@@ -28,6 +28,8 @@ public class MissionUpdateUseCase {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
 
+        // 소모임장 확인 로직 추가
+
         Mission findMission = missionQueryService.findMissionById(missionId);
         findMission.updateMission(missionReq);
 

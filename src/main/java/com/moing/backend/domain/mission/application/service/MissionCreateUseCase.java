@@ -29,6 +29,8 @@ public class MissionCreateUseCase {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
 
+        // 소모임장 확인 로직 추가
+
         Mission mission = MissionMapper.mapToMission(missionReq, member, MissionType.valueOf(missionReq.getType()));
         // teamRepository 변경 예정
         mission.setTeam(teamRepository.findById(teamId).orElseThrow());

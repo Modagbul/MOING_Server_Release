@@ -39,6 +39,16 @@ public class MissionController {
     public ResponseEntity<SuccessResponse<MissionReadRes>> getMission(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId, @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getMission(user.getSocialId(),missionId)));
     }
+    /**
+     * 미션 리스트 조회
+     * [GET] {teamId}/mission/{missionId}
+     * 작성자 : 정승연
+     */
+
+    @GetMapping("")
+    public ResponseEntity<SuccessResponse<MissionReadRes>> getMissionList(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(READ_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getMission(user.getSocialId(),teamId)));
+    }
 
     /**
      * 미션 생성
