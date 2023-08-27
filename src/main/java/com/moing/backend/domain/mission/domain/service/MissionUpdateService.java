@@ -13,7 +13,7 @@ public class MissionUpdateService {
 
     private final MissionRepository missionRepository;
 
-    public void update(Mission mission) {
+    public void updateMission(Mission mission) {
         missionRepository.save(mission);
     }
 }

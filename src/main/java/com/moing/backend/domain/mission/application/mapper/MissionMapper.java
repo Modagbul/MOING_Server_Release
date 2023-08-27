@@ -5,10 +5,10 @@ import com.moing.backend.domain.mission.application.dto.req.MissionReq;
 import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.mission.domain.entity.Team;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
+import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.annotation.Mapper;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Mapper
 public class MissionMapper {
 
-    public static Mission mapToMission(MissionReq missionReq, Team team, Member member, MissionType type) {
+    public static Mission mapToMission(MissionReq missionReq, Member member, MissionType type) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
