@@ -80,4 +80,8 @@ public class Mission extends BaseTimeEntity {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public void setStatus(MissionStatus missionStatus) {
+        this.status = missionStatus;
+    }
 }
