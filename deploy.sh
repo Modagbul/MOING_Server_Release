@@ -23,15 +23,28 @@ if [ -z "$EXIST_BLUE" ] && [ -z "$EXIST_GREEN" ]; then
     AFTER_COMPOSE_COLOR="blue"
 elif [ -z "$EXIST_BLUE" ]; then
     echo "blue up"
+    
+    # 만약 컨테이너가 중지된 상태로 존재하면 삭제한다.
+    if [ "$(docker ps -a --filter name=${DOCKER_APP_NAME}-blue -q)" ]; then
+        docker rm ${DOCKER_APP_NAME}-blue
+    fi
+
     docker run -d --name ${DOCKER_APP_NAME}-blue -p 8081:8080 ${DOCKER_USERNAME}/moing:blue
     BEFORE_COMPOSE_COLOR="green"
     AFTER_COMPOSE_COLOR="blue"
 else
     echo "green up"
+
+    # 만약 컨테이너가 중지된 상태로 존재하면 삭제한다.
+    if [ "$(docker ps -a --filter name=${DOCKER_APP_NAME}-green -q)" ]; then
+        docker rm ${DOCKER_APP_NAME}-green
+    fi
+
     docker run -d --name ${DOCKER_APP_NAME}-green -p 8082:8080 ${DOCKER_USERNAME}/moing:green
     BEFORE_COMPOSE_COLOR="blue"
     AFTER_COMPOSE_COLOR="green"
 fi
+
 
 sleep 40
 
