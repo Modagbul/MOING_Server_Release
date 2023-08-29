@@ -12,11 +12,17 @@ import com.moing.backend.domain.auth.application.service.SignUpUserCase;
 import com.moing.backend.global.response.SuccessResponse;
 import com.moing.backend.global.response.TokenInfoResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static com.moing.backend.domain.auth.presentation.constant.AuthResponseMessage.*;
 
@@ -74,4 +80,5 @@ public class AuthController {
     public ResponseEntity<SuccessResponse<CheckNicknameResponse>> checkNickname(@PathVariable String nickname){
         return ResponseEntity.ok(SuccessResponse.create(CHECK_NICKNAME_SUCCESS.getMessage(), checkNicknameService.checkNickname(nickname)));
     }
+
 }

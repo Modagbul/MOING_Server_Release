@@ -40,3 +40,4 @@ out/
 application.yml
 .DS_Store
 firebase-key.json
+data.sql
