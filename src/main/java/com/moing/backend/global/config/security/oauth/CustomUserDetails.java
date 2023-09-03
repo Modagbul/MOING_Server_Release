@@ -34,22 +34,22 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !member.isDeleted();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !member.isDeleted();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !member.isDeleted();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return !member.isDeleted();
+        return true;
     }
 
     public Member getMember() {

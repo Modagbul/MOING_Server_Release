@@ -2,6 +2,8 @@ package com.moing.backend.domain.mypage.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
+import com.moing.backend.domain.mypage.application.service.AlarmUserCase;
+import com.moing.backend.domain.mypage.application.service.ProfileUserCase;
 import com.moing.backend.domain.mypage.application.service.SignOutUserCase;
 import com.moing.backend.domain.mypage.application.service.WithdrawUserCase;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,12 @@ public class MypageControllerTest extends CommonControllerTest {
 
     @MockBean
     private WithdrawUserCase withdrawService;
+
+    @MockBean
+    private ProfileUserCase profileUserCase;
+
+    @MockBean
+    private AlarmUserCase alarmUserCase;
 
     @Test
     public void sign_out() throws Exception {

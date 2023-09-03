@@ -806,11 +806,12 @@ Content-Length: 205
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/auth/signUp HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer ACCESS_TOKEN
-Content-Length: 29
+Content-Length: 56
 Host: localhost:8080
 
 {
-  "nickName" : "NICKNAME"
+  "nickName" : "NICKNAME",
+  "fcmToken" : "FCMTOKEN"
 }</code></pre>
 </div>
 </div>
@@ -835,6 +836,11 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fcmToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FCM TOKEN</p></td>
 </tr>
 </tbody>
 </table>
