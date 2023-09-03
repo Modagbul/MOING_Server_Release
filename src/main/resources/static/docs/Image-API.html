@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Team API</title>
+<title>Image API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,38 +436,52 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 </head>
-<body id="Team-API" class="article">
+<body id="Image-API" class="article">
 <div id="header">
-<h1>Team API</h1>
+<h1>Image API</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
 </div>
 <div id="content">
 <div class="sect2">
-<h3 id="Team-소모임-개설">Team 소모임 개설</h3>
+<h3 id="Presigned-Url-발급">Presigned Url 발급</h3>
 <div class="sect3">
-<h4 id="Team-소모임-개설_http_request">HTTP request</h4>
+<h4 id="Presigned-Url-발급_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/team HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/image/presigned HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer ACCESS_TOKEN
-Content-Length: 182
+Content-Length: 34
 Host: localhost:8080
 
 {
-  "category" : "ETC",
-  "name" : "소모임 이름",
-  "introduction" : "소모임 소개글",
-  "promise" : "소모임 각오",
-  "profileImgUrl" : "소모임 대표 사진 URL"
+  "imageFileExtension" : "JPG"
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Team-소모임-개설_request_fields">Request fields</h4>
+<h4 id="Presigned-Url-발급_http_response">HTTP response</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 162
+
+{
+  "isSuccess" : true,
+  "message" : "presignedUrl을 발급하였습니다",
+  "data" : {
+    "presignedUrl" : "PRESIGNED_URL",
+    "imgUrl" : "IMAGE_URL"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Presigned-Url-발급_request_fields">Request fields</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -483,53 +497,15 @@ Host: localhost:8080
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>category</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageFileExtension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">카테고리</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">소모임 이름</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>introduction</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">소모임 소개글</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileImgUrl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">소모임 대표 사진</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>promise</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">소모임 각오</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 확장자</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="Team-소모임-개설_http_response">HTTP response</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 111
-
-{
-  "isSuccess" : true,
-  "message" : "소모임을 생성하였습니다",
-  "data" : {
-    "teamId" : 1
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="Team-소모임-개설_response_fields">Response fields</h4>
+<h4 id="Presigned-Url-발급_response_fields">Response fields</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -552,54 +528,42 @@ Content-Length: 111
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">소모임을 생성하였습니다</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">presignedUrl을 발급하였습니다</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.teamId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생성한 teamId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.presignedUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 업로드용 PresignedUrl</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data.imgUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업로드 후 이미지 URL</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_team_category">Team Category</h3>
+<h3 id="_imagefileextension">imageFileExtension</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 100%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Category</th>
-<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">input 형식</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPORTS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">스포츠/운동</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JPG</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HABIT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생활습관 개선</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JPEG</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TEST</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">시험/취업준비</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>STUDY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">스터디/공부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>READING</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">독서</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ETC</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">그외 자기계발</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PNG</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -608,7 +572,7 @@ Content-Length: 111
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-09-03 14:12:35 +0900
+Last updated 2023-09-03 14:11:09 +0900
 </div>
 </div>
 </body>

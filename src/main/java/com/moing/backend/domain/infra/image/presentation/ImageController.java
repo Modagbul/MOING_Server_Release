@@ -4,17 +4,13 @@ import com.moing.backend.domain.infra.image.application.dto.request.IssuePresign
 import com.moing.backend.domain.infra.image.application.dto.response.IssuePresignedUrlResponse;
 import com.moing.backend.domain.infra.image.application.service.IssuePresignedUrlUseCase;
 import com.moing.backend.domain.infra.image.presentation.constant.EImageResponseMessage;
-import com.moing.backend.global.annotation.ValidEnum;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 
 @RestController

@@ -5,7 +5,7 @@
 === Team 소모임 개설
 operation::team-controller-test/create_team[snippets='http-request,request-fields,http-response,response-fields']
 
-=== 소모임 카테고리
+=== Team Category
 |===
 | Category | Description
 
@@ -26,3 +26,4 @@ operation::team-controller-test/create_team[snippets='http-request,request-field
 
 | `ETC`
 | 그외 자기계발
+|===
