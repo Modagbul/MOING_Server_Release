@@ -59,7 +59,7 @@ class ImageControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("presignedUrl을 발급하였습니다"),
                                         fieldWithPath("data.presignedUrl").description("이미지 업로드용 PresignedUrl"),
-                                                fieldWithPath("data.imgUrl").description("업로드 후 이미지 URL")
+                                        fieldWithPath("data.imgUrl").description("업로드 후 이미지 URL")
                                         )
                                 )
                         );
