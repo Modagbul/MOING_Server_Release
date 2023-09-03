@@ -221,6 +221,7 @@ class AuthControllerTest extends CommonControllerTest {
         //given
         SignUpRequest input = SignUpRequest.builder()
                 .nickName("NICKNAME")
+                .fcmToken("FCMTOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -252,7 +253,8 @@ class AuthControllerTest extends CommonControllerTest {
                                         headerWithName("Authorization").description("접근 토큰")
                                 ),
                                 requestFields(
-                                        fieldWithPath("nickName").description("유저 닉네임")
+                                        fieldWithPath("nickName").description("유저 닉네임"),
+                                        fieldWithPath("fcmToken").description("FCM TOKEN")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),

@@ -53,7 +53,6 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 10)
     private String ageRange; //없으면 undef
 
-    private boolean isDeleted;
 
     // 추가정보
     @Convert(converter = AesConverter.class)
@@ -110,13 +109,10 @@ public class Member extends BaseTimeEntity {
         if (registrationStatus == null) registrationStatus = RegistrationStatus.UNCOMPLETED;
     }
 
-    public void signUp(String nickName) {
+    public void signUp(String nickName, String fcmToken) {
         this.nickName = nickName;
-        this.registrationStatus = RegistrationStatus.COMPLETED;
-    }
-
-    public void updateFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+        this.registrationStatus = RegistrationStatus.COMPLETED;
     }
 
     @Builder
@@ -138,14 +134,6 @@ public class Member extends BaseTimeEntity {
         this.profileImage = profileImage;
         this.nickName = nickName;
         this.introduction = introduction;
-    }
-
-    public void deleteAccount() {
-        this.isDeleted = true;
-    }
-
-    public void reSignUp() {
-        this.isDeleted = false;
     }
 
     public void updateNewUploadPush(boolean newUploadPush) {

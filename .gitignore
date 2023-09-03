@@ -41,3 +41,6 @@ application.yml
 .DS_Store
 firebase-key.json
 data.sql
+
+#### docs ####
+!**/src/main/resources/static/docs/
