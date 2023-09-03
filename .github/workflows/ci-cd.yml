@@ -27,16 +27,16 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
 
-    # # Gradle 패키지 캐시
-    # - name: Cache Gradle packages
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: |
-    #          ~/.gradle/caches
-    #          ~/.gradle/wrapper
-    #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-    #     restore-keys: |
-    #           ${{ runner.os }}-gradle-
+    # Gradle 패키지 캐시
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+             ~/.gradle/caches
+             ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+              ${{ runner.os }}-gradle-
 
    # 설정 파일 생성
     - run: |
@@ -74,18 +74,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       working-directory: ${{ env.working-directory }}
-
-    ##### 문서 생성 확인
-    - name: Check generated docs
-      run: |
-          echo "Listing generated docs:"
-          ls ${{ env.working-directory }}/build/docs/asciidoc
-
-    ##### JAR 파일에서 문서 확인
-    - name: Check docs in JAR
-      run: |
-          jar tf ./build/libs/backend-0.0.1-SNAPSHOT.jar 
-          
 
     # Gradle 캐시 정리
     - name: Cleanup Gradle Cache
