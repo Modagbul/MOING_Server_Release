@@ -8,6 +8,8 @@
 
 include::Overview.adoc[]
 
+include::Image-API.adoc[]
+
 include::Auth-API.adoc[]
 
 include::Mypage-API.adoc[]

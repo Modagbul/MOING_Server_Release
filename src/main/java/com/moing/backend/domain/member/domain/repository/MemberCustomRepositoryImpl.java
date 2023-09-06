@@ -17,14 +17,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public Optional<Member> findBySocialIdNotDeleted(String socialId) {
-        return Optional.ofNullable(queryFactory.selectFrom(member)
-                .where(member.socialId.eq(socialId))
-                .where(member.isDeleted.eq(false))
-                .fetchFirst());
-    }
-
-    @Override
     public boolean checkNickname(String nickname) {
         return queryFactory
                 .selectOne()

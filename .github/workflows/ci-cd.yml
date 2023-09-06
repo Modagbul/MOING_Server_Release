@@ -13,6 +13,8 @@ jobs:
     env:
       working-directory: ./
       APPLICATION: ${{ secrets.APPLICATION }}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      DATA_SQL: ${{ secrets.DATA_SQl }}
 
     steps:
     # 소스 코드 체크아웃
@@ -36,13 +38,16 @@ jobs:
         restore-keys: |
               ${{ runner.os }}-gradle-
 
-    # 설정 파일 생성
+   # 설정 파일 생성
     - run: |
+          mkdir ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml 
           echo "${{env.APPLICATION}}" > ./application.yml
           touch ./firebase-key.json
           echo "${{env.GOOGLE_APPLICATION_CREDENTIALS}}" | base64 --decode > ./firebase-key.json
+          touch ./data.sql
+          echo "${{env.DATA_SQL}}" | base64 --decode > ./data.sql
 
     # 설정 파일을 작업공간에 저장
     - uses: actions/upload-artifact@v2
@@ -54,6 +59,11 @@ jobs:
       with:
         name: firebase-key.json
         path: ./src/main/resources/firebase-key.json
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: data.sql
+        path: ./src/main/resources/data.sql
 
     # gradlew 권한 설정
     - name: Grant execute permission for gradlew

@@ -13,4 +13,7 @@ public class SignUpRequest {
     @NotBlank(message = "nickName 을 입력해주세요.")
     @Size(min = 1, max = 10, message="nickName 은 최소 1개, 최대 10개의 문자만 입력 가능합니다.")
     private String nickName;
+
+    @NotBlank(message = "fcmToken 을 입력해주세요.")
+    private String fcmToken;
 }

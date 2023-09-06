@@ -1,5 +1,6 @@
 package com.moing.backend.domain.teamMember.domain.repository;
 
+import com.moing.backend.domain.team.domain.entity.QTeam;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,7 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .select(teamMember.member.memberId)
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId))
+                .where(teamMember.team.isDeleted.eq(false))
                 .fetch();
     }
 }

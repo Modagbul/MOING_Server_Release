@@ -41,6 +41,10 @@ application.yml
 application-local.yml
 .DS_Store
 firebase-key.json
-src/test/resources/
 
+src/test/resources/
 .jpb
+data.sql
+
+#### docs ####
+!**/src/main/resources/static/docs/
