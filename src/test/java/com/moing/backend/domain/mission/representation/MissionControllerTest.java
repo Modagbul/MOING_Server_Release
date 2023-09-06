@@ -65,6 +65,7 @@ public class MissionControllerTest extends CommonControllerTest {
         String body = objectMapper.writeValueAsString(input);
 
         MissionCreateRes output = MissionCreateRes.builder()
+                .missionId(1L)
                 .title("title")
                 .dueTo("dueTo")
                 .rule("rule")
@@ -109,6 +110,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("로그인을 했습니다"),
+                                        fieldWithPath("data.missionId").description("미션 아이디"),
                                         fieldWithPath("data.title").description("미션 제목"),
                                         fieldWithPath("data.dueTo").description("미션 마감 날짜"),
                                         fieldWithPath("data.rule").description("미션 규칙"),
@@ -140,6 +142,7 @@ public class MissionControllerTest extends CommonControllerTest {
         String body = objectMapper.writeValueAsString(input);
 
         MissionCreateRes output = MissionCreateRes.builder()
+                .missionId(1L)
                 .title("title")
                 .dueTo("dueTo")
                 .rule("rule")
@@ -186,6 +189,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("로그인을 했습니다"),
+                                        fieldWithPath("data.missionId").description("미션 아이디"),
                                         fieldWithPath("data.title").description("미션 제목"),
                                         fieldWithPath("data.dueTo").description("미션 마감 날짜"),
                                         fieldWithPath("data.rule").description("미션 규칙"),
