@@ -7,6 +7,8 @@ import lombok.Getter;
 @Builder
 public class MissionCreateRes {
 
+    private Long missionId;
+
     private String title;
     private String dueTo;
 

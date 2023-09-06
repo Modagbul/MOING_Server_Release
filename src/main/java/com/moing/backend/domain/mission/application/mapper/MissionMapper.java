@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Mapper
 public class MissionMapper {
 
-    public static Mission mapToMission(MissionReq missionReq, Member member, MissionType type) {
+    public static Mission mapToMission(MissionReq missionReq, Member member, MissionStatus status) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -29,7 +29,7 @@ public class MissionMapper {
                 .way(MissionWay.valueOf(missionReq.getWay()))
                 .type(MissionType.valueOf(missionReq.getType()))
                 .number(missionReq.getNumber())
-                .status(MissionStatus.valueOf(missionReq.getStatus()))
+                .status(status)
                 .build();
 
     }
@@ -38,6 +38,7 @@ public class MissionMapper {
 
 
         return MissionCreateRes.builder()
+                .missionId(mission.getId())
                 .title(mission.getTitle())
                 .dueTo(mission.getDueTo().toString())
                 .rule(mission.getRule())
@@ -45,6 +46,7 @@ public class MissionMapper {
                 .content(mission.getContent())
                 .type(mission.getType().name())
                 .status(mission.getStatus().name())
+                .number(mission.getNumber())
                 .build();
     }
 

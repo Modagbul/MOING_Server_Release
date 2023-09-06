@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MissionReadUseCase {
 
-    MissionQueryService missionQueryService;
-    MemberGetService memberGetService;
+    private final MissionQueryService missionQueryService;
+    private final MemberGetService memberGetService;
 
     public MissionReadRes getMission(String userSocialId, Long missionId) {
 

@@ -16,6 +16,5 @@ public class MissionReq {
 
     private String type;
     private String way;
-    private String status;
 
 }

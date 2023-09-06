@@ -5,9 +5,13 @@ import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.annotation.Mapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public class MissionArchiveMapper {
@@ -22,21 +26,21 @@ public class MissionArchiveMapper {
     }
 
     public static MissionArchiveRes mapToMissionArchiveRes(MissionArchive missionArchive) {
-        Mission mission = missionArchive.getMission();
-        Team team = mission.getTeam();
-
         return MissionArchiveRes.builder()
-                .title(mission.getTitle())
-                .status(mission.getStatus().name())
-                .dueTo(mission.getDueTo().toString())
-                .totalPerson(10)
-                .donePerson(mission.getMissionArchiveList().size())
-                .rule(mission.getRule())
-                .content(mission.getContent())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
                 .build();
+    }
 
+
+    public static PersonalArchive mapToPersonalArchive(MissionArchive missionArchive) {
+        Member member = missionArchive.getMember();
+        return PersonalArchive.builder()
+                .nickname(member.getNickName())
+                .profileImg(member.getProfileImage())
+                .archive(missionArchive.getArchive())
+                .createdDate(missionArchive.getCreatedDate().toString())
+                .build();
     }
 
 

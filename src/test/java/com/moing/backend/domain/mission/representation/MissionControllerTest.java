@@ -75,7 +75,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .way("TEXT")
                 .build();
 
-        given(missionCreateUseCase.createMission(any(),any())).willReturn(output);
+        given(missionCreateUseCase.createMission(any(),any(),any())).willReturn(output);
 
         Long teamId = 2L;
         //when
@@ -150,7 +150,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .way("TEXT")
                 .build();
 
-        given(missionUpdateUseCase.updateMission(any(),any())).willReturn(output);
+        given(missionUpdateUseCase.updateMission(any(),any(),any())).willReturn(output);
         Long teamId = 2L;
         Long missionId = 2L;
 
@@ -216,7 +216,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .way("TEXT")
                 .build();
 
-        given(missionReadUseCase.getMission(any())).willReturn(output);
+        given(missionReadUseCase.getMission(any(),any())).willReturn(output);
 
         Long teamId = 2L;
         Long missionId = 1L;

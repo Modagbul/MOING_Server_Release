@@ -7,6 +7,7 @@ import com.moing.backend.domain.mission.application.dto.req.MissionReq;
 import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import com.moing.backend.domain.mission.application.mapper.MissionMapper;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
@@ -31,7 +32,7 @@ public class MissionCreateUseCase {
 
         // 소모임장 확인 로직 추가
 
-        Mission mission = MissionMapper.mapToMission(missionReq, member, MissionType.valueOf(missionReq.getType()));
+        Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
         // teamRepository 변경 예정
         mission.setTeam(teamRepository.findById(teamId).orElseThrow());
 
@@ -40,6 +41,5 @@ public class MissionCreateUseCase {
         return MissionMapper.mapToMissionCreateRes(mission);
 
     }
-
 
 }

@@ -36,4 +36,8 @@ public class MissionArchiveQueryService {
             return Boolean.FALSE;
         }
     }
+
+    public MissionArchive findMyArchive(Long memberId, Long missionId) {
+        return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
 }

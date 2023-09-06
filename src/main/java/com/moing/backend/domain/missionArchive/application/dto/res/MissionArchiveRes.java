@@ -4,29 +4,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
 public class MissionArchiveRes {
 
-    private String title;
-    private String status;
-    private String dueTo;
-
-    private int totalPerson;
-    private int donePerson;
-
-
-    private String rule;
-    private String content;
-
     private String archive;
 
     private String createdDate;
 
+    private List<PersonalArchive> donePersonalArchives;
 
-
-
-
-
+    public void setPersonalArchives(List<PersonalArchive> done) {
+        this.donePersonalArchives = done;
+    }
 }

@@ -10,6 +10,7 @@ import com.moing.backend.domain.mission.domain.service.MissionDeleteService;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
@@ -20,6 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper.mapToPersonalArchive;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,10 +34,13 @@ public class MissionArchiveCreateUseCase {
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
     private final MissionArchiveDeleteService missionArchiveDeleteService;
+
     private final MissionQueryService missionQueryService;
+
     private final MemberGetService memberGetService;
 
-    public MissionArchiveRes createArchiveCreate(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
+    // 미션 인증 및 재인증 (수정하기도 포함됨)
+    public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
@@ -59,10 +68,15 @@ public class MissionArchiveCreateUseCase {
     public  MissionArchiveRes saveArchive(Mission mission,MissionArchiveReq missionReq,Member member) {
         MissionArchive save = missionArchiveSaveService.save(MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission));
 
-        if (mission.getMissionArchiveList().size() == 3) {
+        // 미션 완료 처리
+        if (mission.getMissionArchiveList().size() == 3-1) {
             mission.setStatus(MissionStatus.DONE);
         }
+
         return MissionArchiveMapper.mapToMissionArchiveRes(save);
+
     }
+
+
 
 }
