@@ -33,4 +33,12 @@ public class TeamController {
                                                                           @Valid @RequestBody CreateTeamRequest createTeamRequest) {
         return ResponseEntity.ok(SuccessResponse.create(CREATE_TEAM_SUCCESS.getMessage(), this.createTeamService.createTeam(createTeamRequest,user.getSocialId())));
     }
+
+    /**
+     * 소모임 생성 (only 개설만)
+     * [POST] api/team
+     * 작성자 : 김민수
+     */
+
+
 }
