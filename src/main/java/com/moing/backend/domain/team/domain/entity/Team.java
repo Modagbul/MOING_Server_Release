@@ -57,6 +57,9 @@ public class Team extends BaseTimeEntity {
 
     private LocalDateTime deletionTime;
 
+    private Integer numOfMember; //반정규화
+    private Integer levelOfFire;
+
     public static Team createTeam(CreateTeamRequest createTeamRequest, Member member) {
         return Team.builder()
                 .category(Enum.valueOf(Category.class, createTeamRequest.getCategory()))
@@ -66,6 +69,8 @@ public class Team extends BaseTimeEntity {
                 .profileImgUrl(createTeamRequest.getProfileImgUrl())
                 .approvalStatus(ApprovalStatus.NO_CONFIRMATION)
                 .leaderId(member.getMemberId())
+                .numOfMember(0)
+                .levelOfFire(1)
                 .build();
     }
 
@@ -87,5 +92,9 @@ public class Team extends BaseTimeEntity {
     public void deleteTeam() {
         this.isDeleted = true;
         this.deletionTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+    }
+
+    public void addTeamMember(){
+        numOfMember++;
     }
 }

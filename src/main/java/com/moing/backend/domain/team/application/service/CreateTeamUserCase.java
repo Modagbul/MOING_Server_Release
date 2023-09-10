@@ -6,10 +6,8 @@ import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamSaveService;
-import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberSaveService;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,7 +25,9 @@ public class CreateTeamUserCase {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team=Team.createTeam(createTeamRequest, member);
         teamSaveService.saveTeam(team);
-        teamMemberSaveService.saveTeamMember(team, member);
+        teamMemberSaveService.addTeamMember(team, member);
+        //지워야 함 (테스트 용)
+        team.approveTeam();
         return new CreateTeamResponse(team.getTeamId());
     }
 }
