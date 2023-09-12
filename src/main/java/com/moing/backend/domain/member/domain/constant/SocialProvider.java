@@ -6,5 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum SocialProvider {
-    GOOGLE, NAVER, APPLE, KAKAO;
+    GOOGLE, APPLE, KAKAO;
 }

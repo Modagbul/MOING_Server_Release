@@ -31,7 +31,9 @@ public class TeamMember extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    //==연관관계 메서드==//
+    private boolean isDeleted;     //소모임 삭제여부, 마이페이지에서는 상관 없이 모두 조회
+
+    //==연관관계 메서드 ==//
     public void updateTeam(Team team){
         this.team=team;
     }

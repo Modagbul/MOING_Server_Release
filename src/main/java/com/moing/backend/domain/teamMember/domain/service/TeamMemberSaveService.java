@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TeamMemberSaveService {
     private final TeamMemberRepository teamMemberRepository;
-    public void saveTeamMember(Team team, Member member){
+    public void addTeamMember(Team team, Member member){
         TeamMember teamMember=new TeamMember();
         teamMember.updateMember(member);
         teamMember.updateTeam(team);
+        team.addTeamMember();
         this.teamMemberRepository.save(teamMember);
     }
 }

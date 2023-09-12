@@ -31,8 +31,6 @@ class OAuth2Attribute {
                 return ofGoogle(attributeKey, attributes);
             case "kakao":
                 return ofKakao("id", attributes);
-            case "naver":
-                return ofNaver("id", attributes);
             case "apple":
                 return ofApple("id", attributes);
             default:
@@ -73,27 +71,6 @@ class OAuth2Attribute {
                 .build();
 
         oAuth2Attribute.adaptKakaoResponse();
-
-        return oAuth2Attribute;
-    }
-
-    private static OAuth2Attribute ofNaver(String attributeKey,
-                                           Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-
-        System.out.println(response);
-
-        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.builder()
-                .socialId(SocialProvider.NAVER + "@" + response.get(attributeKey))
-                .provider(SocialProvider.NAVER)
-                .name((String) response.get("nickname"))
-                .nickname((String) response.get("nickname"))
-                .email((String) response.get("email"))
-                .gender((String) response.get("gender"))
-                .ageRange((String) response.get("age"))
-                .build();
-
-        oAuth2Attribute.adaptNaverResponse();
 
         return oAuth2Attribute;
     }

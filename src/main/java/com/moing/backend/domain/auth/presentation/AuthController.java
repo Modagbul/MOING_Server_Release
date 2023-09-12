@@ -39,8 +39,8 @@ public class AuthController {
     private final CheckNicknameUserCase checkNicknameService;
 
     /**
-     * 소셜 로그인 (애플/ 카카오)
-     * [POST] api/auth/signIn/kakao||apple
+     * 소셜 로그인 (애플/ 카카오/구글)
+     * [POST] api/auth/signIn/kakao||apple||google
      * 작성자 : 김민수
      */
     @PostMapping("/signIn/{provider}")

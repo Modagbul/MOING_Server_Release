@@ -215,6 +215,92 @@ class AuthControllerTest extends CommonControllerTest {
                 );
     }
 
+    @Test
+    public void GOOGLE_소셜_로그인_회원가입_전() throws Exception {
+        //given
+        SignInRequest input = SignInRequest.builder()
+                .token("APPLE_IDENTITY_TOKEN")
+                .build();
+
+        String body = objectMapper.writeValueAsString(input);
+
+        SignInResponse output = SignInResponse.builder()
+                .accessToken("SERVER_ACCESS_TOKEN")
+                .refreshToken("SERVER_REFRESH_TOKEN")
+                .registrationStatus(false)
+                .build();
+
+        given(authService.signIn(any(), any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/api/auth/signIn/google")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+        );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestFields(
+                                        fieldWithPath("token").description("구글 아이디 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("로그인을 했습니다"),
+                                        fieldWithPath("data.accessToken").description("서버 접근용 Access Token"),
+                                        fieldWithPath("data.refreshToken").description("서버 접근용 Refresh Token"),
+                                        fieldWithPath("data.registrationStatus").description("회원가입 여부 :false")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void GOOGLE_소셜_로그인_회원가입_후() throws Exception {
+        //given
+        SignInRequest input = SignInRequest.builder()
+                .token("APPLE_IDENTITY_TOKEN")
+                .build();
+
+        String body = objectMapper.writeValueAsString(input);
+
+        SignInResponse output = SignInResponse.builder()
+                .accessToken("SERVER_ACCESS_TOKEN")
+                .refreshToken("SERVER_REFRESH_TOKEN")
+                .registrationStatus(true)
+                .build();
+
+        given(authService.signIn(any(), any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/api/auth/signIn/google")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+        );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestFields(
+                                        fieldWithPath("token").description("구글 아이디 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("로그인을 했습니다"),
+                                        fieldWithPath("data.accessToken").description("서버 접근용 Access Token"),
+                                        fieldWithPath("data.refreshToken").description("서버 접근용 Refresh Token"),
+                                        fieldWithPath("data.registrationStatus").description("회원가입 여부 :true")
+                                )
+                        )
+                );
+    }
+
 
     @Test
     public void sign_up() throws Exception {

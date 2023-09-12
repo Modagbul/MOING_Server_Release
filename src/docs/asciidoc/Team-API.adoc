@@ -27,3 +27,7 @@ operation::team-controller-test/create_team[snippets='http-request,request-field
 | `ETC`
 | 그외 자기계발
 |===
+
+[[Team-소모임-조회]]
+=== Team 소모임 조회
+operation::team-controller-test/get_team[snippets='http-request,http-response,response-fields']
