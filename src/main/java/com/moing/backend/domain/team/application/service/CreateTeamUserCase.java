@@ -26,8 +26,9 @@ public class CreateTeamUserCase {
         Team team=Team.createTeam(createTeamRequest, member);
         teamSaveService.saveTeam(team);
         teamMemberSaveService.addTeamMember(team, member);
-        //지워야 함 (테스트 용)
+        //====지워야 함 (테스트 용)=====
         team.approveTeam();
+        //====지워야 함 (테스트 용)=====
         return new CreateTeamResponse(team.getTeamId());
     }
 }
