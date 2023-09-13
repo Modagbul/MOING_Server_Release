@@ -15,7 +15,7 @@ public enum ErrorCode {
 
     //유저 관련 에러 코드
     NOT_FOUND_BY_SOCIAL_ID_ERROR( "U0001",  "해당 socialId인 유저가 존재하지 않습니다."),
-    ACCOUNT_ALREADY_EXIST("AU0001", "이미 다른 소셜 플랫폼으로 가입하였습니다."),
+    ACCOUNT_ALREADY_EXIST("AU0001", "해당 email로 다른 소셜 플랫폼으로 가입하였습니다."),
     TOKEN_INVALID_ERROR("AU0002", "입력 토큰이 유효하지 않습니다."),
     APPID_INVALID_ERROR("AU0003", "appId가 유효하지 않습니다"),
     NICKNAME_DUPLICATION_ERROR("AU0003", "닉네임이 중복됩니다."),

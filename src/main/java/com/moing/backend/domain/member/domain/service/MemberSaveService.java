@@ -16,7 +16,7 @@ public class MemberSaveService {
     private final MemberRepository memberRepository;
 
     public Member saveMember(Member member) {
-        Optional<Member>findMember=memberRepository.findBySocialId(member.getSocialId());
+        Optional<Member>findMember=memberRepository.findByEmail(member.getEmail());
         if(findMember.isEmpty()){
             return memberRepository.save(member);
         } else {
