@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 @NoArgsConstructor
 public class TeamBlock {
     private Long teamId;
-    private Long duration; //걸린시간(단위:hour)
+    private Long duration; //걸린시간(단위:날짜)
     private Integer levelOfFire; //불꽃 레벨
     private String teamName;
     private Integer numOfMember;
@@ -41,7 +40,7 @@ public class TeamBlock {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
         LocalDateTime currentSeoulTime = LocalDateTime.now(seoulZoneId).withSecond(0).withNano(0);
         LocalDateTime adjustedApprovalTime = approvalTime.withSecond(0).withNano(0);
-        return ChronoUnit.HOURS.between(adjustedApprovalTime, currentSeoulTime);
+        return ChronoUnit.DAYS.between(adjustedApprovalTime, currentSeoulTime);
     }
 }
 

@@ -38,7 +38,9 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
                 .on(teamMember.member.memberId.eq(memberId))
-                .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL))
+                .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL)) //승인 되었고
+                .where(team.isDeleted.eq(false)) //강제종료되었는지
+                .where(teamMember.isDeleted.eq(false)) //탈퇴했는지
                 .orderBy(team.approvalTime.asc())
                 .fetch();
     }

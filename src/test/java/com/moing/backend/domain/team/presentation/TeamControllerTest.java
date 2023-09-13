@@ -6,6 +6,7 @@ import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.TeamBlock;
 import com.moing.backend.domain.team.application.service.CreateTeamUserCase;
+import com.moing.backend.domain.team.application.service.DisbandTeamUserCase;
 import com.moing.backend.domain.team.application.service.GetTeamUserCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +32,9 @@ public class TeamControllerTest extends CommonControllerTest {
     private CreateTeamUserCase createTeamService;
     @MockBean
     private GetTeamUserCase getTeamUserCase;
+
+    @MockBean
+    private DisbandTeamUserCase disbandTeamUserCase;
 
     @Test
     public void create_team() throws Exception {
