@@ -31,7 +31,7 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     private Mission mission;
 
     @Enumerated(value = EnumType.STRING)
-    private MissionStatus status;
+    private MissionArchiveStatus status;
 
     private String archive; //링크, 글, 사진 뭐든 가능
 
