@@ -29,7 +29,7 @@ public class SingleMissionArchiveReadUseCase {
     private final MissionArchiveQueryService missionArchiveQueryService;
 
 
-    // 나의 인증 목록
+    // 미션 인증 조회
     public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
         List<MissionArchive> myArchives = getArchive(userSocialId, missionId);
 
@@ -39,7 +39,7 @@ public class SingleMissionArchiveReadUseCase {
         return archiveRes;
     }
 
-    // 팀원들 인증 목록
+    // 모임원 미션 인증 목록 조회
     public List<PersonalArchive> getPersonalArchive(String userSocialId, Long missionId) {
         Mission mission = missionQueryService.findMissionById(missionId);
 
