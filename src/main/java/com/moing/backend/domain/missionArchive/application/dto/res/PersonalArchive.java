@@ -15,6 +15,6 @@ public class PersonalArchive {
     private String archive;
     private String createdDate;
 
-    private int likes;
+    private int hearts;
 
 }

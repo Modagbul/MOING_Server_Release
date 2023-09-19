@@ -31,32 +31,28 @@ public class SingleMissionArchiveReadUseCase {
 
     // 미션 인증 조회
     public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
-        List<MissionArchive> myArchives = getArchive(userSocialId, missionId);
 
         List<MissionArchiveRes> archiveRes = new ArrayList<>();
-        myArchives.forEach(myArchive -> archiveRes.add(MissionArchiveMapper.mapToMissionArchiveRes(myArchive)));
+
+        Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Mission mission = missionQueryService.findMissionById(missionId);
+
+        missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId)
+                .forEach(myArchive -> archiveRes.add(MissionArchiveMapper.mapToMissionArchiveRes(myArchive)));
 
         return archiveRes;
     }
 
-    // 모임원 미션 인증 목록 조회
-    public List<PersonalArchive> getPersonalArchive(String userSocialId, Long missionId) {
+    // 모두의 미션 인증 목록 조회
+    public List<PersonalArchive> getPersonalArchive(Long missionId) {
+
+        List<PersonalArchive> personalArchives = new ArrayList<>();
+
         Mission mission = missionQueryService.findMissionById(missionId);
-
-        List<PersonalArchive> done = new ArrayList<>();
-
         mission.getMissionArchiveList()
-                .forEach(missionArchive1 -> done.add(mapToPersonalArchive(missionArchive1)));
+                .forEach(missionArchive1 -> personalArchives.add(mapToPersonalArchive(missionArchive1)));
 
-        return done;
-    }
-
-    // memberId, missionId로 archive 꺼내기
-    public List<MissionArchive> getArchive(String userSocialId, Long missionId) {
-        Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Mission mission = missionQueryService.findMissionById(missionId);
-
-        return missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId);
+        return personalArchives;
     }
 
 

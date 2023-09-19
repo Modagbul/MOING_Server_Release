@@ -31,6 +31,7 @@ public class MissionArchiveMapper {
         return MissionArchiveRes.builder()
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
+                .hearts(missionArchive.getHearts())
                 .build();
     }
 
@@ -42,6 +43,7 @@ public class MissionArchiveMapper {
                 .profileImg(member.getProfileImage())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
+                .hearts(missionArchive.getHearts())
                 .build();
     }
 

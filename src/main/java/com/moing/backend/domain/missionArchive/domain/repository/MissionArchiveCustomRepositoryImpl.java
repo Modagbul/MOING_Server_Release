@@ -34,6 +34,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(missionArchive)
                 .from(missionArchive)
                 .where(
+                        missionArchive.mission.status.eq(MissionStatus.ONGOING),
                         missionArchive.mission.id.in(missionIds),
                         missionArchive.mission.status.eq(MissionStatus.valueOf(status)),
                         missionArchive.status.eq(MissionArchiveStatus.valueOf(archiveStatus))
@@ -50,7 +51,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         if(orderCondition.equals(OrderCondition.DUETO)){
             orderSpecifiers.add(new OrderSpecifier(Order.DESC, missionArchive.mission.dueTo));
         }else if(orderCondition.equals(OrderCondition.CREATED)){
-            orderSpecifiers.add(new OrderSpecifier(Order.DESC, missionArchive.createdDate));
+            orderSpecifiers.add(new OrderSpecifier(Order.ASC, missionArchive.createdDate));
         }
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }

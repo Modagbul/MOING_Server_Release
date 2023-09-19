@@ -79,7 +79,7 @@ public class MissionArchiveController {
                                                                                   @PathVariable("teamId") Long teamId,
                                                                                   @PathVariable("missionId") Long missionId,
                                                                                   @RequestBody MissionArchiveReq missionArchiveReq) {
-        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(), missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(missionId)));
     }
 
 }

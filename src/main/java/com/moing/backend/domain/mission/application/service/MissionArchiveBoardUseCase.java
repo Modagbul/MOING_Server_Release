@@ -40,7 +40,7 @@ public class MissionArchiveBoardUseCase {
         Team team = teamRepository.findById(teamId).orElseThrow();
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        // 인증상태 가져올 미션 배열
+        // 인증 상태 가져올 미션들
         List<Long> missionIds = new ArrayList<>();
         team.getMissions().forEach(mission -> missionIds.add(mission.getId()));
 

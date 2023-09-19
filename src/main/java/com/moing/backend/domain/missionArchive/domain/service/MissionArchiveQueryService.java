@@ -27,7 +27,7 @@ public class MissionArchiveQueryService {
 
     private final MissionRepository missionRepository;
     private final MissionArchiveRepository missionArchiveRepository;
-    private final MissionArchiveCustomRepository missionArchiveCustomRepository
+    private final MissionArchiveCustomRepository missionArchiveCustomRepository;
 
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow();

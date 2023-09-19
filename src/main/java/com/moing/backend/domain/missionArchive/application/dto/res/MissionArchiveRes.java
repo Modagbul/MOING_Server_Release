@@ -15,9 +15,6 @@ public class MissionArchiveRes {
 
     private String createdDate;
 
-    private List<PersonalArchive> donePersonalArchives;
+    private int hearts;
 
-    public void setPersonalArchives(List<PersonalArchive> done) {
-        this.donePersonalArchives = done;
-    }
 }
