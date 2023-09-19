@@ -21,7 +21,7 @@ import static com.moing.backend.domain.missionArchive.application.mapper.Mission
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MissionArchiveReadUseCase {
+public class SingleMissionArchiveReadUseCase {
 
     //미션 아치브 읽어오기
     private final MemberGetService memberGetService;

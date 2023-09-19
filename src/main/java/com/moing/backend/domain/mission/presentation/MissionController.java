@@ -20,7 +20,7 @@ import static com.moing.backend.domain.mission.presentation.constant.MissionResp
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/mission")
+@RequestMapping("/api/{teamId}/missions")
 public class MissionController {
 
 

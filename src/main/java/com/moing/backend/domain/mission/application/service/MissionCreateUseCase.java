@@ -10,6 +10,8 @@ import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
+import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
+import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
 import com.moing.backend.global.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +29,23 @@ public class MissionCreateUseCase {
 
     public MissionCreateRes createMission(String userSocialId, Long teamId, MissionReq missionReq) {
 
-
         Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Team team = teamRepository.findById(teamId).orElseThrow();
 
         // 소모임장 확인 로직 추가
+        if (member.getMemberId() == team.getLeaderId()) {
+            Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.ONGOING);
+            // teamRepository 변경 예정
+            mission.setTeam(team);
+            missionSaveService.save(mission);
 
-        Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
-        // teamRepository 변경 예정
-        mission.setTeam(teamRepository.findById(teamId).orElseThrow());
+            return MissionMapper.mapToMissionCreateRes(mission);
+        }
+        else{
+            throw new NoAccessCreateMission();
+        }
 
-        missionSaveService.save(mission);
 
-        return MissionMapper.mapToMissionCreateRes(mission);
 
     }
 
