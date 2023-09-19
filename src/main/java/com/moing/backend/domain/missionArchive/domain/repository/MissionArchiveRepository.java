@@ -24,7 +24,7 @@ public interface MissionArchiveRepository extends JpaRepository<MissionArchive, 
             "where m.mission.id IN :missionIds " +
             "and m.member.memberId =:memberId " +
             "and m.mission.status =:status " +
-            "and m.status =:archiveStatus")
+            "and m.status =:archiveStatus" )
     Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId (@Param("memberId") Long memberId,
                                                                                @Param("missionIds") List<Long> missionIds,
                                                                                @Param("status")String status,

@@ -4,8 +4,10 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveCustomRepository;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
+import com.moing.backend.domain.teamMember.domain.repository.OrderCondition;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ public class MissionArchiveQueryService {
 
     private final MissionRepository missionRepository;
     private final MissionArchiveRepository missionArchiveRepository;
+    private final MissionArchiveCustomRepository missionArchiveCustomRepository
 
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow();
@@ -45,27 +48,18 @@ public class MissionArchiveQueryService {
     }
 
     // team의 mission id 들 가져와서 나의 mission archive 리턴
+
+    /**
+     * mission.getTeam() 팀의 단일미션 미션 인증 보드
+     */
     public List<MissionArchive> findMySingleMissionArchives(Long memberId, List<Long> missionIds, MissionStatus missionStatus) {
         // INCOMPLETE
-        List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), INCOMPLETE.name())
+        List<MissionArchive> incompleteList = missionArchiveCustomRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), INCOMPLETE.name(), OrderCondition.DUETO)
                 .orElseThrow(NotFoundMissionArchiveException::new);
-        Collections.sort(incompleteList, new Comparator<MissionArchive>() {
-            @Override
-            public int compare(MissionArchive missionArchive1, MissionArchive missionArchive2) {
-                // missionArchive1의 dueTo와 missionArchive2의 dueTo를 비교하여 오름차순으로 정렬
-                return missionArchive1.getMission().getDueTo().compareTo(missionArchive2.getMission().getDueTo());
-            }
-        });
 
-        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), COMPLETE.name())
+        List<MissionArchive> completeList = missionArchiveCustomRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), COMPLETE.name(),OrderCondition.CREATED)
                 .orElseThrow(NotFoundMissionArchiveException::new);
-        Collections.sort(completeList, new Comparator<MissionArchive>() {
-            @Override
-            public int compare(MissionArchive missionArchive1, MissionArchive missionArchive2) {
-                // missionArchive1의 dueTo와 missionArchive2의 dueTo를 비교하여 오름차순으로 정렬
-                return missionArchive2.getMission().getDueTo().compareTo(missionArchive1.getMission().getDueTo());
-            }
-        });
+
         incompleteList.addAll(completeList);
         return incompleteList;
     }
