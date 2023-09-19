@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRe
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -29,6 +30,7 @@ public class MissionArchiveMapper {
 
     public static MissionArchiveRes mapToMissionArchiveRes(MissionArchive missionArchive) {
         return MissionArchiveRes.builder()
+                .archiveId(missionArchive.getId())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
                 .hearts(missionArchive.getHearts())
@@ -39,6 +41,7 @@ public class MissionArchiveMapper {
     public static PersonalArchive mapToPersonalArchive(MissionArchive missionArchive) {
         Member member = missionArchive.getMember();
         return PersonalArchive.builder()
+                .archiveId(missionArchive.getId())
                 .nickname(member.getNickName())
                 .profileImg(member.getProfileImage())
                 .archive(missionArchive.getArchive())
@@ -68,6 +71,14 @@ public class MissionArchiveMapper {
         );
 
         return singleMissionBoardResList;
+    }
+
+    public static MissionArchiveHeartRes mapToMissionArchiveHeartRes(MissionArchive missionArchive,Boolean heartStatus) {
+        return MissionArchiveHeartRes.builder()
+                .archiveId(missionArchive.getId())
+                .hearts(missionArchive.getHearts())
+                .heartStatus(heartStatus.toString())
+                .build();
     }
 
 

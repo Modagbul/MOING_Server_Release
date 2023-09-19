@@ -1,9 +1,12 @@
 package com.moing.backend.domain.missionArchive.presentation;
 
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
+import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
+import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveUpdateUseCase;
 import com.moing.backend.domain.missionArchive.application.service.SingleMissionArchiveReadUseCase;
 import com.moing.backend.global.config.security.dto.User;
@@ -26,6 +29,7 @@ public class MissionArchiveController {
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;
     private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     private final SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private final MissionArchiveHeartUseCase missionArchiveHeartUseCase;
 
     /**
      * 미션 인증 하기
@@ -81,5 +85,15 @@ public class MissionArchiveController {
                                                                                   @RequestBody MissionArchiveReq missionArchiveReq) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(missionId)));
     }
+
+    @PostMapping("/hearts")
+    public ResponseEntity<SuccessResponse<MissionArchiveHeartRes>> pushHeart(@AuthenticationPrincipal User user,
+                                                                             @PathVariable("teamId") Long teamId,
+                                                                             @PathVariable("missionId") Long missionId,
+                                                                             @RequestBody MissionArchiveHeartReq missionArchiveHeartReq) {
+        return ResponseEntity.ok(SuccessResponse.create(HEART_UPDATE_SUCCESS.getMessage(), this.missionArchiveHeartUseCase.pushHeart(missionArchiveHeartReq)));
+    }
+
+
 
 }

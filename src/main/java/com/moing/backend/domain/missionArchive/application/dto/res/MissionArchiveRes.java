@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class MissionArchiveRes {
 
+    private Long archiveId;
     private String archive;
 
     private String createdDate;

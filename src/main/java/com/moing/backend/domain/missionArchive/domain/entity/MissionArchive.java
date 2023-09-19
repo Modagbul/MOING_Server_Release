@@ -39,8 +39,12 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     private int hearts;
 
 
-    public int addHearts() {
-        return this.hearts++;
+    public int updateHearts(Boolean status) {
+        if(status)
+            return this.hearts += 1;
+        else
+            return this.hearts -= 1;
     }
+
 
 }

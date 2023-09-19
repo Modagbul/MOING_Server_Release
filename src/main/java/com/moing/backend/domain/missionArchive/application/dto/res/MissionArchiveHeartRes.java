@@ -1,21 +1,16 @@
 package com.moing.backend.domain.missionArchive.application.dto.res;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class PersonalArchive {
-
+public class MissionArchiveHeartRes {
     private Long archiveId;
-    private String nickname;
-    private String profileImg;
-
-    private String archive;
-    private String createdDate;
-
+    private String heartStatus;
     private int hearts;
-
 }

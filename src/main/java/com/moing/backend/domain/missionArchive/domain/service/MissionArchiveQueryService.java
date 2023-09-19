@@ -29,8 +29,12 @@ public class MissionArchiveQueryService {
     private final MissionArchiveRepository missionArchiveRepository;
     private final MissionArchiveCustomRepository missionArchiveCustomRepository;
 
+    public MissionArchive findByMissionArchiveId(Long missionArchiveId) {
+        return missionArchiveRepository.findById(missionArchiveId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
+
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
-        return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow();
+        return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
     public MissionArchive findByMemberId(Long memberId) {
