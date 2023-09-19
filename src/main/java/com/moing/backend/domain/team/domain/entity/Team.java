@@ -1,6 +1,7 @@
 package com.moing.backend.domain.team.domain.entity;
 
 import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.constant.Category;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -56,6 +59,9 @@ public class Team extends BaseTimeEntity {
     private boolean isDeleted;
 
     private LocalDateTime deletionTime;
+
+    @OneToMany(mappedBy = "team")
+    List<Mission> missions = new ArrayList<>();
 
     public static Team createTeam(CreateTeamRequest createTeamRequest, Member member) {
         return Team.builder()
