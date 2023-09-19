@@ -32,6 +32,9 @@ public class MissionArchiveBoardUseCase {
     private final MemberGetService memberGetService;
     private final TeamRepository teamRepository;
 
+    /*
+     * 팀별 미션 보드 중 진행중인 단일 미션(한 번 인증)
+     */
     public List<SingleMissionBoardRes> getActiveSingleMissions(Long teamId, String memberId,Long missionId) {
 
         Team team = teamRepository.findById(teamId).orElseThrow();
@@ -41,12 +44,8 @@ public class MissionArchiveBoardUseCase {
         List<Long> missionIds = new ArrayList<>();
         team.getMissions().forEach(mission -> missionIds.add(mission.getId()));
 
-        List<SingleMissionBoardRes> singleMissionBoardResList = new ArrayList<>();
-        missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), missionIds, MissionStatus.ONGOING).forEach(
-                missionArchive -> singleMissionBoardResList.add(MissionArchiveMapper.mapToSingleMissionBoardRes(missionArchive))
-        );
-
-        return singleMissionBoardResList;
+        List<MissionArchive> mySingleMissionArchives = missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), missionIds, MissionStatus.ONGOING);
+        return MissionArchiveMapper.mapToSingleMissionBoardResList(mySingleMissionArchives);
 
     }
 

@@ -59,6 +59,15 @@ public class MissionArchiveMapper {
 
     }
 
+    public static List<SingleMissionBoardRes> mapToSingleMissionBoardResList( List<MissionArchive> missionArchives) {
+        List<SingleMissionBoardRes> singleMissionBoardResList = new ArrayList<>();
+        missionArchives.forEach(
+                missionArchive -> singleMissionBoardResList.add(MissionArchiveMapper.mapToSingleMissionBoardRes(missionArchive))
+        );
+
+        return singleMissionBoardResList;
+    }
+
 
 
 }
