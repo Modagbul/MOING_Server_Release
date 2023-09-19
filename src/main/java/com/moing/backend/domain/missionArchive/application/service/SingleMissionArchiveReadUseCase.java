@@ -30,9 +30,13 @@ public class SingleMissionArchiveReadUseCase {
 
 
     // 나의 인증 목록
-    public MissionArchiveRes getMyArchive(String userSocialId, Long missionId) {
-        MissionArchive myArchive = getArchive(userSocialId, missionId);
-        return MissionArchiveMapper.mapToMissionArchiveRes(myArchive);
+    public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
+        List<MissionArchive> myArchives = getArchive(userSocialId, missionId);
+
+        List<MissionArchiveRes> archiveRes = new ArrayList<>();
+        myArchives.forEach(myArchive -> archiveRes.add(MissionArchiveMapper.mapToMissionArchiveRes(myArchive)));
+
+        return archiveRes;
     }
 
     // 팀원들 인증 목록
@@ -48,7 +52,7 @@ public class SingleMissionArchiveReadUseCase {
     }
 
     // memberId, missionId로 archive 꺼내기
-    public MissionArchive getArchive(String userSocialId, Long missionId) {
+    public List<MissionArchive> getArchive(String userSocialId, Long missionId) {
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
 
