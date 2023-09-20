@@ -18,6 +18,6 @@ public class GetTeamUserCase {
 
     public GetTeamResponse getTeam(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
-        return teamGetService.getTeam(member);
+        return teamGetService.getTeamByMember(member);
     }
 }

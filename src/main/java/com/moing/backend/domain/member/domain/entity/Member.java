@@ -56,7 +56,7 @@ public class Member extends BaseTimeEntity {
 
     // 추가정보
     @Convert(converter = AesConverter.class)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName; //없으면 undef
 
     @Column(nullable = false)
@@ -152,6 +152,20 @@ public class Member extends BaseTimeEntity {
         this.isNewUploadPush = allPush;
         this.isRemindPush = allPush;
         this.isFirePush = allPush;
+    }
+
+    public Member(String ageRange, String email, String fcmToken, String gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
+        this.ageRange = ageRange;
+        this.email = email;
+        this.fcmToken = fcmToken;
+        this.gender = gender;
+        this.introduction = introduction;
+        this.nickName = nickName;
+        this.profileImage = profileImage;
+        this.provider = provider;
+        this.registrationStatus = registrationStatus;
+        this.role = role;
+        this.socialId = socialId;
     }
 
 }

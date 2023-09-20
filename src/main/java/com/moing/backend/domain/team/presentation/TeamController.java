@@ -7,9 +7,11 @@ import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.service.CreateTeamUserCase;
 import com.moing.backend.domain.team.application.service.DisbandTeamUserCase;
 import com.moing.backend.domain.team.application.service.GetTeamUserCase;
+import com.moing.backend.domain.team.application.service.WithdrawTeamUserCase;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ public class TeamController {
     private final CreateTeamUserCase createTeamService;
     private final GetTeamUserCase getTeamUserCase;
     private final DisbandTeamUserCase disbandTeamUserCase;
+    private final WithdrawTeamUserCase withdrawTeamUserCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -48,7 +51,7 @@ public class TeamController {
     }
 
     /**
-     * 소모임 강제 종료 (소모임 권한)
+     * 소모임 강제 종료 (소모임장 권한)
      * [DELETE] api/team/{teamId}/disband
      * 작성자:김민수
      */
@@ -57,4 +60,16 @@ public class TeamController {
                                                                            @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(DISBAND_TEAM_SUCCESS.getMessage(), this.disbandTeamUserCase.disbandTeam(user.getSocialId(), teamId)));
     }
+
+    /**
+     * 소모임 탈퇴 (소모임원)
+     * [DELETE] api/team/{teamId}/withdraw
+     * 작성자: 김민수
+     */
+    @DeleteMapping("/{teamId}/withdraw")
+    public ResponseEntity<SuccessResponse<DeleteTeamResponse>> withdrawTeam(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId){
+        return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUserCase.withdrawTeam(user.getSocialId(),teamId)));
+    }
+
 }

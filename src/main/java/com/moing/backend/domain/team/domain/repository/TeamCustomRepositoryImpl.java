@@ -4,10 +4,12 @@ import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.TeamBlock;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
+import com.moing.backend.domain.team.domain.entity.Team;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
@@ -25,6 +27,14 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
         List<TeamBlock> teamBlocks = getTeamBlock(memberId);
         Integer numOfTeam = teamBlocks.size();
         return new GetTeamResponse(numOfTeam, teamBlocks);
+    }
+
+    @Override
+    public Optional<Team> findTeamByTeamId(Long teamId) {
+        return Optional.ofNullable(queryFactory.selectFrom(team)
+                .where(team.teamId.eq(teamId))
+                .where(team.isDeleted.eq(false))
+                .fetchOne());
     }
 
     private List<TeamBlock> getTeamBlock(Long memberId) {

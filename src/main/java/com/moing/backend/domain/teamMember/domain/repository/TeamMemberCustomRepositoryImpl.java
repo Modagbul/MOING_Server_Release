@@ -16,7 +16,7 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     }
 
     @Override
-    public List<Long> getMemberIdsByTeamId(Long teamId) {
+    public List<Long> findMemberIdsByTeamId(Long teamId) {
         return queryFactory
                 .select(teamMember.member.memberId)
                 .from(teamMember)
