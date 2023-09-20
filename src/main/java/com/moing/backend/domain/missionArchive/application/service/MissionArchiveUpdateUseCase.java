@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class MissionArchiveUpdateUseCase {
     private final IssuePresignedUrlUseCase getPresignedUrlUseCase;
 
 
-    // 미션 인증 및 재인증 (수정하기도 포함됨)
+    // 미션 재인증 (수정하기도 포함됨)
     public MissionArchiveRes updateArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
@@ -48,7 +50,10 @@ public class MissionArchiveUpdateUseCase {
 
         }
 
-        MissionArchive missionArchive = missionArchiveSaveService.save(MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission));
+        MissionArchive missionArchive = missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0);
+
+        missionArchive.updateArchive(missionReq);
+
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchive);
     }
 

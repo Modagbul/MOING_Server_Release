@@ -9,6 +9,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchi
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
+import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,27 +31,25 @@ public class SingleMissionArchiveReadUseCase {
 
 
     // 미션 인증 조회
-    public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
+    public MissionArchiveRes getMyArchive(String userSocialId, Long missionId) {
 
         List<MissionArchiveRes> archiveRes = new ArrayList<>();
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
 
-        missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId)
-                .forEach(myArchive -> archiveRes.add(MissionArchiveMapper.mapToMissionArchiveRes(myArchive)));
-
-        return archiveRes;
+        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0));
     }
 
     // 모두의 미션 인증 목록 조회
-    public List<PersonalArchive> getPersonalArchive(Long missionId) {
+    public List<PersonalArchive> getPersonalArchive(String userSocialId,Long missionId) {
 
         List<PersonalArchive> personalArchives = new ArrayList<>();
 
+        Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
-        mission.getMissionArchiveList()
-                .forEach(missionArchive1 -> personalArchives.add(mapToPersonalArchive(missionArchive1)));
+
+        MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(member.getMemberId(), missionId));
 
         return personalArchives;
     }

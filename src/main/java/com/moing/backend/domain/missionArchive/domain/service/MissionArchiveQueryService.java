@@ -7,6 +7,7 @@ import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatu
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveCustomRepository;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
+import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
 import com.moing.backend.domain.teamMember.domain.repository.OrderCondition;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
@@ -27,22 +28,33 @@ public class MissionArchiveQueryService {
 
     private final MissionRepository missionRepository;
     private final MissionArchiveRepository missionArchiveRepository;
-    private final MissionArchiveCustomRepository missionArchiveCustomRepository;
 
     public MissionArchive findByMissionArchiveId(Long missionArchiveId) {
         return missionArchiveRepository.findById(missionArchiveId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
-    public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
+    public MissionArchive findArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
+    public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
-    public MissionArchive findByMemberId(Long memberId) {
+        Optional<List<MissionArchive>> optional = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
+        if (optional.isPresent() && optional.get().size() == 0) {
+            throw new NotFoundMissionArchiveException();
+        } else {
+            return optional.get();
+        }
+    }
+    public List<MissionArchive> findOthersArchive(Long memberId, Long missionId) {
+        return missionArchiveRepository.findOthersArchives(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
+
+    public List<MissionArchive> findArchivesByMemberId(Long memberId) {
         return missionArchiveRepository.findByMemberId(memberId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
     public Boolean isDone(Long memberId, Long missionId) {
-        Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId);
+        Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
         if (byMemberId.isPresent()) {
             return Boolean.TRUE;
         }
@@ -58,10 +70,10 @@ public class MissionArchiveQueryService {
      */
     public List<MissionArchive> findMySingleMissionArchives(Long memberId, List<Long> missionIds, MissionStatus missionStatus) {
         // INCOMPLETE
-        List<MissionArchive> incompleteList = missionArchiveCustomRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), INCOMPLETE.name(), OrderCondition.DUETO)
+        List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), INCOMPLETE.name(), OrderCondition.DUETO)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
-        List<MissionArchive> completeList = missionArchiveCustomRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), COMPLETE.name(),OrderCondition.CREATED)
+        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), COMPLETE.name(),OrderCondition.CREATED)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
         incompleteList.addAll(completeList);

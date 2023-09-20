@@ -50,6 +50,14 @@ public class MissionArchiveMapper {
                 .build();
     }
 
+    public static List<PersonalArchive> mapToPersonalArchiveList(List<MissionArchive> missionArchiveList) {
+        List<PersonalArchive> personalArchiveList = new ArrayList<>();
+        missionArchiveList.forEach(
+                missionArchive -> personalArchiveList.add(MissionArchiveMapper.mapToPersonalArchive(missionArchive))
+        );
+        return personalArchiveList;
+    }
+
 
     public static SingleMissionBoardRes mapToSingleMissionBoardRes(MissionArchive missionArchive) {
         Member member = missionArchive.getMember();

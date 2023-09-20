@@ -48,6 +48,8 @@ public class MissionArchiveCreateUseCase {
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
+
+        // missionArchive 2개 이상일 때 예외처리 필요
         MissionArchive missionArchive = missionArchiveSaveService.save(MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission));
 
         if (isDoneSingleMission(mission)) {

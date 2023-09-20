@@ -11,6 +11,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Param;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
 
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
+
     private final JPAQueryFactory queryFactory;
 
     public MissionArchiveCustomRepositoryImpl(EntityManager em) {
@@ -54,6 +56,24 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
             orderSpecifiers.add(new OrderSpecifier(Order.ASC, missionArchive.createdDate));
         }
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
+    }
+
+
+//    @Query("select m from MissionArchive as m where m.mission.id = :missionId and m.member.memberId =:memberId")
+//    Optional<List<MissionArchive>> findArchivesByMissionIdAndMemberId(@Param("memberId") Long memberId, @Param("missionId")Long missionId);
+
+    @Override
+    public Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) {
+
+        return Optional.ofNullable(queryFactory
+                .select(missionArchive)
+                .from(missionArchive)
+                .where(
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.ne(memberId)
+                )
+                .fetch()
+        );
     }
 
 
