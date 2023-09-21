@@ -6,10 +6,7 @@ import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.TeamBlock;
-import com.moing.backend.domain.team.application.service.CreateTeamUserCase;
-import com.moing.backend.domain.team.application.service.DisbandTeamUserCase;
-import com.moing.backend.domain.team.application.service.GetTeamUserCase;
-import com.moing.backend.domain.team.application.service.WithdrawTeamUserCase;
+import com.moing.backend.domain.team.application.service.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,6 +36,8 @@ public class TeamControllerTest extends CommonControllerTest {
     private DisbandTeamUserCase disbandTeamUserCase;
     @MockBean
     private WithdrawTeamUserCase withdrawTeamUserCase;
+    @MockBean
+    private SignInTeamUserCase signInTeamUserCase;
 
     @Test
     public void create_team() throws Exception {
@@ -226,6 +225,40 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("[소모임원 권한] 소모임을 탈퇴하였습니다"),
                                         fieldWithPath("data.teamId").description("탈퇴한 소모임 id")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void signIn_team() throws Exception {
+        //given
+        Long teamId = 1L; // 예시 ID
+        CreateTeamResponse output = CreateTeamResponse.builder()
+                .teamId(teamId)
+                .build();
+
+        given(signInTeamUserCase.signInTeam(any(), any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/api/team/" + teamId)
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("소모임에 가입하였습니다."),
+                                        fieldWithPath("data.teamId").description("가입한 소모임 id")
                                 )
                         )
                 );
