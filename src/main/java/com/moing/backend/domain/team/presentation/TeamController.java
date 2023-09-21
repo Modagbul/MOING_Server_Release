@@ -4,10 +4,7 @@ import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
-import com.moing.backend.domain.team.application.service.CreateTeamUserCase;
-import com.moing.backend.domain.team.application.service.DisbandTeamUserCase;
-import com.moing.backend.domain.team.application.service.GetTeamUserCase;
-import com.moing.backend.domain.team.application.service.WithdrawTeamUserCase;
+import com.moing.backend.domain.team.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -26,6 +23,7 @@ import static com.moing.backend.domain.team.presentation.constant.TeamResponseMe
 public class TeamController {
     private final CreateTeamUserCase createTeamService;
     private final GetTeamUserCase getTeamUserCase;
+    private final SignInTeamUserCase signInTeamUserCase;
     private final DisbandTeamUserCase disbandTeamUserCase;
     private final WithdrawTeamUserCase withdrawTeamUserCase;
 
@@ -48,6 +46,18 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<SuccessResponse<GetTeamResponse>> getTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_SUCCESS.getMessage(), this.getTeamUserCase.getTeam(user.getSocialId())));
+    }
+
+    /**
+     * 소모임 가입하기 (소모임원으로 입장)
+     * [POST] api/team/{teamId}
+     * 작성자 : 김민수
+     */
+
+    @PostMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<CreateTeamResponse>> signInTeam(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId){
+        return ResponseEntity.ok(SuccessResponse.create(SIGNIN_TEAM_SUCCESS.getMessage(),this.signInTeamUserCase.signInTeam(user.getSocialId(), teamId)));
     }
 
     /**
