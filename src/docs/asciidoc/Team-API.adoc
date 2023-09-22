@@ -28,6 +28,20 @@ operation::team-controller-test/create_team[snippets='http-request,request-field
 | 그외 자기계발
 |===
 
+
+[[Team-소모임-가입]]
+=== Team 소모임 가입
+operation::team-controller-test/sign-in_team[snippets='http-request,http-response,response-fields']
+
+
 [[Team-소모임-조회]]
 === Team 소모임 조회
 operation::team-controller-test/get_team[snippets='http-request,http-response,response-fields']
+
+[[Team-소모임-강제종료]]
+=== Team 소모임 강제종료
+operation::team-controller-test/disband_team[snippets='http-request,http-response,response-fields']
+
+[[Team-소모임-탈퇴]]
+=== Team 소모임원 강제종료
+operation::team-controller-test/withdraw_team[snippets='http-request,http-response,response-fields']

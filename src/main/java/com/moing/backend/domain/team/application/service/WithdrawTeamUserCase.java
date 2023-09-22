@@ -5,7 +5,8 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
-import com.moing.backend.domain.team.exception.NotAuthException;
+import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
+import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +15,17 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DisbandTeamUserCase {
+public class WithdrawTeamUserCase {
 
+    private final TeamMemberGetService teamMemberGetService;
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
-    private final CheckLeaderUserCase checkLeaderUserCase;
 
-    public DeleteTeamResponse disbandTeam(String socialId, Long teamId) {
+    public DeleteTeamResponse withdrawTeam(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);
-        if (checkLeaderUserCase.isTeamLeader(member, team)) {
-            team.deleteTeam();
-        } else {
-            throw new NotAuthException();
-        }
+        TeamMember teamMember = teamMemberGetService.getTeamMember(member, team);
+        teamMember.withdrawTeam();
         return new DeleteTeamResponse(team.getTeamId());
     }
 }

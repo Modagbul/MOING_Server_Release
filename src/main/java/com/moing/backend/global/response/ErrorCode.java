@@ -20,8 +20,9 @@ public enum ErrorCode {
     APPID_INVALID_ERROR("AU0003", "appId가 유효하지 않습니다"),
     NICKNAME_DUPLICATION_ERROR("AU0003", "닉네임이 중복됩니다."),
 
-    //팀멤버 에러 코드
-    TOO_MANY_TEAM_MEMBER_ERROR("TM0001", "팀 최대 개수 3을 초과했습니다");
+    //팀 관련 에러 코드
+    NOT_FOUND_BY_TEAM_ID_ERROR("T0001", "해당 teamId인 팀이 존재하지 않습니다."),
+    NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다.");
 
     private String errorCode;
     private String message;
