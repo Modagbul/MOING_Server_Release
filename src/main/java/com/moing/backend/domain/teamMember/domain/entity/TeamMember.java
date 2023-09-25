@@ -2,7 +2,6 @@ package com.moing.backend.domain.teamMember.domain.entity;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.teamMember.exception.TooManyTeamMemberException;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,18 +30,19 @@ public class TeamMember extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    //==연관관계 메서드==//
-    public void updateTeam(Team team){
-        this.team=team;
+    private boolean isDeleted;     //소모임 삭제여부, 마이페이지에서는 상관 없이 모두 조회
+
+    //==연관관계 메서드 ==//
+    public void updateTeam(Team team) {
+        this.team = team;
     }
 
-    public void updateMember(Member member){
-        if(member.getTeamMembers().size()<3) {
-            this.member = member;
-            member.getTeamMembers().add(this);
-        }else{
-            throw new TooManyTeamMemberException();
-        }
+    public void updateMember(Member member) {
+        this.member = member;
+        member.getTeamMembers().add(this);
     }
 
+    public void withdrawTeam() {
+        this.isDeleted = true;
+    }
 }

@@ -26,9 +26,8 @@ public class MemberAuthUserCase {
 
     // 다른 플랫폼으로 가입했으면 에러 출력
     private void checkRegistration(Member signInMember, String providerInfo) {
-        Optional.of(signInMember)
-                .filter(m -> providerInfo.contains(m.getProvider().name().toLowerCase()))
-                .orElseThrow(()->new AccountAlreadyExistedException());
+        if(!providerInfo.contains((signInMember.getProvider().name().toLowerCase())))
+            throw new AccountAlreadyExistedException();
     }
 
 }

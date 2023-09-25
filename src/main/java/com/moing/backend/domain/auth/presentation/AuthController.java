@@ -2,6 +2,7 @@ package com.moing.backend.domain.auth.presentation;
 
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
+import com.moing.backend.domain.auth.application.dto.request.TestRequest;
 import com.moing.backend.domain.auth.application.dto.response.CheckNicknameResponse;
 import com.moing.backend.domain.auth.application.dto.response.ReissueTokenResponse;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
@@ -39,8 +40,8 @@ public class AuthController {
     private final CheckNicknameUserCase checkNicknameService;
 
     /**
-     * 소셜 로그인 (애플/ 카카오)
-     * [POST] api/auth/signIn/kakao||apple
+     * 소셜 로그인 (애플/ 카카오/구글)
+     * [POST] api/auth/signIn/kakao||apple||google
      * 작성자 : 김민수
      */
     @PostMapping("/signIn/{provider}")
@@ -81,4 +82,14 @@ public class AuthController {
         return ResponseEntity.ok(SuccessResponse.create(CHECK_NICKNAME_SUCCESS.getMessage(), checkNicknameService.checkNickname(nickname)));
     }
 
+    /**
+     * 테스트 계정 로그인 (토큰 만드는 컨트롤러)
+     * [POST] api/auth/test
+     * 작성자: 김민수
+     */
+    @PostMapping("/test/{provider}")
+    public ResponseEntity<SuccessResponse<SignInResponse>> testLogin(@PathVariable String provider,
+                                                                     @RequestBody TestRequest testRequest){
+        return ResponseEntity.ok(SuccessResponse.create(SIGN_IN_SUCCESS.getMessage(), this.authService.testSignIn(testRequest.getSocialId(),provider)));
+    }
 }
