@@ -18,4 +18,6 @@ public class MissionArchiveRes {
 
     private int hearts;
 
+    private String status;
+
 }
