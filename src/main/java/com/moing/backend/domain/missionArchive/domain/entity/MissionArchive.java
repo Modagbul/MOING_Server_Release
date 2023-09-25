@@ -26,9 +26,11 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_id")
     private Mission mission;
 
     @Enumerated(value = EnumType.STRING)

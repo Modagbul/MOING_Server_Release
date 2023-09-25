@@ -70,7 +70,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .from(missionArchive)
                 .where(
                         missionArchive.mission.id.eq(missionId),
-                        missionArchive.member.memberId.ne(memberId)
+                        missionArchive.member.memberId.ne(memberId),
+                        missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP))
                 )
                 .fetch()
         );

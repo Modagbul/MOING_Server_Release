@@ -36,7 +36,6 @@ public class SingleMissionArchiveReadUseCase {
         List<MissionArchiveRes> archiveRes = new ArrayList<>();
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Mission mission = missionQueryService.findMissionById(missionId);
 
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0));
     }
@@ -47,11 +46,9 @@ public class SingleMissionArchiveReadUseCase {
         List<PersonalArchive> personalArchives = new ArrayList<>();
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Mission mission = missionQueryService.findMissionById(missionId);
+        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(member.getMemberId(), missionId));
 
-        MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(member.getMemberId(), missionId));
-
-        return personalArchives;
+//        return personalArchives;
     }
 
 
