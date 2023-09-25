@@ -241,6 +241,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
+                .status("COMPLETE/SKIP")
                 .build());
 
         given(singleMissionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
@@ -275,7 +276,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].profileImg").description("미션 인증자 프로필 이미지 "),
                                         fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크] "),
                                         fieldWithPath("data[].createdDate").description("미션 인증 날짜 "),
-                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 ")
+                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
+                                        fieldWithPath("data[].status").description("미션 인증 상태")
 
                                 )
                         )

@@ -18,4 +18,6 @@ public class PersonalArchive {
 
     private int hearts;
 
+    private String status;
+
 }
