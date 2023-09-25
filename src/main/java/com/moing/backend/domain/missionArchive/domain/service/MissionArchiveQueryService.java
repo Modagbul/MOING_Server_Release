@@ -68,19 +68,23 @@ public class MissionArchiveQueryService {
     /**
      * mission.getTeam() 팀의 단일미션 미션 인증 보드
      */
-    public List<MissionArchive> findMySingleMissionArchives(Long memberId, List<Long> missionIds, MissionStatus missionStatus) {
+    public List<MissionArchive> findMySingleMissionArchives(Long memberId,Long teamId, MissionStatus missionStatus) {
         // INCOMPLETE
-        List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), INCOMPLETE.name(), OrderCondition.DUETO)
+        List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, INCOMPLETE, OrderCondition.DUETO)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
-        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, missionIds, missionStatus.name(), COMPLETE.name(),OrderCondition.CREATED)
+        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, COMPLETE,OrderCondition.CREATED)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
         incompleteList.addAll(completeList);
         return incompleteList;
     }
-    public List<MissionArchive> findMyRepeatMissionArchives(Long memberId, List<Long> missionIds) {
-        return missionArchiveRepository.findRepeatMissionArchivesByMission(memberId, missionIds).orElseThrow(NotFoundMissionArchiveException::new);
+//    public List<MissionArchive> findMyRepeatMissionArchives(Long memberId, List<Long> missionIds) {
+//        return missionArchiveRepository.findRepeatMissionArchivesByMission(memberId, missionIds).orElseThrow(NotFoundMissionArchiveException::new);
+//    }
+
+    public List<MissionArchive> findMyAllMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
+        return missionArchiveRepository.findAllMissionArchivesByMemberId(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
 

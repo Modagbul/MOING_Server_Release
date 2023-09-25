@@ -1,6 +1,7 @@
 package com.moing.backend.domain.missionArchive.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
@@ -88,6 +89,27 @@ public class MissionArchiveMapper {
                 .archiveId(missionArchive.getId())
                 .hearts(missionArchive.getHearts())
                 .heartStatus(heartStatus.toString())
+                .build();
+    }
+
+
+    public static List<FinishMissionBoardRes> mapToFinishMissionBoardResList(List<MissionArchive> missionArchives) {
+        List<FinishMissionBoardRes> finishMissionBoardResList = new ArrayList<>();
+        missionArchives.forEach(
+                missionArchive -> finishMissionBoardResList.add(MissionArchiveMapper.mapToFinishMissionBoardRes(missionArchive))
+        );
+
+        return finishMissionBoardResList;
+    }
+
+    public static FinishMissionBoardRes mapToFinishMissionBoardRes(MissionArchive missionArchive) {
+        Mission mission = missionArchive.getMission();
+        return FinishMissionBoardRes.builder()
+                .missionId(mission.getId())
+                .missionType(mission.getType().name())
+                .title(mission.getTitle())
+                .dueTo(mission.getDueTo().toString())
+                .status(missionArchive.getStatus().name())
                 .build();
     }
 

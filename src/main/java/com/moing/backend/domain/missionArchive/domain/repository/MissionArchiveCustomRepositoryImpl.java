@@ -30,16 +30,17 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
     @Override
-    public Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, List<Long> missionIds, String status, String archiveStatus,OrderCondition orderCondition) {
+    public Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status,
+                                                                              MissionArchiveStatus archiveStatus,OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
                 .from(missionArchive)
                 .where(
-                        missionArchive.mission.status.eq(MissionStatus.ONGOING),
-                        missionArchive.mission.id.in(missionIds),
-                        missionArchive.mission.status.eq(MissionStatus.valueOf(status)),
-                        missionArchive.status.eq(MissionArchiveStatus.valueOf(archiveStatus))
+                        missionArchive.mission.team.teamId.eq(teamId),
+                        missionArchive.member.memberId.eq(memberId),
+                        missionArchive.mission.status.eq(status),
+                        missionArchive.status.eq(archiveStatus)
                 )
                 .orderBy(orderSpecifiers)
                 .fetch());
@@ -73,6 +74,20 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP))
                 )
+                .fetch()
+        );
+    }
+
+    @Override
+    public Optional<List<MissionArchive>> findAllMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus missionStatus){
+
+        return Optional.ofNullable(queryFactory
+                .selectFrom(missionArchive)
+                .where(
+                        missionArchive.mission.status.eq(missionStatus),
+                        missionArchive.mission.team.teamId.eq(teamId)
+                )
+                .orderBy(missionArchive.mission.dueTo.desc())
                 .fetch()
         );
     }

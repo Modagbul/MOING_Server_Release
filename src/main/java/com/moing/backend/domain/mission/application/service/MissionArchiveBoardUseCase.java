@@ -35,17 +35,25 @@ public class MissionArchiveBoardUseCase {
     /*
      * 팀별 미션 보드 중 진행중인 단일 미션(한 번 인증)
      */
-    public List<SingleMissionBoardRes> getActiveSingleMissions(Long teamId, String memberId,Long missionId) {
+    public List<SingleMissionBoardRes> getActiveSingleMissions(Long teamId, String memberId) {
+
+        Member member = memberGetService.getMemberBySocialId(memberId);
+
+        List<MissionArchive> mySingleMissionArchives = missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
+        return MissionArchiveMapper.mapToSingleMissionBoardResList(mySingleMissionArchives);
+
+    }
+
+    /*
+     * 팀별 미션 보드 중 종료한 전체 미션
+     */
+    public List<FinishMissionBoardRes> getFinishMissions(Long teamId, String memberId) {
 
         Team team = teamRepository.findById(teamId).orElseThrow();
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        // 인증 상태 가져올 미션들
-        List<Long> missionIds = new ArrayList<>();
-        team.getMissions().forEach(mission -> missionIds.add(mission.getId()));
-
-        List<MissionArchive> mySingleMissionArchives = missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), missionIds, MissionStatus.ONGOING);
-        return MissionArchiveMapper.mapToSingleMissionBoardResList(mySingleMissionArchives);
+        List<MissionArchive> myAllMissionArchives = missionArchiveQueryService.findMyAllMissionArchives(member.getMemberId(), teamId, MissionStatus.END);
+        return MissionArchiveMapper.mapToFinishMissionBoardResList(myAllMissionArchives);
 
     }
 
@@ -57,12 +65,5 @@ public class MissionArchiveBoardUseCase {
 //        missionArchiveQueryService.findRepeatMissionMyArchive(memberId, );
 //    }
 //
-//    public List<FinishMissionBoardRes> getFinishMissions(Long teamId, Long memberId) {
-//
-//
-//
-//    }
-//    public List<MissionArchiveRes> getFinishRepeatMissions(Long teamId, Long memberId) {
-//
-//    }
+
 }
