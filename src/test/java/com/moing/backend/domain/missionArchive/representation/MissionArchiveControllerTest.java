@@ -58,15 +58,15 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 미션_인증하기() throws Exception {
         //given
         MissionArchiveReq input = MissionArchiveReq.builder()
-                .status("COMPLETE")
-                .archive("https://iwheifhoaiwj")
+                .status("COMPLETE/SKIP")
+                .archive("content[s3 Link / text / link]")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
 
         MissionArchiveRes output = MissionArchiveRes.builder()
                 .archiveId(1L)
-                .archive("https://iwheifhoaiwj")
+                .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .build();
@@ -118,15 +118,15 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 미션_재인증하기() throws Exception {
         //given
         MissionArchiveReq input = MissionArchiveReq.builder()
-                .status("COMPLETE")
-                .archive("contents")
+                .status("COMPLETE/SKIP")
+                .archive("content[s3 Link / text / link]")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
 
         MissionArchiveRes output = MissionArchiveRes.builder()
                 .archiveId(1L)
-                .archive("contents")
+                .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .build();
@@ -180,7 +180,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
 
         MissionArchiveRes output = MissionArchiveRes.builder()
                 .archiveId(1L)
-                .archive("https://iwheifhoaiwj")
+                .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(0)
                 .build();
@@ -231,8 +231,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         List<PersonalArchive> output =  Lists.newArrayList(PersonalArchive.builder()
                 .archiveId(1L)
                 .nickname("modagbul_tester1")
-                .profileImg("https://wehofijaowi")
-                .archive("hihihihi")
+                .profileImg("[s3 Link]")
+                .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .build());
