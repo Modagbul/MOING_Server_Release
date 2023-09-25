@@ -81,8 +81,7 @@ public class MissionArchiveController {
     @GetMapping("/others")
     public ResponseEntity<SuccessResponse<List<PersonalArchive>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
                                                                                   @PathVariable("teamId") Long teamId,
-                                                                                  @PathVariable("missionId") Long missionId,
-                                                                                  @RequestBody MissionArchiveReq missionArchiveReq) {
+                                                                                  @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
