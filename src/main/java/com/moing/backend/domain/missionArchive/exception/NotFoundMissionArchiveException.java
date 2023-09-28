@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public class NotFoundMissionArchiveException extends MissionArchiveException {
 
     public NotFoundMissionArchiveException() {
-        super(ErrorCode.TOKEN_INVALID_ERROR,
-                HttpStatus.BAD_REQUEST);
+        super(ErrorCode.NOT_FOUND_MISSION,
+                HttpStatus.NOT_FOUND);
     }
 }

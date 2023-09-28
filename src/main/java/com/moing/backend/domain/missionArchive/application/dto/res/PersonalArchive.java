@@ -9,12 +9,15 @@ import lombok.Setter;
 @Builder
 public class PersonalArchive {
 
+    private Long archiveId;
     private String nickname;
     private String profileImg;
 
     private String archive;
     private String createdDate;
 
-    private int likes;
+    private int hearts;
+
+    private String status;
 
 }

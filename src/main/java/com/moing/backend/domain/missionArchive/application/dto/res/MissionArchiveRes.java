@@ -11,13 +11,13 @@ import java.util.List;
 @Setter
 public class MissionArchiveRes {
 
+    private Long archiveId;
     private String archive;
 
     private String createdDate;
 
-    private List<PersonalArchive> donePersonalArchives;
+    private int hearts;
 
-    public void setPersonalArchives(List<PersonalArchive> done) {
-        this.donePersonalArchives = done;
-    }
+    private String status;
+
 }

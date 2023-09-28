@@ -4,6 +4,7 @@ package com.moing.backend.domain.missionArchive.domain.entity;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,16 +26,32 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_id")
     private Mission mission;
 
     @Enumerated(value = EnumType.STRING)
-    private MissionStatus status;
+    private MissionArchiveStatus status;
 
+    @Column(nullable = false)
     private String archive; //링크, 글, 사진 뭐든 가능
 
+    private int hearts;
+
+
+    public void updateArchive(MissionArchiveReq missionArchiveReq) {
+        this.archive = missionArchiveReq.getArchive();
+        this.status = MissionArchiveStatus.valueOf(missionArchiveReq.getStatus());
+    }
+    public int updateHearts(Boolean status) {
+        if(status)
+            return this.hearts += 1;
+        else
+            return this.hearts -= 1;
+    }
 
 
 }

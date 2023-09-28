@@ -81,7 +81,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long teamId = 2L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/mission",teamId)
+                post("/api/{teamId}/missions",teamId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -159,7 +159,7 @@ public class MissionControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                put("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                put("/api/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -226,7 +226,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                get("/api/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
 
@@ -270,7 +270,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                delete("/api/{teamId}/mission/{missionId}",teamId,missionId)
+                delete("/api/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );

@@ -16,4 +16,8 @@ include::Mypage-API.adoc[]
 
 include::Team-API.adoc[]
 
+include::Mission-API.adoc[]
+
+include::MissionArchive-API.adoc[]
+
 
