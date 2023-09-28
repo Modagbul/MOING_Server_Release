@@ -1,0 +1,29 @@
+
+
+[[MissionArchive-API]]
+= MissionArchive API
+
+[[MissionArchive-인증하기]]
+=== 미션 인증하기
+operation::mission-archive-controller-test/미션_인증하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-재인증하기]]
+=== 미션 재인증하기
+operation::mission-archive-controller-test/미션_재인증하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-나의미션인증조회]]
+=== 나의 미션 인증 조회
+operation::mission-archive-controller-test/나의_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-모임원미션인증조회]]
+=== 모임원 미션 인증 조회
+operation::mission-archive-controller-test/모임원_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+

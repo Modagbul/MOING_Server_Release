@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public class NotFoundMissionException extends MissionException {
 
     public NotFoundMissionException() {
-        super(ErrorCode.TOKEN_INVALID_ERROR,
-                HttpStatus.BAD_REQUEST);
+        super(ErrorCode.NOT_FOUND_MISSION,
+                HttpStatus.NOT_FOUND);
     }
 }

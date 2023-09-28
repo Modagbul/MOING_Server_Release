@@ -9,6 +9,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchi
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
+import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import static com.moing.backend.domain.missionArchive.application.mapper.Mission
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MissionArchiveReadUseCase {
+public class SingleMissionArchiveReadUseCase {
 
     //미션 아치브 읽어오기
     private final MemberGetService memberGetService;
@@ -29,30 +30,25 @@ public class MissionArchiveReadUseCase {
     private final MissionArchiveQueryService missionArchiveQueryService;
 
 
-    // 나의 인증 목록
+    // 미션 인증 조회
     public MissionArchiveRes getMyArchive(String userSocialId, Long missionId) {
-        MissionArchive myArchive = getArchive(userSocialId, missionId);
-        return MissionArchiveMapper.mapToMissionArchiveRes(myArchive);
-    }
 
-    // 팀원들 인증 목록
-    public List<PersonalArchive> getPersonalArchive(String userSocialId, Long missionId) {
-        Mission mission = missionQueryService.findMissionById(missionId);
+        List<MissionArchiveRes> archiveRes = new ArrayList<>();
 
-        List<PersonalArchive> done = new ArrayList<>();
-
-        mission.getMissionArchiveList()
-                .forEach(missionArchive1 -> done.add(mapToPersonalArchive(missionArchive1)));
-
-        return done;
-    }
-
-    // memberId, missionId로 archive 꺼내기
-    public MissionArchive getArchive(String userSocialId, Long missionId) {
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Mission mission = missionQueryService.findMissionById(missionId);
 
-        return missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId);
+        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0));
+    }
+
+    // 모두의 미션 인증 목록 조회
+    public List<PersonalArchive> getPersonalArchive(String userSocialId,Long missionId) {
+
+        List<PersonalArchive> personalArchives = new ArrayList<>();
+
+        Member member = memberGetService.getMemberBySocialId(userSocialId);
+        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(member.getMemberId(), missionId));
+
+//        return personalArchives;
     }
 
 

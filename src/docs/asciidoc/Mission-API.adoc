@@ -10,7 +10,7 @@ operation::mission-controller-test/미션_생성[snippets='http-request,path-par
 ---
 
 [[Mission-조회]]
-=== Mission 생성
+=== Mission 조회
 operation::mission-controller-test/미션_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
@@ -21,8 +21,8 @@ operation::mission-controller-test/미션_수정[snippets='http-request,path-par
 
 ---
 
-[[Mission-수정]]
-=== Mission 수정
+[[Mission-삭제]]
+=== Mission 삭제
 operation::mission-controller-test/미션_삭제[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
