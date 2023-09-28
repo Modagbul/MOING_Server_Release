@@ -1,0 +1,12 @@
+[[Board-API]]
+= Board API
+
+[[Board-게시글-생성]]
+=== Board 게시글 생성
+operation::board-controller-test/create_board[snippets='http-request,request-fields,http-response,response-fields']
+---
+
+[[Board-게시글-수정]]
+=== Board 게시글 수정
+operation::board-controller-test/update_board[snippets='http-request,request-fields,http-response,response-fields']
+---
