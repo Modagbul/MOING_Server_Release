@@ -4,6 +4,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
@@ -83,6 +84,16 @@ public class MissionArchiveController {
                                                                                   @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
+
+
+
+    @GetMapping("/status")
+    public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
+                                                                                         @PathVariable("teamId") Long teamId,
+                                                                                         @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
+    }
+
 
     @PostMapping("/hearts")
     public ResponseEntity<SuccessResponse<MissionArchiveHeartRes>> pushHeart(@AuthenticationPrincipal User user,

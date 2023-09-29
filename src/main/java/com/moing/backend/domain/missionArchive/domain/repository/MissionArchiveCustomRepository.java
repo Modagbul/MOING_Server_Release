@@ -14,5 +14,8 @@ public interface MissionArchiveCustomRepository {
 
     Optional<List<MissionArchive>> findAllMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus missionStatus);
 
+    Optional<Long> findDonePeopleByMissionId(Long missionId);
+
+
 
     }
