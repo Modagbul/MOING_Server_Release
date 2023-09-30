@@ -5,7 +5,7 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
-import com.moing.backend.domain.team.exception.NotAuthException;
+import com.moing.backend.domain.team.exception.NotAuthByTeamException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class DisbandTeamUserCase {
         if (checkLeaderUserCase.isTeamLeader(member, team)) {
             team.deleteTeam();
         } else {
-            throw new NotAuthException();
+            throw new NotAuthByTeamException();
         }
         return new DeleteTeamResponse(team.getTeamId());
     }

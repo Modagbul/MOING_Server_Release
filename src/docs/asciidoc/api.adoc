@@ -20,4 +20,7 @@ include::Mission-API.adoc[]
 
 include::MissionArchive-API.adoc[]
 
+include::Board-API.adoc[]
+
+include::BoardComment_API.adoc[]
 
