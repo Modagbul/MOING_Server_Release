@@ -6,8 +6,8 @@
 operation::board-comment-controller-test/create_board_comment[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 ---
 
-[[Board-Comment-게시글-삭제]]
-=== Board Comment 게시글 삭제
+[[Board-Comment-댓글-삭제]]
+=== Board Comment 댓글 삭제
 operation::board-comment-controller-test/delete_board_comment[snippets='http-request,path-parameters,request-fields,response-fields']
 ---
 
