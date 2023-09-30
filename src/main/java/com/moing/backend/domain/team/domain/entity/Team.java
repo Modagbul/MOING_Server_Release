@@ -1,8 +1,6 @@
 package com.moing.backend.domain.team.domain.entity;
 
-import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.global.entity.BaseTimeEntity;
@@ -65,20 +63,6 @@ public class Team extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "team")
     List<Mission> missions = new ArrayList<>();
-
-    public static Team createTeam(CreateTeamRequest createTeamRequest, Member member) {
-        return Team.builder()
-                .category(Enum.valueOf(Category.class, createTeamRequest.getCategory()))
-                .name(createTeamRequest.getName())
-                .introduction(createTeamRequest.getIntroduction())
-                .promise(createTeamRequest.getPromise())
-                .profileImgUrl(createTeamRequest.getProfileImgUrl())
-                .approvalStatus(ApprovalStatus.NO_CONFIRMATION)
-                .leaderId(member.getMemberId())
-                .numOfMember(0)
-                .levelOfFire(1)
-                .build();
-    }
 
     public void approveTeam() {
         this.approvalStatus = ApprovalStatus.APPROVAL;

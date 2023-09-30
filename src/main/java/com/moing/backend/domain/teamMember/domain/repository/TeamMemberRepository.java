@@ -9,6 +9,5 @@ import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, TeamMemberCustomRepository{
-
-    TeamMember findTeamMemberByTeamAndMember(Team team, Member member);
+    Optional<TeamMember> findTeamMemberByTeamAndMember(Team team, Member member);
 }

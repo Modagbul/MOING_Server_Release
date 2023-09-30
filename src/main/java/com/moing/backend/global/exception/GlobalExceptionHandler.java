@@ -5,6 +5,7 @@ import com.moing.backend.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,6 +40,11 @@ public class GlobalExceptionHandler {
         return handleException(ex, ErrorCode.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage(), HttpStatus.BAD_REQUEST, log::warn);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> jsonParseExceptionHandler(HttpMessageNotReadableException ex) {
+        return handleException(ex, ErrorCode.BAD_REQUEST, ErrorCode.BAD_REQUEST.getMessage(), HttpStatus.BAD_REQUEST, log::warn);
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> httpRequestNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
         return handleException(ex, ErrorCode.METHOD_NOT_ALLOWED, ErrorCode.METHOD_NOT_ALLOWED.getMessage(), HttpStatus.METHOD_NOT_ALLOWED, log::warn);
@@ -50,7 +56,7 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ErrorResponse> handleException(Exception ex, ErrorCode errorCode, String message, HttpStatus httpStatus, Consumer<String> logger) {
-        logger.accept(String.format(LOG_FORMAT, ex.getClass().getSimpleName(), errorCode.getErrorCode(), ex.getMessage()));
+        log.error(LOG_FORMAT, ex.getClass().getSimpleName(), errorCode.getErrorCode(), ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(errorCode, message);
         return ResponseEntity.status(httpStatus.value()).body(errorResponse);
     }

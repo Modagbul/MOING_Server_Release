@@ -78,15 +78,45 @@
 | `AU0003`
 | 로그인할 때
 | appId가 일치하지 않음 (유효하지 않음)
+
+| `AU0004`
+| 회원가입할 때
+| 닉네임이 중복됨
 |===
 
-=== Team / Team_member ErrorCode
+=== Team ErrorCode
 |===
 | ErrorCode | Scope | Description
-| `TM0001`
-| 팀 개설할 때
-| 팀 최대 개수 3을 초과
+| `T0001`
+| API PATH에 teamId가 있을 때
+| teamId가 유효하지 않음 (존재하지 않거나, 해당 유저가 그 팀에 속해있지 않거나)
+
+| `T0002`
+| 소모임을 수정, 삭제하려고 할 때
+| 소모임장이 아님 (권한 없음)
 |===
 
+=== Board ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `B0001`
+| API PATH에 boardId가 있을 때
+| boardId가 유효하지 않음 (존재하지 않음)
 
+| `B0002`
+| 게시글을 수정, 삭제하려고 할 때
+| 작성자가 아님 (권한 없음)
+|===
+
+=== Mission ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `M0001`
+| 미션 생성할 때
+| 소모임장이 아님
+
+| `M0002`
+| API PATH에 missionId가 있으 때
+| missionId가 유요하지 않음
+|===
 

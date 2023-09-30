@@ -2,6 +2,7 @@ package com.moing.backend.domain.teamMember.domain.service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.team.exception.NotFoundByTeamIdException;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.domain.teamMember.domain.repository.TeamMemberRepository;
 import com.moing.backend.global.annotation.DomainService;
@@ -19,6 +20,6 @@ public class TeamMemberGetService {
     }
 
     public TeamMember getTeamMember(Member member, Team team){
-        return teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
+        return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(()-> new NotFoundByTeamIdException());
     }
 }
