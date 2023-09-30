@@ -1,0 +1,17 @@
+[[Board-Comment-API]]
+= Board Comment API
+
+[[Board-Comment-댓글-생성]]
+=== Board Comment 댓글 생성
+operation::board-comment-controller-test/create_board_comment[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+---
+
+[[Board-Comment-게시글-삭제]]
+=== Board Comment 게시글 삭제
+operation::board-comment-controller-test/delete_board_comment[snippets='http-request,path-parameters,request-fields,response-fields']
+---
+
+[[Board-Comment-댓글-전체-조회]]
+=== Board Comment 댓글 전체 조회
+operation::board-comment-controller-test/get_board_comment_all[snippets='http-request,path-parameters,http-response,response-fields']
+---

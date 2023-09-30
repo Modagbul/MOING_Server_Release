@@ -308,7 +308,7 @@ public class BoardControllerTest extends CommonControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
-                                        fieldWithPath("message").description("게시글 목록을 모두 조회했습니다."),
+                                        fieldWithPath("message").description("게시글 상세 조회했습니다."),
                                         fieldWithPath("data.boardId").description("게시글 아이디"),
                                         fieldWithPath("data.writerNickName").description("작성자 닉네임"),
                                         fieldWithPath("data.writerIsLeader").description("작성자 소모임장 여부"),
