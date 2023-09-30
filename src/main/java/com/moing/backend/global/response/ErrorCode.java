@@ -18,10 +18,7 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_EXIST("AU0001", "해당 email로 다른 소셜 플랫폼으로 가입하였습니다."),
     TOKEN_INVALID_ERROR("AU0002", "입력 토큰이 유효하지 않습니다."),
     APPID_INVALID_ERROR("AU0003", "appId가 유효하지 않습니다"),
-    NICKNAME_DUPLICATION_ERROR("AU0003", "닉네임이 중복됩니다."),
-
-    //팀멤버 에러 코드
-    TOO_MANY_TEAM_MEMBER_ERROR("TM0001", "팀 최대 개수 3을 초과했습니다"),
+    NICKNAME_DUPLICATION_ERROR("AU0004", "닉네임이 중복됩니다."),
 
     //미션 관련 에러코드
     NO_ACCESS_CREATE_MISSION("M0001", "소모임장만 미션을 생성할 수 있습니다."),
@@ -33,7 +30,8 @@ public enum ErrorCode {
     NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다."),
 
     //게시글 관련 에러 코드
-    NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 팀이 존재하지 않습니다.");
+    NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 팀이 존재하지 않습니다."),
+    NOT_AUTH_BY_BOARD_ID_ERROR("B0002","권한이 없습니다.");
 
     private String errorCode;
     private String message;
