@@ -10,7 +10,6 @@ import com.moing.backend.domain.board.application.service.CreateBoardUserCase;
 import com.moing.backend.domain.board.application.service.DeleteBoardUserCase;
 import com.moing.backend.domain.board.application.service.GetBoardUserCase;
 import com.moing.backend.domain.board.application.service.UpdateBoardUserCase;
-import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -63,7 +62,7 @@ public class BoardController {
      * 작성자 : 김민수
      */
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<SuccessResponse<UpdateBoardResponse>> deleteBoard(@AuthenticationPrincipal User user,
+    public ResponseEntity<SuccessResponse> deleteBoard(@AuthenticationPrincipal User user,
                                                                             @PathVariable Long teamId,
                                                                             @PathVariable Long boardId) {
         this.deleteBoardUserCase.deleteBoard(user.getSocialId(), teamId, boardId);

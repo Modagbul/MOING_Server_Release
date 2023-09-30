@@ -27,6 +27,7 @@ public class BoardMapper {
                 .commentNum(0)
                 .isLeader(isLeader)
                 .boardReads(new ArrayList<>())
+                .boardComments(new ArrayList<>())
                 .build();
         board.updateTeamMember(teamMember);
         board.updateTeam(team);

@@ -30,8 +30,12 @@ public enum ErrorCode {
     NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다."),
 
     //게시글 관련 에러 코드
-    NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 팀이 존재하지 않습니다."),
-    NOT_AUTH_BY_BOARD_ID_ERROR("B0002","권한이 없습니다.");
+    NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 게시글이 존재하지 않습니다."),
+    NOT_AUTH_BY_BOARD_ID_ERROR("B0002","권한이 없습니다."),
+
+    //게시글 댓글 관련 에러 코드
+    NOT_FOUND_BY_BOARD_COMMENT_ID_ERROR("B0001","해당 boardCommentId인 댓글이 존재하지 않습니다."),
+    NOT_AUTH_BY_BOARD_COMMENT_ID_ERROR("B0002","권한이 없습니다.");
 
     private String errorCode;
     private String message;

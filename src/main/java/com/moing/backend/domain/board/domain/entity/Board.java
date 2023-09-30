@@ -1,6 +1,7 @@
 package com.moing.backend.domain.board.domain.entity;
 
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
+import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
 import com.moing.backend.domain.boardRead.domain.entity.BoardRead;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
@@ -12,9 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +58,8 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardRead> boardReads = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardComment> boardComments = new ArrayList<>();
 
     public void incrComNum() {
         this.commentNum++;
