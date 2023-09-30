@@ -10,8 +10,11 @@ import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase
 import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
 import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
 import com.moing.backend.domain.mission.presentation.MissionController;
+import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
@@ -31,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.READ_MY_ARCHIVE_SUCCESS;
+import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -285,6 +288,110 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .andReturn();
 
     }
+
+    @Test
+    public void 인증_성공_인원_조회() throws Exception {
+        //given
+
+        MissionArchiveStatusRes output = MissionArchiveStatusRes.builder()
+                .total("8")
+                .done("3")
+                .build();
+
+        given(singleMissionArchiveReadUseCase.getMissionDoneStatus(any())).willReturn(output);
+
+        Long teamId = 1L;
+        Long missionId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/{teamId}/missions/{missionId}/archive/status",teamId,missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage()),
+                                        fieldWithPath("data.total").description("전체 미션 참여자"),
+                                        fieldWithPath("data.done").description("미션 인증 완료한 미션 참여자 ")
+
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+    @Test
+    public void 미션_인증물_좋아요() throws Exception {
+        //given
+        MissionArchiveHeartReq input = MissionArchiveHeartReq.builder()
+                .archiveId(1L)
+                .heartStatus("content[s3 Link / text / link]")
+                .build();
+
+        String body = objectMapper.writeValueAsString(input);
+
+        MissionArchiveHeartRes output = MissionArchiveHeartRes.builder()
+                .archiveId(1L)
+                .heartStatus("content[s3 Link / text / link]")
+                .hearts(3)
+                .build();
+
+        given(missionArchiveHeartUseCase.pushHeart(any())).willReturn(output);
+
+        Long teamId = 1L;
+        Long missionId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                post("/api/{teamId}/missions/{missionId}/archive/hearts", teamId, missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
+                                requestFields(
+                                        fieldWithPath("archiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("heartStatus").description("미션 인증물 좋아요 상태 [True]")
+                                        ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(HEART_UPDATE_SUCCESS.getMessage()),
+                                        fieldWithPath("data.archiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("data.heartStatus").description("미션 인증물 좋아요 상태 [True]"),
+                                        fieldWithPath("data.hearts").description("미션 인증물 좋아요 수")
+
+                                )
+                        )
+                )
+                .andReturn();
+    }
+
+
 
 
 }
