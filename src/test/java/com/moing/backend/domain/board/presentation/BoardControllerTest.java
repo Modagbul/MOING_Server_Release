@@ -5,6 +5,7 @@ import com.moing.backend.domain.board.application.dto.request.CreateBoardRequest
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
 import com.moing.backend.domain.board.application.dto.response.*;
 import com.moing.backend.domain.board.application.service.CreateBoardUserCase;
+import com.moing.backend.domain.board.application.service.DeleteBoardUserCase;
 import com.moing.backend.domain.board.application.service.GetBoardUserCase;
 import com.moing.backend.domain.board.application.service.UpdateBoardUserCase;
 import org.junit.jupiter.api.Test;
@@ -32,9 +33,10 @@ public class BoardControllerTest extends CommonControllerTest {
     private CreateBoardUserCase createBoardUserCase;
     @MockBean
     private UpdateBoardUserCase updateBoardUserCase;
-
     @MockBean
     private GetBoardUserCase getBoardUserCase;
+    @MockBean
+    private DeleteBoardUserCase deleteBoardUserCase;
 
     @Test
     public void create_board() throws Exception {
@@ -143,6 +145,42 @@ public class BoardControllerTest extends CommonControllerTest {
                         )
                 );
     }
+
+    @Test
+    public void delete_board() throws Exception {
+
+        //given
+        Long teamId = 1L;
+        Long boardId = 1L;
+
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/{teamId}/board/{boardId}", teamId, boardId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("boardId").description("게시글 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("게시글을 삭제했습니다")
+                                )
+                        )
+                );
+    }
+
 
     @Test
     public void get_board_all() throws Exception {

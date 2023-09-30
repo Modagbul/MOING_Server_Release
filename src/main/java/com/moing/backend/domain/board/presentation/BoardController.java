@@ -7,6 +7,7 @@ import com.moing.backend.domain.board.application.dto.response.GetAllBoardRespon
 import com.moing.backend.domain.board.application.dto.response.GetBoardDetailResponse;
 import com.moing.backend.domain.board.application.dto.response.UpdateBoardResponse;
 import com.moing.backend.domain.board.application.service.CreateBoardUserCase;
+import com.moing.backend.domain.board.application.service.DeleteBoardUserCase;
 import com.moing.backend.domain.board.application.service.GetBoardUserCase;
 import com.moing.backend.domain.board.application.service.UpdateBoardUserCase;
 import com.moing.backend.domain.member.domain.entity.Member;
@@ -29,6 +30,7 @@ public class BoardController {
     private final CreateBoardUserCase createBoardUserCase;
     private final UpdateBoardUserCase updateBoardUserCase;
     private final GetBoardUserCase getBoardUserCase;
+    private final DeleteBoardUserCase deleteBoardUserCase;
 
     /**
      * 게시글 생성
@@ -53,6 +55,19 @@ public class BoardController {
                                                                             @PathVariable Long boardId,
                                                                             @Valid @RequestBody UpdateBoardRequest updateBoardRequest) {
         return ResponseEntity.ok(SuccessResponse.create(UPDATE_BOARD_SUCCESS.getMessage(), this.updateBoardUserCase.updateBoard(user.getSocialId(), teamId, boardId, updateBoardRequest)));
+    }
+
+    /**
+     * 게시글 삭제
+     * [DELETE] api/{teamId}/board/{boardId}
+     * 작성자 : 김민수
+     */
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<SuccessResponse<UpdateBoardResponse>> deleteBoard(@AuthenticationPrincipal User user,
+                                                                            @PathVariable Long teamId,
+                                                                            @PathVariable Long boardId) {
+        this.deleteBoardUserCase.deleteBoard(user.getSocialId(), teamId, boardId);
+        return ResponseEntity.ok(SuccessResponse.create(DELETE_BOARD_SUCCESS.getMessage()));
     }
 
     /**

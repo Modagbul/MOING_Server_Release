@@ -32,6 +32,9 @@ public class GetBoardUserCase {
     private final BoardReadSaveService boardReadSaveService;
     private final TeamMemberGetService teamMemberGetService;
 
+    /**
+     * 게시글 상세 조회
+     */
     public GetBoardDetailResponse getBoardDetail(String socialId, Long teamId, Long boardId) {
         Member member=memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);
@@ -44,6 +47,9 @@ public class GetBoardUserCase {
         return boardMapper.toBoardDetail(board, teamMember==board.getTeamMember());
     }
 
+    /**
+     * 게시글 전체 조회
+     */
     public GetAllBoardResponse getAllBoard(String socialId, Long teamId){
         Member member=memberGetService.getMemberBySocialId(socialId);
         return boardGetService.getBoardAll(teamId, member.getMemberId());
