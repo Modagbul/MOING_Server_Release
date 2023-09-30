@@ -19,7 +19,7 @@ public class BoardGetService {
     private final BoardRepository boardRepository;
 
     public Board getBoard(Long boardId){
-        return boardRepository.findBoardByBoardId(boardId).orElseThrow(()->new NotFoundByBoardIdException());
+        return boardRepository.findBoardByBoardId(boardId).orElseThrow(NotFoundByBoardIdException::new);
     }
 
     public GetAllBoardResponse getBoardAll(Long teamId, Long memberId){

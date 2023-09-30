@@ -28,14 +28,17 @@ public class DeleteBoardCommentUserCase {
     private final TeamMemberGetService teamMemberGetService;
     private final BoardCommentGetService boardCommentGetService;
     private final BoardCommentDeleteService boardCommentDeleteService;
+    private final BoardGetService boardGetService;
 
     public void deleteBoardComment(String socialId, Long teamId, Long boardId, Long boardCommentId){
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);
         TeamMember teamMember = teamMemberGetService.getTeamMember(member, team);
+        Board board=boardGetService.getBoard(boardId);
         BoardComment boardComment=boardCommentGetService.getBoardComment(boardCommentId);
         if (teamMember == boardComment.getTeamMember()) {
             boardCommentDeleteService.deleteBoardComment(boardComment);
+            board.decrComNum();
         } else throw new NotAuthByBoardCommentException();
     }
 }
