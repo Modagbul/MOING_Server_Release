@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class GetAllBoardResponse {
-    private Long noticeNum;
-    private List<BoardBlocks> notices=new ArrayList<>();
-    private Long notNoticeNum;
-    private List<BoardBlocks> notNotices=new ArrayList<>();
+    private int noticeNum;
+    private List<BoardBlocks> noticeBlocks=new ArrayList<>();
+    private int notNoticeNum;
+    private List<BoardBlocks> notNoticeBlocks=new ArrayList<>();
 }

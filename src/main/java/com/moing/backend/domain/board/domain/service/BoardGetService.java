@@ -1,5 +1,7 @@
 package com.moing.backend.domain.board.domain.service;
 
+import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
+import com.moing.backend.domain.board.application.dto.response.GetBoardDetailResponse;
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.board.domain.repository.BoardRepository;
 import com.moing.backend.domain.board.exception.NotFoundByBoardIdException;
@@ -18,5 +20,9 @@ public class BoardGetService {
 
     public Board getBoard(Long boardId){
         return boardRepository.findBoardByBoardId(boardId).orElseThrow(()->new NotFoundByBoardIdException());
+    }
+
+    public GetAllBoardResponse getBoardAll(Long teamId, Long memberId){
+        return boardRepository.findBoardAll(teamId, memberId);
     }
 }

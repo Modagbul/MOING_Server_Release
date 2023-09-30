@@ -32,11 +32,11 @@ public class Board extends BaseTimeEntity {
     //반정규화 -> 작성자에 대한 정보
     @Convert(converter = AesConverter.class)
     @Column(nullable = false)
-    private String writerNickName;
+    private String writerNickName; /*작성자 닉네임*/
 
-    private boolean isLeader;
+    private boolean isLeader; /*작성자 소모임장유무*/
 
-    private String writerProfileImage;
+    private String writerProfileImage; /*작성자 프로필 사진*/
 
     @Column(nullable = false, length = 15)
     private String title;

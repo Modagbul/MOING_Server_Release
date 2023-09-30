@@ -14,7 +14,7 @@ public class BoardSaveService {
 
     private final BoardRepository boardRepository;
 
-    public void saveBoard(Board board) {
-        this.boardRepository.save(board);
+    public Board saveBoard(Board board) {
+        return this.boardRepository.save(board);
     }
 }
