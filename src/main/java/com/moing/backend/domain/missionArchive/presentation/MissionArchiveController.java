@@ -4,6 +4,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
@@ -35,7 +36,7 @@ public class MissionArchiveController {
      * 미션 인증 하기
      * [POST] {teamId}/missions/{missionId}/archive
      * 작성자 : 정승연
-     */
+     **/
 
     @PostMapping()
     public ResponseEntity<SuccessResponse<MissionArchiveRes>> createArchive(@AuthenticationPrincipal User user,
@@ -49,7 +50,7 @@ public class MissionArchiveController {
      * 미션 재인증 하기
      * [POST] {teamId}/missions/{missionId}/archive
      * 작성자 : 정승연
-     */
+     **/
 
     @PutMapping()
     public ResponseEntity<SuccessResponse<MissionArchiveRes>> updateArchive(@AuthenticationPrincipal User user,
@@ -63,7 +64,7 @@ public class MissionArchiveController {
      * 미션 인증 조회
      * [GET] {teamId}/missions/{missionId}/archive
      * 작성자 : 정승연
-     */
+     **/
 
     @GetMapping()
     public ResponseEntity<SuccessResponse<MissionArchiveRes>> getMyArchive(@AuthenticationPrincipal User user,
@@ -76,13 +77,32 @@ public class MissionArchiveController {
      * 모임원 미션 인증 목록 조회
      * [GET] {teamId}/missions/{missionId}/archive/others
      * 작성자 : 정승연
-     */
+     **/
     @GetMapping("/others")
     public ResponseEntity<SuccessResponse<List<PersonalArchive>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
                                                                                   @PathVariable("teamId") Long teamId,
                                                                                   @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
+
+    /**
+     * 인증 성공 인원 조회
+     * [GET] {teamId}/m원issions/{missionId}/archive/status
+     * 작성자 : 정승연
+     **/
+
+    @GetMapping("/status")
+    public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
+                                                                                         @PathVariable("teamId") Long teamId,
+                                                                                         @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
+    }
+
+    /**
+     * 미션 인증 게시물 좋아요
+     * [GET] {teamId}/m원issions/{missionId}/archive/hearts
+     * 작성자 : 정승연
+     **/
 
     @PostMapping("/hearts")
     public ResponseEntity<SuccessResponse<MissionArchiveHeartRes>> pushHeart(@AuthenticationPrincipal User user,

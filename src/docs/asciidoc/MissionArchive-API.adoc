@@ -27,3 +27,15 @@ operation::mission-archive-controller-test/모임원_미션_인증_조회[snippe
 
 ---
 
+[[MissionArchive-인증성공인원조회]]
+=== 인증 성공 인원 조회 ( n/n명 )
+operation::mission-archive-controller-test/인증_성공_인원_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-미션인증물좋아요]]
+=== 미션 인증물 좋아요
+operation::mission-archive-controller-test/미션_인증물_좋아요[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+

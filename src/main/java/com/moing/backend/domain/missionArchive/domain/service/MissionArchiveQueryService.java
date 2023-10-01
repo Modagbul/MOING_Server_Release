@@ -87,6 +87,10 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findAllMissionArchivesByMemberId(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
+    public Long findDoneArchives(Long missionId) {
+        return missionArchiveRepository.findDonePeopleByMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
+
 
 
 
