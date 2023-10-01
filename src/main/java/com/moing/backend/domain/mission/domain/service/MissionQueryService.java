@@ -17,4 +17,8 @@ public class MissionQueryService {
     public Mission findMissionById(Long missionId) {
         return missionRepository.findById(missionId).orElseThrow(NotFoundMissionException::new);
     }
+
+    public Long findMissionsCountByTeam(Long teamId) {
+        return missionRepository.findMissionsCountByTeam(teamId);
+    }
 }
