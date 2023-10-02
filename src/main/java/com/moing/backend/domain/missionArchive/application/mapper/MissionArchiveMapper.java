@@ -36,6 +36,7 @@ public class MissionArchiveMapper {
                 .createdDate(missionArchive.getCreatedDate().toString())
                 .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
+                .count(missionArchive.getCount())
                 .build();
     }
 

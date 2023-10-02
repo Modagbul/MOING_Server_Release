@@ -13,10 +13,7 @@ import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus.*;
 import static com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus.INCOMPLETE;
@@ -40,7 +37,8 @@ public class MissionArchiveQueryService {
 
         Optional<List<MissionArchive>> optional = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
         if (optional.isPresent() && optional.get().size() == 0) {
-            throw new NotFoundMissionArchiveException();
+            return new ArrayList<>();
+//            throw new NotFoundMissionArchiveException();
         } else {
             return optional.get();
         }
