@@ -34,13 +34,11 @@ public class SingleMissionArchiveReadUseCase {
 
 
     // 미션 인증 조회
-    public MissionArchiveRes getMyArchive(String userSocialId, Long missionId) {
-
-        List<MissionArchiveRes> archiveRes = new ArrayList<>();
+    public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
 
-        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0));
+        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId));
     }
 
     // 모두의 미션 인증 목록 조회

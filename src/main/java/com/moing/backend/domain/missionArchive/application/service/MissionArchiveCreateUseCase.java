@@ -52,9 +52,9 @@ public class MissionArchiveCreateUseCase {
         // missionArchive 2개 이상일 때 예외처리 필요
         MissionArchive missionArchive = missionArchiveSaveService.save(MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission));
 
-        if (isDoneSingleMission(mission)) {
-            missionArchiveScoreService.addScore(team);
-        }
+//        if (isDoneSingleMission(mission)) {
+//            missionArchiveScoreService.addScore(team);
+//        }
 
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchive);
 

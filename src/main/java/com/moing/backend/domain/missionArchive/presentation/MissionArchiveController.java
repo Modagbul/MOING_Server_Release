@@ -67,7 +67,7 @@ public class MissionArchiveController {
      **/
 
     @GetMapping()
-    public ResponseEntity<SuccessResponse<MissionArchiveRes>> getMyArchive(@AuthenticationPrincipal User user,
+    public ResponseEntity<SuccessResponse<List<MissionArchiveRes>>> getMyArchive(@AuthenticationPrincipal User user,
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));

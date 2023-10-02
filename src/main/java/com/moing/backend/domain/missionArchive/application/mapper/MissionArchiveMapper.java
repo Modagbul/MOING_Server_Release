@@ -39,6 +39,14 @@ public class MissionArchiveMapper {
                 .build();
     }
 
+    public static List<MissionArchiveRes> mapToMissionArchiveResList(List<MissionArchive> missionArchiveList) {
+        List<MissionArchiveRes> missionArchiveResList = new ArrayList<>();
+        missionArchiveList.forEach(
+                missionArchive -> missionArchiveResList.add(MissionArchiveMapper.mapToMissionArchiveRes(missionArchive))
+        );
+        return missionArchiveResList;
+    }
+
 
     public static PersonalArchive mapToPersonalArchive(MissionArchive missionArchive) {
         Member member = missionArchive.getMember();

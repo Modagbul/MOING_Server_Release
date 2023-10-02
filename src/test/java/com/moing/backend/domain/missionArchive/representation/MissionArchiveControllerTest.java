@@ -185,13 +185,13 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 나의_미션_인증_조회() throws Exception {
         //given
 
-        MissionArchiveRes output = MissionArchiveRes.builder()
+        List<MissionArchiveRes> output = Lists.newArrayList(MissionArchiveRes.builder()
                 .archiveId(1L)
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(0)
                 .status("COMPLETE/SKIP")
-                .build();
+                .build());
 
         given(singleMissionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
 
@@ -220,11 +220,11 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(READ_MY_ARCHIVE_SUCCESS.getMessage()),
-                                        fieldWithPath("data.archiveId").description("미션 인증 아이디"),
-                                        fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
-                                        fieldWithPath("data.createdDate").description("미션 제출 시각"),
-                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
+                                        fieldWithPath("data[].archiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크]"),
+                                        fieldWithPath("data[].createdDate").description("미션 제출 시각"),
+                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수"),
+                                        fieldWithPath("data[].status").description("미션 인증 상태")
 
                                 )
                         )
