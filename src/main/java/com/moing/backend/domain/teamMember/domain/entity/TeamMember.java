@@ -42,7 +42,7 @@ public class TeamMember extends BaseTimeEntity {
         member.getTeamMembers().add(this);
     }
 
-    public void withdrawTeam() {
+    public void deleteMember() {
         this.isDeleted = true;
     }
 }

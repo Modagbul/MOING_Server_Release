@@ -79,7 +79,7 @@ public class Member extends BaseTimeEntity {
     @ColumnDefault("true")
     private boolean isFirePush;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member")
     private List<TeamMember> teamMembers = new ArrayList<>(); //최대 3개이므로 양방향
 
     //==생성 메서드==//
@@ -166,6 +166,13 @@ public class Member extends BaseTimeEntity {
         this.registrationStatus = registrationStatus;
         this.role = role;
         this.socialId = socialId;
+    }
+
+    public void deleteTeamMember(){
+        List<TeamMember> teamMemberList=this.getTeamMembers();
+        for(TeamMember teamMember:teamMemberList){
+            teamMember.deleteMember();
+        }
     }
 
 }

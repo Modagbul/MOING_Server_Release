@@ -9,8 +9,10 @@ import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase
 import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
 import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
+import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.presentation.MissionController;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -46,6 +48,9 @@ public class MissionControllerTest extends CommonControllerTest {
 
     @MockBean
     private MissionDeleteUseCase missionDeleteUseCase;
+
+    @MockBean
+    private MissionQueryService missionQueryService;
 
 
 

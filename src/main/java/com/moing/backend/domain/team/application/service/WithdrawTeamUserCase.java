@@ -25,7 +25,7 @@ public class WithdrawTeamUserCase {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);
         TeamMember teamMember = teamMemberGetService.getTeamMember(member, team);
-        teamMember.withdrawTeam();
+        teamMember.deleteMember();
         return new DeleteTeamResponse(team.getTeamId());
     }
 }
