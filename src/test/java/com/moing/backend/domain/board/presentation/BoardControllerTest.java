@@ -193,6 +193,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .boardId(1L)
                 .writerIsLeader(true)
                 .writerNickName("작성자 닉네임")
+                .writerIsDeleted(false)
                 .writerProfileImage("작성자 프로필 이미지")
                 .title("공지 제목")
                 .content("공지 내용")
@@ -204,6 +205,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .boardId(1L)
                 .writerIsLeader(true)
                 .writerNickName("작성자 닉네임")
+                .writerIsDeleted(false)
                 .writerProfileImage("작성자 프로필 이미지")
                 .title("게시글 제목")
                 .content("게시글 내용")
@@ -246,6 +248,7 @@ public class BoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.noticeBlocks[0].writerNickName").description("작성자 닉네임"),
                                         fieldWithPath("data.noticeBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
                                         fieldWithPath("data.noticeBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.noticeBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
                                         fieldWithPath("data.noticeBlocks[0].title").description("공지 제목"),
                                         fieldWithPath("data.noticeBlocks[0].content").description("공지 내용"),
                                         fieldWithPath("data.noticeBlocks[0].commentNum").description("공지 댓글 개수"),
@@ -255,6 +258,7 @@ public class BoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.notNoticeBlocks[0].writerNickName").description("작성자 닉네임"),
                                         fieldWithPath("data.notNoticeBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
                                         fieldWithPath("data.notNoticeBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.notNoticeBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
                                         fieldWithPath("data.notNoticeBlocks[0].title").description("일반 게시글 제목"),
                                         fieldWithPath("data.notNoticeBlocks[0].content").description("일반 게시글 내용"),
                                         fieldWithPath("data.notNoticeBlocks[0].commentNum").description("일반 게시글 댓글 개수"),

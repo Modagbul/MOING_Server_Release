@@ -1,11 +1,7 @@
 package com.moing.backend.domain.boardComment.domain.repository;
 
-import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
-import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUserCase;
-import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
-import com.moing.backend.domain.boardComment.domain.entity.QBoardComment;
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.ExpressionUtils;
@@ -17,7 +13,6 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.boardComment;
-import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 
 public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepository{
 
@@ -42,11 +37,15 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                                 .from(QTeamMember.teamMember)
                                 .where(QTeamMember.teamMember.eq(teamMember)
                                         .and(QTeamMember.teamMember.eq(boardComment.teamMember)))
-                                .exists(), "isWriter")))
+                                .exists(), "isWriter"),
+                        boardComment.teamMember.isDeleted))
                 .from(boardComment)
                 .where(boardComment.board.boardId.eq(boardId))
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
+
+        commentBlocks.forEach(CommentBlocks::deleteMember);
+
         return new GetBoardCommentResponse(commentBlocks);
     }
 }
