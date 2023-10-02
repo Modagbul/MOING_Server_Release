@@ -105,5 +105,19 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         );
     }
 
+    @Override
+    public Optional<Long> findMyDoneCountByMissionId(Long missionId,Long memberId){
+        return Optional.ofNullable(queryFactory
+                .select(missionArchive.count())
+                .from(missionArchive)
+                .where(
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.eq(memberId)
+                )
+                .fetchFirst()
+        );
+    }
+
+
 
 }

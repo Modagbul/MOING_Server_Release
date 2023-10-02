@@ -90,6 +90,9 @@ public class MissionArchiveQueryService {
     public Long findDoneArchives(Long missionId) {
         return missionArchiveRepository.findDonePeopleByMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
+    public Long findMyDoneArchives(Long memberId,Long missionId) {
+        return missionArchiveRepository.findMyDoneCountByMissionId(missionId,memberId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
 
 
 
