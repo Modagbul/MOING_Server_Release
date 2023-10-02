@@ -5,7 +5,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
@@ -77,9 +77,9 @@ public class MissionArchiveController {
      * 작성자 : 정승연
      **/
     @GetMapping("/others")
-    public ResponseEntity<SuccessResponse<List<PersonalArchive>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
-                                                                                  @PathVariable("teamId") Long teamId,
-                                                                                  @PathVariable("missionId") Long missionId) {
+    public ResponseEntity<SuccessResponse<List<PersonalArchiveRes>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
+                                                                                            @PathVariable("teamId") Long teamId,
+                                                                                            @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
