@@ -13,6 +13,11 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("500", "서버에서 요청을 처리하는 동안 오류가 발생했습니다."),
     NOT_FOUND_REFRESH_TOKEN_ERROR( "J0008",  "유효하지 않는 RefreshToken 입니다."),
 
+    //FCM 토큰 관련
+    INITIALIZE_ERROR("F0001", "Firebase Admin SDK 초기화에 실패했습니다."),
+    NOTIFICATION_ERROR("F0002", "메시지 전송에 실패했습니다."),
+    MESSAGING_ERROR("F0003", "firebaseConfigPath를 읽어오는데 실패하였습니다"),
+
     //유저 관련 에러 코드
     NOT_FOUND_BY_SOCIAL_ID_ERROR( "U0001",  "해당 socialId인 유저가 존재하지 않습니다."),
     ACCOUNT_ALREADY_EXIST("AU0001", "해당 email로 다른 소셜 플랫폼으로 가입하였습니다."),
