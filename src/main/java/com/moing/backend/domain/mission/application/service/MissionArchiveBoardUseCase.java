@@ -19,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +66,18 @@ public class MissionArchiveBoardUseCase {
 
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        return missionArchiveQueryService.findMyRepeatMissionArchives(member.getMemberId(),teamId,MissionStatus.ONGOING);
+        List<RepeatMissionBoardRes> myRepeatMissionArchives = missionArchiveQueryService.findMyRepeatMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
+
+
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+        if (currentDayOfWeek == DayOfWeek.SUNDAY) {
+            myRepeatMissionArchives.stream().forEach(
+                    repeatMissionBoardRes -> repeatMissionBoardRes.setDueTo("True")
+            );
+        }
+
+        return myRepeatMissionArchives;
 
     }
 

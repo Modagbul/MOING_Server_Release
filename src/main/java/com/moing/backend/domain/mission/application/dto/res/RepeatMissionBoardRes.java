@@ -20,6 +20,7 @@ public class RepeatMissionBoardRes {
     public RepeatMissionBoardRes(Long missionId, String title, Long done,int number) {
         this.missionId = missionId;
         this.title = title;
+        this.dueTo="False";
         this.number = number;
         this.done = done;
     }
