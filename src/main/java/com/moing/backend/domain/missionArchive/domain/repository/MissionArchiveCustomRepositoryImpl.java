@@ -47,6 +47,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.mission.team.teamId.eq(teamId),
                         missionArchive.member.memberId.eq(memberId),
                         missionArchive.mission.status.eq(status),
+                        missionArchive.mission.type.eq(MissionType.ONCE),
                         missionArchive.status.eq(archiveStatus)
                 )
                 .orderBy(orderSpecifiers)
