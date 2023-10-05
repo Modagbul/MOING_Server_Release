@@ -9,6 +9,7 @@ import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @DomainService
 @RequiredArgsConstructor
@@ -22,4 +23,9 @@ public class TeamMemberGetService {
     public TeamMember getTeamMember(Member member, Team team){
         return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(()-> new NotFoundByTeamIdException());
     }
+
+    public Optional<List<String>> getFcmTokens(Long teamId, Long memberId) {
+        return teamMemberRepository.findFcmTokensByTeamId(teamId, memberId);
+    }
+
 }

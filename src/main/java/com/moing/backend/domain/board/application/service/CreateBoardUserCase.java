@@ -40,12 +40,15 @@ public class CreateBoardUserCase {
      * 게시글 생성
      */
     public CreateBoardResponse createBoard(String socialId, Long teamId, CreateBoardRequest createBoardRequest) {
+        //1, 게시글 생성, 저장
         BaseServiceResponse data=baseService.getCommonData(socialId, teamId);
-        boolean isLeader = checkLeaderUserCase.isTeamLeader(data.getMember(), data.getTeam());
+        boolean isLeader = checkLeaderUserCase.isTeamLeader(data.getMember(), data.getTeam()); //작성자 리더 여부
         Board board=boardSaveService.saveBoard(boardMapper.toBoard(data.getMember(), data.getTeamMember(), data.getTeam(), createBoardRequest, isLeader));
 
-        //읽음 처리
+        //2. 읽음 처리 - 생성한 사람은 무조건 읽음
         createBoardReadUserCase.createBoardRead(data.getTeam(), data.getMember(), board);
+
+        //3. 알림 보내기 - 공지인 경우
         return new CreateBoardResponse(board.getBoardId());
     }
 }
