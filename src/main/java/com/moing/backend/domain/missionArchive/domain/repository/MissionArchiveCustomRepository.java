@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
@@ -17,6 +18,7 @@ public interface MissionArchiveCustomRepository {
     Optional<Long> findDonePeopleByMissionId(Long missionId);
     Optional<Long> findMyDoneCountByMissionId(Long missionId,Long memberId);
 
+    Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status);
 
 
     }

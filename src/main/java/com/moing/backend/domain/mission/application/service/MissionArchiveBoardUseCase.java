@@ -7,6 +7,7 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -28,6 +29,7 @@ import java.util.List;
 public class MissionArchiveBoardUseCase {
 
     private final MissionArchiveQueryService missionArchiveQueryService;
+    private final MissionQueryService missionQueryService;
 
     private final MemberGetService memberGetService;
     private final TeamRepository teamRepository;
@@ -57,13 +59,12 @@ public class MissionArchiveBoardUseCase {
 
     }
 
-//    public List<RepeatMissionBoardRes> getActiveRepeatMissions(Long teamId, String memberId) {
-//
-//        Team team = teamRepository.findById(teamId).orElseThrow();
-//        Member member = memberGetService.getMemberBySocialId(memberId);
-//
-//        missionArchiveQueryService.findRepeatMissionMyArchive(memberId, );
-//    }
-//
+    public List<RepeatMissionBoardRes> getActiveRepeatMissions(Long teamId, String memberId) {
+
+        Member member = memberGetService.getMemberBySocialId(memberId);
+
+        return missionArchiveQueryService.findMyRepeatMissionArchives(member.getMemberId(),teamId,MissionStatus.ONGOING);
+
+    }
 
 }

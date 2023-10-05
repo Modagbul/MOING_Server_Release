@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.service;
 
+import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -77,9 +78,9 @@ public class MissionArchiveQueryService {
         incompleteList.addAll(completeList);
         return incompleteList;
     }
-//    public List<MissionArchive> findMyRepeatMissionArchives(Long memberId, List<Long> missionIds) {
-//        return missionArchiveRepository.findRepeatMissionArchivesByMission(memberId, missionIds).orElseThrow(NotFoundMissionArchiveException::new);
-//    }
+    public List<RepeatMissionBoardRes> findMyRepeatMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
+        return missionArchiveRepository.findRepeatMissionArchivesByMemberId(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
+    }
 
     public List<MissionArchive> findMyAllMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
         return missionArchiveRepository.findAllMissionArchivesByMemberId(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);

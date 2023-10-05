@@ -70,7 +70,9 @@ public class MissionArchiveCreateUseCase {
     public Boolean isEndMission(Member member,Mission mission) {
         Team team = mission.getTeam();
 
-        if (mission.getMissionArchiveList().size() == team.getNumOfMember()-1) {
+        Long missionsCountByTeam = missionQueryService.findMissionsCountByTeam(team.getTeamId());
+
+        if (missionsCountByTeam == team.getNumOfMember()-1) {
             mission.setStatus(MissionStatus.END);
             return true;
         }
