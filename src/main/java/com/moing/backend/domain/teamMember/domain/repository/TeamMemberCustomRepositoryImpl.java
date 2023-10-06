@@ -27,12 +27,21 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     }
 
     @Override
-    public Optional<List<String>> findFcmTokensByTeamId(Long teamId, Long memberId) {
+    public Optional<List<String>> findFcmTokensByTeamIdAndMemberId(Long teamId, Long memberId) {
         return Optional.ofNullable(queryFactory.select(teamMember.member.fcmToken)
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)) //해당 소모임에 참여하고 있고
                 .where(teamMember.member.isNewUploadPush.eq(true)) //알림 설정 on해 있고
                 .where(teamMember.member.memberId.ne(memberId)) //지금 유저가 아닌 경우
+                .fetch());
+    }
+
+    @Override
+    public Optional<List<String>> findFcmTokensByTeamId(Long teamId) {
+        return Optional.ofNullable(queryFactory.select(teamMember.member.fcmToken)
+                .from(teamMember)
+                .where(teamMember.team.teamId.eq(teamId)) //해당 소모임에 참여하고 있고
+                .where(teamMember.member.isNewUploadPush.eq(true)) //알림 설정 on해 있고
                 .fetch());
     }
 }

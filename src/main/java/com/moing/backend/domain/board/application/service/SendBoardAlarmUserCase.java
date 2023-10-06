@@ -19,7 +19,7 @@ import static com.moing.backend.global.config.fcm.constant.NewUploadTitle.UPLOAD
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AlarmBoardUserCase {
+public class SendBoardAlarmUserCase {
 
     private final TeamMemberGetService teamMemberGetService;
     private final FcmService fcmService;
@@ -31,7 +31,7 @@ public class AlarmBoardUserCase {
         if (board.isNotice() && member.isNewUploadPush()) {
             String title = team.getName() + " " + UPLOAD_NOTICE_NEW_TITLE.getTitle();
             String message = board.getTitle();
-            Optional<List<String>> fcmTokens = teamMemberGetService.getFcmTokens(team.getTeamId(), member.getMemberId());
+            Optional<List<String>> fcmTokens = teamMemberGetService.getFcmTokensExceptMe(team.getTeamId(), member.getMemberId());
             if (fcmTokens.isPresent() && !fcmTokens.get().isEmpty()) {
                 MultiRequest toMultiRequest = new MultiRequest(fcmTokens.get(), title, message);
                 fcmService.sendMultipleDevices(toMultiRequest);

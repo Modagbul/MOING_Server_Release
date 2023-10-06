@@ -24,8 +24,12 @@ public class TeamMemberGetService {
         return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(()-> new NotFoundByTeamIdException());
     }
 
-    public Optional<List<String>> getFcmTokens(Long teamId, Long memberId) {
-        return teamMemberRepository.findFcmTokensByTeamId(teamId, memberId);
+    public Optional<List<String>> getFcmTokensExceptMe(Long teamId, Long memberId) {
+        return teamMemberRepository.findFcmTokensByTeamIdAndMemberId(teamId, memberId);
+    }
+
+    public Optional<List<String>> getFcmTokens(Long teamId) {
+        return teamMemberRepository.findFcmTokensByTeamId(teamId);
     }
 
 }
