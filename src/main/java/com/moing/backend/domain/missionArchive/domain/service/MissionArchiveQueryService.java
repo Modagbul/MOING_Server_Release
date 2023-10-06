@@ -1,6 +1,8 @@
 package com.moing.backend.domain.missionArchive.domain.service;
 
+import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
+import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -31,6 +33,7 @@ public class MissionArchiveQueryService {
     public MissionArchive findArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
+
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
         Optional<List<MissionArchive>> optional = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
@@ -41,6 +44,7 @@ public class MissionArchiveQueryService {
             return optional.get();
         }
     }
+
     public List<MissionArchive> findOthersArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findOthersArchives(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
@@ -53,8 +57,7 @@ public class MissionArchiveQueryService {
         Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
         if (byMemberId.isPresent()) {
             return Boolean.TRUE;
-        }
-        else{
+        } else {
             return Boolean.FALSE;
         }
     }
@@ -64,17 +67,18 @@ public class MissionArchiveQueryService {
     /**
      * mission.getTeam() 팀의 단일미션 미션 인증 보드
      */
-    public List<MissionArchive> findMySingleMissionArchives(Long memberId,Long teamId, MissionStatus missionStatus) {
+    public List<MissionArchive> findMySingleMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
         // INCOMPLETE
         List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, INCOMPLETE, OrderCondition.DUETO)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
-        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, COMPLETE,OrderCondition.CREATED)
+        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, COMPLETE, OrderCondition.CREATED)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
         incompleteList.addAll(completeList);
         return incompleteList;
     }
+
     public List<RepeatMissionBoardRes> findMyRepeatMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
         return missionArchiveRepository.findRepeatMissionArchivesByMemberId(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
     }
@@ -86,11 +90,15 @@ public class MissionArchiveQueryService {
     public Long findDoneArchives(Long missionId) {
         return missionArchiveRepository.findDonePeopleByMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
-    public Long findMyDoneArchives(Long memberId,Long missionId) {
-        return missionArchiveRepository.findMyDoneCountByMissionId(missionId,memberId).orElseThrow(NotFoundMissionArchiveException::new);
+
+    public Long findMyDoneArchives(Long memberId, Long missionId) {
+        return missionArchiveRepository.findMyDoneCountByMissionId(missionId, memberId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
 
+    public List<FinishMissionBoardRes> findMyFinishMissions(Long memberId, Long teamId, MissionStatus missionStatus) {
+        return missionArchiveRepository.findMyMissionsByStatus(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
+    }
 
 
 }

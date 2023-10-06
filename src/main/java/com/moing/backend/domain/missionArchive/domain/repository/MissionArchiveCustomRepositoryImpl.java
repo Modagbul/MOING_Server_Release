@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
@@ -161,6 +162,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .groupBy(mission.id)
                 .fetch());
 
+
+    }
+
+    @Override
+    public Optional<List<FinishMissionBoardRes>> findMyMissionsByStatus(Long memberId, Long teamId, MissionStatus missionStatus) {
 
     }
 }
