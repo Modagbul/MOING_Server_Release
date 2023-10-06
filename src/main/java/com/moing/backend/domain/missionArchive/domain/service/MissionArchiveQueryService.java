@@ -4,12 +4,9 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveCustomRepository;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
-import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
-import com.moing.backend.domain.teamMember.domain.repository.OrderCondition;
+import com.moing.backend.domain.missionArchive.domain.repository.OrderCondition;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;

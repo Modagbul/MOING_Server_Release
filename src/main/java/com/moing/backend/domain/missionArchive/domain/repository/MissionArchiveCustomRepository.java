@@ -4,8 +4,6 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.teamMember.domain.repository.OrderCondition;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;

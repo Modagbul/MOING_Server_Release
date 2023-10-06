@@ -1,32 +1,23 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
-import com.moing.backend.domain.mission.domain.entity.QMission;
-import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
-import com.moing.backend.domain.teamMember.domain.repository.OrderCondition;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import feign.Param;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
 import static javax.swing.Spring.constant;
-import static org.hibernate.internal.util.NullnessHelper.coalesce;
 
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
 
