@@ -6,9 +6,11 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -168,5 +170,27 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<FinishMissionBoardRes>> findMyMissionsByStatus(Long memberId, Long teamId, MissionStatus missionStatus) {
 
+        Expression<String> dueToString = Expressions.stringTemplate("DATE_FORMAT({0}, '%Y-%m-%d %H:%i.%s')", mission.dueTo);
+        Expression<String> status = Expressions.stringTemplate(String.valueOf(missionArchive.status));
+        Expression<String> type = Expressions.stringTemplate(String.valueOf(mission.type));
+
+
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(FinishMissionBoardRes.class,
+                    mission.id,
+                    mission.dueTo,
+                    mission.title,
+                    missionArchive.status,
+                    mission.type
+                ))
+                .from(mission)
+                .leftJoin(mission.missionArchiveList,missionArchive)
+                        .on(missionArchive.member.memberId.eq(memberId))
+                .where(
+                        mission.team.teamId.eq(teamId),
+                        mission.status.eq(missionStatus)
+                )
+                .fetch()
+        );
     }
 }

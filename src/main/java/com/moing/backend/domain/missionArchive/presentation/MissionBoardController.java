@@ -44,7 +44,7 @@ public class MissionBoardController {
     @GetMapping("/repeat")
     public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> getActiveRepeatMission(@AuthenticationPrincipal User user,
                                                                                                @PathVariable("teamId") Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(FINISH_ALL_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
+        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
     }
 
     /**
