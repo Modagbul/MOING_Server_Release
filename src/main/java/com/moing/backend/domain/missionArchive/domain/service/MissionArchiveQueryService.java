@@ -2,7 +2,6 @@ package com.moing.backend.domain.missionArchive.domain.service;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
-import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -96,8 +95,8 @@ public class MissionArchiveQueryService {
     }
 
 
-    public List<FinishMissionBoardRes> findMyFinishMissions(Long memberId, Long teamId, MissionStatus missionStatus) {
-        return missionArchiveRepository.findMyMissionsByStatus(memberId, teamId, missionStatus).orElseThrow(NotFoundMissionArchiveException::new);
+    public List<FinishMissionBoardRes> findMyFinishMissions(Long memberId, Long teamId) {
+        return missionArchiveRepository.findFinishMissionsByStatus(memberId, teamId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
 

@@ -19,6 +19,6 @@ public interface MissionArchiveCustomRepository {
 
     Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status);
 
-    Optional<List<FinishMissionBoardRes>> findMyMissionsByStatus(Long memberId, Long teamId, MissionStatus missionStatus);
+    Optional<List<FinishMissionBoardRes>> findFinishMissionsByStatus(Long memberId, Long teamId);
 
     }

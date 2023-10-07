@@ -57,7 +57,7 @@ public class MissionArchiveBoardUseCase {
         Team team = teamRepository.findById(teamId).orElseThrow();
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        return missionArchiveQueryService.findMyFinishMissions(member.getMemberId(), teamId, MissionStatus.END);
+        return missionArchiveQueryService.findMyFinishMissions(member.getMemberId(), teamId);
 
     }
 

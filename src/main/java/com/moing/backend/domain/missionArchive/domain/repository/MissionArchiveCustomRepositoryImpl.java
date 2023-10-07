@@ -168,7 +168,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
     @Override
-    public Optional<List<FinishMissionBoardRes>> findMyMissionsByStatus(Long memberId, Long teamId, MissionStatus missionStatus) {
+    public Optional<List<FinishMissionBoardRes>> findFinishMissionsByStatus(Long memberId, Long teamId) {
 
         Expression<String> dueToString = Expressions.stringTemplate("DATE_FORMAT({0}, '%Y-%m-%d %H:%i.%s')", mission.dueTo);
         Expression<String> status = Expressions.stringTemplate(String.valueOf(missionArchive.status));
@@ -188,7 +188,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         .on(missionArchive.member.memberId.eq(memberId))
                 .where(
                         mission.team.teamId.eq(teamId),
-                        mission.status.eq(missionStatus)
+                        mission.status.eq(MissionStatus.SUCCESS).or(mission.status.eq(MissionStatus.FAIL))
                 )
                 .fetch()
         );
