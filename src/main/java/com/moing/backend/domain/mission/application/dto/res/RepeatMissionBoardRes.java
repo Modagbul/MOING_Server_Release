@@ -24,4 +24,13 @@ public class RepeatMissionBoardRes {
         this.number = number;
         this.done = done;
     }
+
+    @Builder
+    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number) {
+        this.missionId = missionId;
+        this.title = title;
+        this.dueTo = "False";
+        this.done = done;
+        this.number = number;
+    }
 }

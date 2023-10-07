@@ -26,7 +26,7 @@ public class MissionBoardController {
 
     /**
      * 단일 인증 조회
-     * [POST] {teamId}/missions/board/single
+     * [GET] {teamId}/missions/board/single
      * 작성자 : 정승연
      */
 
