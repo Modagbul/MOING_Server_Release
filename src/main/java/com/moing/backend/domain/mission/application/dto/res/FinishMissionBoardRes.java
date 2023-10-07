@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 public class FinishMissionBoardRes {
     private Long missionId;
-    private LocalDateTime dueTo; // 날짜
+    private String dueTo; // 날짜
     private String title;
-    private MissionArchiveStatus status;
-    private MissionType missionType;
+    private String status;
+    private String missionType;
 
-    public FinishMissionBoardRes(Long missionId, LocalDateTime dueTo, String title, MissionArchiveStatus status, MissionType missionType) {
+    public FinishMissionBoardRes(Long missionId, String dueTo, String title, String status, String missionType) {
         this.missionId = missionId;
         this.dueTo = dueTo;
         this.title = title;

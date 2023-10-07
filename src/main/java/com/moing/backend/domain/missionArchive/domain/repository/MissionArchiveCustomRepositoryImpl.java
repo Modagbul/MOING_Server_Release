@@ -178,10 +178,10 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(FinishMissionBoardRes.class,
                     mission.id,
-                    mission.dueTo,
+                    mission.dueTo.stringValue(),
                     mission.title,
-                    missionArchive.status,
-                    mission.type
+                    missionArchive.status.stringValue(),
+                    mission.type.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)

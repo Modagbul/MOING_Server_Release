@@ -115,10 +115,10 @@ public class MissionArchiveMapper {
         Mission mission = missionArchive.getMission();
         return FinishMissionBoardRes.builder()
                 .missionId(mission.getId())
-                .missionType(mission.getType())
+                .missionType(mission.getType().name())
                 .title(mission.getTitle())
-                .dueTo(mission.getDueTo())
-                .status(missionArchive.getStatus())
+                .dueTo(mission.getDueTo().toString())
+                .status(missionArchive.getStatus().name())
                 .build();
     }
 
