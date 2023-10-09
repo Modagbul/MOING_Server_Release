@@ -21,9 +21,14 @@ public class CreateBoardCommentUserCase {
     private final BoardCommentMapper boardCommentMapper;
     private final BaseBoardService baseBoardService;
 
+    /**
+     * 게시글 댓글 생성
+     */
     public CreateBoardCommentResponse createBoardComment(String socialId, Long teamId, Long boardId, CreateBoardCommentRequest createBoardCommentRequest) {
+        // 1. 게시글 댓글 생성
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         BoardComment boardComment = boardCommentSaveService.saveBoardComment(boardCommentMapper.toBoardComment(data.getTeamMember(), data.getBoard(), createBoardCommentRequest));
+        // 2. 게시글 댓글 개수 증가
         data.getBoard().incrComNum();
         return new CreateBoardCommentResponse(boardComment.getBoardCommentId());
     }

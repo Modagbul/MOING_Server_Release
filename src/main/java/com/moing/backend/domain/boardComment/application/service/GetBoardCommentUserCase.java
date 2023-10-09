@@ -17,6 +17,9 @@ public class GetBoardCommentUserCase {
     private final BoardCommentGetService boardCommentGetService;
     private final BaseBoardService baseBoardService;
 
+    /**
+     * 게시글 댓글 전체 조회
+     */
     public GetBoardCommentResponse getBoardCommentAll(String socialId, Long teamId, Long boardId){
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         return boardCommentGetService.getBoardCommentAll(boardId, data.getTeamMember());

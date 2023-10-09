@@ -31,8 +31,9 @@ public class GetBoardUserCase {
      * 게시글 상세 조회
      */
     public GetBoardDetailResponse getBoardDetail(String socialId, Long teamId, Long boardId) {
+        // 1. 게시글 조회
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
-        //읽음 처리
+        // 2. 읽음 처리
         createBoardReadUserCase.createBoardRead(data.getTeam(), data.getMember(), data.getBoard());
         return boardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember());
     }

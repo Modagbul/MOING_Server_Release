@@ -21,8 +21,11 @@ public class DeleteBoardUserCase {
      * 게시글 삭제
      */
     public void deleteBoard(String socialId, Long teamId, Long boardId){
+        //1. 게시글 조회
         BaseBoardServiceResponse data= baseBoardService.getCommonData(socialId,teamId,boardId);
+        //2. 작성자인 경우
         if (data.getTeamMember() == data.getBoard().getTeamMember()) {
+            //3. 삭제
             boardDeleteService.deleteBoard(data.getBoard());
         } else throw new NotAuthByBoardException();
     }
