@@ -5,9 +5,11 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+@Repository
 public interface MissionArchiveCustomRepository {
     Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status, MissionArchiveStatus archiveStatus, OrderCondition orderCondition);
     Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) ;

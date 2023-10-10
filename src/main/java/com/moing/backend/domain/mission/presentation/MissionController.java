@@ -29,7 +29,6 @@ public class MissionController {
     private final MissionReadUseCase missionReadUseCase;
     private final MissionUpdateUseCase missionUpdateUseCase;
     private final MissionDeleteUseCase missionDeleteUseCase;
-    private final MissionQueryService missionQueryService;
 
     /**
      * 미션 조회

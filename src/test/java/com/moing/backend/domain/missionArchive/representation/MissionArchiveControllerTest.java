@@ -7,10 +7,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveUpdateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.SingleMissionArchiveReadUseCase;
+import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.domain.missionArchive.presentation.MissionArchiveController;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -42,6 +39,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     @MockBean
     private SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
     @MockBean
+    private RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
+    @MockBean
     private MissionArchiveHeartUseCase missionArchiveHeartUseCase;
 
 
@@ -62,6 +61,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .status("COMPLETE/SKIP")
+                .count(1L)
                 .build();
 
         given(missionArchiveCreateUseCase.createArchive(any(),any(),any())).willReturn(output);
@@ -99,7 +99,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data.createdDate").description("미션 제출 시각"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
+                                        fieldWithPath("data.status").description("미션 인증 상태"),
+                                        fieldWithPath("data.count").description("미션 인증 횟수")
 //                                        fieldWithPath("data.heartsStatus").description("미션 인증 좋아요 상태"),
                                 )
                         )
@@ -124,6 +125,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .status("COMPLETE/SKIP")
+                .count(1L)
                 .build();
 
         given(missionArchiveUpdateUseCase.updateArchive(any(),any(),any())).willReturn(output);
@@ -161,7 +163,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data.createdDate").description("미션 제출 시각"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
+                                        fieldWithPath("data.status").description("미션 인증 상태"),
+                                        fieldWithPath("data.count").description("미션 인증 횟수")
 //                                        fieldWithPath("data.heartsStatus").description("미션 인증 좋아요 상태"),
                                 )
                         )
@@ -180,6 +183,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(0)
                 .status("COMPLETE/SKIP")
+                        .count(1L)
                 .build());
 
         given(singleMissionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
@@ -213,7 +217,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data[].createdDate").description("미션 제출 시각"),
                                         fieldWithPath("data[].hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data[].status").description("미션 인증 상태")
+                                        fieldWithPath("data[].status").description("미션 인증 상태"),
+                                        fieldWithPath("data[].count").description("미션 인증 횟수")
 
                                 )
                         )
@@ -234,6 +239,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .createdDate("2023-09-03T21:32:33.888")
                 .hearts(3)
                 .status("COMPLETE/SKIP")
+                        .count(1L)
                 .build());
 
         given(singleMissionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
@@ -269,7 +275,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크] "),
                                         fieldWithPath("data[].createdDate").description("미션 인증 날짜 "),
                                         fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
-                                        fieldWithPath("data[].status").description("미션 인증 상태")
+                                        fieldWithPath("data[].status").description("미션 인증 상태"),
+                                        fieldWithPath("data[].count").description("미션 인증 횟수")
 
                                 )
                         )
@@ -379,6 +386,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 )
                 .andReturn();
     }
+
+
 
 
 
