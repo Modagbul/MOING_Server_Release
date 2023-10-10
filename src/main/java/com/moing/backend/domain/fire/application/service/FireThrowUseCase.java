@@ -29,7 +29,7 @@ public class FireThrowUseCase {
 
         Long throwMemberId = memberGetService.getMemberBySocialId(userId).getMemberId();
 
-        if (fireQueryService.hasFireCreatedWithinOneHour(throwMemberId, receiveMemberId)) {
+        if (!fireQueryService.hasFireCreatedWithinOneHour(throwMemberId, receiveMemberId)) {
             throw new NoAuthThrowFireException();
         }
 
@@ -39,7 +39,14 @@ public class FireThrowUseCase {
                 .build()));
     }
 
-//    public List<FireReceiveRes> getFireReceiveList(Long missionArchiveId) {
-//        fireQueryService.
-//    }
+    public List<FireReceiveRes> getFireReceiveList(String userId,Long teamId, Long missionId) {
+        Long memberId = memberGetService.getMemberBySocialId(userId).getMemberId();
+
+        List<FireReceiveRes> fireReceiveRes = FireMapper.mapToFireReceiversList(fireQueryService.getNotYetMissionMember(teamId, missionId));
+        fireReceiveRes.forEach(
+                res -> res.updateFireStatus(fireQueryService.hasFireCreatedWithinOneHour(memberId,res.getReceiveMemberId())
+        ));
+
+        return fireReceiveRes;
+    }
 }

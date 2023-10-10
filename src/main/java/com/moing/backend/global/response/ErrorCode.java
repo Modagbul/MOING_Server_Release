@@ -27,6 +27,7 @@ public enum ErrorCode {
 
     //불던지기 관련 에러 코드
     NOT_FOUND_FIRE("F001","불던지기 현황을 찾을 수 없습니다"),
+    NOT_FOUND_FIRE_RECEIVERS("F001","불던지기를 받을 사람을 찾을 수 없습니다"),
     NOT_AUTH_FIRE_THROW("F002","1시간 이내에 불던지기를 할 수 없습니다"),
 
     //팀 관련 에러 코드
