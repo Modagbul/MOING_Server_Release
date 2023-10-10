@@ -25,6 +25,10 @@ public enum ErrorCode {
     NOT_FOUND_MISSION("M0002", "미션을 찾을 수 없습니다."),
     NOT_FOUND_MISSION_ARCHIVE("MA0001", "아직 미션을 제출하지 않았습니다."),
 
+    //불던지기 관련 에러 코드
+    NOT_FOUND_FIRE("F001","불던지기 현황을 찾을 수 없습니다"),
+    NOT_AUTH_FIRE_THROW("F002","1시간 이내에 불던지기를 할 수 없습니다"),
+
     //팀 관련 에러 코드
     NOT_FOUND_BY_TEAM_ID_ERROR("T0001", "해당 teamId인 팀이 존재하지 않습니다."),
     NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다."),
