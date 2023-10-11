@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PersonalArchive {
+public class PersonalArchiveRes {
 
     private Long archiveId;
     private String nickname;
@@ -19,5 +19,6 @@ public class PersonalArchive {
     private int hearts;
 
     private String status;
+    private Long count;
 
 }

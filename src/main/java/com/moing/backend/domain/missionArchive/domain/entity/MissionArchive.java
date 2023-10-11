@@ -41,6 +41,8 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
 
     private int hearts;
 
+    private Long count;
+
 
     public void updateArchive(MissionArchiveReq missionArchiveReq) {
         this.archive = missionArchiveReq.getArchive();
@@ -51,6 +53,10 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
             return this.hearts += 1;
         else
             return this.hearts -= 1;
+    }
+
+    public void updateCount(Long count) {
+        this.count = count;
     }
 
 

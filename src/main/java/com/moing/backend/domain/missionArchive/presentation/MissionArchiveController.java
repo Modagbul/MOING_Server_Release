@@ -5,11 +5,8 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveUpdateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.SingleMissionArchiveReadUseCase;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
+import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -30,6 +27,7 @@ public class MissionArchiveController {
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;
     private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     private final SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private final RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
     private final MissionArchiveHeartUseCase missionArchiveHeartUseCase;
 
     /**
@@ -67,7 +65,7 @@ public class MissionArchiveController {
      **/
 
     @GetMapping()
-    public ResponseEntity<SuccessResponse<MissionArchiveRes>> getMyArchive(@AuthenticationPrincipal User user,
+    public ResponseEntity<SuccessResponse<List<MissionArchiveRes>>> getMyArchive(@AuthenticationPrincipal User user,
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
@@ -79,26 +77,13 @@ public class MissionArchiveController {
      * 작성자 : 정승연
      **/
     @GetMapping("/others")
-    public ResponseEntity<SuccessResponse<List<PersonalArchive>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
-                                                                                  @PathVariable("teamId") Long teamId,
-                                                                                  @PathVariable("missionId") Long missionId) {
+    public ResponseEntity<SuccessResponse<List<PersonalArchiveRes>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
+                                                                                            @PathVariable("teamId") Long teamId,
+                                                                                            @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
-    /**
-     * 인증 성공 인원 조회 (n/n명)
-     * [GET] {teamId}/missions/{missionId}/archive/status
-     * 작성자 : 정승연
-     **/
-
-    @GetMapping("/status")
-    public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
-                                                                                         @PathVariable("teamId") Long teamId,
-                                                                                         @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
-    }
-
-    /**
+     /**
      * 미션 인증 게시물 좋아요
      * [GET] {teamId}/m원issions/{missionId}/archive/hearts
      * 작성자 : 정승연
@@ -111,6 +96,35 @@ public class MissionArchiveController {
                                                                              @RequestBody MissionArchiveHeartReq missionArchiveHeartReq) {
         return ResponseEntity.ok(SuccessResponse.create(HEART_UPDATE_SUCCESS.getMessage(), this.missionArchiveHeartUseCase.pushHeart(missionArchiveHeartReq)));
     }
+
+    /**
+     * 인증 성공 인원 조회
+     * [GET] {teamId}/missions/{missionId}/archive/status
+     * 작성자 : 정승연
+     **/
+
+    @GetMapping("/status")
+    public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
+                                                                                         @PathVariable("teamId") Long teamId,
+                                                                                         @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
+    }
+
+
+
+    /**
+     * 반복미션 - 나의 성공 횟수 조회
+     * [GET] {teamId}/missions/{missionId}/archive/my-status
+     * 작성자 : 정승연
+     **/
+
+    @GetMapping("/my-status")
+    public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMyMissionDoneStatus(@AuthenticationPrincipal User user,
+                                                                                         @PathVariable("teamId") Long teamId,
+                                                                                         @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.repeatMissionArchiveReadUseCase.getMyMissionDoneStatus(user.getSocialId(),missionId)));
+    }
+
 
 
 

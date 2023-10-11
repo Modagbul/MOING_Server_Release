@@ -13,6 +13,11 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("500", "서버에서 요청을 처리하는 동안 오류가 발생했습니다."),
     NOT_FOUND_REFRESH_TOKEN_ERROR( "J0008",  "유효하지 않는 RefreshToken 입니다."),
 
+    //FCM 토큰 관련
+    INITIALIZE_ERROR("F0001", "Firebase Admin SDK 초기화에 실패했습니다."),
+    NOTIFICATION_ERROR("F0002", "메시지 전송에 실패했습니다."),
+    MESSAGING_ERROR("F0003", "firebaseConfigPath를 읽어오는데 실패하였습니다"),
+
     //유저 관련 에러 코드
     NOT_FOUND_BY_SOCIAL_ID_ERROR( "U0001",  "해당 socialId인 유저가 존재하지 않습니다."),
     ACCOUNT_ALREADY_EXIST("AU0001", "해당 email로 다른 소셜 플랫폼으로 가입하였습니다."),
@@ -24,6 +29,7 @@ public enum ErrorCode {
     NO_ACCESS_CREATE_MISSION("M0001", "소모임장만 미션을 생성할 수 있습니다."),
     NOT_FOUND_MISSION("M0002", "미션을 찾을 수 없습니다."),
     NOT_FOUND_MISSION_ARCHIVE("MA0001", "아직 미션을 제출하지 않았습니다."),
+    NO_MORE_ARCHIVE_ERROR("MA0001", "지정한 횟수 이상 미션을 인증할 수 없습니다."),
 
     //불던지기 관련 에러 코드
     NOT_FOUND_FIRE("F001","불던지기 현황을 찾을 수 없습니다"),

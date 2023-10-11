@@ -16,7 +16,7 @@ public interface MissionArchiveRepository extends JpaRepository<MissionArchive, 
     @Query("select m from MissionArchive as m where m.member =:memberId" )
     Optional<List<MissionArchive>> findByMemberId(@Param("memberId") Long memberId);
 
-    @Query("select m from MissionArchive as m where m.mission.id = :missionId and m.member.memberId =:memberId")
+    @Query("select m from MissionArchive as m where m.mission.id = :missionId and m.member.memberId =:memberId order by m.createdDate")
     Optional<List<MissionArchive>> findArchivesByMissionIdAndMemberId(@Param("memberId") Long memberId, @Param("missionId")Long missionId);
 
     @Query("select m from MissionArchive as m where m.mission.id = :missionId and m.member.memberId =:memberId")
