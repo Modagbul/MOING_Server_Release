@@ -5,6 +5,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
@@ -50,11 +51,22 @@ public class MissionArchiveUpdateUseCase {
 
         }
 
-        MissionArchive missionArchive = missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0);
+        MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0);
 
-        missionArchive.updateArchive(missionReq);
+        if (mission.getType().equals(MissionType.ONCE)) {
+            // missionArchive 2개 이상일 때 예외처리 필요
+//            if (isDoneSingleMission(mission)) {
+//                missionArchiveScoreService.addScore(team);
+//            }
+            updateArchive.updateCount(1L);
+        }
+        else{
+            updateArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(member.getMemberId(), missionId)+1);
+        }
 
-        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchive);
+        updateArchive.updateArchive(missionReq);
+        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive));
+
     }
 
 

@@ -13,11 +13,10 @@ public class MissionArchiveRes {
 
     private Long archiveId;
     private String archive;
-
     private String createdDate;
-
     private int hearts;
-
     private String status;
+    private Long count;
+
 
 }

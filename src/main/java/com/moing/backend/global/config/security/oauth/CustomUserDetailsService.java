@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final MemberGetService memberQueryService;
+    private final MemberGetService memberGetService;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String socialId) throws UsernameNotFoundException {
-        Member member = this.memberQueryService.getMemberBySocialId(socialId);
+        Member member = this.memberGetService.getMemberBySocialId(socialId);
 
         if (member == null) {
             throw new UsernameNotFoundException("User not found with socialId: " + socialId);

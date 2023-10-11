@@ -11,7 +11,7 @@ operation::mission-archive-controller-test/미션_인증하기[snippets='http-re
 
 [[MissionArchive-재인증하기]]
 === 미션 재인증하기
-operation::mission-archive-controller-test/미션_재인증하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+operation::mission-archive-controller-test/미션_재인증하기[snipipets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
@@ -24,6 +24,18 @@ operation::mission-archive-controller-test/나의_미션_인증_조회[snippets=
 [[MissionArchive-모임원미션인증조회]]
 === 모임원 미션 인증 조회
 operation::mission-archive-controller-test/모임원_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-인증성공인원조회]]
+=== 인증 성공 인원 조회 ( n/n명 )
+operation::mission-archive-controller-test/인증_성공_인원_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[MissionArchive-미션인증물좋아요]]
+=== 미션 인증물 좋아요
+operation::mission-archive-controller-test/미션_인증물_좋아요[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 

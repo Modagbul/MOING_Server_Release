@@ -8,10 +8,10 @@ import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.TeamBlock;
 import com.moing.backend.domain.team.application.service.*;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
@@ -22,6 +22,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -174,8 +176,8 @@ public class TeamControllerTest extends CommonControllerTest {
         given(disbandTeamUserCase.disbandTeam(any(), any())).willReturn(output);
 
         //when
-        ResultActions actions = mockMvc.perform(
-                delete("/api/team/" + teamId + "/disband")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/team/{teamId}/disband", teamId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -187,6 +189,9 @@ public class TeamControllerTest extends CommonControllerTest {
                         restDocs.document(
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -207,8 +212,8 @@ public class TeamControllerTest extends CommonControllerTest {
         given(withdrawTeamUserCase.withdrawTeam(any(), any())).willReturn(output);
 
         //when
-        ResultActions actions = mockMvc.perform(
-                delete("/api/team/" + teamId + "/withdraw")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/team/{teamId}/withdraw", teamId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -220,6 +225,9 @@ public class TeamControllerTest extends CommonControllerTest {
                         restDocs.document(
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -241,8 +249,8 @@ public class TeamControllerTest extends CommonControllerTest {
         given(signInTeamUserCase.signInTeam(any(), any())).willReturn(output);
 
         //when
-        ResultActions actions = mockMvc.perform(
-                post("/api/team/" + teamId)
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                post("/api/team/{teamId}", teamId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );
@@ -254,6 +262,9 @@ public class TeamControllerTest extends CommonControllerTest {
                         restDocs.document(
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
