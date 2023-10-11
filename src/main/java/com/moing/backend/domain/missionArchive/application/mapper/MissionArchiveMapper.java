@@ -2,16 +2,15 @@ package com.moing.backend.domain.missionArchive.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.annotation.Mapper;
 
 import java.util.ArrayList;
@@ -36,13 +35,22 @@ public class MissionArchiveMapper {
                 .createdDate(missionArchive.getCreatedDate().toString())
                 .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
+                .count(missionArchive.getCount())
                 .build();
     }
 
+    public static List<MissionArchiveRes> mapToMissionArchiveResList(List<MissionArchive> missionArchiveList) {
+        List<MissionArchiveRes> missionArchiveResList = new ArrayList<>();
+        missionArchiveList.forEach(
+                missionArchive -> missionArchiveResList.add(MissionArchiveMapper.mapToMissionArchiveRes(missionArchive))
+        );
+        return missionArchiveResList;
+    }
 
-    public static PersonalArchive mapToPersonalArchive(MissionArchive missionArchive) {
+
+    public static PersonalArchiveRes mapToPersonalArchive(MissionArchive missionArchive) {
         Member member = missionArchive.getMember();
-        return PersonalArchive.builder()
+        return PersonalArchiveRes.builder()
                 .archiveId(missionArchive.getId())
                 .nickname(member.getNickName())
                 .profileImg(member.getProfileImage())
@@ -50,11 +58,12 @@ public class MissionArchiveMapper {
                 .createdDate(missionArchive.getCreatedDate().toString())
                 .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
+                .count(missionArchive.getCount())
                 .build();
     }
 
-    public static List<PersonalArchive> mapToPersonalArchiveList(List<MissionArchive> missionArchiveList) {
-        List<PersonalArchive> personalArchiveList = new ArrayList<>();
+    public static List<PersonalArchiveRes> mapToPersonalArchiveList(List<MissionArchive> missionArchiveList) {
+        List<PersonalArchiveRes> personalArchiveList = new ArrayList<>();
         missionArchiveList.forEach(
                 missionArchive -> personalArchiveList.add(MissionArchiveMapper.mapToPersonalArchive(missionArchive))
         );

@@ -29,6 +29,7 @@ public enum ErrorCode {
     NO_ACCESS_CREATE_MISSION("M0001", "소모임장만 미션을 생성할 수 있습니다."),
     NOT_FOUND_MISSION("M0002", "미션을 찾을 수 없습니다."),
     NOT_FOUND_MISSION_ARCHIVE("MA0001", "아직 미션을 제출하지 않았습니다."),
+    NO_MORE_ARCHIVE_ERROR("MA0001", "지정한 횟수 이상 미션을 인증할 수 없습니다."),
 
     //팀 관련 에러 코드
     NOT_FOUND_BY_TEAM_ID_ERROR("T0001", "해당 teamId인 팀이 존재하지 않습니다."),
