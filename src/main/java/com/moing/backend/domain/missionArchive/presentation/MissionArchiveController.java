@@ -86,8 +86,8 @@ public class MissionArchiveController {
     }
 
     /**
-     * 인증 성공 인원 조회
-     * [GET] {teamId}/m원issions/{missionId}/archive/status
+     * 인증 성공 인원 조회 (n/n명)
+     * [GET] {teamId}/missions/{missionId}/archive/status
      * 작성자 : 정승연
      **/
 
