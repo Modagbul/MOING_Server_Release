@@ -18,6 +18,7 @@ import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
+import static com.querydsl.jpa.JPAExpressions.max;
 import static com.querydsl.jpa.JPAExpressions.select;
 
 public class FireCustomRepositoryImpl implements FireCustomRepository {
@@ -55,11 +56,19 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                         teamMember.member.memberId.notIn(
                                 JPAExpressions
                                         .select(missionArchive.member.memberId)
-                                        .from(missionArchive)
-                                        .where(missionArchive.mission.id.eq(missionId))
+                                        .from(missionArchive,mission)
+                                        .where(missionArchive.mission.id.eq(missionId),
+                                                mission.id.eq(missionId))
+                                        .groupBy(missionArchive.member.memberId, missionArchive.mission.id,
+                                                missionArchive.count, mission.number)
+                                        .having(
+                                                missionArchive.mission.id.eq(missionId),
+                                                missionArchive.count.max().goe(mission.number)
+                                        )
                         )
                 )
                 .fetch());
 
     }
+
 }

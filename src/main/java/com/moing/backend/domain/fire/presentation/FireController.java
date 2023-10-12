@@ -25,7 +25,7 @@ public class FireController {
 
     /**
      * 불 던지기
-     * [POST] {teamId}/mission/{missionId}/archive/{missionArchiveId}
+     * [POST] {teamId}/mission/{missionId}/fire/{receiveMemberId}
      * 작성자 : 정승연
      */
 
@@ -36,8 +36,8 @@ public class FireController {
     }
 
     /**
-     * 불 던지기
-     * [POST] {teamId}/mission/{missionId}/archive/{missionArchiveId}
+     * 불 던질 사람 조회 (receivers)
+     * [GET] {teamId}/mission/{missionId}/fire
      * 작성자 : 정승연
      */
 
