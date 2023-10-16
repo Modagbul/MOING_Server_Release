@@ -33,7 +33,6 @@ public class MissionArchiveMapper {
                 .archiveId(missionArchive.getId())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
-                .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
                 .count(missionArchive.getCount())
                 .build();
@@ -56,7 +55,6 @@ public class MissionArchiveMapper {
                 .profileImg(member.getProfileImage())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
-                .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
                 .count(missionArchive.getCount())
                 .build();
@@ -96,7 +94,6 @@ public class MissionArchiveMapper {
     public static MissionArchiveHeartRes mapToMissionArchiveHeartRes(MissionArchive missionArchive,Boolean heartStatus) {
         return MissionArchiveHeartRes.builder()
                 .archiveId(missionArchive.getId())
-                .hearts(missionArchive.getHearts())
                 .heartStatus(heartStatus.toString())
                 .build();
     }

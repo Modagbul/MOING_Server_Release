@@ -51,7 +51,6 @@ public class MissionArchiveCreateUseCase {
 
         if (mission.getType().equals(MissionType.ONCE)) {
             // missionArchive 2개 이상일 때 예외처리
-//                missionArchiveScoreService.addScore(team);
             newArchive.updateCount(1L);
         }
         else {

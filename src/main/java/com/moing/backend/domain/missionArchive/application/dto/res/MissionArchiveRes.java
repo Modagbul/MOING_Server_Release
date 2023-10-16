@@ -17,6 +17,7 @@ public class MissionArchiveRes {
     private int hearts;
     private String status;
     private Long count;
+    private String heartStatus;
 
 
 }

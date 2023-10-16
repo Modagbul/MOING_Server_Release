@@ -98,10 +98,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archiveId").description("미션 인증 아이디"),
                                         fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data.createdDate").description("미션 제출 시각"),
-                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
                                         fieldWithPath("data.status").description("미션 인증 상태"),
-                                        fieldWithPath("data.count").description("미션 인증 횟수")
-//                                        fieldWithPath("data.heartsStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.count").description("미션 인증 횟수"),
+                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
+                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태")
                                 )
                         )
                 )

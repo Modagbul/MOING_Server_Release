@@ -39,20 +39,12 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     @Column(nullable = false)
     private String archive; //링크, 글, 사진 뭐든 가능
 
-    private int hearts;
-
-    private Long count;
+    private Long count; // 횟수
 
 
     public void updateArchive(MissionArchiveReq missionArchiveReq) {
         this.archive = missionArchiveReq.getArchive();
         this.status = MissionArchiveStatus.valueOf(missionArchiveReq.getStatus());
-    }
-    public int updateHearts(Boolean status) {
-        if(status)
-            return this.hearts += 1;
-        else
-            return this.hearts -= 1;
     }
 
     public void updateCount(Long count) {

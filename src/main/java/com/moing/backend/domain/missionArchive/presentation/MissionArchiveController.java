@@ -7,6 +7,8 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
+import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
+import com.moing.backend.domain.missionHeart.application.service.MissionHeartUseCase;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -28,7 +30,8 @@ public class MissionArchiveController {
     private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     private final SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
     private final RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
-    private final MissionArchiveHeartUseCase missionArchiveHeartUseCase;
+    private final MissionHeartUseCase missionHeartUseCase;
+
 
     /**
      * 미션 인증 하기
@@ -83,18 +86,20 @@ public class MissionArchiveController {
         return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
+
     /**
-     * 미션 인증 게시물 좋아요
-     * [GET] {teamId}/m원issions/{missionId}/archive/hearts
+     * 미션 인증 좋아요 누르기
+     * [POST] {teamId}/missions/{missionId}/archive
      * 작성자 : 정승연
      **/
 
-    @PostMapping("/hearts")
-    public ResponseEntity<SuccessResponse<MissionArchiveHeartRes>> pushHeart(@AuthenticationPrincipal User user,
-                                                                             @PathVariable("teamId") Long teamId,
-                                                                             @PathVariable("missionId") Long missionId,
-                                                                             @RequestBody MissionArchiveHeartReq missionArchiveHeartReq) {
-        return ResponseEntity.ok(SuccessResponse.create(HEART_UPDATE_SUCCESS.getMessage(), this.missionArchiveHeartUseCase.pushHeart(missionArchiveHeartReq)));
+    @PutMapping("{archiveId}/heart/{missionHeartStatus}")
+    public ResponseEntity<SuccessResponse<MissionHeartRes>> pushHeart(@AuthenticationPrincipal User user,
+                                                                      @PathVariable("teamId") Long teamId,
+                                                                      @PathVariable("missionId") Long missionId,
+                                                                      @PathVariable("archiveId") Long archiveId,
+                                                                      @PathVariable("missionHeartStatus") String missionHeartStatus) {
+        return ResponseEntity.ok(SuccessResponse.create(CREATE_ARCHIVE_SUCCESS.getMessage(), this.missionHeartUseCase.pushHeart(user.getSocialId(),archiveId,missionHeartStatus)));
     }
 
     /**
