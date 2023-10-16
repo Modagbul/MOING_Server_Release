@@ -27,7 +27,7 @@ public class FireMapper {
     public static FireReceiveRes mapToFireReceiveRes(Member member) {
         return FireReceiveRes.builder()
                 .receiveMemberId(member.getMemberId())
-                .nickName(member.getNickName())
+                .nickname(member.getNickName())
                 .fireStatus("TRUE")
                 .build();
     }

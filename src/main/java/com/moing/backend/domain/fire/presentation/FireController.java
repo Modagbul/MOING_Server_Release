@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.moing.backend.domain.fire.presentation.constant.FireResponseMessage.GET_RECEIVERS_SUCCESS;
 import static com.moing.backend.domain.fire.presentation.constant.FireResponseMessage.THROW_FIRE_SUCCESS;
 import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.READ_MISSION_SUCCESS;
 
@@ -44,7 +45,7 @@ public class FireController {
     @GetMapping("")
     public ResponseEntity<SuccessResponse<List<FireReceiveRes>>> throwFireList (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
                                                                                 @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.getFireReceiveList(user.getSocialId(),teamId,missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_RECEIVERS_SUCCESS.getMessage(), this.fireThrowUseCase.getFireReceiveList(user.getSocialId(),teamId,missionId)));
     }
 
 

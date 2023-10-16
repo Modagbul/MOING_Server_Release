@@ -8,7 +8,7 @@ import lombok.Getter;
 public class FireReceiveRes {
 
     private Long receiveMemberId;
-    private String nickName;
+    private String nickname;
     private String fireStatus;
 
     public void updateFireStatus(boolean status) {
