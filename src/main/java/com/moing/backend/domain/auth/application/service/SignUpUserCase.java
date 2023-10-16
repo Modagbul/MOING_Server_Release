@@ -32,7 +32,7 @@ public class SignUpUserCase {
         //2. signUp 처리
         String nickName=signUpRequest.getNickName();
         if(memberCheckService.checkNickname(nickName)) throw new NicknameDuplicationException(); //닉네임 중복검사 (이중체크)
-        member.signUp(nickName, signUpRequest.getFcmToken());
+        member.signUp(signUpRequest);
         //3. security 처리
         AuthenticationUtil.makeAuthentication(member);
         //4. token 만들기

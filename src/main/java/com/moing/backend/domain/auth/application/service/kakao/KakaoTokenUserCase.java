@@ -22,8 +22,6 @@ public class KakaoTokenUserCase {
 
     public void verifyAccessToken(String accessToken) {
 
-
-
         KakaoAccessTokenResponse kakaoAccessTokenResponse = webClient.get()
                 .uri("https://kapi.kakao.com/v1/user/access_token_info")
                 .headers(h -> h.setBearerAuth(accessToken))
