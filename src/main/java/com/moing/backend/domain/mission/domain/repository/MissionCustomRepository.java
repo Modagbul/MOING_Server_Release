@@ -12,4 +12,7 @@ public interface MissionCustomRepository {
     Long findMissionsCountByTeam(Long teamId);
     Optional<List<Mission>> findRepeatMissionByMemberId(Long teamId, MissionStatus status);
 
+    Optional<List<Mission>> findMissionByDueTo();
+
+
     }

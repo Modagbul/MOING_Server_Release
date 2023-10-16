@@ -1,4 +1,4 @@
-package com.moing.backend.domain.mission.application.service;
+package com.moing.backend.domain.missionArchive.application.service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;

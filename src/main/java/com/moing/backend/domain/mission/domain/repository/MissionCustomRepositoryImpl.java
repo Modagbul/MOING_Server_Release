@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,5 +44,19 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.type.eq(MissionType.REPEAT)
                 )
                 .fetch());
+    }
+
+
+    @Override
+    public Optional<List<Mission>> findMissionByDueTo() {
+
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+
+        return Optional.ofNullable(queryFactory
+                .selectFrom(mission)
+                .where(
+                        mission.dueTo.after(oneHourAgo)
+                ).fetch()
+        );
     }
 }
