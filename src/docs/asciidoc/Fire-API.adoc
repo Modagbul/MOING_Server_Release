@@ -1,0 +1,16 @@
+
+
+[[Fire-API]]
+= Fire API
+
+[[Fire-불던지기]]
+=== 불 던지기
+operation::fire-controller-test/불_던지기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+[[Fire-불던질사람조회]]
+=== 불 던질 사람 조회
+operation::fire-controller-test/불_던질_사람_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
