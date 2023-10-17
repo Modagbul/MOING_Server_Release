@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KakaoAccessTokenResponse {
-
     private String appId;
 }
 

@@ -1,5 +1,7 @@
 package com.moing.backend.domain.member.domain.entity;
 
+import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
+import com.moing.backend.domain.member.domain.constant.Gender;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
@@ -14,6 +16,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,40 +47,36 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Convert(converter = AesConverter.class)
-    @Column(nullable = false)
     private String profileImage; //없으면 undef
 
-    @Column(nullable = false, length = 6)
-    private String gender; //없으면 undef
+    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(nullable = false, length = 10)
-    private String ageRange; //없으면 undef
+    private LocalDate birthDate;
 
-
-    // 추가정보
     @Convert(converter = AesConverter.class)
-    @Column(nullable = false)
-    private String nickName; //없으면 undef
+    @Column(unique=true)
+    private String nickName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Convert(converter = AesConverter.class)
-    @Column(nullable = false)
-    private String introduction; //없으면 undef
+    private String introduction;
 
-    @Column(nullable = false)
-    private String fcmToken; //없으면 undef
+    private String fcmToken;
 
     @ColumnDefault("true")
+    @Column(nullable = false)
     private boolean isNewUploadPush;
 
     @ColumnDefault("true")
+    @Column(nullable = false)
     private boolean isRemindPush;
 
     @ColumnDefault("true")
+    @Column(nullable = false)
     private boolean isFirePush;
 
     @OneToMany(mappedBy = "member")
@@ -90,37 +90,25 @@ public class Member extends BaseTimeEntity {
                 .provider((SocialProvider) attributes.get("provider"))
                 .nickName((String) attributes.get("nickname"))
                 .email((String) attributes.get("email"))
-                .gender((String) attributes.get("gender"))
-                .ageRange((String) attributes.get("age"))
                 .role((Role) attributes.get("role"))
                 .registrationStatus(RegistrationStatus.UNCOMPLETED)
                 .build();
     }
 
-    //==초기화==//
-    @PrePersist
-    public void prePersist() {
-        if (profileImage == null) profileImage = "undef";
-        if (gender == null) gender = "undef";
-        if (ageRange == null) ageRange = "undef";
-        if (nickName == null) nickName = "undef";
-        if (introduction == null) introduction = "undef";
-        if (fcmToken == null) fcmToken = "undef";
-        if (registrationStatus == null) registrationStatus = RegistrationStatus.UNCOMPLETED;
-    }
-
-    public void signUp(String nickName, String fcmToken) {
-        this.nickName = nickName;
-        this.fcmToken = fcmToken;
+    public void signUp(SignUpRequest signUpRequest) {
+        this.nickName = signUpRequest.getNickName();
+        this.gender = signUpRequest.getGender();
+        this.birthDate = LocalDate.parse(signUpRequest.getBirthDate(), DateTimeFormatter.ISO_DATE);;
+        this.fcmToken = signUpRequest.getFcmToken();
         this.registrationStatus = RegistrationStatus.COMPLETED;
     }
 
     @Builder
-    public Member(String email, String profileImage, String gender, String ageRange, Role role) {
+    public Member(String email, String profileImage, Gender gender, LocalDate birthDate, Role role) {
         this.email = email;
         this.profileImage = profileImage;
         this.gender = gender;
-        this.ageRange = ageRange;
+        this.birthDate = birthDate;
         this.role = role;
     }
 
@@ -154,8 +142,8 @@ public class Member extends BaseTimeEntity {
         this.isFirePush = allPush;
     }
 
-    public Member(String ageRange, String email, String fcmToken, String gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
-        this.ageRange = ageRange;
+    public Member(LocalDate birthDate, String email, String fcmToken, Gender gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
+        this.birthDate = birthDate;
         this.email = email;
         this.fcmToken = fcmToken;
         this.gender = gender;
