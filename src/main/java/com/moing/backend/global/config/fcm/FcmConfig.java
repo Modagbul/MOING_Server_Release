@@ -10,15 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 @Slf4j
 public class FcmConfig {
-
 
     @Value("${firebase.config.path}")
     private String firebaseConfigPath;
@@ -29,7 +30,9 @@ public class FcmConfig {
     @Bean
     public FirebaseApp firebaseApp() {
         try {
-            FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+            // FileInputStream 대신 ClassPathResource를 사용하여 파일 로드
+            ClassPathResource resource = new ClassPathResource(firebaseConfigPath);
+            InputStream serviceAccount = resource.getInputStream();
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
