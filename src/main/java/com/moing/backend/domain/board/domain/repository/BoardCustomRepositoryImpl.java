@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
 
-public class BoardCustomRepositoryImpl implements BoardCustomRepository {
+public class    BoardCustomRepositoryImpl implements BoardCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     public BoardCustomRepositoryImpl(EntityManager em) {
@@ -51,7 +51,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                     b.getWriterProfileImage(),
                     b.getTitle(),
                     b.getContent(),
-                    b.getCommentNum()
+                    b.getCommentNum(),
+                    b.getTeamMember().isDeleted()
             );
             if (isRead) {
                 boardBlocks.readBoard();

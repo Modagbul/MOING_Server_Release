@@ -21,8 +21,11 @@ public class UpdateBoardUserCase {
      * 게시글 수정
      */
     public UpdateBoardResponse updateBoard(String socialId, Long teamId, Long boardId, UpdateBoardRequest updateBoardRequest){
+        // 1. 게시글 조회
         BaseBoardServiceResponse data= baseBoardService.getCommonData(socialId, teamId, boardId);
+        // 2. 게시글 작성자만
         if (data.getTeamMember() == data.getBoard().getTeamMember()) {
+            // 3. 수정
             data.getBoard().updateBoard(updateBoardRequest);
             return new UpdateBoardResponse(data.getBoard().getBoardId());
         } else throw new NotAuthByBoardException();

@@ -20,11 +20,19 @@ public class DeleteBoardCommentUserCase {
     private final BoardCommentDeleteService boardCommentDeleteService;
     private final BaseBoardService baseBoardService;
 
+    /**
+     * 게시글 댓글 삭제
+     */
+
     public void deleteBoardComment(String socialId, Long teamId, Long boardId, Long boardCommentId){
+        // 1. 게시글 댓글 조회
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         BoardComment boardComment=boardCommentGetService.getBoardComment(boardCommentId);
+        // 2. 게시글 댓글 작성자만
         if (data.getTeamMember() == boardComment.getTeamMember()) {
+            // 3. 삭제
             boardCommentDeleteService.deleteBoardComment(boardComment);
+            // 4. 댓글 개수 줄이기
             data.getBoard().decrComNum();
         } else throw new NotAuthByBoardCommentException();
     }

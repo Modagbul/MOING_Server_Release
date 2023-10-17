@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BoardCommentController.class)
 public class BoardCommentControllerTest extends CommonControllerTest {
+
     @MockBean
     private CreateBoardCommentUserCase createBoardCommentUserCase;
     @MockBean
@@ -139,6 +140,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                 .writerIsLeader(true)
                 .writerNickName("작성자 닉네임")
                 .writerProfileImage("작성자 프로필 이미지")
+                .writerIsDeleted(false)
                 .isWriter(true)
                 .build();
 
@@ -177,6 +179,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.commentBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
                                         fieldWithPath("data.commentBlocks[0].writerNickName").description("작성자 닉네임"),
                                         fieldWithPath("data.commentBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.commentBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
                                         fieldWithPath("data.commentBlocks[0].isWriter").description("댓글 작성자 여부")
                                 )
 
