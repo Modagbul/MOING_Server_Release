@@ -47,7 +47,6 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Convert(converter = AesConverter.class)
     private String profileImage; //없으면 undef
 
     @Column(length = 10)
@@ -57,17 +56,15 @@ public class Member extends BaseTimeEntity {
     private LocalDate birthDate;
 
     @Convert(converter = AesConverter.class)
-    @Column(unique = true)
+    @Column(unique=true)
     private String nickName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Convert(converter = AesConverter.class)
     private String introduction;
 
-    @Column(nullable = false)
     private String fcmToken;
 
     @ColumnDefault("true")
@@ -145,7 +142,7 @@ public class Member extends BaseTimeEntity {
         this.isFirePush = allPush;
     }
 
-    public Member(LocalDate birthDate, String email, String fcmToken, Gender øgender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
+    public Member(LocalDate birthDate, String email, String fcmToken, Gender gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
         this.birthDate = birthDate;
         this.email = email;
         this.fcmToken = fcmToken;

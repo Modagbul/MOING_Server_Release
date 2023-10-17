@@ -13,6 +13,9 @@ public class AesConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
+        if (attribute == null) {
+            return null; // attribute가 null인 경우 null 반환
+        }
         try {
             return aesUtil.encrypt(attribute);
         } catch (Exception e) {
@@ -22,6 +25,9 @@ public class AesConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToEntityAttribute(String dbData) {
+        if (dbData == null) {
+            return null; // dbData가 null인 경우 null 반환
+        }
         try {
             return aesUtil.decrypt(dbData);
         } catch (Exception e) {
