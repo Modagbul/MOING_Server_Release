@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 public interface MissionArchiveCustomRepository {
     Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status, MissionArchiveStatus archiveStatus, OrderCondition orderCondition);
+    Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId);
+
     Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) ;
 
     Optional<List<MissionArchive>> findAllMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus missionStatus);

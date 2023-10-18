@@ -3,12 +3,13 @@ package com.moing.backend.domain.missionArchive.representation;
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.domain.missionArchive.presentation.MissionArchiveController;
+import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
+import com.moing.backend.domain.missionHeart.application.service.MissionHeartUseCase;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,11 +38,11 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     @MockBean
     private MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     @MockBean
-    private SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private MissionArchiveReadUseCase missionArchiveReadUseCase;
     @MockBean
     private RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
     @MockBean
-    private MissionArchiveHeartUseCase missionArchiveHeartUseCase;
+    private MissionHeartUseCase missionHeartUseCase;
 
 
 
@@ -186,7 +187,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                         .count(1L)
                 .build());
 
-        given(singleMissionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
+        given(missionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
@@ -242,7 +243,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                         .count(1L)
                 .build());
 
-        given(singleMissionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
+        given(missionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
@@ -294,7 +295,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .done("3")
                 .build();
 
-        given(singleMissionArchiveReadUseCase.getMissionDoneStatus(any())).willReturn(output);
+        given(missionArchiveReadUseCase.getMissionDoneStatus(any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
@@ -340,13 +341,13 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
 
         String body = objectMapper.writeValueAsString(input);
 
-        MissionArchiveHeartRes output = MissionArchiveHeartRes.builder()
-                .archiveId(1L)
-                .heartStatus("content[s3 Link / text / link]")
+        MissionHeartRes output = MissionHeartRes.builder()
+                .missionArchiveId(1L)
+                .missionHeartStatus("content[s3 Link / text / link]")
                 .hearts(3)
                 .build();
 
-        given(missionArchiveHeartUseCase.pushHeart(any())).willReturn(output);
+        given(missionHeartUseCase.pushHeart(any(),any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;

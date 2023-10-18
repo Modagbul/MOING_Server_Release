@@ -1,9 +1,7 @@
 package com.moing.backend.domain.missionArchive.presentation;
 
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
@@ -28,7 +26,7 @@ public class MissionArchiveController {
 
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;
     private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
-    private final SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private final MissionArchiveReadUseCase missionArchiveReadUseCase;
     private final RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
     private final MissionHeartUseCase missionHeartUseCase;
 
@@ -71,7 +69,7 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<List<MissionArchiveRes>>> getMyArchive(@AuthenticationPrincipal User user,
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
     }
 
     /**
@@ -83,7 +81,7 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<List<PersonalArchiveRes>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
                                                                                             @PathVariable("teamId") Long teamId,
                                                                                             @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
 
@@ -112,7 +110,7 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
                                                                                          @PathVariable("teamId") Long teamId,
                                                                                          @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMissionDoneStatus(missionId)));
     }
 
 

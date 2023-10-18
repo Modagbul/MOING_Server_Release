@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionHeart.domain.entity;
 
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionHeart.domain.constant.MissionHeartStatus;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -22,12 +23,20 @@ public class MissionHeart extends BaseTimeEntity {
     private Long id;
 
     private Long pushMemberId;
-    private Long missionArchiveId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "missionArchiveId")
+    private MissionArchive missionArchive;
 
     private MissionHeartStatus heartStatus;
 
     public void updateHeartStatus(MissionHeartStatus heartStatus) {
         this.heartStatus = heartStatus;
+    }
+
+    public void changeByHeart(MissionArchive missionArchive) {
+        this.missionArchive = missionArchive;
+        missionArchive.getHeartList().add(this);
     }
 
 

@@ -1,6 +1,8 @@
 package com.moing.backend.domain.missionHeart.application.service;
 
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
 import com.moing.backend.domain.missionHeart.application.mapper.MissionHeartMapper;
 import com.moing.backend.domain.missionHeart.domain.constant.MissionHeartStatus;
@@ -21,12 +23,14 @@ public class MissionHeartUseCase {
     private final MissionHeartUpdateService missionHeartUpdateService;
     private final MissionHeartQueryService missionHeartQueryService;
     private final MemberGetService memberGetService;
+    private final MissionArchiveQueryService missionArchiveQueryService;
 
 
     public MissionHeartRes pushHeart(String socialId,Long archiveId, String status) {
 
         Long memberId = memberGetService.getMemberBySocialId(socialId).getMemberId();
-        MissionHeart missionHeart = MissionHeartMapper.mapToMissionHeart(memberId, archiveId, MissionHeartStatus.valueOf(status));
+        MissionArchive archive = missionArchiveQueryService.findByMissionArchiveId(archiveId);
+        MissionHeart missionHeart = MissionHeartMapper.mapToMissionHeart(memberId, archive, MissionHeartStatus.valueOf(status));
 
         if(missionHeartQueryService.isAlreadyHeart(memberId, archiveId)) {
             return MissionHeartMapper.mapToMissionHeartRes(

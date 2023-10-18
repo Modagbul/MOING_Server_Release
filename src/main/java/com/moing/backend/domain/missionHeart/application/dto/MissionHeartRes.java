@@ -6,5 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MissionHeartRes {
+    private Long missionArchiveId;
     private String missionHeartStatus;
+    private int hearts;
 }

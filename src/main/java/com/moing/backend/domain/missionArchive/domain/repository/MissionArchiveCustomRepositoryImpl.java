@@ -4,6 +4,7 @@ import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRe
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.querydsl.core.types.Expression;
@@ -12,6 +13,8 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import feign.Param;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
+import static com.moing.backend.domain.missionHeart.domain.entity.QMissionHeart.missionHeart;
 import static javax.swing.Spring.constant;
 
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
@@ -61,9 +65,21 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
 
+   @Override
+    public Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId) {
 
-//    @Query("select m from MissionArchive as m where m.mission.id = :missionId and m.member.memberId =:memberId")
-//    Optional<List<MissionArchive>> findArchivesByMissionIdAndMemberId(@Param("memberId") Long memberId, @Param("missionId")Long missionId);
+        return Optional.ofNullable(queryFactory
+                .select(missionArchive)
+                 .from(missionArchive)
+                 .where(
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.eq(memberId)
+                )
+                .orderBy(missionArchive.createdDate.desc())
+                .fetch()
+
+        );
+    }
 
     @Override
     public Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) {
@@ -76,6 +92,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP))
                 )
+                .orderBy(missionArchive.createdDate.desc())
                 .fetch()
         );
     }
@@ -121,27 +138,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
 
-//    @Override
-//    public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
-//        return Optional.ofNullable(queryFactory
-//                .select(Projections.constructor(RepeatMissionBoardRes.class,
-//                                missionArchive.mission.id,
-//                                missionArchive.mission.title,
-//                                missionArchive.count,
-//                                missionArchive.mission.number
-//                        ))
-//                .from(missionArchive)
-//                .where(
-//                        missionArchive.mission.team.teamId.eq(teamId),
-//                        missionArchive.mission.type.eq(MissionType.REPEAT),
-//                        missionArchive.member.memberId.eq(memberId),
-//                        missionArchive.mission.status.eq(status)
-//                )
-//                .groupBy(missionArchive.mission.id)
-//                .fetch());
-//
-//
-//    }
     @Override
     public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
         return Optional.ofNullable(queryFactory

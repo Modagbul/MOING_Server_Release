@@ -17,8 +17,9 @@ public class MissionHeartUpdateService {
 
     public MissionHeart update(MissionHeart missionHeart) {
 
-        MissionHeart updateHeart = missionHeartRepository.findByMemberIdAndArchiveId(missionHeart.getPushMemberId(), missionHeart.getMissionArchiveId());
+        MissionHeart updateHeart = missionHeartRepository.findByMemberIdAndArchiveId(missionHeart.getPushMemberId(), missionHeart.getMissionArchive().getId());
         updateHeart.updateHeartStatus(missionHeart.getHeartStatus());
+        updateHeart.changeByHeart(missionHeart.getMissionArchive());
         return updateHeart;
 
     }

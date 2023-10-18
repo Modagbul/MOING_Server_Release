@@ -23,7 +23,7 @@ public class MissionHeartCustomRepositoryImpl implements MissionHeartCustomRepos
                 .selectFrom(missionHeart)
                 .where(
                         missionHeart.pushMemberId.eq(memberId),
-                        missionHeart.missionArchiveId.eq(archiveId)
+                        missionHeart.missionArchive.id.eq(archiveId)
                 ).fetchCount() > 0;
 
     }
@@ -33,7 +33,7 @@ public class MissionHeartCustomRepositoryImpl implements MissionHeartCustomRepos
                 .selectFrom(missionHeart)
                 .where(
                         missionHeart.pushMemberId.eq(memberId),
-                        missionHeart.missionArchiveId.eq(archiveId)
+                        missionHeart.missionArchive.id.eq(archiveId)
                 ).fetchFirst();
 
     }
