@@ -21,7 +21,7 @@ import static com.moing.backend.domain.missionArchive.domain.constant.MissionArc
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions/{missionId}/archive")
+@RequestMapping("/api/team/{teamId}/missions/{missionId}/archive")
 public class MissionArchiveController {
 
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;

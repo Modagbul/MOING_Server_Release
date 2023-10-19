@@ -4,14 +4,15 @@ import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRe
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.application.service.MissionArchiveBoardUseCase;
-import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import static com.moing.backend.domain.missionArchive.domain.constant.MissionArc
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/team/{teamId}/missions/board")
-public class MissionBoardController {
+public class MissionTotalBoardController {
 
     private final MissionArchiveBoardUseCase missionArchiveBoardUseCase;
 
