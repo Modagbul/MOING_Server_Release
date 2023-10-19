@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.domain.service;
 
+import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
@@ -27,14 +28,18 @@ public class MissionQueryService {
         return missionRepository.findMissionsCountByTeam(teamId);
     }
 
-    public List<Mission> findRepeatMissionByTeamId(Long teamId) {
-        return missionRepository.findRepeatMissionByMemberId(teamId, MissionStatus.ONGOING).orElseThrow(NotFoundMissionException::new);
+    public List<GatherRepeatMissionRes> findAllRepeatMission(Long memberId) {
+        List<Long> teams = new ArrayList<>();
+        teams.add(1L);
+        teams.add(2L);
+        return missionRepository.findRepeatMissionByMemberId(memberId,teams).orElseThrow(NotFoundMissionException::new);
     }
 
     public List<GatherSingleMissionRes> findAllSingleMission(Long memberId) {
 
         List<Long> teams = new ArrayList<>();
         teams.add(1L);
-        return missionRepository.findMissionsByMemberId(memberId, teams).orElseThrow();
+        teams.add(2L);
+        return missionRepository.findSingleMissionByMemberId(memberId, teams).orElseThrow(NotFoundMissionException::new);
     }
 }

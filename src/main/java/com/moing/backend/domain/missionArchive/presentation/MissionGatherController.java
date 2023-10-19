@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.presentation;
 
+import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.service.MissionArchiveBoardUseCase;
@@ -44,8 +45,8 @@ public class MissionGatherController {
      */
 
     @GetMapping("/my-repeat")
-    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> getMyActiveRepeatMission(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
+    public ResponseEntity<SuccessResponse<List<GatherRepeatMissionRes>>> getMyActiveRepeatMission(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getAllActiveRepeatMissions( user.getSocialId())));
     }
 
     /**
@@ -53,21 +54,21 @@ public class MissionGatherController {
      * [GET] {teamId}/missions/board/repeat
      * 작성자 : 정승연
      */
-    @GetMapping("/{teamId}/mission/single")
-    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> geActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
-                                                                                               @PathVariable("teamId") Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
-    }
+//    @GetMapping("/{teamId}/mission/single")
+//    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> geActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
+//                                                                                               @PathVariable("teamId") Long teamId) {
+//        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
+//    }
     /**
      * 모임별 미션 - 반복 미션
      * [GET] {teamId}/missions/board/repeat
      * 작성자 : 정승연
      */
-    @GetMapping("/{teamId}/mission/repeat")
-    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> getActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
-                                                                                               @PathVariable("teamId") Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
-    }
+//    @GetMapping("/{teamId}/mission/repeat")
+//    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> getActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
+//                                                                                               @PathVariable("teamId") Long teamId) {
+//        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
+//    }
 
 
 

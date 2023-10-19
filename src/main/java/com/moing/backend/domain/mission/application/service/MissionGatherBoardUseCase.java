@@ -1,6 +1,7 @@
 package com.moing.backend.domain.mission.application.service;
 
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,11 @@ public class MissionGatherBoardUseCase {
     public List<GatherSingleMissionRes> getAllActiveSingleMissions(String userId) {
         Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
         return missionQueryService.findAllSingleMission(memberId);
+
+    }
+    public List<GatherRepeatMissionRes> getAllActiveRepeatMissions(String userId) {
+        Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
+        return missionQueryService.findAllRepeatMission(memberId);
 
     }
 

@@ -100,19 +100,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         );
     }
 
-    @Override
-    public Optional<List<MissionArchive>> findAllMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus missionStatus) {
-
-        return Optional.ofNullable(queryFactory
-                .selectFrom(missionArchive)
-                .where(
-                        missionArchive.mission.status.eq(missionStatus),
-                        missionArchive.mission.team.teamId.eq(teamId)
-                )
-                .orderBy(missionArchive.mission.dueTo.desc())
-                .fetch()
-        );
-    }
 
     @Override
     public Optional<Long> findDonePeopleByMissionId(Long missionId) {
