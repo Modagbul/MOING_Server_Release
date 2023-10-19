@@ -3,6 +3,7 @@ package com.moing.backend.domain.mission.application.service;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
@@ -79,5 +80,8 @@ public class MissionArchiveBoardUseCase {
         return myRepeatMissionArchives;
 
     }
+
+
+
 
 }

@@ -1,12 +1,15 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.team.domain.entity.Team;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -189,4 +192,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .fetch()
         );
     }
+
+
 }

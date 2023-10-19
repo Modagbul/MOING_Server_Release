@@ -1,6 +1,7 @@
 package com.moing.backend.domain.missionArchive.domain.service;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
@@ -8,6 +9,7 @@ import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
 import com.moing.backend.domain.missionArchive.domain.repository.OrderCondition;
+import com.moing.backend.domain.teamMember.domain.repository.TeamMemberRepository;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class MissionArchiveQueryService {
 
     private final MissionRepository missionRepository;
     private final MissionArchiveRepository missionArchiveRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     public MissionArchive findByMissionArchiveId(Long missionArchiveId) {
         return missionArchiveRepository.findById(missionArchiveId).orElseThrow(NotFoundMissionArchiveException::new);
@@ -98,6 +101,8 @@ public class MissionArchiveQueryService {
     public List<FinishMissionBoardRes> findMyFinishMissions(Long memberId, Long teamId) {
         return missionArchiveRepository.findFinishMissionsByStatus(memberId, teamId).orElseThrow(NotFoundMissionArchiveException::new);
     }
+
+
 
 
 }
