@@ -10,6 +10,7 @@ import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
 import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
 import com.moing.backend.domain.auth.application.service.SignInUserCase;
 import com.moing.backend.domain.auth.application.service.SignUpUserCase;
+import com.moing.backend.domain.member.domain.constant.Gender;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -307,6 +308,8 @@ class AuthControllerTest extends CommonControllerTest {
         //given
         SignUpRequest input = SignUpRequest.builder()
                 .nickName("NICKNAME")
+                .gender(Gender.MAN)
+                .birthDate("2000-03-28")
                 .fcmToken("FCMTOKEN")
                 .build();
 
@@ -340,6 +343,8 @@ class AuthControllerTest extends CommonControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("nickName").description("유저 닉네임"),
+                                        fieldWithPath("gender").description("성별"),
+                                        fieldWithPath("birthDate").description("태어난 날짜(YYYY-MM-DD)"),
                                         fieldWithPath("fcmToken").description("FCM TOKEN")
                                 ),
                                 responseFields(
