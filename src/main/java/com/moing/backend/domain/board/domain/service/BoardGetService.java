@@ -25,4 +25,8 @@ public class BoardGetService {
     public GetAllBoardResponse getBoardAll(Long teamId, Long memberId){
         return boardRepository.findBoardAll(teamId, memberId);
     }
+
+    public Integer getUnReadBoardNum(Long teamId, Long memberId){
+        return boardRepository.findUnReadBoardNum(teamId, memberId);
+    }
 }

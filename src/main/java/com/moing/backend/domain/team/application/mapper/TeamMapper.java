@@ -2,10 +2,15 @@ package com.moing.backend.domain.team.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
+import com.moing.backend.domain.team.application.dto.response.GetTeamDetailResponse;
+import com.moing.backend.domain.team.application.dto.response.TeamInfo;
+import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class TeamMapper {
@@ -21,6 +26,14 @@ public class TeamMapper {
                 .leaderId(member.getMemberId())
                 .numOfMember(0)
                 .levelOfFire(1)
+                .build();
+    }
+
+    public GetTeamDetailResponse toTeamDetailResponse(Team team, Integer boardNum, List<TeamMemberInfo> teamMemberInfoList) {
+        TeamInfo teamInfo = new TeamInfo(team.getName(), teamMemberInfoList.size(), team.getCategory(), team.getIntroduction(), teamMemberInfoList);
+        return GetTeamDetailResponse.builder()
+                .boardNum(boardNum)
+                .teamInfo(teamInfo)
                 .build();
     }
 }

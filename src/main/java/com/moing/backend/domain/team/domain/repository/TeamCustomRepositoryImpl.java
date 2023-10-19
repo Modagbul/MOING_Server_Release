@@ -1,8 +1,7 @@
 package com.moing.backend.domain.team.domain.repository;
 
-import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
-import com.moing.backend.domain.team.application.dto.response.TeamBlock;
+import com.moing.backend.domain.member.domain.entity.QMember;
+import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -50,6 +49,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .orderBy(team.approvalTime.asc())
                 .fetch();
     }
+
     private List<TeamBlock> getTeamBlock(Long memberId) {
         return queryFactory
                 .select(new QTeamBlock(team.teamId,
