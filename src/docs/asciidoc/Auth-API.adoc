@@ -25,13 +25,14 @@ operation::auth-controller-test/google_소셜_로그인_회원가입_후[snippet
 
 [[Auth-회원가입]]
 === Auth 회원가입
-operation::auth-controller-test/sign_up[snippets='http-request,request-fields,http-response,response-fields']
 |===
-| 성별 |
+| 성별
 | `MAN`
 | `WOMAN`
 | `NEUTRALITY`
 |===
+operation::auth-controller-test/sign_up[snippets='http-request,request-fields,http-response,response-fields']
+
 
 [[Auth-토큰-재발급]]
 === Auth 토큰 재발급

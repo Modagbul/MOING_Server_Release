@@ -37,6 +37,19 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .fetchOne());
     }
 
+    @Override
+    public List<Long> findTeamIdByMemberId(Long memberId){
+        return queryFactory
+                .select(team.teamId)
+                .from(teamMember)
+                .innerJoin(teamMember.team, team)
+                .on(teamMember.member.memberId.eq(memberId))
+                .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL)) //승인 되었고
+                .where(team.isDeleted.eq(false)) //강제종료되었는지
+                .where(teamMember.isDeleted.eq(false)) //탈퇴했는지
+                .orderBy(team.approvalTime.asc())
+                .fetch();
+    }
     private List<TeamBlock> getTeamBlock(Long memberId) {
         return queryFactory
                 .select(new QTeamBlock(team.teamId,

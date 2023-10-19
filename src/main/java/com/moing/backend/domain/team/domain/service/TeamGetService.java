@@ -8,7 +8,7 @@ import com.moing.backend.domain.team.exception.NotFoundByTeamIdException;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
+import java.util.List;
 
 @DomainService
 @RequiredArgsConstructor
@@ -19,6 +19,10 @@ public class TeamGetService {
         GetTeamResponse getTeamResponse = teamRepository.findTeamByMemberId(member.getMemberId());
         getTeamResponse.updateMemberNickName(member.getNickName());
         return getTeamResponse;
+    }
+
+    public List<Long> getTeamIdByMemberId(Long memberId) {
+        return teamRepository.findTeamIdByMemberId(memberId);
     }
 
     public Team getTeamByTeamId(Long teamId){
