@@ -47,16 +47,15 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         missionArchive.count().stringValue()
 
                 ))
-                .from(mission)
-                        .leftJoin(missionArchive)
-                        .on(missionArchive.mission.id.eq(mission.id),
-                                missionArchive.member.memberId.eq(memberId))
+                .from(mission,missionArchive)
                 .where(
+                        missionArchive.mission.eq(mission),
+                        missionArchive.member.memberId.eq(memberId),
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING),
                         mission.type.eq(MissionType.REPEAT)
                 )
-//                .groupBy(mission.id)
+                .groupBy(mission.id)
                 .fetch());
     }
 
