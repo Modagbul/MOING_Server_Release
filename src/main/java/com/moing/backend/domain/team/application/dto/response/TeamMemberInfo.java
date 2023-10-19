@@ -2,10 +2,12 @@ package com.moing.backend.domain.team.application.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class TeamMemberInfo {
     private Long memberId;
     private String nickName;

@@ -5,6 +5,7 @@ import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.application.service.*;
+import com.moing.backend.domain.team.domain.constant.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -166,6 +167,76 @@ public class TeamControllerTest extends CommonControllerTest {
     }
 
     @Test
+    public void get_team_detail() throws Exception {
+        //given
+        Long teamId = 1L;
+        List<TeamMemberInfo> teamMemberInfoList = new ArrayList<>();
+        TeamMemberInfo teamMemberInfo = TeamMemberInfo.builder()
+                .memberId(1L)
+                .nickName("소모임원 닉네임")
+                .profileImage("소모임원 프로필 사진")
+                .introduction("소모임원 소개")
+                .isLeader(true)
+                .build();
+        teamMemberInfoList.add(teamMemberInfo);
+
+        TeamInfo teamInfo = TeamInfo
+                .builder()
+                .teamName("소모임 이름")
+                .numOfMember(1)
+                .category(Category.ETC)
+                .introduction("소모임 소개글")
+                .teamMemberInfoList(teamMemberInfoList).build();
+
+        GetTeamDetailResponse output = GetTeamDetailResponse
+                .builder()
+                .boardNum(1)
+                .teamInfo(teamInfo)
+                .build();
+
+
+        given(getTeamUserCase.getTeamDetailResponse(any(),any())).willReturn(output);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}", teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("목표보드를 조회했습니다."),
+                                        fieldWithPath("data.boardNum").description("안 읽은 공지/게시글"),
+                                        fieldWithPath("data.teamInfo.teamName").description("소모임 이름"),
+                                        fieldWithPath("data.teamInfo.numOfMember").description("모임원 명 수"),
+                                        fieldWithPath("data.teamInfo.category").description("카테고리"),
+                                        fieldWithPath("data.teamInfo.introduction").description("모임 소개"),
+                                        fieldWithPath("data.teamInfo.teamMemberInfoList[0].memberId").description("유저 아이디"),
+                                        fieldWithPath("data.teamInfo.teamMemberInfoList[0].nickName").description("유저 닉네임"),
+                                        fieldWithPath("data.teamInfo.teamMemberInfoList[0].profileImage").description("유저 프로필 이미지"),
+                                        fieldWithPath("data.teamInfo.teamMemberInfoList[0].introduction").description("유저 소개"),
+                                        fieldWithPath("data.teamInfo.teamMemberInfoList[0].isLeader").description("유저 소모임장 여부")
+                                )
+
+                        )
+                );
+    }
+
+    @Test
     public void disband_team() throws Exception {
         //given
         Long teamId = 1L; // 예시 ID
@@ -274,6 +345,7 @@ public class TeamControllerTest extends CommonControllerTest {
                         )
                 );
     }
+
 
 
     @Test
