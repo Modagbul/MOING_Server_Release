@@ -109,7 +109,10 @@ public class TokenUtil implements InitializingBean {
         Member member = memberQueryService.getMemberBySocialId(socialId);
 
         // socialId 에 해당하는 refreshToken redis 에서 가져오기
-        String storedRefreshToken = redisUtil.findById(socialId).orElseThrow(() -> new NotFoundRefreshToken());
+        String storedRefreshToken = redisUtil.findById(socialId).orElseThrow(NotFoundRefreshToken::new);
+
+        //가져온 refeshToken이랑 입력한 refeshToken이랑 비교
+        if(storedRefreshToken == null || !storedRefreshToken.equals(token)) throw new NotFoundRefreshToken();
 
         // Token 생성
         TokenInfoResponse newToken = createToken(member, true);

@@ -2,10 +2,8 @@ package com.moing.backend.domain.team.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
-import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.TeamBlock;
+import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
+import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.application.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +22,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TeamController.class)
@@ -33,13 +32,14 @@ public class TeamControllerTest extends CommonControllerTest {
     private CreateTeamUserCase createTeamService;
     @MockBean
     private GetTeamUserCase getTeamUserCase;
-
     @MockBean
     private DisbandTeamUserCase disbandTeamUserCase;
     @MockBean
     private WithdrawTeamUserCase withdrawTeamUserCase;
     @MockBean
     private SignInTeamUserCase signInTeamUserCase;
+    @MockBean
+    private UpdateTeamUserCase updateTeamUserCase;
 
     @Test
     public void create_team() throws Exception {
@@ -270,6 +270,62 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("소모임에 가입하였습니다."),
                                         fieldWithPath("data.teamId").description("가입한 소모임 id")
+                                )
+                        )
+                );
+    }
+
+
+    @Test
+    public void update_team() throws Exception {
+
+        // given
+        Long teamId = 1L;
+        UpdateTeamRequest input = UpdateTeamRequest.builder()
+                .name("수정 후 팀 이름")
+                .introduction("수정 후 소개")
+                .profileImgUrl("수정 후 프로필 이미지")
+                .build();
+
+
+        String body = objectMapper.writeValueAsString(input);
+
+        UpdateTeamResponse output = UpdateTeamResponse.builder()
+                .teamId(1L)
+                .build();
+
+        given(updateTeamUserCase.updateTeam(any(), any(), any())).willReturn(output);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                put("/api/team/{teamId}", teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                requestFields(
+                                        fieldWithPath("name").description("변경 후 소모임 이름"),
+                                        fieldWithPath("introduction").description("변경 후 소모임 소개글"),
+                                        fieldWithPath("profileImgUrl").description("변경 후 소모임 대표 사진")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("소모임을 수정했습니다."),
+                                        fieldWithPath("data.teamId").description("수정한 teamId")
                                 )
                         )
                 );
