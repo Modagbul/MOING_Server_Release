@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.application.service;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
