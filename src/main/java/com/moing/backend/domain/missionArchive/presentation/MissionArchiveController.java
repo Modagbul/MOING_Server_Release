@@ -56,7 +56,7 @@ public class MissionArchiveController {
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId,
                                                                             @RequestBody MissionArchiveReq missionArchiveReq) {
-        return ResponseEntity.ok(SuccessResponse.create(CREATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveUpdateUseCase.updateArchive(user.getSocialId(), missionId,missionArchiveReq)));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveUpdateUseCase.updateArchive(user.getSocialId(), missionId,missionArchiveReq)));
     }
 
     /**

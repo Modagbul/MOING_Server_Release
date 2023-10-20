@@ -33,7 +33,7 @@ public class MissionGatherController {
      * 작성자 : 정승연
      */
 
-    @GetMapping("/my-single")
+    @GetMapping("/my-once")
     public ResponseEntity<SuccessResponse<List<GatherSingleMissionRes>>> getMyActiveSingleMission(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(ACTIVE_SINGLE_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getAllActiveSingleMissions(user.getSocialId())));
     }
@@ -48,28 +48,6 @@ public class MissionGatherController {
     public ResponseEntity<SuccessResponse<List<GatherRepeatMissionRes>>> getMyActiveRepeatMission(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getAllActiveRepeatMissions( user.getSocialId())));
     }
-
-    /**
-     * 모임별 미션 - 단일 미션
-     * [GET] {teamId}/missions/board/repeat
-     * 작성자 : 정승연
-     */
-//    @GetMapping("/{teamId}/mission/single")
-//    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> geActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
-//                                                                                               @PathVariable("teamId") Long teamId) {
-//        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
-//    }
-    /**
-     * 모임별 미션 - 반복 미션
-     * [GET] {teamId}/missions/board/repeat
-     * 작성자 : 정승연
-     */
-//    @GetMapping("/{teamId}/mission/repeat")
-//    public ResponseEntity<SuccessResponse<List<RepeatMissionBoardRes>>> getActiveRepeatMissionByTeam(@AuthenticationPrincipal User user,
-//                                                                                               @PathVariable("teamId") Long teamId) {
-//        return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionArchiveBoardUseCase.getActiveRepeatMissions(teamId, user.getSocialId())));
-//    }
-
 
 
 }
