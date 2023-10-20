@@ -1,9 +1,11 @@
 package com.moing.backend.domain.team.presentation;
 
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
+import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
+import com.moing.backend.domain.team.application.dto.response.UpdateTeamResponse;
 import com.moing.backend.domain.team.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
@@ -26,6 +28,7 @@ public class TeamController {
     private final SignInTeamUserCase signInTeamUserCase;
     private final DisbandTeamUserCase disbandTeamUserCase;
     private final WithdrawTeamUserCase withdrawTeamUserCase;
+    private final UpdateTeamUserCase updateTeamUserCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -80,6 +83,18 @@ public class TeamController {
     public ResponseEntity<SuccessResponse<DeleteTeamResponse>> withdrawTeam(@AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUserCase.withdrawTeam(user.getSocialId(),teamId)));
+    }
+
+    /**
+     * 소모임 수정 (소모임장)
+     * [POST] api/team/{teamId}
+     */
+
+    @PutMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<UpdateTeamResponse>> updateTeam(@Valid @RequestBody UpdateTeamRequest updateTeamRequest,
+                                                                          @AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId){
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUserCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
     }
 
 }
