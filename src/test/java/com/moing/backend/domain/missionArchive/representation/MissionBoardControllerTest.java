@@ -53,7 +53,7 @@ public class MissionBoardControllerTest extends CommonControllerTest {
         Long teamId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/board/single",teamId)
+                get("/api/team/{teamId}/missions/board/single",teamId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -103,7 +103,7 @@ public class MissionBoardControllerTest extends CommonControllerTest {
         Long teamId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/board/repeat",teamId)
+                get("/api/team/{teamId}/missions/board/repeat",teamId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -153,7 +153,7 @@ public class MissionBoardControllerTest extends CommonControllerTest {
         Long teamId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/board/finish",teamId)
+                get("/api/team/{teamId}/missions/board/finish",teamId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 

@@ -1,12 +1,12 @@
 package com.moing.backend.domain.missionArchive.presentation;
 
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
+import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
+import com.moing.backend.domain.missionHeart.application.service.MissionHeartUseCase;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -21,14 +21,15 @@ import static com.moing.backend.domain.missionArchive.domain.constant.MissionArc
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions/{missionId}/archive")
+@RequestMapping("/api/team/{teamId}/missions/{missionId}/archive")
 public class MissionArchiveController {
 
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;
     private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
-    private final SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private final MissionArchiveReadUseCase missionArchiveReadUseCase;
     private final RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
-    private final MissionArchiveHeartUseCase missionArchiveHeartUseCase;
+    private final MissionHeartUseCase missionHeartUseCase;
+
 
     /**
      * 미션 인증 하기
@@ -55,7 +56,7 @@ public class MissionArchiveController {
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId,
                                                                             @RequestBody MissionArchiveReq missionArchiveReq) {
-        return ResponseEntity.ok(SuccessResponse.create(CREATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveUpdateUseCase.updateArchive(user.getSocialId(), missionId,missionArchiveReq)));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveUpdateUseCase.updateArchive(user.getSocialId(), missionId,missionArchiveReq)));
     }
 
     /**
@@ -68,7 +69,7 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<List<MissionArchiveRes>>> getMyArchive(@AuthenticationPrincipal User user,
                                                                             @PathVariable("teamId") Long teamId,
                                                                             @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
     }
 
     /**
@@ -80,21 +81,23 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<List<PersonalArchiveRes>>> getOtherPeopleArchives(@AuthenticationPrincipal User user,
                                                                                             @PathVariable("teamId") Long teamId,
                                                                                             @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(READ_TEAM_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getPersonalArchive(user.getSocialId(),missionId)));
     }
 
-     /**
-     * 미션 인증 게시물 좋아요
-     * [GET] {teamId}/m원issions/{missionId}/archive/hearts
+
+    /**
+     * 미션 인증 좋아요 누르기
+     * [POST] {teamId}/missions/{missionId}/archive
      * 작성자 : 정승연
      **/
 
-    @PostMapping("/hearts")
-    public ResponseEntity<SuccessResponse<MissionArchiveHeartRes>> pushHeart(@AuthenticationPrincipal User user,
-                                                                             @PathVariable("teamId") Long teamId,
-                                                                             @PathVariable("missionId") Long missionId,
-                                                                             @RequestBody MissionArchiveHeartReq missionArchiveHeartReq) {
-        return ResponseEntity.ok(SuccessResponse.create(HEART_UPDATE_SUCCESS.getMessage(), this.missionArchiveHeartUseCase.pushHeart(missionArchiveHeartReq)));
+    @PutMapping("{archiveId}/heart/{missionHeartStatus}")
+    public ResponseEntity<SuccessResponse<MissionHeartRes>> pushHeart(@AuthenticationPrincipal User user,
+                                                                      @PathVariable("teamId") Long teamId,
+                                                                      @PathVariable("missionId") Long missionId,
+                                                                      @PathVariable("archiveId") Long archiveId,
+                                                                      @PathVariable("missionHeartStatus") String missionHeartStatus) {
+        return ResponseEntity.ok(SuccessResponse.create(CREATE_ARCHIVE_SUCCESS.getMessage(), this.missionHeartUseCase.pushHeart(user.getSocialId(),archiveId,missionHeartStatus)));
     }
 
     /**
@@ -107,7 +110,7 @@ public class MissionArchiveController {
     public ResponseEntity<SuccessResponse<MissionArchiveStatusRes>> getMissionDoneStatus(@AuthenticationPrincipal User user,
                                                                                          @PathVariable("teamId") Long teamId,
                                                                                          @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.singleMissionArchiveReadUseCase.getMissionDoneStatus(missionId)));
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMissionDoneStatus(missionId)));
     }
 
 
