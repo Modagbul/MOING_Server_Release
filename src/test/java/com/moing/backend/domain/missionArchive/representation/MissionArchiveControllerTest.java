@@ -1,26 +1,15 @@
 package com.moing.backend.domain.missionArchive.representation;
 
-import com.google.common.collect.ImmutableList;
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.mission.application.dto.req.MissionReq;
-import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
-import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
-import com.moing.backend.domain.mission.application.service.MissionCreateUseCase;
-import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase;
-import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
-import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
-import com.moing.backend.domain.mission.presentation.MissionController;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveHeartUseCase;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveUpdateUseCase;
-import com.moing.backend.domain.missionArchive.application.service.SingleMissionArchiveReadUseCase;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
+import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.domain.missionArchive.presentation.MissionArchiveController;
+import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
+import com.moing.backend.domain.missionHeart.application.service.MissionHeartUseCase;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,8 +19,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.*;
@@ -51,9 +38,11 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     @MockBean
     private MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     @MockBean
-    private SingleMissionArchiveReadUseCase singleMissionArchiveReadUseCase;
+    private MissionArchiveReadUseCase missionArchiveReadUseCase;
     @MockBean
-    private MissionArchiveHeartUseCase missionArchiveHeartUseCase;
+    private RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
+    @MockBean
+    private MissionHeartUseCase missionHeartUseCase;
 
 
 
@@ -71,8 +60,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .archiveId(1L)
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
-                .hearts(3)
                 .status("COMPLETE/SKIP")
+                .count(1L)
+                .heartStatus("[True/False]")
+                .hearts(1L)
                 .build();
 
         given(missionArchiveCreateUseCase.createArchive(any(),any(),any())).willReturn(output);
@@ -81,7 +72,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/missions/{missionId}/archive",teamId,missionId)
+                post("/api/team/{teamId}/missions/{missionId}/archive",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -109,9 +100,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archiveId").description("미션 인증 아이디"),
                                         fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data.createdDate").description("미션 제출 시각"),
+                                        fieldWithPath("data.status").description("미션 인증 상태"),
+                                        fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
-//                                        fieldWithPath("data.heartsStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태")
                                 )
                         )
                 )
@@ -133,8 +125,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .archiveId(1L)
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
-                .hearts(3)
                 .status("COMPLETE/SKIP")
+                .count(1L)
+                .heartStatus("[True/False]")
+                .hearts(1L)
                 .build();
 
         given(missionArchiveUpdateUseCase.updateArchive(any(),any(),any())).willReturn(output);
@@ -143,7 +137,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                put("/api/{teamId}/missions/{missionId}/archive",teamId,missionId)
+                put("/api/team/{teamId}/missions/{missionId}/archive",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -167,13 +161,15 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
-                                        fieldWithPath("message").description("미션 인증을 완료 했습니다."),
+                                        fieldWithPath("message").description(UPDATE_ARCHIVE_SUCCESS),
                                         fieldWithPath("data.archiveId").description("미션 인증 아이디"),
                                         fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
                                         fieldWithPath("data.createdDate").description("미션 제출 시각"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
-//                                        fieldWithPath("data.heartsStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.status").description("미션 인증 상태"),
+                                        fieldWithPath("data.count").description("미션 인증 횟수"),
+                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수")
                                 )
                         )
                 )
@@ -185,21 +181,23 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 나의_미션_인증_조회() throws Exception {
         //given
 
-        MissionArchiveRes output = MissionArchiveRes.builder()
+        List<MissionArchiveRes> output = Lists.newArrayList(MissionArchiveRes.builder()
                 .archiveId(1L)
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
-                .hearts(0)
                 .status("COMPLETE/SKIP")
-                .build();
+                .count(1L)
+                .heartStatus("[True/False]")
+                .hearts(1L)
+                .build());
 
-        given(singleMissionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
+        given(missionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/{missionId}/archive",teamId,missionId)
+                get("/api/team/{teamId}/missions/{missionId}/archive",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -220,13 +218,16 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(READ_MY_ARCHIVE_SUCCESS.getMessage()),
-                                        fieldWithPath("data.archiveId").description("미션 인증 아이디"),
-                                        fieldWithPath("data.archive").description("미션 인증물 [s3URL/text/링크]"),
-                                        fieldWithPath("data.createdDate").description("미션 제출 시각"),
-                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.status").description("미션 인증 상태")
+                                        fieldWithPath("data[].archiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크]"),
+                                        fieldWithPath("data[].createdDate").description("미션 제출 시각"),
+                                        fieldWithPath("data[].status").description("미션 인증 상태"),
+                                        fieldWithPath("data[].count").description("미션 인증 횟수"),
+                                        fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수")
 
-                                )
+
+                                        )
                         )
                 )
                 .andReturn();
@@ -237,23 +238,25 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 모임원_미션_인증_조회() throws Exception {
         //given
 
-        List<PersonalArchive> output =  Lists.newArrayList(PersonalArchive.builder()
+        List<PersonalArchiveRes> output =  Lists.newArrayList(PersonalArchiveRes.builder()
                 .archiveId(1L)
                 .nickname("modagbul_tester1")
                 .profileImg("[s3 Link]")
                 .archive("content[s3 Link / text / link]")
                 .createdDate("2023-09-03T21:32:33.888")
-                .hearts(3)
                 .status("COMPLETE/SKIP")
+                .count(1L)
+                .heartStatus("[True/False]")
+                .hearts(3)
                 .build());
 
-        given(singleMissionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
+        given(missionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/{missionId}/archive/others",teamId,missionId)
+                get("/api/team/{teamId}/missions/{missionId}/archive/others",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -273,16 +276,19 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
-                                        fieldWithPath("message").description("팀원 미션 인증 현황 조회를 완료 했습니다."),
+                                        fieldWithPath("message").description(READ_TEAM_ARCHIVE_SUCCESS),
                                         fieldWithPath("data[].archiveId").description("미션 인증 아이디"),
                                         fieldWithPath("data[].nickname").description("미션 인증자 닉네임 "),
                                         fieldWithPath("data[].profileImg").description("미션 인증자 프로필 이미지 "),
                                         fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크] "),
                                         fieldWithPath("data[].createdDate").description("미션 인증 날짜 "),
-                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
-                                        fieldWithPath("data[].status").description("미션 인증 상태")
+                                        fieldWithPath("data[].status").description("미션 인증 상태"),
+                                        fieldWithPath("data[].count").description("미션 인증 횟수"),
+                                        fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태 "),
+                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 ")
 
-                                )
+
+                                        )
                         )
                 )
                 .andReturn();
@@ -298,13 +304,13 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .done("3")
                 .build();
 
-        given(singleMissionArchiveReadUseCase.getMissionDoneStatus(any())).willReturn(output);
+        given(missionArchiveReadUseCase.getMissionDoneStatus(any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/{missionId}/archive/status",teamId,missionId)
+                get("/api/team/{teamId}/missions/{missionId}/archive/status",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -337,29 +343,25 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     @Test
     public void 미션_인증물_좋아요() throws Exception {
         //given
-        MissionArchiveHeartReq input = MissionArchiveHeartReq.builder()
-                .archiveId(1L)
-                .heartStatus("content[s3 Link / text / link]")
-                .build();
 
-        String body = objectMapper.writeValueAsString(input);
 
-        MissionArchiveHeartRes output = MissionArchiveHeartRes.builder()
-                .archiveId(1L)
-                .heartStatus("content[s3 Link / text / link]")
+        MissionHeartRes output = MissionHeartRes.builder()
+                .missionArchiveId(1L)
+                .missionHeartStatus("[True/False]")
                 .hearts(3)
                 .build();
 
-        given(missionArchiveHeartUseCase.pushHeart(any())).willReturn(output);
+        given(missionHeartUseCase.pushHeart(any(),any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
+        Long archiveId = 1L;
+        String missionHeartStatus = "False";
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/missions/{missionId}/archive/hearts", teamId, missionId)
+                put("/api/team/{teamId}/missions/{missionId}/archive/{archiveId}/heart/{missionHeartStatus}", teamId, missionId,archiveId,missionHeartStatus)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
         );
 
         //then
@@ -372,17 +374,16 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
-                                        parameterWithName("missionId").description("미션 아이디")
+                                        parameterWithName("missionId").description("미션 아이디"),
+                                        parameterWithName("archiveId").description("미션 인증물 아이디"),
+                                        parameterWithName("missionHeartStatus").description("미션 인증물 좋아요 상태")
                                 ),
-                                requestFields(
-                                        fieldWithPath("archiveId").description("미션 인증 아이디"),
-                                        fieldWithPath("heartStatus").description("미션 인증물 좋아요 상태 [True]")
-                                        ),
+
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(HEART_UPDATE_SUCCESS.getMessage()),
-                                        fieldWithPath("data.archiveId").description("미션 인증 아이디"),
-                                        fieldWithPath("data.heartStatus").description("미션 인증물 좋아요 상태 [True]"),
+                                        fieldWithPath("data.missionArchiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("data.missionHeartStatus").description("미션 인증물 좋아요 상태 [True]"),
                                         fieldWithPath("data.hearts").description("미션 인증물 좋아요 수")
 
                                 )
@@ -390,6 +391,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 )
                 .andReturn();
     }
+
+
 
 
 

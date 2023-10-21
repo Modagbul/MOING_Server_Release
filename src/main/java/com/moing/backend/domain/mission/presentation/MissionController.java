@@ -21,7 +21,7 @@ import static com.moing.backend.domain.mission.presentation.constant.MissionResp
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions")
+@RequestMapping("/api/team/{teamId}/missions")
 public class MissionController {
 
 
@@ -29,7 +29,6 @@ public class MissionController {
     private final MissionReadUseCase missionReadUseCase;
     private final MissionUpdateUseCase missionUpdateUseCase;
     private final MissionDeleteUseCase missionDeleteUseCase;
-    private final MissionQueryService missionQueryService;
 
     /**
      * 미션 조회

@@ -2,16 +2,16 @@ package com.moing.backend.domain.missionArchive.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveHeartRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchive;
+import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.missionHeart.domain.constant.MissionHeartStatus;
 import com.moing.backend.global.annotation.Mapper;
 
 import java.util.ArrayList;
@@ -26,37 +26,58 @@ public class MissionArchiveMapper {
                 .status(MissionArchiveStatus.valueOf(missionArchiveReq.getStatus()))
                 .member(member)
                 .mission(mission)
+                .heartList(new ArrayList<>())
                 .build();
     }
 
-    public static MissionArchiveRes mapToMissionArchiveRes(MissionArchive missionArchive) {
+    public static MissionArchiveRes mapToMissionArchiveRes(MissionArchive missionArchive,Long memberId) {
         return MissionArchiveRes.builder()
                 .archiveId(missionArchive.getId())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
-                .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
+                .count(missionArchive.getCount())
+                .heartStatus(
+                        String.valueOf(missionArchive.getHeartList().stream().anyMatch(
+                        missionHeart -> missionHeart.getPushMemberId().equals(memberId) &&
+                                missionHeart.getHeartStatus().equals(MissionHeartStatus.True)
+                                )))
+                .hearts(missionArchive.getHeartList().stream().filter(
+                        missionHeart -> missionHeart.getHeartStatus().equals(MissionHeartStatus.True)
+                        ).count())
                 .build();
     }
 
+    public static List<MissionArchiveRes> mapToMissionArchiveResList(List<MissionArchive> missionArchiveList,Long memberId) {
+        List<MissionArchiveRes> missionArchiveResList = new ArrayList<>();
+        missionArchiveList.forEach(
+                missionArchive -> missionArchiveResList.add(MissionArchiveMapper.mapToMissionArchiveRes(missionArchive,memberId))
+        );
+        return missionArchiveResList;
+    }
 
-    public static PersonalArchive mapToPersonalArchive(MissionArchive missionArchive) {
+
+    public static PersonalArchiveRes mapToPersonalArchive(MissionArchive missionArchive,Long memberId) {
         Member member = missionArchive.getMember();
-        return PersonalArchive.builder()
+        return PersonalArchiveRes.builder()
                 .archiveId(missionArchive.getId())
                 .nickname(member.getNickName())
                 .profileImg(member.getProfileImage())
                 .archive(missionArchive.getArchive())
                 .createdDate(missionArchive.getCreatedDate().toString())
-                .hearts(missionArchive.getHearts())
                 .status(missionArchive.getStatus().name())
+                .count(missionArchive.getCount())
+                .heartStatus(
+                        String.valueOf(missionArchive.getHeartList().stream().anyMatch(
+                                missionHeart -> missionHeart.getPushMemberId().equals(memberId))))
+                .hearts(missionArchive.getHeartList().size())
                 .build();
     }
 
-    public static List<PersonalArchive> mapToPersonalArchiveList(List<MissionArchive> missionArchiveList) {
-        List<PersonalArchive> personalArchiveList = new ArrayList<>();
+    public static List<PersonalArchiveRes> mapToPersonalArchiveList(List<MissionArchive> missionArchiveList,Long memberId) {
+        List<PersonalArchiveRes> personalArchiveList = new ArrayList<>();
         missionArchiveList.forEach(
-                missionArchive -> personalArchiveList.add(MissionArchiveMapper.mapToPersonalArchive(missionArchive))
+                missionArchive -> personalArchiveList.add(MissionArchiveMapper.mapToPersonalArchive(missionArchive,memberId))
         );
         return personalArchiveList;
     }
@@ -87,7 +108,6 @@ public class MissionArchiveMapper {
     public static MissionArchiveHeartRes mapToMissionArchiveHeartRes(MissionArchive missionArchive,Boolean heartStatus) {
         return MissionArchiveHeartRes.builder()
                 .archiveId(missionArchive.getId())
-                .hearts(missionArchive.getHearts())
                 .heartStatus(heartStatus.toString())
                 .build();
     }

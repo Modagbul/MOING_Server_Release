@@ -86,7 +86,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long teamId = 2L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/missions",teamId)
+                post("/api/team/{teamId}/missions",teamId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -164,7 +164,7 @@ public class MissionControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                put("/api/{teamId}/missions/{missionId}",teamId,missionId)
+                put("/api/team/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -231,7 +231,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/{missionId}",teamId,missionId)
+                get("/api/team/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
 
@@ -275,7 +275,7 @@ public class MissionControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                delete("/api/{teamId}/missions/{missionId}",teamId,missionId)
+                delete("/api/team/{teamId}/missions/{missionId}",teamId,missionId)
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
         );

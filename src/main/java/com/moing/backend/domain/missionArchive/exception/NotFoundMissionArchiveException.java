@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public class NotFoundMissionArchiveException extends MissionArchiveException {
 
     public NotFoundMissionArchiveException() {
-        super(ErrorCode.NOT_FOUND_MISSION,
+        super(ErrorCode.NOT_FOUND_MISSION_ARCHIVE,
                 HttpStatus.NOT_FOUND);
     }
 }

@@ -32,13 +32,12 @@ public class MissionCreateUseCase {
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Team team = teamRepository.findById(teamId).orElseThrow();
 
-        // 소모임장 확인 로직 추가
-        if (member.getMemberId() == team.getLeaderId()) {
+        // 소모임 장 확인
+        if (member.getMemberId().equals(team.getLeaderId())) {
             Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.ONGOING);
             // teamRepository 변경 예정
             mission.setTeam(team);
             missionSaveService.save(mission);
-
             return MissionMapper.mapToMissionCreateRes(mission);
         }
         else{
