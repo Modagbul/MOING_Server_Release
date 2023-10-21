@@ -87,4 +87,8 @@ public class Team extends BaseTimeEntity {
     public void addTeamMember(){
         numOfMember++;
     }
+
+    public void deleteTeamMember(){
+        numOfMember--;
+    }
 }

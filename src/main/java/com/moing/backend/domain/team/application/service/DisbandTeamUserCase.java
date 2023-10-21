@@ -2,7 +2,9 @@ package com.moing.backend.domain.team.application.service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
+import com.moing.backend.domain.team.application.mapper.TeamMapper;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.team.exception.NotAuthByTeamException;
@@ -23,6 +25,8 @@ public class DisbandTeamUserCase {
     private final TeamGetService teamGetService;
     private final CheckLeaderUserCase checkLeaderUserCase;
     private final TeamMemberDeleteService teamMemberDeleteService;
+    private final MissionQueryService missionQueryService;
+    private final TeamMapper teamMapper;
 
     public DeleteTeamResponse disbandTeam(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
@@ -34,6 +38,6 @@ public class DisbandTeamUserCase {
         } else {
             throw new NotAuthByTeamException();
         }
-        return new DeleteTeamResponse(team.getTeamId());
+        return teamMapper.toDeleteTeamResponse(missionQueryService.findMissionsCountByTeam(team.getTeamId()), team);
     }
 }
