@@ -157,7 +157,7 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.teamBlocks[0].duration").description("소모임과 함께한 시간"),
                                         fieldWithPath("data.teamBlocks[0].levelOfFire").description("불꽃 레벨"),
                                         fieldWithPath("data.teamBlocks[0].teamName").description("소모임 이름"),
-                                        fieldWithPath("data.teamBlocks[0].numOfMember").description("소모임원 숫자"),
+                                        fieldWithPath("data.teamBlocks[0].numOfMember").description("소모임원 명 수"),
                                         fieldWithPath("data.teamBlocks[0].category").description("소모임 카테고리"),
                                         fieldWithPath("data.teamBlocks[0].startDate").description("소모임 시작일")
                                 )
@@ -242,6 +242,11 @@ public class TeamControllerTest extends CommonControllerTest {
         Long teamId = 1L; // 예시 ID
         DeleteTeamResponse output = DeleteTeamResponse.builder()
                 .teamId(teamId)
+                .teamName("팀 이름")
+                .numOfMember(9)
+                .duration(30L)
+                .numOfMission(90L)
+                .levelOfFire(3)
                 .build();
 
         given(disbandTeamUserCase.disbandTeam(any(), any())).willReturn(output);
@@ -267,7 +272,12 @@ public class TeamControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("[소모임장 권한] 소모임을 강제 종료했습니다."),
-                                        fieldWithPath("data.teamId").description("강제종료한 소모임 id")
+                                        fieldWithPath("data.teamId").description("강제종료한 소모임 id"),
+                                        fieldWithPath("data.teamName").description("소모임 이름"),
+                                        fieldWithPath("data.numOfMember").description("모임원 명 수"),
+                                        fieldWithPath("data.duration").description("소모임과 함께한 시간"),
+                                        fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
+                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
                                 )
                         )
                 );
@@ -278,6 +288,11 @@ public class TeamControllerTest extends CommonControllerTest {
         Long teamId = 1L; // 예시 ID
         DeleteTeamResponse output = DeleteTeamResponse.builder()
                 .teamId(teamId)
+                .teamName("팀 이름")
+                .numOfMember(9)
+                .duration(30L)
+                .numOfMission(90L)
+                .levelOfFire(3)
                 .build();
 
         given(withdrawTeamUserCase.withdrawTeam(any(), any())).willReturn(output);
@@ -303,7 +318,12 @@ public class TeamControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("[소모임원 권한] 소모임을 탈퇴하였습니다"),
-                                        fieldWithPath("data.teamId").description("탈퇴한 소모임 id")
+                                        fieldWithPath("data.teamId").description("탈퇴한 소모임 id"),
+                                        fieldWithPath("data.teamName").description("소모임 이름"),
+                                        fieldWithPath("data.numOfMember").description("모임원 명 수"),
+                                        fieldWithPath("data.duration").description("소모임과 함께한 시간"),
+                                        fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
+                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
                                 )
                         )
                 );
