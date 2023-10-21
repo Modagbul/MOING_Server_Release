@@ -11,6 +11,7 @@ import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -54,8 +55,9 @@ public class TeamMapper {
 
     private Long calculateDuration(LocalDateTime approvalTime) {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime currentSeoulTime = LocalDateTime.now(seoulZoneId).withSecond(0).withNano(0);
-        LocalDateTime adjustedApprovalTime = approvalTime.withSecond(0).withNano(0);
-        return ChronoUnit.DAYS.between(adjustedApprovalTime, currentSeoulTime);
+        LocalDate currentDate = LocalDate.now(seoulZoneId);
+        LocalDate approvalDate = approvalTime.toLocalDate();
+        return ChronoUnit.DAYS.between(approvalDate, currentDate);
     }
+
 }

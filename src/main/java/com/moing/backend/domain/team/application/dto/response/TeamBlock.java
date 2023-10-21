@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -38,9 +39,10 @@ public class TeamBlock {
 
     private Long calculateDuration(LocalDateTime approvalTime) {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime currentSeoulTime = LocalDateTime.now(seoulZoneId).withSecond(0).withNano(0);
-        LocalDateTime adjustedApprovalTime = approvalTime.withSecond(0).withNano(0);
-        return ChronoUnit.DAYS.between(adjustedApprovalTime, currentSeoulTime);
+        LocalDate currentDate = LocalDate.now(seoulZoneId);
+        LocalDate approvalDate = approvalTime.toLocalDate();
+        return ChronoUnit.DAYS.between(approvalDate, currentDate);
     }
+
 }
 
