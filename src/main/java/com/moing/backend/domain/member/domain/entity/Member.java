@@ -101,6 +101,9 @@ public class Member extends BaseTimeEntity {
         this.birthDate = LocalDate.parse(signUpRequest.getBirthDate(), DateTimeFormatter.ISO_DATE);;
         this.fcmToken = signUpRequest.getFcmToken();
         this.registrationStatus = RegistrationStatus.COMPLETED;
+        this.isNewUploadPush=true;
+        this.isFirePush=true;
+        this.isRemindPush=true;
     }
 
     @Builder
