@@ -35,7 +35,7 @@ public class TeamMapper {
     }
 
     public GetTeamDetailResponse toTeamDetailResponse(Team team, Integer boardNum, List<TeamMemberInfo> teamMemberInfoList) {
-        TeamInfo teamInfo = new TeamInfo(team.getName(), teamMemberInfoList.size(), team.getCategory(), team.getIntroduction(), teamMemberInfoList);
+        TeamInfo teamInfo = new TeamInfo(team.isDeleted(), team.getDeletionTime(), team.getName(), teamMemberInfoList.size(), team.getCategory(), team.getIntroduction(), teamMemberInfoList);
         return GetTeamDetailResponse.builder()
                 .boardNum(boardNum)
                 .teamInfo(teamInfo)
@@ -53,11 +53,14 @@ public class TeamMapper {
                 .build();
     }
 
-    private Long calculateDuration(LocalDateTime approvalTime) {
+    public Long calculateDuration(LocalDateTime approvalTime) {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDate currentDate = LocalDate.now(seoulZoneId);
-        LocalDate approvalDate = approvalTime.toLocalDate();
-        return ChronoUnit.DAYS.between(approvalDate, currentDate);
+        LocalDateTime currentDateTime = LocalDateTime.now(seoulZoneId);
+
+        long hoursBetween = ChronoUnit.HOURS.between(approvalTime, currentDateTime);
+        long daysBetween = hoursBetween / 24;
+
+        return daysBetween;
     }
 
 }

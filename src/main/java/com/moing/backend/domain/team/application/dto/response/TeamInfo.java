@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
 @Getter
 @Builder
 public class TeamInfo {
+    private Boolean isDeleted;
+    private LocalDateTime deletionTime;
     private String teamName; //소모임 이름
     private Integer numOfMember; //소모임원 수
     private Category category; //카테고리

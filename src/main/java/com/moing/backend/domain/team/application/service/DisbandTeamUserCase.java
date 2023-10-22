@@ -8,9 +8,6 @@ import com.moing.backend.domain.team.application.mapper.TeamMapper;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.team.exception.NotAuthByTeamException;
-import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
-import com.moing.backend.domain.teamMember.domain.service.TeamMemberDeleteService;
-import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +21,6 @@ public class DisbandTeamUserCase {
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
     private final CheckLeaderUserCase checkLeaderUserCase;
-    private final TeamMemberDeleteService teamMemberDeleteService;
     private final MissionQueryService missionQueryService;
     private final TeamMapper teamMapper;
 
@@ -33,7 +29,6 @@ public class DisbandTeamUserCase {
         Team team = teamGetService.getTeamByTeamId(teamId);
 
         if (checkLeaderUserCase.isTeamLeader(member, team)) {
-            teamMemberDeleteService.deleteAllTeamMembers(team.getTeamId());
             team.deleteTeam();
         } else {
             throw new NotAuthByTeamException();

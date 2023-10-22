@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +109,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .numOfMember(10)
                 .category("ETC")
                 .startDate("2023.09.05")
+                .deletionTime(LocalDateTime.now().withNano(0))
                 .build();
 
         TeamBlock teamBlock2=TeamBlock.builder()
@@ -118,6 +120,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .numOfMember(8)
                 .category("SPORTS")
                 .startDate("2023.09.01")
+                .deletionTime(LocalDateTime.now().withNano(0))
                 .build();
 
         teamBlocks.add(teamBlock1);
@@ -159,7 +162,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.teamBlocks[0].teamName").description("소모임 이름"),
                                         fieldWithPath("data.teamBlocks[0].numOfMember").description("소모임원 명 수"),
                                         fieldWithPath("data.teamBlocks[0].category").description("소모임 카테고리"),
-                                        fieldWithPath("data.teamBlocks[0].startDate").description("소모임 시작일")
+                                        fieldWithPath("data.teamBlocks[0].startDate").description("소모임 시작일"),
+                                        fieldWithPath("data.teamBlocks[0].deletionTime").description("소모임 삭제 시간 (삭제 안했으면 null)")
                                 )
 
                         )
@@ -182,6 +186,8 @@ public class TeamControllerTest extends CommonControllerTest {
 
         TeamInfo teamInfo = TeamInfo
                 .builder()
+                .isDeleted(true)
+                .deletionTime(LocalDateTime.now())
                 .teamName("소모임 이름")
                 .numOfMember(1)
                 .category(Category.ETC)
@@ -225,6 +231,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.teamInfo.numOfMember").description("모임원 명 수"),
                                         fieldWithPath("data.teamInfo.category").description("카테고리"),
                                         fieldWithPath("data.teamInfo.introduction").description("모임 소개"),
+                                        fieldWithPath("data.teamInfo.isDeleted").description("삭제여부"),
+                                        fieldWithPath("data.teamInfo.deletionTime").description("삭제 시간 (삭제 안했으면 null)"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].memberId").description("유저 아이디"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].nickName").description("유저 닉네임"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].profileImage").description("유저 프로필 이미지"),

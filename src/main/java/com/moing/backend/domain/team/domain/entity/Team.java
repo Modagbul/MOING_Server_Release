@@ -80,7 +80,7 @@ public class Team extends BaseTimeEntity {
     }
 
     public void deleteTeam() {
-        this.isDeleted = true;
+        this.isDeleted=true;
         this.deletionTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
     }
 

@@ -13,8 +13,4 @@ import java.util.Optional;
 public interface TeamMemberRepository extends JpaRepository<TeamMember, Long>, TeamMemberCustomRepository{
     Optional<TeamMember> findTeamMemberByTeamAndMember(Team team, Member member);
 
-    @Modifying
-    @Query("update TeamMember t set t.isDeleted = true where t.team.teamId = :teamId")
-    void deleteTeamMembers(Long teamId);
-
 }
