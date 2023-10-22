@@ -25,7 +25,7 @@ public class MissionTerminationUseCase {
 
         missionByDueTo.stream().forEach(
                 // 미션 종료 처리
-                mission -> mission.setStatus(MissionStatus.END)
+                mission -> mission.updateStatus(MissionStatus.END)
 
         );
     }

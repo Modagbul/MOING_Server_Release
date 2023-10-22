@@ -29,7 +29,6 @@ public class MissionArchiveHeartUseCase {
 
     private final MemberGetService memberGetService;
 
-    private final MissionArchiveScoreService missionArchiveScoreService;
 
     public MissionArchiveHeartRes pushHeart(MissionArchiveHeartReq missionArchiveHeartReq) {
 
