@@ -1,7 +1,8 @@
-package com.moing.backend.domain.missionStatus.domain.entity;
+package com.moing.backend.domain.missionState.domain.entity;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +16,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Builder
-public class MissionStatus extends BaseTimeEntity {
+public class MissionState extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "missionStatus_id")
+    @Column(name = "missionState_id")
     private Long id;
 
     @OneToOne
@@ -26,6 +27,6 @@ public class MissionStatus extends BaseTimeEntity {
     @OneToOne
     private Member member;
 
-    private Status status;
+    private MissionStatus status;
 
 }

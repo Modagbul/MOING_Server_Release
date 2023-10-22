@@ -122,7 +122,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
 
 //    @Override
-//    public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
+//    public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionState status) {
 //        return Optional.ofNullable(queryFactory
 //                .select(Projections.constructor(RepeatMissionBoardRes.class,
 //                                missionArchive.mission.id,

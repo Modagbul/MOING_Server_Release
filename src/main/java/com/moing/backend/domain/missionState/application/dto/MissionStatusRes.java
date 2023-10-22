@@ -1,4 +1,4 @@
-package com.moing.backend.domain.missionStatus.application.dto;
+package com.moing.backend.domain.missionState.application.dto;
 
 public class MissionStatusRes {
 
