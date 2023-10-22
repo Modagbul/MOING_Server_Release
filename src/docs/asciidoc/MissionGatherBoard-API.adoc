@@ -1,7 +1,7 @@
 
 
 [[MissionGatherBoard-API]]
-= MissionBoard API
+= MissionGatherBoard API
 
 [[MissionBoard-미션-모아보기-단일]]
 === 미션_모아보기_단일_미션

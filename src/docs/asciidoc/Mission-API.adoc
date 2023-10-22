@@ -27,3 +27,10 @@ operation::mission-controller-test/미션_삭제[snippets='http-request,path-par
 
 ---
 
+
+[[Mission-추천]]
+=== Mission 추천
+operation::mission-controller-test/미션_추천[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
