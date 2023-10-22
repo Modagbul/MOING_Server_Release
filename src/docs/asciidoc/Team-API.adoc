@@ -37,6 +37,10 @@ operation::team-controller-test/sign-in_team[snippets='http-request,path-paramet
 === Team 소모임 조회
 operation::team-controller-test/get_team[snippets='http-request,http-response,response-fields']
 
+[[Team-목표보드-조회]]
+=== Team 목표보드_소모임 단건_조회
+operation::team-controller-test/get_team_detail[snippets='http-request,path-parameters,http-response,response-fields']
+
 [[Team-소모임-수정]]
 === Team 소모임 수정
 operation::team-controller-test/update_team[snippets='http-request,path-parameters,http-response,request-fields,response-fields']
