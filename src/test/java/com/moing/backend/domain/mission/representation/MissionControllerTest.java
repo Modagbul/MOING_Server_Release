@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.RECOMMEND_MISSION_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.ResponseEntity.status;
@@ -300,5 +301,45 @@ public class MissionControllerTest extends CommonControllerTest {
                         )
                 )
                 .andReturn();
+    }
+
+    @Test
+    public void 미션_추천() throws Exception {
+        //given
+
+
+        String output = "" ;
+
+        given(missionReadUseCase.getTeamCategory(any())).willReturn(output);
+
+        Long teamId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}/missions/recommend",teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(RECOMMEND_MISSION_SUCCESS),
+                                        fieldWithPath("data").description("팀 카테고리 [SPORTS/HABIT/TEST/STUDY/READING/ETC] ")
+                                )
+                        )
+                )
+                .andReturn();
+
     }
 }
