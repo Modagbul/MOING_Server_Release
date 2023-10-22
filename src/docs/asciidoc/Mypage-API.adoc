@@ -11,6 +11,10 @@ operation::mypage-controller-test/sign_out[snippets='http-request,http-response,
 === Mypage 회원탈퇴
 operation::mypage-controller-test/withdraw[snippets='http-request,request-fields,http-response,response-fields']
 
+[[Mypage-전체-조회]]
+=== Mypage 전체 조회
+operation::mypage-controller-test/get_mypage[snippets='http-request,http-response,response-fields']
+
 [[Mypage-프로필-조회]]
 === Mypage 프로필 조회
 operation::mypage-controller-test/get_profile[snippets='http-request,http-response,response-fields']
