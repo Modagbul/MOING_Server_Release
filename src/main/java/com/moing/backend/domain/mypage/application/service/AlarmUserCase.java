@@ -21,7 +21,7 @@ public class AlarmUserCase {
         return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush());
     }
 
-    public void updateAlarm(String socialId, String type, String status) {
+    public GetAlarmResponse updateAlarm(String socialId, String type, String status) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         boolean push = "on".equals(status);
 
@@ -41,5 +41,6 @@ public class AlarmUserCase {
             default:
                 throw new AlarmInvalidException();
         }
+        return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush());
     }
 }

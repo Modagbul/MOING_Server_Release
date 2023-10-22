@@ -33,3 +33,14 @@ Host: localhost:8080
 {
 "profileImage" : "PROFILE_IMAGE_URL"
 }
+
+
+[[Mypage-알람설정_조회]]
+=== Mypage 알람설정 조회
+operation::mypage-controller-test/get_alarm[snippets='http-request,http-response,response-fields']
+
+
+[[Mypage-알람설정_수정]]
+=== Mypage 알람설정 수정
+operation::mypage-controller-test/update_alarm[snippets='http-request,http-response,request-parameters,response-fields']
+

@@ -98,11 +98,10 @@ public class MyPageController {
      * [POST] api/mypage/alarm?type=all || isNewUploadPush || isRemindPush || isFirePush && status= on || off
      */
     @PutMapping("/alarm")
-    public ResponseEntity<SuccessResponse> updateAlarm(@AuthenticationPrincipal User user,
+    public ResponseEntity<SuccessResponse<GetAlarmResponse>> updateAlarm(@AuthenticationPrincipal User user,
                                                        @RequestParam(name = "type") String type,
                                                        @RequestParam(name = "status") String status) {
-        this.alarmUserCase.updateAlarm(user.getSocialId(), type, status);
-        return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage()));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(), this.alarmUserCase.updateAlarm(user.getSocialId(), type, status)));
     }
 
 }
