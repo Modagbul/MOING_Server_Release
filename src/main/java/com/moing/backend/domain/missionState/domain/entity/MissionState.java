@@ -3,6 +3,7 @@ package com.moing.backend.domain.missionState.domain.entity;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,6 @@ public class MissionState extends BaseTimeEntity {
     @OneToOne
     private Member member;
 
-    private MissionStatus status;
+    private MissionArchiveStatus status;
 
 }
