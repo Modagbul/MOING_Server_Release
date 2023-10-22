@@ -66,6 +66,7 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .innerJoin(teamMember.team, team) // innerJoin을 사용하여 최적화
                 .where(teamMember.team.teamId.eq(teamId) // where 절을 하나로 합침
                         .and(teamMember.isDeleted.eq(false)))
+                .groupBy(teamMember.member.memberId)
                 .fetch();
     }
 }

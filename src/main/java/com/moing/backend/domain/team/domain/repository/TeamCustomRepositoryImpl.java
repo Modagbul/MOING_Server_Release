@@ -56,6 +56,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .where(teamMember.isDeleted.eq(false)) // 탈퇴하지 않았다면
                 .where(team.isDeleted.eq(false) // 강제종료되지 않았거나
                         .or(team.deletionTime.after(threeDaysAgo))) // 강제종료된 경우 3일이 지나지 않았다면
+                .groupBy(team.teamId)
                 .orderBy(team.approvalTime.asc())
                 .fetch();
     }
@@ -70,6 +71,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .on(teamMember.member.memberId.eq(memberId))
                 .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL)) // 승인 되었고
                 .orderBy(team.missions.size().desc())
+                .groupBy(team.teamId)
                 .fetch();
     }
 
@@ -92,6 +94,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                         .or(team.deletionTime.isNotNull()
                         .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
                 .orderBy(team.approvalTime.asc())
+                .groupBy(team.teamId)
                 .fetch();
     }
 
