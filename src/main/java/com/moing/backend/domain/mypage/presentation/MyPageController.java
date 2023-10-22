@@ -28,8 +28,6 @@ public class MyPageController {
     private final AlarmUserCase alarmUserCase;
     private final GetMyPageUserCase getMyPageUserCase;
 
-    //TODO 알림설정 수정
-
     /**
      * 로그아웃
      * [POST] api/mypage/signOut
@@ -93,6 +91,17 @@ public class MyPageController {
     @GetMapping("/alarm")
     public ResponseEntity<SuccessResponse<GetAlarmResponse>> getAlarm(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_ALARM_SUCCESS.getMessage(), this.alarmUserCase.getAlarm(user.getSocialId())));
+    }
+
+    /**
+     * 알림정보 수정
+     * [POST] api/mypage/alarm?type=all || isNewUploadPush || isRemindPush || isFirePush && status= on || off
+     */
+    @PutMapping("/alarm")
+    public ResponseEntity<SuccessResponse<GetAlarmResponse>> updateAlarm(@AuthenticationPrincipal User user,
+                                                       @RequestParam(name = "type") String type,
+                                                       @RequestParam(name = "status") String status) {
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(), this.alarmUserCase.updateAlarm(user.getSocialId(), type, status)));
     }
 
 }

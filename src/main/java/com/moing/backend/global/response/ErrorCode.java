@@ -42,14 +42,16 @@ public enum ErrorCode {
     ALREADY_WITHDRAW_ERROR("T0003","이미 탈퇴한 회원입니다."),
     ALREADY_JOIN_ERROR("T0004","이미 가입한 회원입니다."),
 
+    //마이페이지 관련 에러 코드
+    INVALID_ALARM_ERROR("MP0001","유효하지 않는 알람 입력값입니다"),
+
     //게시글 관련 에러 코드
     NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 게시글이 존재하지 않습니다."),
     NOT_AUTH_BY_BOARD_ID_ERROR("B0002","권한이 없습니다."),
 
     //게시글 댓글 관련 에러 코드
-    NOT_FOUND_BY_BOARD_COMMENT_ID_ERROR("B0001","해당 boardCommentId인 댓글이 존재하지 않습니다."),
-    NOT_AUTH_BY_BOARD_COMMENT_ID_ERROR("B0002","권한이 없습니다.");
-
+    NOT_FOUND_BY_BOARD_COMMENT_ID_ERROR("BC0001","해당 boardCommentId인 댓글이 존재하지 않습니다."),
+    NOT_AUTH_BY_BOARD_COMMENT_ID_ERROR("BC0002","권한이 없습니다.");
     private String errorCode;
     private String message;
 
