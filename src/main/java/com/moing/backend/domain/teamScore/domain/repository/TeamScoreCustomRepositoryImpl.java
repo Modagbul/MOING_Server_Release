@@ -1,5 +1,8 @@
 package com.moing.backend.domain.teamScore.domain.repository;
 
+import static com.moing.backend.domain.teamScore.domain.entity.QTeamScore.teamScore;
+
+import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -14,10 +17,12 @@ public class TeamScoreCustomRepositoryImpl implements TeamScoreCustomRepository 
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-//    public TeamScore findTeamScoreByTeamId(Long teamId) {
-//        return queryFactory
-//                .selectFrom(TeamSc)
-//    }
+    @Override
+    public TeamScore findTeamScoreByTeam(Team team) {
+        return queryFactory
+                .selectFrom(teamScore)
+                .where(teamScore.team.eq(team)).fetchFirst();
+    }
 
 
 }

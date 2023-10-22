@@ -16,16 +16,17 @@ public class TeamScoreUpdateService {
 
     private final TeamScoreRepository teamScoreRepository;
     private final TeamGetService teamGetService;
+    private final TeamScoreQueryService teamScoreQueryService;
 
     public TeamScore update(Long teamId, Long score) {
         Team team = teamGetService.getTeamByTeamId(teamId);
 
+        TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team);
 
+        teamScore.updateScore(score);
 
-        return teamScoreRepository.save(TeamScore.builder()
-                .team(team)
-                .score(score)
-                .build());
+        return teamScore;
+
     }
 
 

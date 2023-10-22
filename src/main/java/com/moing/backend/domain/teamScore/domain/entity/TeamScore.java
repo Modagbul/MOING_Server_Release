@@ -2,7 +2,6 @@ package com.moing.backend.domain.teamScore.domain.entity;
 
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.entity.BaseTimeEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 

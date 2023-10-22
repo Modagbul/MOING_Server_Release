@@ -17,11 +17,10 @@ public class TeamScoreQueryService {
     private final TeamScoreRepository teamScoreRepository;
     private final TeamGetService teamGetService;
 
-//    public TeamScore findTeamScoreByTeamId(Long teamId, Long score) {
-//        Team team = teamGetService.getTeamByTeamId(teamId);
-//
-//        return teamScoreRepository.findByTeam(team);
-//    }
+    public TeamScore findTeamScoreByTeam(Team team) {
+
+        return teamScoreRepository.findTeamScoreByTeam(team);
+    }
 
 
 }
