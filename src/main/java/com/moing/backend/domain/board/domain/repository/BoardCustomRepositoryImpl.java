@@ -70,16 +70,18 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     public Integer findUnReadBoardNum(Long teamId, Long memberId) {
         // 전체 게시글 수
         Long allBoards = queryFactory
-                .selectFrom(board)
+                .select(board.count())
+                .from(board)
                 .where(board.team.teamId.eq(teamId))
-                .fetchCount();
+                .fetchFirst();
 
         // 멤버가 읽은 게시글 수
         Long readBoards = queryFactory
-                .selectFrom(boardRead)
+                .select(boardRead.count())
+                .from(boardRead)
                 .where(boardRead.member.memberId.eq(memberId))
                 .where(boardRead.board.team.teamId.eq(teamId))
-                .fetchCount();
+                .fetchFirst();
 
         return Math.toIntExact(allBoards - readBoards);
     }
