@@ -16,8 +16,8 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQuer
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
+import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,9 @@ public class MissionArchiveCreateUseCase {
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
     private final MissionArchiveDeleteService missionArchiveDeleteService;
+
+    private final MissionHeartQueryService missionHeartQueryService;
+
     private final MissionQueryService missionQueryService;
     private final MemberGetService memberGetService;
 
@@ -61,18 +64,14 @@ public class MissionArchiveCreateUseCase {
 
         }
 
-        // 단일 미션
-        if (mission.getType().equals(MissionType.ONCE)) {
-            newArchive.updateCount(1L);
-        }
-
         // 반복 미션
         else {
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
         }
 
         missionStateSaveService.saveMissionState(member,mission, MissionArchiveStatus.COMPLETE);
-        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive));
+
+        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive),memberId);
 
     }
 

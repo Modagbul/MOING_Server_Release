@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -24,9 +25,10 @@ public class TeamBlock {
     private Integer numOfMember;
     private String category;
     private String startDate;
+    private LocalDateTime deletionTime;
 
     @QueryProjection
-    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, Category category){
+    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, Category category, LocalDateTime deletionTime){
         this.teamId=teamId;
         this.duration=calculateDuration(approvalTime);
         this.levelOfFire=levelOfFire;
@@ -34,13 +36,18 @@ public class TeamBlock {
         this.numOfMember=numOfMember;
         this.category=category.getMessage();
         this.startDate=approvalTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        this.deletionTime=deletionTime;
     }
 
-    private Long calculateDuration(LocalDateTime approvalTime) {
+    public Long calculateDuration(LocalDateTime approvalTime) {
         ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime currentSeoulTime = LocalDateTime.now(seoulZoneId).withSecond(0).withNano(0);
-        LocalDateTime adjustedApprovalTime = approvalTime.withSecond(0).withNano(0);
-        return ChronoUnit.DAYS.between(adjustedApprovalTime, currentSeoulTime);
+        LocalDateTime currentDateTime = LocalDateTime.now(seoulZoneId);
+
+        long hoursBetween = ChronoUnit.HOURS.between(approvalTime, currentDateTime);
+        long daysBetween = hoursBetween / 24;
+
+        return daysBetween;
     }
+
 }
 

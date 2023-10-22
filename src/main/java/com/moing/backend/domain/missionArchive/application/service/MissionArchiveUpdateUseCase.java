@@ -20,6 +20,8 @@ import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveExc
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
+import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
+import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class MissionArchiveUpdateUseCase {
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
     private final MissionArchiveDeleteService missionArchiveDeleteService;
+    private final MissionHeartQueryService missionHeartQueryService;
 
     private final MissionQueryService missionQueryService;
 
@@ -55,13 +58,13 @@ public class MissionArchiveUpdateUseCase {
         Team team = mission.getTeam();
 
         // 사진 제출 했다면,
-        if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(member.getMemberId(), missionId)) {
+        if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(memberId, missionId)) {
             //s3삭제
 
 
         }
 
-        MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId).get(0);
+        MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(memberId, missionId).get(0);
 
         // 단일 미션 && 미션 종료 직전인지 확인
         if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(missionId)) {
@@ -75,12 +78,14 @@ public class MissionArchiveUpdateUseCase {
             updateArchive.updateCount(1L);
         }
         else{
-            updateArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(member.getMemberId(), missionId)+1);
+            updateArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
         }
 
         updateArchive.updateArchive(missionReq);
         missionStateSaveService.saveMissionState(member,mission, MissionArchiveStatus.COMPLETE);
-        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive));
+
+        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive),memberId);
+
 
     }
     // 이 미션을 완료 했는지

@@ -17,10 +17,11 @@ import static com.moing.backend.domain.missionArchive.domain.constant.MissionArc
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions/board")
+@RequestMapping("/api/team/{teamId}/missions/board")
 public class MissionBoardController {
 
     private final MissionArchiveBoardUseCase missionArchiveBoardUseCase;
+
 
     /**
      * 단일 인증 조회

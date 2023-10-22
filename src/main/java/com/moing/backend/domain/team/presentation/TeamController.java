@@ -1,14 +1,12 @@
 package com.moing.backend.domain.team.presentation;
 
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
-import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
+import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
+import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +24,7 @@ public class TeamController {
     private final SignInTeamUserCase signInTeamUserCase;
     private final DisbandTeamUserCase disbandTeamUserCase;
     private final WithdrawTeamUserCase withdrawTeamUserCase;
+    private final UpdateTeamUserCase updateTeamUserCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -39,13 +38,24 @@ public class TeamController {
     }
 
     /**
-     * 소모임 조회하기 (소모임 홈화면) : 인증사진 제외
+     * 소모임 전체 조회하기 (소모임 홈화면) : 인증사진 제외
      * [GET] api/team
      * 작성자 : 김민수
      */
     @GetMapping
     public ResponseEntity<SuccessResponse<GetTeamResponse>> getTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_SUCCESS.getMessage(), this.getTeamUserCase.getTeam(user.getSocialId())));
+    }
+
+    /**
+     * 소모임 하나만 조회하기 (목표보드) : 소모임 레벨, 상태 바 제외
+     * [GET] api/team/{teamId}
+     * 작성자: 김민수
+     */
+    @GetMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<GetTeamDetailResponse>> getTeamDetail(@AuthenticationPrincipal User user,
+                                                                                @PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_DETAIL_SUCCESS.getMessage(), this.getTeamUserCase.getTeamDetailResponse(user.getSocialId(), teamId)));
     }
 
     /**
@@ -80,6 +90,18 @@ public class TeamController {
     public ResponseEntity<SuccessResponse<DeleteTeamResponse>> withdrawTeam(@AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUserCase.withdrawTeam(user.getSocialId(),teamId)));
+    }
+
+    /**
+     * 소모임 수정 (소모임장)
+     * [POST] api/team/{teamId}
+     */
+
+    @PutMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<UpdateTeamResponse>> updateTeam(@Valid @RequestBody UpdateTeamRequest updateTeamRequest,
+                                                                          @AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId){
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUserCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
     }
 
 }

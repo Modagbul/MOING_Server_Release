@@ -3,11 +3,9 @@ package com.moing.backend.domain.mypage.presentation;
 import com.moing.backend.domain.mypage.application.dto.request.UpdateProfileRequest;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.application.dto.response.GetAlarmResponse;
+import com.moing.backend.domain.mypage.application.dto.response.GetMyPageResponse;
 import com.moing.backend.domain.mypage.application.dto.response.GetProfileResponse;
-import com.moing.backend.domain.mypage.application.service.AlarmUserCase;
-import com.moing.backend.domain.mypage.application.service.ProfileUserCase;
-import com.moing.backend.domain.mypage.application.service.SignOutUserCase;
-import com.moing.backend.domain.mypage.application.service.WithdrawUserCase;
+import com.moing.backend.domain.mypage.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -28,8 +26,9 @@ public class MyPageController {
     private final WithdrawUserCase withdrawService;
     private final ProfileUserCase profileUserCase;
     private final AlarmUserCase alarmUserCase;
+    private final GetMyPageUserCase getMyPageUserCase;
 
-    //TODO 마이페이지 조회, 알림설정 수정
+    //TODO 알림설정 수정
 
     /**
      * 로그아웃
@@ -52,6 +51,16 @@ public class MyPageController {
                                                     @Valid @RequestBody WithdrawRequest withdrawRequest) {
         this.withdrawService.withdraw(user.getSocialId(), withdrawRequest);
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAWAL_SUCCESS.getMessage()));
+    }
+
+    /**
+     * 마이페이지 조회
+     * [GET] api/mypage
+     * 작성자: 김민수
+     */
+    @GetMapping
+    public ResponseEntity<SuccessResponse<GetMyPageResponse>> getMyPage(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(SuccessResponse.create(GET_MYPAGE_SUCCESS.getMessage(), this.getMyPageUserCase.getMyPageResponse(user.getSocialId())));
     }
 
     /**

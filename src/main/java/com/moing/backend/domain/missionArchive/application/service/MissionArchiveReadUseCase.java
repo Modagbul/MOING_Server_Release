@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SingleMissionArchiveReadUseCase {
+public class MissionArchiveReadUseCase {
 
     //미션 아치브 읽어오기
     private final MemberGetService memberGetService;
@@ -33,9 +33,9 @@ public class SingleMissionArchiveReadUseCase {
     // 미션 인증 조회
     public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
 
-        Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
 
-        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(member.getMemberId(), missionId));
+        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId),memberId);
     }
 
     // 모두의 미션 인증 목록 조회
@@ -43,10 +43,8 @@ public class SingleMissionArchiveReadUseCase {
 
         List<PersonalArchiveRes> personalArchives = new ArrayList<>();
 
-        Member member = memberGetService.getMemberBySocialId(userSocialId);
-        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(member.getMemberId(), missionId));
-
-//        return personalArchives;
+        Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
+        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(memberId, missionId),memberId);
     }
 
     public MissionArchiveStatusRes getMissionDoneStatus(Long missionId) {
