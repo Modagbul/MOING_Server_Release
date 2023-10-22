@@ -39,6 +39,8 @@ public enum ErrorCode {
     //팀 관련 에러 코드
     NOT_FOUND_BY_TEAM_ID_ERROR("T0001", "해당 teamId인 팀이 존재하지 않습니다."),
     NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다."),
+    ALREADY_WITHDRAW_ERROR("T0003","이미 탈퇴한 회원입니다."),
+    ALREADY_JOIN_ERROR("T0004","이미 가입한 회원입니다."),
 
     //게시글 관련 에러 코드
     NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 게시글이 존재하지 않습니다."),

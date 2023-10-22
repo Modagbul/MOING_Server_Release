@@ -1,14 +1,15 @@
 package com.moing.backend.domain.team.domain.repository;
 
-import com.moing.backend.domain.member.domain.entity.QMember;
-import com.moing.backend.domain.team.application.dto.response.*;
+import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
+import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
+import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
+import com.moing.backend.domain.team.application.dto.response.TeamBlock;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,22 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .where(teamMember.isDeleted.eq(false)) // 탈퇴하지 않았다면
                 .where(team.isDeleted.eq(false) // 강제종료되지 않았거나
                         .or(team.deletionTime.after(threeDaysAgo))) // 강제종료된 경우 3일이 지나지 않았다면
+                .groupBy(team.teamId)
                 .orderBy(team.approvalTime.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<GetMyPageTeamBlock> findMyPageTeamByMemberId(Long memberId) {
+        return queryFactory
+                .select(Projections.constructor(GetMyPageTeamBlock.class,
+                        team.teamId, team.name, team.category))
+                .from(teamMember)
+                .innerJoin(teamMember.team, team)
+                .on(teamMember.member.memberId.eq(memberId))
+                .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL)) // 승인 되었고
+                .orderBy(team.missions.size().desc())
+                .groupBy(team.teamId)
                 .fetch();
     }
 
@@ -78,6 +94,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                         .or(team.deletionTime.isNotNull()
                         .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
                 .orderBy(team.approvalTime.asc())
+                .groupBy(team.teamId)
                 .fetch();
     }
 
