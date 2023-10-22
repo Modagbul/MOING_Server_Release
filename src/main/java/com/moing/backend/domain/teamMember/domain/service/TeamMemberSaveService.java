@@ -18,20 +18,19 @@ import java.util.Optional;
 public class TeamMemberSaveService {
     private final TeamMemberRepository teamMemberRepository;
     public void addTeamMember(Team team, Member member){
-        Optional<TeamMember> existingTeamMemberOpt = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
-
-        TeamMember teamMember = existingTeamMemberOpt.orElseGet(() -> {
+        Optional<TeamMember> teamMember = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
+        if (teamMember.isPresent()) {
+            if (teamMember.get().isDeleted()) {
+                throw new AlreadyWithdrawTeamException();
+            } else {
+                throw new AlreadyJoinTeamException();
+            }
+        } else {
             TeamMember newMember = new TeamMember();
             newMember.updateMember(member);
             newMember.updateTeam(team);
             team.addTeamMember();
-            return teamMemberRepository.save(newMember);
-        });
-
-        if (teamMember.isDeleted()) {
-            throw new AlreadyWithdrawTeamException();
-        } else {
-            throw new AlreadyJoinTeamException();
+            this.teamMemberRepository.save(newMember);
         }
     }
 }
