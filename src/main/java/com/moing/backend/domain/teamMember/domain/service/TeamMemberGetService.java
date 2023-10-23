@@ -36,4 +36,8 @@ public class TeamMemberGetService {
     public List<TeamMemberInfo> getTeamMemberInfo(Long teamId){
         return teamMemberRepository.findTeamMemberInfoByTeamId(teamId);
     }
+
+    public List<TeamMember> getNotDeletedTeamMember(Long memberId){
+        return teamMemberRepository.findTeamMemberByMemberId(memberId);
+    }
 }
