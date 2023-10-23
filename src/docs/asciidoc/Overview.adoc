@@ -105,6 +105,18 @@
 
 |===
 
+=== MyPage ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `MP0001`
+| 알람을 수정할 때
+| 알람 입력값이 유효하지 않음
+
+| `MP0002`
+| 회원 탈퇴할 때
+| 탈퇴되지 않은 소모임이 있음
+|===
+
 === Board ErrorCode
 |===
 | ErrorCode | Scope | Description
@@ -117,6 +129,7 @@
 | 작성자가 아님 (권한 없음)
 |===
 
+=== BoardComment ErrorCode
 |===
 | ErrorCode | Scope | Description
 | `BC0001`
@@ -127,6 +140,8 @@
 | 게시글을 수정, 삭제하려고 할 때
 | 작성자가 아님 (권한 없음)
 |===
+
+
 
 === Mission ErrorCode
 |===

@@ -4,6 +4,7 @@ import com.moing.backend.domain.team.application.dto.response.QTeamMemberInfo;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.entity.QTeam;
+import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -67,6 +68,14 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .where(teamMember.team.teamId.eq(teamId) // where 절을 하나로 합침
                         .and(teamMember.isDeleted.eq(false)))
                 .groupBy(teamMember.member.memberId)
+                .fetch();
+    }
+
+    @Override
+    public List<TeamMember> findTeamMemberByMemberId(Long memberId) {
+        return queryFactory.selectFrom(teamMember)
+                .where(teamMember.member.memberId.eq(memberId)
+                        .and(teamMember.isDeleted.eq(false)))
                 .fetch();
     }
 }

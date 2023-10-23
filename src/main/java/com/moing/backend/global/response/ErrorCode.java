@@ -44,6 +44,7 @@ public enum ErrorCode {
 
     //마이페이지 관련 에러 코드
     INVALID_ALARM_ERROR("MP0001","유효하지 않는 알람 입력값입니다"),
+    EXISTING_TEAM_ERROR("MP0002","탈퇴되지 않은 소모임이 있습니다."),
 
     //게시글 관련 에러 코드
     NOT_FOUND_BY_BOARD_ID_ERROR("B0001","해당 boardId인 게시글이 존재하지 않습니다."),
