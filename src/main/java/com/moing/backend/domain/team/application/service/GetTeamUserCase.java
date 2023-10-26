@@ -3,6 +3,7 @@ package com.moing.backend.domain.team.application.service;
 import com.moing.backend.domain.board.domain.service.BoardGetService;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.team.application.dto.response.GetCurrentStatusResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamDetailResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
@@ -37,5 +38,10 @@ public class GetTeamUserCase {
         List<TeamMemberInfo> teamMemberInfoList = teamMemberGetService.getTeamMemberInfo(teamId);
         Team team = teamGetService.getTeamByTeamId(teamId);
         return teamMapper.toTeamDetailResponse(team, boardNum, teamMemberInfoList);
+    }
+
+    public GetCurrentStatusResponse getCurrentStatus(Long teamId) {
+        Team team=teamGetService.getTeamByTeamId(teamId);
+        return teamMapper.toCurrentStatusResponse(team);
     }
 }

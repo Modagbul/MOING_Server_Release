@@ -206,7 +206,7 @@ public class TeamControllerTest extends CommonControllerTest {
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/team/{teamId}", teamId)
+                get("/api/team/board/{teamId}", teamId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -431,5 +431,49 @@ public class TeamControllerTest extends CommonControllerTest {
                 );
     }
 
+    @Test
+    public void get_current_status() throws Exception {
+
+        // given
+        Long teamId = 1L;
+
+        GetCurrentStatusResponse output = GetCurrentStatusResponse.builder()
+                .name("팀 이름")
+                .introduction("소개")
+                .profileImgUrl("프로필 이미지")
+                .build();
+
+        given(getTeamUserCase.getCurrentStatus(any())).willReturn(output);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}", teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("소모임을 수정했습니다."),
+                                        fieldWithPath("data.name").description("소모임 이름"),
+                                        fieldWithPath("data.introduction").description("소모임 소개글"),
+                                        fieldWithPath("data.profileImgUrl").description("소모임 대표 사진")
+                                )
+                        )
+                );
+    }
 
 }
