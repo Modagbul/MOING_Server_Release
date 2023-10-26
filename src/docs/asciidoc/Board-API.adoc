@@ -2,26 +2,26 @@
 = Board API
 
 [[Board-게시글-생성]]
-=== Board 게시글 생성
+== Board 게시글 생성
 operation::board-controller-test/create_board[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 ---
 
 [[Board-게시글-수정]]
-=== Board 게시글 수정
+== Board 게시글 수정
 operation::board-controller-test/update_board[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 ---
 
 [[Board-게시글-삭제]]
-=== Board 게시글 삭제
-operation::board-controller-test/delete_board[snippets='http-request,path-parameters,request-fields,response-fields']
+== Board 게시글 삭제
+operation::board-controller-test/delete_board[snippets='http-request,path-parameters,response-fields']
 ---
 
 [[Board-게시글-전체-조회]]
-=== Board 게시글 전체 조회
+== Board 게시글 전체 조회
 operation::board-controller-test/get_board_all[snippets='http-request,path-parameters,http-response,response-fields']
 ---
 
 [[Board-게시글-상제-조회]]
-=== Board 게시글 상세 조회
+== Board 게시글 상세 조회
 operation::board-controller-test/get_board_detail[snippets='http-request,path-parameters,http-response,response-fields']
 ---

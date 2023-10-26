@@ -4,26 +4,26 @@
 = Mission API
 
 [[Mission-생성]]
-=== Mission 생성
+== Mission 생성
 operation::mission-controller-test/미션_생성[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
 [[Mission-조회]]
-=== Mission 조회
-operation::mission-controller-test/미션_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+== Mission 조회
+operation::mission-controller-test/미션_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 ---
 
 [[Mission-수정]]
-=== Mission 수정
+== Mission 수정
 operation::mission-controller-test/미션_수정[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
 [[Mission-삭제]]
-=== Mission 삭제
-operation::mission-controller-test/미션_삭제[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+== Mission 삭제
+operation::mission-controller-test/미션_삭제[snippets='http-request,path-parameters,http-response,response-fields']
 
 ---
 

@@ -4,25 +4,25 @@
 = MissionBoard API
 
 [[MissionBoard-단일미션인증조회]]
-=== 단일 미션 인증 조회
-operation::mission-board-controller-test/단일_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+== 단일 미션 인증 조회
+operation::mission-board-controller-test/단일_미션_인증_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 ---
 
 [[MissionBoard-반복미션인증조회]]
-=== 반복 미션 인증 조회
-operation::mission-board-controller-test/반복 미션 인증 조회[snipipets='http-request,path-parameters,request-fields,http-response,response-fields']
+== 반복 미션 인증 조회
+operation::mission-board-controller-test/반복_미션_인증_조회[snipipets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
 [[MissionBoard-나의미션인증조회]]
-=== 나의 미션 인증 조회
-operation::mission-archive-controller-test/나의_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+== 나의 미션 인증 조회
+operation::mission-archive-controller-test/나의_미션_인증_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 ---
 
 [[MissionBoard-종료된인증조회]]
-=== 종료된 인증 조회
-operation::mission-board-controller-test/종료된_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+== 종료된 인증 조회
+operation::mission-board-controller-test/종료된_인증_조회[snippets='http-request,path-parameters,http-response,response-fields']
 
 ---

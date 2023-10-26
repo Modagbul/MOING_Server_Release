@@ -2,7 +2,7 @@
 = Image API
 
 [[Presigned-Url-발급]]
-=== Presigned Url 발급
+== Presigned Url 발급
 operation::image-controller-test/create_presigned_url[snippets='http-request,http-response,request-fields,response-fields']
 
 === imageFileExtension

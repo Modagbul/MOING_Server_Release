@@ -52,7 +52,7 @@ public class TeamController {
      * [GET] api/team/{teamId}
      * 작성자: 김민수
      */
-    @GetMapping("/{teamId}")
+    @GetMapping("/board/{teamId}")
     public ResponseEntity<SuccessResponse<GetTeamDetailResponse>> getTeamDetail(@AuthenticationPrincipal User user,
                                                                                 @PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_DETAIL_SUCCESS.getMessage(), this.getTeamUserCase.getTeamDetailResponse(user.getSocialId(), teamId)));
@@ -102,6 +102,16 @@ public class TeamController {
                                                                           @AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUserCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
+    }
+
+    /**
+     * 소모임 수정 전 조회
+     * [GET] api/team/{teamid}
+     */
+    @GetMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<GetCurrentStatusResponse>> getCurrentStatus(@AuthenticationPrincipal User user,
+                                                                                      @PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_CURRENT_STATUS_SUCCESS.getMessage(), this.getTeamUserCase.getCurrentStatus(teamId)));
     }
 
 }
