@@ -49,6 +49,10 @@ operation::team-controller-test/update_team[snippets='http-request,path-paramete
 == Team 소모임 수정 전 조회
 operation::team-controller-test/get_current_status[snippets='http-request,path-parameters,http-response,response-fields']
 
+[[Team-소모임-삭제전-조회]]
+== Team 소모임 삭제 전 조회
+operation::team-controller-test/review_team[snippets='http-request,path-parameters,http-response,response-fields']
+
 [[Team-소모임-강제종료]]
 == Team 소모임 강제종료
 operation::team-controller-test/disband_team[snippets='http-request,path-parameters,http-response,response-fields']

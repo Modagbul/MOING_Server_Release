@@ -24,7 +24,7 @@ operation::auth-controller-test/google_소셜_로그인_회원가입_후[snippet
 
 
 [[Auth-회원가입]]
-=== Auth 회원가입
+== Auth 회원가입
 |===
 | 성별
 | `MAN`
