@@ -38,8 +38,9 @@ public class TeamMapper {
                 .build();
     }
 
-    public DeleteTeamResponse toDeleteTeamResponse(Long numOfMission, Team team){
-        return DeleteTeamResponse.builder()
+    public ReviewTeamResponse toReviewTeamResponse(Long numOfMission, Team team){
+        return ReviewTeamResponse
+                .builder()
                 .teamId(team.getTeamId())
                 .teamName(team.getName())
                 .numOfMember(team.getNumOfMember())

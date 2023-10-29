@@ -42,6 +42,8 @@ public class TeamControllerTest extends CommonControllerTest {
     private SignInTeamUserCase signInTeamUserCase;
     @MockBean
     private UpdateTeamUserCase updateTeamUserCase;
+    @MockBean
+    private ReviewTeamUserCase reviewTeamUserCase;
 
     @Test
     public void create_team() throws Exception {
@@ -245,16 +247,58 @@ public class TeamControllerTest extends CommonControllerTest {
     }
 
     @Test
-    public void disband_team() throws Exception {
+    public void review_team() throws Exception {
         //given
         Long teamId = 1L; // 예시 ID
-        DeleteTeamResponse output = DeleteTeamResponse.builder()
+        ReviewTeamResponse output = ReviewTeamResponse.builder()
                 .teamId(teamId)
                 .teamName("팀 이름")
                 .numOfMember(9)
                 .duration(30L)
                 .numOfMission(90L)
                 .levelOfFire(3)
+                .build();
+
+        given(reviewTeamUserCase.reviewTeam(any(), any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}/review", teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("소모임 삭제 전 조회했습니다."),
+                                        fieldWithPath("data.teamId").description("삭제할 소모임 id"),
+                                        fieldWithPath("data.teamName").description("소모임 이름"),
+                                        fieldWithPath("data.numOfMember").description("모임원 명 수"),
+                                        fieldWithPath("data.duration").description("소모임과 함께한 시간"),
+                                        fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
+                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void disband_team() throws Exception {
+        //given
+        Long teamId = 1L; // 예시 ID
+        DeleteTeamResponse output = DeleteTeamResponse.builder()
+                .teamId(teamId)
                 .build();
 
         given(disbandTeamUserCase.disbandTeam(any(), any())).willReturn(output);
@@ -280,12 +324,7 @@ public class TeamControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("[소모임장 권한] 소모임을 강제 종료했습니다."),
-                                        fieldWithPath("data.teamId").description("강제종료한 소모임 id"),
-                                        fieldWithPath("data.teamName").description("소모임 이름"),
-                                        fieldWithPath("data.numOfMember").description("모임원 명 수"),
-                                        fieldWithPath("data.duration").description("소모임과 함께한 시간"),
-                                        fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
-                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
+                                        fieldWithPath("data.teamId").description("강제종료한 소모임 id")
                                 )
                         )
                 );
@@ -296,11 +335,6 @@ public class TeamControllerTest extends CommonControllerTest {
         Long teamId = 1L; // 예시 ID
         DeleteTeamResponse output = DeleteTeamResponse.builder()
                 .teamId(teamId)
-                .teamName("팀 이름")
-                .numOfMember(9)
-                .duration(30L)
-                .numOfMission(90L)
-                .levelOfFire(3)
                 .build();
 
         given(withdrawTeamUserCase.withdrawTeam(any(), any())).willReturn(output);
@@ -326,12 +360,7 @@ public class TeamControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("[소모임원 권한] 소모임을 탈퇴하였습니다"),
-                                        fieldWithPath("data.teamId").description("탈퇴한 소모임 id"),
-                                        fieldWithPath("data.teamName").description("소모임 이름"),
-                                        fieldWithPath("data.numOfMember").description("모임원 명 수"),
-                                        fieldWithPath("data.duration").description("소모임과 함께한 시간"),
-                                        fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
-                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
+                                        fieldWithPath("data.teamId").description("탈퇴한 소모임 id")
                                 )
                         )
                 );

@@ -25,6 +25,7 @@ public class TeamController {
     private final DisbandTeamUserCase disbandTeamUserCase;
     private final WithdrawTeamUserCase withdrawTeamUserCase;
     private final UpdateTeamUserCase updateTeamUserCase;
+    private final ReviewTeamUserCase reviewTeamUserCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -91,6 +92,18 @@ public class TeamController {
                                                                           @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUserCase.withdrawTeam(user.getSocialId(),teamId)));
     }
+
+    /**
+     * 소모임 강제 종료, 탈퇴 전 정보 보여주기
+     * [GET] api/team/{teamId}/review
+     * 작성자: 김민수
+     */
+    @GetMapping("/{teamId}/review")
+    public ResponseEntity<SuccessResponse<ReviewTeamResponse>> reviewTeam(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(REVIEW_TEAM_SUCCESS.getMessage(), this.reviewTeamUserCase.reviewTeam(user.getSocialId(), teamId)));
+    }
+
 
     /**
      * 소모임 수정 (소모임장)
