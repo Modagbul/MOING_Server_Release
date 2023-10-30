@@ -1,10 +1,11 @@
 package com.moing.backend.domain.mission.application.dto.req;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@Getter
 public class MissionReq {
 
     private String title;

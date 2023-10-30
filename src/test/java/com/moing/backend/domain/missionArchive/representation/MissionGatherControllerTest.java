@@ -3,6 +3,8 @@ package com.moing.backend.domain.missionArchive.representation;
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mission.application.dto.res.*;
 import com.moing.backend.domain.mission.application.service.MissionGatherBoardUseCase;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.service.MissionArchiveReadUseCase;
 import com.moing.backend.domain.missionArchive.presentation.MissionGatherController;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.*;
@@ -20,8 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -118,6 +120,49 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].totalNum").description("전체 횟수")
 
 
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+    @Test
+    public void 미션_모아보기_팀별() throws Exception {
+        //given
+
+        List<String> objects = new ArrayList<>();
+        objects.add("1");
+        objects.add("2");
+
+        List<MissionArchivePhotoRes> output = Lists.newArrayList(MissionArchivePhotoRes.builder()
+                        .teamId(1L)
+                .photo(objects)
+                .build());
+
+        given(missionGatherBoardUseCase.getArchivePhotoByTeamRes(any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/my-teams")
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(MISSION_ARCHIVE_BY_TEAM.getMessage()),
+                                        fieldWithPath("data[].teamId").description("팀 아이디"),
+                                        fieldWithPath("data[].photo[]").description("팀별 미션 인증물 사진들")
                                 )
                         )
                 )

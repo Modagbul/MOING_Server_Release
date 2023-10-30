@@ -4,6 +4,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
@@ -11,6 +12,7 @@ import com.moing.backend.domain.missionArchive.application.mapper.MissionArchive
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
+import com.moing.backend.domain.team.domain.service.TeamGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class MissionArchiveReadUseCase {
     private final MemberGetService memberGetService;
     private final MissionQueryService missionQueryService;
     private final MissionArchiveQueryService missionArchiveQueryService;
-    private final TeamRepository teamRepository;
+    private final TeamGetService teamGetService;
 
 
     // 미션 인증 조회
@@ -35,7 +37,7 @@ public class MissionArchiveReadUseCase {
 
         Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
 
-        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId),memberId);
+        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId), memberId);
     }
 
     // 모두의 미션 인증 목록 조회
@@ -44,7 +46,7 @@ public class MissionArchiveReadUseCase {
         List<PersonalArchiveRes> personalArchives = new ArrayList<>();
 
         Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
-        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(memberId, missionId),memberId);
+        return MissionArchiveMapper.mapToPersonalArchiveList(missionArchiveQueryService.findOthersArchive(memberId, missionId), memberId);
     }
 
     public MissionArchiveStatusRes getMissionDoneStatus(Long missionId) {
@@ -57,6 +59,8 @@ public class MissionArchiveReadUseCase {
                 .build();
 
     }
+
+
 
 
 }
