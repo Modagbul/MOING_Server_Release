@@ -15,7 +15,8 @@ public enum MissionArchiveResponseMessage {
     MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS("미션 인증 성공한 인원 상태 조회를 완료 했습니다."),
     ACTIVE_SINGLE_MISSION_SUCCESS("진행 중인 한번 인증 미션 조회를 완료 했습니다."),
     ACTIVE_REPEAT_MISSION_SUCCESS("진행 중인 반복 인증 미션 조회를 완료 했습니다."),
-    FINISH_ALL_MISSION_SUCCESS("종료된 미션 조회를 완료하였습니다.");
+    FINISH_ALL_MISSION_SUCCESS("종료된 미션 조회를 완료하였습니다."),
+    MISSION_ARCHIVE_BY_TEAM("팀별 미션 인증물 사진 조회를 완료했습니더.");
 
     private final String message;
 

@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionR
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
@@ -99,6 +100,9 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findFinishMissionsByStatus(memberId, teamId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
+    public List<MissionArchivePhotoRes> findTop5ArchivesByTeam(List<Long> teamIds) {
+        return missionArchiveRepository.findTop5ArchivesByTeam(teamIds).orElse(null);
+    }
 
 
 

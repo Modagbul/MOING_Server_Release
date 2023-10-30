@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+import java.util.List;
+
 @Builder
-@NoArgsConstructor
 @Getter
-public class MissionArchiveStatusRes {
-    private String total;
-    private String done;
+@NoArgsConstructor
+@AllArgsConstructor
+public class MissionArchivePhotoRes {
+    Long teamId;
+    List<String> photo;
 }

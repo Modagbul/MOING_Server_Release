@@ -1,12 +1,11 @@
 package com.moing.backend.domain.missionArchive.application.dto.res;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@Getter
 public class PersonalArchiveRes {
 
     private Long archiveId;

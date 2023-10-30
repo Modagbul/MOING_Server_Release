@@ -64,8 +64,8 @@ public class MissionControllerTest extends CommonControllerTest {
                 .rule("rule")
                 .content("content")
                 .number(1)
-                .type("ONCE")
-                .way("TEXT")
+                .type("ONCE/REPEAT")
+                .way("TEXT/PHOTO/LINK")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -73,13 +73,13 @@ public class MissionControllerTest extends CommonControllerTest {
         MissionCreateRes output = MissionCreateRes.builder()
                 .missionId(1L)
                 .title("title")
-                .dueTo("dueTo")
+                .dueTo("2023-12-31 23:39:22.333")
                 .rule("rule")
                 .content("content")
                 .number(1)
-                .type("TEXT")
-                .status("WAIT")
-                .way("TEXT")
+                .type("ONCE/REPEAT")
+                .status("END/ONGOING/SUCCESS/FAIL")
+                .way("TEXT/PHOTO/LINK")
                 .build();
 
         given(missionCreateUseCase.createMission(any(),any(),any())).willReturn(output);
@@ -110,7 +110,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("rule").description("미션 규칙"),
                                         fieldWithPath("content").description("미션 내용"),
                                         fieldWithPath("number").description("미션 반복 횟수"),
-                                        fieldWithPath("type").description("미션 타입"),
+                                        fieldWithPath("type").description("미션 유형(단일/반복)"),
                                         fieldWithPath("way").description("미션 진행 방법")
                                 ),
                                 responseFields(
@@ -122,8 +122,8 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.rule").description("미션 규칙"),
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
-                                        fieldWithPath("data.type").description("미션 타입"),
-                                        fieldWithPath("data.way").description("미션 진행 방법"),
+                                        fieldWithPath("data.type").description("미션 유형(단일/반복)"),
+                                        fieldWithPath("data.way").description("미션 진행 방법(사진/글/링크)"),
                                         fieldWithPath("data.status").description("미션 진행 상태")
                                 )
                         )
@@ -137,7 +137,7 @@ public class MissionControllerTest extends CommonControllerTest {
         //given
         MissionReq input = MissionReq.builder()
                 .title("title")
-                .dueTo("dueTo")
+                .dueTo("2023-12-31 23:39:22.333")
                 .rule("rule")
                 .content("content")
                 .number(1)
@@ -150,12 +150,12 @@ public class MissionControllerTest extends CommonControllerTest {
         MissionCreateRes output = MissionCreateRes.builder()
                 .missionId(1L)
                 .title("title")
-                .dueTo("dueTo")
+                .dueTo("2023-12-31 23:39:22.333")
                 .rule("rule")
                 .content("content")
                 .number(1)
-                .type("TEXT")
-                .status("WAIT")
+                .type("ONCE")
+                .status("END")
                 .way("TEXT")
                 .build();
 
@@ -201,9 +201,9 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.rule").description("미션 규칙"),
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
-                                        fieldWithPath("data.type").description("미션 타입"),
-                                        fieldWithPath("data.way").description("미션 진행 방법"),
-                                        fieldWithPath("data.status").description("미션 진행 상태")
+                                        fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
+                                        fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
+                                        fieldWithPath("data.status").description("미션 진행 상태(END/ONGOING/SUCCESS/FAIL)")
 
                                 )
                         )
@@ -219,10 +219,10 @@ public class MissionControllerTest extends CommonControllerTest {
 
         MissionReadRes output = MissionReadRes.builder()
                 .title("title")
-                .dueTo("dueTo")
+                .dueTo("2023-12-31 23:39:22.333")
                 .rule("rule")
                 .content("content")
-                .type("TEXT")
+                .type("ONCE")
                 .way("TEXT")
                 .build();
 
@@ -257,8 +257,8 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.dueTo").description("미션 마감 날짜"),
                                         fieldWithPath("data.rule").description("미션 규칙"),
                                         fieldWithPath("data.content").description("미션 내용"),
-                                        fieldWithPath("data.type").description("미션 타입"),
-                                        fieldWithPath("data.way").description("미션 진행 방법")
+                                        fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
+                                        fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)")
 
                                 )
                         )
@@ -308,7 +308,7 @@ public class MissionControllerTest extends CommonControllerTest {
         //given
 
 
-        String output = "" ;
+        String output = "SPORTS/HABIT/TEST/STUDY/READING/ETC" ;
 
         given(missionReadUseCase.getTeamCategory(any())).willReturn(output);
 
