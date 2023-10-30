@@ -18,10 +18,10 @@ public class TeamScoreCustomRepositoryImpl implements TeamScoreCustomRepository 
     }
 
     @Override
-    public TeamScore findTeamScoreByTeam(Team team) {
+    public TeamScore findTeamScoreByTeam(Long teamId) {
         return queryFactory
                 .selectFrom(teamScore)
-                .where(teamScore.team.eq(team)).fetchFirst();
+                .where(teamScore.team.teamId.eq(teamId)).fetchFirst();
     }
 
 

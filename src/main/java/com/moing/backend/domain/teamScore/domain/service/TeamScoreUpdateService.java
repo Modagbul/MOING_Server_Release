@@ -21,7 +21,7 @@ public class TeamScoreUpdateService {
     public TeamScore update(Long teamId, Long score) {
         Team team = teamGetService.getTeamByTeamId(teamId);
 
-        TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team);
+        TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team.getTeamId());
 
         teamScore.updateScore(score);
 

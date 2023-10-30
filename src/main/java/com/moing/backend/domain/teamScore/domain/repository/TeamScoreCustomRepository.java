@@ -6,6 +6,6 @@ import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 
 public interface TeamScoreCustomRepository {
 
-    TeamScore findTeamScoreByTeam(Team team);
+    TeamScore findTeamScoreByTeam(Long teamId);
 
 }

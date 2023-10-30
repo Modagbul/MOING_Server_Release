@@ -17,9 +17,9 @@ public class TeamScoreQueryService {
     private final TeamScoreRepository teamScoreRepository;
     private final TeamGetService teamGetService;
 
-    public TeamScore findTeamScoreByTeam(Team team) {
+    public TeamScore findTeamScoreByTeam(Long teamId) {
 
-        return teamScoreRepository.findTeamScoreByTeam(team);
+        return teamScoreRepository.findTeamScoreByTeam(teamId);
     }
 
 

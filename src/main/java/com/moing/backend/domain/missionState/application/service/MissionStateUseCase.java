@@ -23,12 +23,30 @@ public class MissionStateUseCase {
     public boolean isAbleToEnd(Long missionId) {
 
         Mission mission = missionQueryService.findMissionById(missionId);
-        Long totalPerson = Long.valueOf(mission.getTeam().getNumOfMember());
-        Long donePerson = missionStateQueryService.stateCountByMissionId(missionId);
+        Long total = totalPeople(mission);
+        Long done = donePeople(mission);
 
-        return donePerson == totalPerson-1;
+        return done == total-1;
 
     }
+
+    public Long getScoreByMission(Mission mission) {
+        Long total = totalPeople(mission);
+        Long done = donePeople(mission);
+
+        return (done / total * 100) / 5 ;
+
+    }
+
+    public Long donePeople(Mission mission) {
+        return missionStateQueryService.stateCountByMissionId(mission.getId());
+    }
+
+    public Long totalPeople(Mission mission) {
+        return Long.valueOf(mission.getTeam().getNumOfMember());
+
+    }
+
 
 
 }
