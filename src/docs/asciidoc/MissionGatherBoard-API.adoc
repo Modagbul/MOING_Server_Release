@@ -13,3 +13,9 @@ operation::mission-gather-controller-test/미션_모아보기_단일_미션[snip
 operation::mission-gather-controller-test/미션_모아보기_반복_미션[snippets='http-request,http-response,response-fields']
 
 ---
+
+[[MissionBoard-미션-모아보기-팀별]]
+== 미션_모아보기_팀별
+operation::mission-gather-controller-test/미션_모아보기_팀별[snippets='http-request,http-response,response-fields']
+
+---
