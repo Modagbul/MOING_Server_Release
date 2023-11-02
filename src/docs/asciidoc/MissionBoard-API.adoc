@@ -15,11 +15,6 @@ operation::mission-board-controller-test/반복 미션 인증 조회[snipipets='
 
 ---
 
-[[MissionBoard-나의미션인증조회]]
-=== 나의 미션 인증 조회
-operation::mission-archive-controller-test/나의_미션_인증_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
-
----
 
 [[MissionBoard-종료된인증조회]]
 === 종료된 인증 조회
