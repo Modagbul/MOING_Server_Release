@@ -82,7 +82,7 @@ public class MissionArchiveUpdateUseCase {
         }
 
         updateArchive.updateArchive(missionReq);
-        missionStateSaveService.saveMissionState(member,mission, MissionArchiveStatus.COMPLETE);
+        missionStateSaveService.saveMissionState(member,mission, updateArchive.getStatus());
 
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive),memberId);
 

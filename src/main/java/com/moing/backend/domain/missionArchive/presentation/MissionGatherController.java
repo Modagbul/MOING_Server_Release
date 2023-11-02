@@ -2,15 +2,14 @@ package com.moing.backend.domain.missionArchive.presentation;
 
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
-import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.service.MissionGatherBoardUseCase;
+import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +46,8 @@ public class MissionGatherController {
     public ResponseEntity<SuccessResponse<List<GatherRepeatMissionRes>>> getMyActiveRepeatMission(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getAllActiveRepeatMissions( user.getSocialId())));
     }
+
+
 
 
 }

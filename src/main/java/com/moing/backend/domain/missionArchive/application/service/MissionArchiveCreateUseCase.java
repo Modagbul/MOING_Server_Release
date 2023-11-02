@@ -19,6 +19,7 @@ import com.moing.backend.domain.missionState.application.service.MissionStateUse
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,13 +41,12 @@ public class MissionArchiveCreateUseCase {
     private final MissionStateSaveService missionStateSaveService;
     private final MissionStateUseCase missionStateUseCase;
 
+    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
-    // 미션 인증
     public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Long memberId = member.getMemberId();
-
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
@@ -56,21 +56,12 @@ public class MissionArchiveCreateUseCase {
         if (isDoneMission(memberId,mission)) {
             throw new NoMoreMissionArchiveException();
         }
-
-        // 단일 미션 && 미션 종료 직전인지 확인
-        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(missionId)) {
-            mission.updateStatus(MissionStatus.SUCCESS);
-            // 점수 반영 로직
-
-        }
-
-        // 반복 미션
-        else {
+        // 반복 미션일 경우
+        if (mission.getType() == MissionType.REPEAT) {
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
         }
 
-        missionStateSaveService.saveMissionState(member,mission, MissionArchiveStatus.COMPLETE);
-
+        missionStateUseCase.updateMissionState(member, mission, newArchive);
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive),memberId);
 
     }

@@ -1,0 +1,10 @@
+
+
+[[TeamScore-API]]
+= TeamScore API
+
+[[TeamScore-팀별-불-레벨-경험치-조회]]
+=== 팀별_불_레벨_경험치_조회
+operation::team-score-controller-test/팀별_불_레벨_경험치_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---

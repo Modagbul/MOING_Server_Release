@@ -39,10 +39,11 @@ public class TeamScore extends BaseTimeEntity {
     public void levelUp() {
         final int[] steps = {0, 2, 10, 25, 45, 100};
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if (steps[i] < this.level && this.level < steps[i + 1]) {
                 if (20 + i * 15 <= score) {
                     this.level+=1;
+                    this.score -= score-(20 + i * 15);
                 }
             }
         }
