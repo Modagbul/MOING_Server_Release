@@ -172,7 +172,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count.coalesce(0L).as("done"),
+                                missionArchive.count().coalesce(0L).as("done"),
                                 mission.number
                         ))
                 .from(mission)
