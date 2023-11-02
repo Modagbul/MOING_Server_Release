@@ -45,8 +45,7 @@ public class MissionArchiveBoardUseCase {
 
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        List<MissionArchive> mySingleMissionArchives = missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
-        return MissionArchiveMapper.mapToSingleMissionBoardResList(mySingleMissionArchives);
+        return missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
 
     }
 
