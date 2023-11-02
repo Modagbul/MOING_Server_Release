@@ -25,6 +25,7 @@ public class TeamController {
     private final DisbandTeamUserCase disbandTeamUserCase;
     private final WithdrawTeamUserCase withdrawTeamUserCase;
     private final UpdateTeamUserCase updateTeamUserCase;
+    private final ReviewTeamUserCase reviewTeamUserCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -52,7 +53,7 @@ public class TeamController {
      * [GET] api/team/{teamId}
      * 작성자: 김민수
      */
-    @GetMapping("/{teamId}")
+    @GetMapping("/board/{teamId}")
     public ResponseEntity<SuccessResponse<GetTeamDetailResponse>> getTeamDetail(@AuthenticationPrincipal User user,
                                                                                 @PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_DETAIL_SUCCESS.getMessage(), this.getTeamUserCase.getTeamDetailResponse(user.getSocialId(), teamId)));
@@ -93,6 +94,18 @@ public class TeamController {
     }
 
     /**
+     * 소모임 강제 종료, 탈퇴 전 정보 보여주기
+     * [GET] api/team/{teamId}/review
+     * 작성자: 김민수
+     */
+    @GetMapping("/{teamId}/review")
+    public ResponseEntity<SuccessResponse<ReviewTeamResponse>> reviewTeam(@AuthenticationPrincipal User user,
+                                                                          @PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(REVIEW_TEAM_SUCCESS.getMessage(), this.reviewTeamUserCase.reviewTeam(user.getSocialId(), teamId)));
+    }
+
+
+    /**
      * 소모임 수정 (소모임장)
      * [POST] api/team/{teamId}
      */
@@ -102,6 +115,16 @@ public class TeamController {
                                                                           @AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
         return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUserCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
+    }
+
+    /**
+     * 소모임 수정 전 조회
+     * [GET] api/team/{teamid}
+     */
+    @GetMapping("/{teamId}")
+    public ResponseEntity<SuccessResponse<GetCurrentStatusResponse>> getCurrentStatus(@AuthenticationPrincipal User user,
+                                                                                      @PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_CURRENT_STATUS_SUCCESS.getMessage(), this.getTeamUserCase.getCurrentStatus(teamId)));
     }
 
 }

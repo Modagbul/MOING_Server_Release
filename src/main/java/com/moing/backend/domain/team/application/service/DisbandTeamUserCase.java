@@ -21,8 +21,6 @@ public class DisbandTeamUserCase {
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
     private final CheckLeaderUserCase checkLeaderUserCase;
-    private final MissionQueryService missionQueryService;
-    private final TeamMapper teamMapper;
 
     public DeleteTeamResponse disbandTeam(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
@@ -33,6 +31,6 @@ public class DisbandTeamUserCase {
         } else {
             throw new NotAuthByTeamException();
         }
-        return teamMapper.toDeleteTeamResponse(missionQueryService.findMissionsCountByTeam(team.getTeamId()), team);
+        return new DeleteTeamResponse(teamId);
     }
 }

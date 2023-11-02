@@ -15,7 +15,6 @@ public class SignOutUserCase {
     private final MemberGetService memberGetService;
 
     public void signOut(String socialId){
-        //TODO: teamMember가 isDeleted가 아닌게 한개라도 있으면 error 반환
         tokenUtil.expireRefreshToken(socialId);
     }
 }

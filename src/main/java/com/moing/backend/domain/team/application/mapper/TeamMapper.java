@@ -2,16 +2,12 @@ package com.moing.backend.domain.team.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
-import com.moing.backend.domain.team.application.dto.response.DeleteTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.GetTeamDetailResponse;
-import com.moing.backend.domain.team.application.dto.response.TeamInfo;
-import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
+import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -42,8 +38,9 @@ public class TeamMapper {
                 .build();
     }
 
-    public DeleteTeamResponse toDeleteTeamResponse(Long numOfMission, Team team){
-        return DeleteTeamResponse.builder()
+    public ReviewTeamResponse toReviewTeamResponse(Long numOfMission, Team team){
+        return ReviewTeamResponse
+                .builder()
                 .teamId(team.getTeamId())
                 .teamName(team.getName())
                 .numOfMember(team.getNumOfMember())
@@ -61,6 +58,14 @@ public class TeamMapper {
         long daysBetween = hoursBetween / 24;
 
         return daysBetween;
+    }
+
+    public GetCurrentStatusResponse toCurrentStatusResponse(Team team) {
+        return GetCurrentStatusResponse.builder()
+                .name(team.getName())
+                .introduction(team.getIntroduction())
+                .profileImgUrl(team.getProfileImgUrl())
+                .build();
     }
 
 }

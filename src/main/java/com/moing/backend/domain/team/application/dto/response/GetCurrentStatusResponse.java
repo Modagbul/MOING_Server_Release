@@ -3,12 +3,15 @@ package com.moing.backend.domain.team.application.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class DeleteTeamResponse {
-    private Long teamId;
+public class GetCurrentStatusResponse {
+
+    private String name;
+
+    private String introduction;
+
+    private String profileImgUrl;
 }

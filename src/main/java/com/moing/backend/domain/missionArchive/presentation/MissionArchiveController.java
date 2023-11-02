@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.presentation;
 
+import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
@@ -127,6 +128,8 @@ public class MissionArchiveController {
                                                                                          @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.repeatMissionArchiveReadUseCase.getMyMissionDoneStatus(user.getSocialId(),missionId)));
     }
+
+
 
 
 

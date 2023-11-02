@@ -1,23 +1,19 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
-import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
-import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.team.domain.entity.Team;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import feign.Param;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -177,6 +173,40 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 )
                 .fetch()
         );
+    }
+
+
+    public Optional<List<MissionArchivePhotoRes>> findTop5ArchivesByTeam(List<Long> teamIds) {
+        List<Tuple> queryResults = queryFactory
+                .select(missionArchive.mission.team.teamId, missionArchive.archive)
+                .from(missionArchive)
+                .where(missionArchive.mission.team.teamId.in(teamIds))
+                .orderBy(missionArchive.createdDate.desc())
+                .limit(14)
+                .fetch();
+
+        List<MissionArchivePhotoRes> resultDTOs = new ArrayList<>();
+
+        for (Tuple tuple : queryResults) {
+            Long teamId = tuple.get(missionArchive.mission.team.teamId);
+            String photo = tuple.get(missionArchive.archive);
+
+            // Check if a TeamPhotoDTO with the same teamId already exists in the list
+            MissionArchivePhotoRes existingDTO = resultDTOs.stream()
+                    .filter(dto -> dto.getTeamId().equals(teamId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingDTO != null) {
+                existingDTO.getPhoto().add(photo);
+            } else {
+                List<String> photoList = new ArrayList<>();
+                photoList.add(photo);
+                resultDTOs.add(new MissionArchivePhotoRes(teamId, photoList));
+            }
+        }
+
+        return Optional.ofNullable(resultDTOs);
     }
 
 

@@ -22,27 +22,37 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         String exception = String.valueOf(request.getAttribute("exception"));
-        log.info("commonce:" + exception);
+        log.info("commence:" + exception);
 
-        if (exception.equals(JwtExceptionList.ADDITIONAL_REQUIRED_TOKEN.getErrorCode()))
-            setResponse(response, JwtExceptionList.ADDITIONAL_REQUIRED_TOKEN);
+        switch (exception) {
+            case "J0007":
+                setResponse(response, JwtExceptionList.ADDITIONAL_REQUIRED_TOKEN);
+                break;
 
-        else if (exception.equals(JwtExceptionList.UNKNOWN_ERROR.getErrorCode()))
-            setResponse(response, JwtExceptionList.UNKNOWN_ERROR);
+            case "J0001":
+                setResponse(response, JwtExceptionList.UNKNOWN_ERROR);
+                break;
 
-        else if (exception.equals(JwtExceptionList.MAL_FORMED_TOKEN.getErrorCode()))
-            setResponse(response, JwtExceptionList.MAL_FORMED_TOKEN);
+            case "J0002":
+                setResponse(response, JwtExceptionList.MAL_FORMED_TOKEN);
+                break;
 
-        else if (exception.equals(JwtExceptionList.ILLEGAL_TOKEN.getErrorCode()))
-            setResponse(response, JwtExceptionList.ILLEGAL_TOKEN);
+            case "J0006":
+                setResponse(response, JwtExceptionList.ILLEGAL_TOKEN);
+                break;
 
-        else if (exception.equals(JwtExceptionList.EXPIRED_TOKEN.getErrorCode()))
-            setResponse(response, JwtExceptionList.EXPIRED_TOKEN);
+            case "J0003":
+                setResponse(response, JwtExceptionList.EXPIRED_TOKEN);
+                break;
 
-        else if (exception.equals(JwtExceptionList.UNSUPPORTED_TOKEN.getErrorCode()))
-            setResponse(response, JwtExceptionList.UNSUPPORTED_TOKEN);
+            case "J0004":
+                setResponse(response, JwtExceptionList.UNSUPPORTED_TOKEN);
+                break;
 
-        else setResponse(response, JwtExceptionList.ACCESS_DENIED);
+            default:
+                setResponse(response, JwtExceptionList.ACCESS_DENIED);
+                break;
+        }
 
     }
 

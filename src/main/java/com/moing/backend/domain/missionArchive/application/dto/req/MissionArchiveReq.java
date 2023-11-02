@@ -2,8 +2,9 @@ package com.moing.backend.domain.missionArchive.application.dto.req;
 
 import lombok.*;
 
-@Getter
+@Builder
 @NoArgsConstructor
+@Getter
 public class MissionArchiveReq {
 
     private String status;

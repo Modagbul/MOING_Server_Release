@@ -22,14 +22,12 @@ public class WithdrawTeamUserCase {
     private final TeamMemberGetService teamMemberGetService;
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
-    private final MissionQueryService missionQueryService;
-    private final TeamMapper teamMapper;
 
     public DeleteTeamResponse withdrawTeam(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);
         TeamMember teamMember = teamMemberGetService.getTeamMember(member, team);
         teamMember.deleteMember(team);
-        return teamMapper.toDeleteTeamResponse(missionQueryService.findMissionsCountByTeam(team.getTeamId()),team);
+        return new DeleteTeamResponse(teamId);
     }
 }
