@@ -141,11 +141,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<Long> findDonePeopleByMissionId(Long missionId) {
         return Optional.ofNullable(queryFactory
-                .select(missionArchive.count())
+                .select(missionArchive.member.count())
                 .from(missionArchive)
                 .where(
                         missionArchive.mission.id.eq(missionId)
                 )
+                .groupBy(missionArchive.member)
                 .fetchFirst()
 
         );
