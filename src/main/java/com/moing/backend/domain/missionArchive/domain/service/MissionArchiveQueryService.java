@@ -40,7 +40,7 @@ public class MissionArchiveQueryService {
 
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
-        Optional<List<MissionArchive>> optional = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
+        Optional<List<MissionArchive>> optional = missionArchiveRepository.findMyArchives(memberId, missionId);
         if (optional.isPresent() && optional.get().size() == 0) {
             return new ArrayList<>();
 //            throw new NotFoundMissionArchiveException();

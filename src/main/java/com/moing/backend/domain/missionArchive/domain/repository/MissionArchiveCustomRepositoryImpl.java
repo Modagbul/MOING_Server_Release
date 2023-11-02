@@ -16,6 +16,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import feign.Param;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -117,6 +119,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         );
     }
+
 
     @Override
     public Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) {
