@@ -13,7 +13,7 @@ public class MissionStateQueryService {
 
     private final MissionStateRepository missionStateRepository;
 
-    public Long stateCountByMissionId(Long missionId) {
+    public int stateCountByMissionId(Long missionId) {
         return missionStateRepository.getCountsByMissionId(missionId);
     }
 

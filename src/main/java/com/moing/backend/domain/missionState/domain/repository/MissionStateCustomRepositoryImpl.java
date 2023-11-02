@@ -18,17 +18,13 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
 
 
     @Override
-    public Long getCountsByMissionId(Long missionId) {
+    public int getCountsByMissionId(Long missionId) {
         return queryFactory
-                .select(missionState.count())
+                .select(missionState)
                 .from(missionState)
                 .where(
                         missionState.mission.id.eq(missionId))
-                .where(
-                        (missionState.status.eq(MissionArchiveStatus.COMPLETE)
-                                .or( missionState.status.eq(MissionArchiveStatus.SKIP)))
-                )
-                .fetchFirst();
+                .fetch().size();
     }
 
 
