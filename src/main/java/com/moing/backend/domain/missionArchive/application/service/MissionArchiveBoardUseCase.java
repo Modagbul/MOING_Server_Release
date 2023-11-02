@@ -1,4 +1,4 @@
-package com.moing.backend.domain.mission.application.service;
+package com.moing.backend.domain.missionArchive.application.service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
@@ -45,8 +45,7 @@ public class MissionArchiveBoardUseCase {
 
         Member member = memberGetService.getMemberBySocialId(memberId);
 
-        List<MissionArchive> mySingleMissionArchives = missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
-        return MissionArchiveMapper.mapToSingleMissionBoardResList(mySingleMissionArchives);
+        return missionArchiveQueryService.findMySingleMissionArchives(member.getMemberId(), teamId, MissionStatus.ONGOING);
 
     }
 

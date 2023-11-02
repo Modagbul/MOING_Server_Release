@@ -2,6 +2,7 @@ package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
@@ -12,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface MissionArchiveCustomRepository {
-    Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status, MissionArchiveStatus archiveStatus, OrderCondition orderCondition);
+    Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,OrderCondition orderCondition);
+    Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,OrderCondition orderCondition);
     Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId);
 
     Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) ;

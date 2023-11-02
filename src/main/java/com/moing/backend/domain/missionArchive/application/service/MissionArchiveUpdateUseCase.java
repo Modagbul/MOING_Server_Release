@@ -12,9 +12,14 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
+import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
+import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
+import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
+import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -40,13 +45,15 @@ public class MissionArchiveUpdateUseCase {
 
     private final IssuePresignedUrlUseCase getPresignedUrlUseCase;
 
+    private final MissionStateSaveService missionStateSaveService;
+    private final MissionStateUseCase missionStateUseCase;
+
 
     // 미션 재인증 (수정하기도 포함됨)
     public MissionArchiveRes updateArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Long memberId = member.getMemberId();
-
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
@@ -54,15 +61,20 @@ public class MissionArchiveUpdateUseCase {
         if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(memberId, missionId)) {
             //s3삭제
 
+
         }
 
         MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(memberId, missionId).get(0);
 
+        // 단일 미션 && 미션 종료 직전인지 확인
+        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(missionId)) {
+            mission.updateStatus(MissionStatus.SUCCESS);
+            // 점수 반영 로직
+
+        }
+
+
         if (mission.getType().equals(MissionType.ONCE)) {
-            // missionArchive 2개 이상일 때 예외처리 필요
-//            if (isDoneSingleMission(mission)) {
-//                missionArchiveScoreService.addScore(team);
-//            }
             updateArchive.updateCount(1L);
         }
         else{
@@ -70,10 +82,15 @@ public class MissionArchiveUpdateUseCase {
         }
 
         updateArchive.updateArchive(missionReq);
+        missionStateSaveService.saveMissionState(member,mission, updateArchive.getStatus());
 
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive),memberId);
 
 
+    }
+    // 이 미션을 완료 했는지
+    public Boolean isDoneMission(Long memberId,Mission mission) {
+        return missionArchiveQueryService.findMyDoneArchives(memberId, mission.getId()) >= mission.getNumber();
     }
 
 

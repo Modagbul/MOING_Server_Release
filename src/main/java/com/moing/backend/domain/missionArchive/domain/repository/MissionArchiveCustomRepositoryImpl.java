@@ -2,6 +2,7 @@ package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
@@ -13,7 +14,10 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import feign.Param;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
+import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static javax.swing.Spring.constant;
 
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
@@ -33,21 +38,57 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
     @Override
-    public Optional<List<MissionArchive>> findSingleMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status,
-                                                                              MissionArchiveStatus archiveStatus, OrderCondition orderCondition) {
+    public Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,
+                                                                                    OrderCondition orderCondition) {
+        OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
+        String missionArchiveStatus = "INCOMPLETE";
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(SingleMissionBoardRes.class,
+                        mission.id,
+                        mission.dueTo.stringValue(),
+                        mission.title,
+                        Expressions.constant(missionArchiveStatus),
+                        mission.type.stringValue()
+                ))
+                .from(mission)
+                .where(mission.notIn
+                                (JPAExpressions
+                                        .select(missionState.mission)
+                                        .from(missionState)
+                                        .where(missionState.member.memberId.eq(memberId),
+                                                missionState.mission.team.teamId.eq(teamId),
+                                                missionState.mission.type.eq(MissionType.ONCE),
+                                                missionState.mission.status.eq(MissionStatus.SUCCESS)
+                                                        .or(missionState.mission.status.eq(MissionStatus.ONGOING))
+                                        )),
+                        mission.type.eq(MissionType.ONCE),
+                        mission.team.teamId.eq(teamId))
+                .orderBy(orderSpecifiers).fetch());
+
+
+    }
+    @Override
+    public Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,
+                                                                                    OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
-                .select(missionArchive)
-                .from(missionArchive)
+                .select(Projections.constructor(SingleMissionBoardRes.class,
+                        mission.id,
+                        mission.dueTo.stringValue(),
+                        mission.title,
+                        missionArchive.status.stringValue(),
+                        mission.type.stringValue()
+                ))
+                .from(mission)
+                .join(mission.missionArchiveList,missionArchive)
+                .on(missionArchive.member.memberId.eq(memberId))
                 .where(
-                        missionArchive.mission.team.teamId.eq(teamId),
-                        missionArchive.member.memberId.eq(memberId),
-                        missionArchive.mission.status.eq(status),
-                        missionArchive.mission.type.eq(MissionType.ONCE),
-                        missionArchive.status.eq(archiveStatus)
+                        mission.team.teamId.eq(teamId),
+                        mission.type.eq(MissionType.ONCE),
+                        mission.status.eq(MissionStatus.ONGOING)
                 )
-                .orderBy(orderSpecifiers)
-                .fetch());
+                .orderBy(orderSpecifiers).fetch());
+
 
     }
 
@@ -56,7 +97,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
 
         if (orderCondition.equals(OrderCondition.DUETO)) {
-            orderSpecifiers.add(new OrderSpecifier(Order.DESC, missionArchive.mission.dueTo));
+            orderSpecifiers.add(new OrderSpecifier(Order.ASC, mission.dueTo));
         } else if (orderCondition.equals(OrderCondition.CREATED)) {
             orderSpecifiers.add(new OrderSpecifier(Order.ASC, missionArchive.createdDate));
         }
@@ -78,6 +119,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         );
     }
+
 
     @Override
     public Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) {

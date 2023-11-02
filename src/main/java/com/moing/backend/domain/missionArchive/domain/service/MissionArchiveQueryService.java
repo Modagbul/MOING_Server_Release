@@ -3,6 +3,7 @@ package com.moing.backend.domain.missionArchive.domain.service;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
+import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
@@ -39,7 +40,7 @@ public class MissionArchiveQueryService {
 
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
-        Optional<List<MissionArchive>> optional = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
+        Optional<List<MissionArchive>> optional = missionArchiveRepository.findMyArchives(memberId, missionId);
         if (optional.isPresent() && optional.get().size() == 0) {
             return new ArrayList<>();
 //            throw new NotFoundMissionArchiveException();
@@ -70,12 +71,13 @@ public class MissionArchiveQueryService {
     /**
      * mission.getTeam() 팀의 단일미션 미션 인증 보드
      */
-    public List<MissionArchive> findMySingleMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
+    public List<SingleMissionBoardRes> findMySingleMissionArchives(Long memberId, Long teamId, MissionStatus missionStatus) {
+
         // INCOMPLETE
-        List<MissionArchive> incompleteList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, INCOMPLETE, OrderCondition.DUETO)
+        List<SingleMissionBoardRes> incompleteList = missionArchiveRepository.findSingleMissionInComplete(memberId, teamId, missionStatus, OrderCondition.DUETO)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
-        List<MissionArchive> completeList = missionArchiveRepository.findSingleMissionArchivesByMemberId(memberId, teamId, missionStatus, COMPLETE, OrderCondition.CREATED)
+        List<SingleMissionBoardRes> completeList = missionArchiveRepository.findSingleMissionComplete(memberId, teamId, missionStatus, OrderCondition.CREATED)
                 .orElseThrow(NotFoundMissionArchiveException::new);
 
         incompleteList.addAll(completeList);

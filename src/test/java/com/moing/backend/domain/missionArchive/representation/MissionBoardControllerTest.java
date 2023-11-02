@@ -4,8 +4,7 @@ import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
-import com.moing.backend.domain.mission.application.service.MissionArchiveBoardUseCase;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
+import com.moing.backend.domain.missionArchive.application.service.MissionArchiveBoardUseCase;
 import com.moing.backend.domain.missionArchive.presentation.MissionBoardController;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;

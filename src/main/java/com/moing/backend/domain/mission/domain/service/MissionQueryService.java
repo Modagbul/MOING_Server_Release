@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.mission.exception.NotFoundEndMissionException;
 import com.moing.backend.domain.mission.exception.NotFoundMissionException;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
@@ -40,5 +41,13 @@ public class MissionQueryService {
     public List<GatherSingleMissionRes> findAllSingleMission(Long memberId) {
         List<Long> teams = teamGetService.getTeamIdByMemberId(memberId);
         return missionRepository.findSingleMissionByMemberId(memberId, teams).orElseThrow(NotFoundMissionException::new);
+    }
+
+    /**
+     * 스케쥴러에서 한시간 단위로 실행
+     * 현재 시간으로부터 1시간 이내 종료 되는 미션 리턴
+     */
+    public List<Mission> findMissionByDueTo() {
+        return missionRepository.findMissionByDueTo().orElseThrow(NotFoundEndMissionException::new);
     }
 }

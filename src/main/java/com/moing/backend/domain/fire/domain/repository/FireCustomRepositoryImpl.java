@@ -1,7 +1,6 @@
 package com.moing.backend.domain.fire.domain.repository;
 
 import com.moing.backend.domain.fire.domain.entity.Fire;
-import com.moing.backend.domain.fire.domain.entity.QFire;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.querydsl.jpa.JPAExpressions;
