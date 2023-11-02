@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 
 public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepository {
@@ -19,15 +20,19 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
     @Override
     public Long getCountsByMissionId(Long missionId) {
         return queryFactory
-                .select(missionState)
+                .select(missionState.count())
                 .from(missionState)
                 .where(
-                        missionState.mission.id.eq(missionId),
-                        missionState.status.eq(MissionArchiveStatus.COMPLETE)
-                                .or( missionState.status.eq(MissionArchiveStatus.SKIP))
+                        missionState.mission.id.eq(missionId))
+                .where(
+                        (missionState.status.eq(MissionArchiveStatus.COMPLETE)
+                                .or( missionState.status.eq(MissionArchiveStatus.SKIP)))
                 )
-                .fetchCount();
+                .fetchFirst();
     }
+
+
+
 
 
 

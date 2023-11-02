@@ -11,9 +11,10 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateSaveServ
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,17 +36,12 @@ public class MissionStateUseCase {
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
+        log.info("done/total -> "+ done+ total);
+
         return done == total-1;
 
     }
 
-    public Long getScoreByMission(Mission mission) {
-        Long total = totalPeople(mission);
-        Long done = donePeople(mission);
-
-        return (done / total * 100) / 5 ;
-
-    }
 
     public Long donePeople(Mission mission) {
         return missionStateQueryService.stateCountByMissionId(mission.getId());
@@ -61,7 +57,6 @@ public class MissionStateUseCase {
         // 마지막 인증 시
         if (isAbleToEnd(mission.getId())) {
             mission.updateStatus(MissionStatus.SUCCESS);
-            teamScoreLogicUseCase.updateSingleScore(mission.getId());
         }
 
         // 미션 인증 상태 저장

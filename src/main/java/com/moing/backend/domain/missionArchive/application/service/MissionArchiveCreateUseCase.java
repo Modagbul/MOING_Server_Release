@@ -59,6 +59,8 @@ public class MissionArchiveCreateUseCase {
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
+        }else {
+            newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId));
         }
 
         missionStateUseCase.updateMissionState(member, mission, newArchive);

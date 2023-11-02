@@ -15,7 +15,7 @@ public class TeamScore extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mission_id")
+    @Column(name = "teamScore_id")
     private Long id;
 
     @OneToOne
@@ -33,7 +33,8 @@ public class TeamScore extends BaseTimeEntity {
     }
 
     public void updateScore(Long score) {
-        this.score = score;
+
+        this.score += score;
     }
 
     public void levelUp() {
@@ -43,7 +44,8 @@ public class TeamScore extends BaseTimeEntity {
             if (steps[i] < this.level && this.level < steps[i + 1]) {
                 if (20 + i * 15 <= score) {
                     this.level+=1;
-                    this.score -= score-(20 + i * 15);
+                    this.score -= score - (20 + i * 15);
+                    return;
                 }
             }
         }

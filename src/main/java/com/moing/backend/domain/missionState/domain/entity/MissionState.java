@@ -28,6 +28,7 @@ public class MissionState extends BaseTimeEntity {
     @OneToOne
     private Member member;
 
+    @Enumerated(value = EnumType.STRING)
     private MissionArchiveStatus status;
 
 }
