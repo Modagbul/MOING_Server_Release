@@ -172,7 +172,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count.coalesce(0L).as("num"),
+                                missionArchive.count.coalesce(0L).as("done"),
                                 mission.number
                         ))
                 .from(mission)
@@ -182,10 +182,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT)
-//                        missionArchive.member.memberId.eq(memberId),
-//                        missionArchive.mission.status.eq(status)
                 )
-                .groupBy(mission.id)
+//                .groupBy(missionArchive.mission)
                 .fetch());
 
 
@@ -200,11 +198,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
 
         return Optional.ofNullable(queryFactory
-                .select(Projections.constructor(FinishMissionBoardRes.class,
+                .selectDistinct(Projections.constructor(FinishMissionBoardRes.class,
                     mission.id,
                     mission.dueTo.stringValue(),
                     mission.title,
-                    missionArchive.status.stringValue(),
+                    missionArchive.status.stringValue().coalesce("INCOMPLETE").as("status"),
                     mission.type.stringValue()
                 ))
                 .from(mission)
