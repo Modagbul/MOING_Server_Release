@@ -5,7 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
-import com.moing.backend.domain.mission.exception.NotFoundEndMissionException;
+import com.moing.backend.domain.mission.exception.*;
 import com.moing.backend.domain.mission.exception.NotFoundMissionException;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
@@ -49,5 +49,9 @@ public class MissionQueryService {
      */
     public List<Mission> findMissionByDueTo() {
         return missionRepository.findMissionByDueTo().orElseThrow(NotFoundEndMissionException::new);
+    }
+
+    public List<Long> findOngoingRepeatMissions() {
+        return missionRepository.findOngoingRepeatMissions().orElseThrow(NotFoundOngoingMissionException::new);
     }
 }

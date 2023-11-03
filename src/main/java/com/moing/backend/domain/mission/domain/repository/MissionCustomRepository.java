@@ -20,5 +20,6 @@ public interface MissionCustomRepository {
 
     Optional<List<Mission>> findMissionByDueTo();
 
+    Optional<List<Long>> findOngoingRepeatMissions();
 
     }
