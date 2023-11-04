@@ -2,21 +2,17 @@ package com.moing.backend.domain.auth.application.service.google;
 
 import com.moing.backend.domain.auth.application.dto.response.GoogleUserResponse;
 import com.moing.backend.domain.auth.application.service.SignInProvider;
-import com.moing.backend.domain.auth.exception.AppIdInvalidException;
 import com.moing.backend.domain.auth.exception.TokenInvalidException;
 import com.moing.backend.domain.member.application.mapper.MemberMapper;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.global.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-
-@Service("google")
+@Service("googleSignIn")
 @RequiredArgsConstructor
 public class GoogleSignInUserCase implements SignInProvider {
 

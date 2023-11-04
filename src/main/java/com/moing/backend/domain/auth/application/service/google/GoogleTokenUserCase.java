@@ -12,7 +12,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class GoogleTokenUserCase {
 
-    @Value("${app-id.google}")
+    @Value("${oauth2.google.appId}")
     private String appId;
 
     public void verifyAccessToken(String aud) {

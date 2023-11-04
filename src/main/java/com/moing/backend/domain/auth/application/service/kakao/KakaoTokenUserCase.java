@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class KakaoTokenUserCase {
 
-    @Value("${app-id.kakao}")
+    @Value("${oauth2.kakao.appId}")
     private String appId;
 
     private final WebClient webClient;
