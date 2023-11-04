@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class TestRequest {
     private String socialId;
 
+    private String fcmToken;
 }
