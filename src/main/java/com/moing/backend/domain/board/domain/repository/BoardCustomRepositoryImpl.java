@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
 
-public class    BoardCustomRepositoryImpl implements BoardCustomRepository {
-    private final JPAQueryFactory queryFactory;
+public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
+    private final JPAQueryFactory queryFactory;
     public BoardCustomRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
@@ -64,5 +64,25 @@ public class    BoardCustomRepositoryImpl implements BoardCustomRepository {
         List<BoardBlocks> regularBlocks = regularPosts.stream().map(toBoardBlocks).collect(Collectors.toList());
 
         return new GetAllBoardResponse(noticeBlocks.size(), noticeBlocks, regularBlocks.size(), regularBlocks);
+    }
+
+    @Override
+    public Integer findUnReadBoardNum(Long teamId, Long memberId) {
+        // 전체 게시글 수
+        Long allBoards = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(board.team.teamId.eq(teamId))
+                .fetchFirst();
+
+        // 멤버가 읽은 게시글 수
+        Long readBoards = queryFactory
+                .select(boardRead.count())
+                .from(boardRead)
+                .where(boardRead.member.memberId.eq(memberId))
+                .where(boardRead.board.team.teamId.eq(teamId))
+                .fetchFirst();
+
+        return Math.toIntExact(allBoards - readBoards);
     }
 }

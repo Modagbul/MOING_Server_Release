@@ -3,23 +3,28 @@ package com.moing.backend.domain.mypage.presentation;
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mypage.application.dto.request.UpdateProfileRequest;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
+import com.moing.backend.domain.mypage.application.dto.response.GetAlarmResponse;
+import com.moing.backend.domain.mypage.application.dto.response.GetMyPageResponse;
+import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.mypage.application.dto.response.GetProfileResponse;
-import com.moing.backend.domain.mypage.application.service.AlarmUserCase;
-import com.moing.backend.domain.mypage.application.service.ProfileUserCase;
-import com.moing.backend.domain.mypage.application.service.SignOutUserCase;
-import com.moing.backend.domain.mypage.application.service.WithdrawUserCase;
-import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
+import com.moing.backend.domain.mypage.application.service.*;
+import com.moing.backend.domain.team.domain.constant.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,6 +41,9 @@ public class MypageControllerTest extends CommonControllerTest {
 
     @MockBean
     private AlarmUserCase alarmUserCase;
+
+    @MockBean
+    private GetMyPageUserCase getMyPageUserCase;
 
     @Test
     public void sign_out() throws Exception {
@@ -96,6 +104,61 @@ public class MypageControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("회원탈퇴를 했습니다")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void get_mypage() throws Exception{
+        //given
+        List<Category> categoryList=new ArrayList<>();
+        categoryList.add(Category.SPORTS);
+
+        List<GetMyPageTeamBlock> getMyPageTeamBlocks=new ArrayList<>();
+        GetMyPageTeamBlock blocks= GetMyPageTeamBlock.builder()
+                .teamId(1L)
+                .teamName("소모임이름")
+                .category(Category.SPORTS)
+                .build();
+        getMyPageTeamBlocks.add(blocks);
+
+        GetMyPageResponse output = GetMyPageResponse.builder()
+                .profileImage("PROFILE_IMAGE_URL")
+                .introduction("INTRODUCTION")
+                .nickName("NICKNAME")
+                .categories(categoryList)
+                .getMyPageTeamBlocks(getMyPageTeamBlocks)
+                .build();
+
+        given(getMyPageUserCase.getMyPageResponse(any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                get("/api/mypage")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("마이페이지를 조회했습니다"),
+                                        fieldWithPath("data.profileImage").description("프로필 이미지 URL"),
+                                        fieldWithPath("data.nickName").description("닉네임"),
+                                        fieldWithPath("data.introduction").description("한줄 소개"),
+                                        fieldWithPath("data.categories[0]").description("내 열정의 불 해시태그"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[0].teamId").description("소모임 아이디"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[0].teamName").description("소모임 이름"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[0].category").description("소모임 카테고리")
                                 )
                         )
                 );
@@ -175,6 +238,89 @@ public class MypageControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("프로필을 수정했습니다.")
+                                )
+                        )
+                );
+    }
+
+
+    @Test
+    public void get_alarm() throws Exception {
+        //given
+        GetAlarmResponse output = GetAlarmResponse.builder()
+                .isNewUploadPush(true)
+                .isFirePush(true)
+                .isRemindPush(true)
+                .build();
+
+        given(alarmUserCase.getAlarm(any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                get("/api/mypage/alarm")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("알람 정보를 조회했습니다"),
+                                        fieldWithPath("data.newUploadPush").description("신규 공지 알림"),
+                                        fieldWithPath("data.remindPush").description("미션 리마인드 알림"),
+                                        fieldWithPath("data.firePush").description("불 던지기 알림")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void update_alarm() throws Exception {
+        //given
+        GetAlarmResponse output = GetAlarmResponse.builder()
+                .isNewUploadPush(true)
+                .isFirePush(true)
+                .isRemindPush(true)
+                .build();
+
+        given(alarmUserCase.updateAlarm(any(),any(),any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                put("/api/mypage/alarm")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("type", "all") // 파라미터 추가
+                        .param("status", "on") // 파라미터 추가
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                requestParameters( // 요청 파라미터 문서화
+                                        parameterWithName("type").description("all || isNewUploadPush || isRemindPush || isFirePush"),
+                                        parameterWithName("status").description("on || off")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("알람 정보를 수정했습니다"),
+                                        fieldWithPath("data.newUploadPush").description("신규 공지 알림"),
+                                        fieldWithPath("data.remindPush").description("미션 리마인드 알림"),
+                                        fieldWithPath("data.firePush").description("불 던지기 알림")
                                 )
                         )
                 );

@@ -8,4 +8,6 @@ import lombok.Getter;
 public enum MissionStatus {
     END,
     ONGOING,
+    SUCCESS,
+    FAIL
 }

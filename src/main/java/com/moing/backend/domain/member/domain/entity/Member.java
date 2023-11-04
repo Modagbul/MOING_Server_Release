@@ -47,7 +47,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String profileImage; //없으면 undef
+    private String profileImage;
 
     @Column(length = 10)
     @Enumerated(EnumType.STRING)

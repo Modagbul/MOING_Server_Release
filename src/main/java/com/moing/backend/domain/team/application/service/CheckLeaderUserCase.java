@@ -6,16 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CheckLeaderUserCase {
     public boolean isTeamLeader(Member member, Team team) {
-        if (member.getMemberId() == team.getLeaderId()) {
-            return true;
-        } else {
-            return false;
-        }
+        return Objects.equals(member.getMemberId(), team.getLeaderId());
     }
 }

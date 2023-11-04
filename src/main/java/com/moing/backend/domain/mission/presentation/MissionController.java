@@ -21,7 +21,7 @@ import static com.moing.backend.domain.mission.presentation.constant.MissionResp
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions")
+@RequestMapping("/api/team/{teamId}/missions")
 public class MissionController {
 
 
@@ -29,11 +29,10 @@ public class MissionController {
     private final MissionReadUseCase missionReadUseCase;
     private final MissionUpdateUseCase missionUpdateUseCase;
     private final MissionDeleteUseCase missionDeleteUseCase;
-    private final MissionQueryService missionQueryService;
 
     /**
      * 미션 조회
-     * [GET] {teamId}/mission/{missionId}
+     * [GET] {teamId}/missions/{missionId}
      * 작성자 : 정승연
      */
 
@@ -46,7 +45,7 @@ public class MissionController {
 
     /**
      * 미션 생성
-     * [POST] {teamId}/mission
+     * [POST] {teamId}/missions
      * 작성자 : 정승연
      */
 
@@ -57,7 +56,7 @@ public class MissionController {
 
     /**
      * 미션 수정
-     * [PUT] {teamId}/mission/{missionId}
+     * [PUT] {teamId}/missions/{missionId}
      * 작성자 : 정승연
      */
     @PutMapping("/{missionId}")
@@ -67,12 +66,23 @@ public class MissionController {
 
     /**
      * 미션 삭제
-     * [DELETE] {teamId}/mission/{missionId}
+     * [DELETE] {teamId}/missions/{missionId}
      * 작성자 : 정승연
      */
     @DeleteMapping("/{missionId}")
     public ResponseEntity<SuccessResponse<Long>> deleteMission(@AuthenticationPrincipal User user,@PathVariable Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(DELETE_MISSION_SUCCESS.getMessage(), this.missionDeleteUseCase.deleteMission(user.getSocialId(),missionId)));
+    }
+
+    /**
+     * 미션 추천
+     * [GET] {teamId}/missions/recommend
+     * 작성자 : 정승연
+     */
+
+    @GetMapping("/recommend")
+    public ResponseEntity<SuccessResponse<String>> recommendMission(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getTeamCategory(teamId)));
     }
 
 

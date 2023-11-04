@@ -1,12 +1,15 @@
 package com.moing.backend.domain.mission.application.dto.res;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.A;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class SingleMissionBoardRes {
     private Long missionId;
     private String dueTo; // 날짜

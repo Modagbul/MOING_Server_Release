@@ -1,6 +1,7 @@
 package com.moing.backend.domain.team.domain.service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
@@ -27,5 +28,9 @@ public class TeamGetService {
 
     public Team getTeamByTeamId(Long teamId){
         return teamRepository.findTeamByTeamId(teamId).orElseThrow(()->new NotFoundByTeamIdException());
+    }
+
+    public List<GetMyPageTeamBlock> getMyPageTeamBlockByMemberId(Long memberId){
+        return teamRepository.findMyPageTeamByMemberId(memberId);
     }
 }
