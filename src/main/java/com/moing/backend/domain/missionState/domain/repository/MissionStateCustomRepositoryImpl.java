@@ -1,10 +1,13 @@
 package com.moing.backend.domain.missionState.domain.repository;
 
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+
+import java.util.List;
 
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 
@@ -18,26 +21,26 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
 
 
     @Override
-    public Long getCountsByMissionId(Long missionId) {
+    public int getCountsByMissionId(Long missionId) {
         return queryFactory
-                .select(missionState.count())
+                .select(missionState)
                 .from(missionState)
                 .where(
                         missionState.mission.id.eq(missionId))
-                .where(
-                        (missionState.status.eq(MissionArchiveStatus.COMPLETE)
-                                .or( missionState.status.eq(MissionArchiveStatus.SKIP)))
-                )
-                .fetchFirst();
+                .fetch().size();
     }
 
+    @Override
+    public List<MissionState> findByMissionId(List<Long> missionId) {
 
+        return queryFactory
+                .select(missionState)
+                .from(missionState)
+                .where(
+                        missionState.mission.id.in(missionId)
+                ).fetch();
 
-
-
-
-
-
+    }
 
 
 }

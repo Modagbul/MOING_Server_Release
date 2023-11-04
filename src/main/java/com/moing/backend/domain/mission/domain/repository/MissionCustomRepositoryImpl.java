@@ -72,6 +72,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.dueTo.after(oneHourAgo)
                 ).fetch());
     }
+
+    @Override
+    public Optional<List<Long>> findOngoingRepeatMissions() {
+        return Optional.ofNullable(queryFactory
+                .select(mission.id)
+                .from(mission)
+                .where(mission.status.eq(MissionStatus.ONGOING),
+                        mission.type.eq(MissionType.REPEAT))
+                .fetch());
+    }
+
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
         return Optional.ofNullable(queryFactory

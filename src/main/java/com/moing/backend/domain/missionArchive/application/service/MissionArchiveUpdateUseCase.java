@@ -73,19 +73,9 @@ public class MissionArchiveUpdateUseCase {
 
         }
 
-
-        if (mission.getType().equals(MissionType.ONCE)) {
-            updateArchive.updateCount(1L);
-        }
-        else{
-            updateArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
-        }
-
         updateArchive.updateArchive(missionReq);
-        missionStateSaveService.saveMissionState(member,mission, updateArchive.getStatus());
-
+//        missionStateUseCase.updateMissionState(member, mission, updateArchive);
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive),memberId);
-
 
     }
     // 이 미션을 완료 했는지

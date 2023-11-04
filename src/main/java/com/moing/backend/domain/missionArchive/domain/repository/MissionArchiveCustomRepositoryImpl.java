@@ -140,14 +140,14 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     @Override
     public Optional<Long> findDonePeopleByMissionId(Long missionId) {
-        return Optional.ofNullable(queryFactory
-                .select(missionArchive.member.count())
+        return Optional.of(queryFactory
+                .select(missionArchive)
                 .from(missionArchive)
                 .where(
                         missionArchive.mission.id.eq(missionId)
                 )
                 .groupBy(missionArchive.member)
-                .fetchFirst()
+                .fetchCount()
 
         );
     }
@@ -172,7 +172,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count.coalesce(0L).as("done"),
+                                missionArchive.count().coalesce(0L).as("done"),
                                 mission.number
                         ))
                 .from(mission)
