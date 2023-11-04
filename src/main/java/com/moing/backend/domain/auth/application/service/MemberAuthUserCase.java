@@ -17,7 +17,8 @@ public class MemberAuthUserCase {
     private final MemberSaveService memberSaveService;
 
     @Transactional
-    public Member auth(Member member, String providerInfo) {
+    public Member auth(String fcmToken, Member member, String providerInfo) {
+        member.updateFcmToken(fcmToken);
         Member signInMember = memberSaveService.saveMember(member);
         checkRegistration(signInMember, providerInfo);
         return signInMember;

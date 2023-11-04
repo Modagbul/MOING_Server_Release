@@ -47,7 +47,7 @@ public class AuthController {
     @PostMapping("/signIn/{provider}")
     public ResponseEntity<SuccessResponse<SignInResponse>> signIn(@PathVariable String provider,
                                                                   @Valid @RequestBody SignInRequest signInRequest) {
-        return ResponseEntity.ok(SuccessResponse.create(SIGN_IN_SUCCESS.getMessage(), this.authService.signIn(signInRequest.getToken(), provider)));
+        return ResponseEntity.ok(SuccessResponse.create(SIGN_IN_SUCCESS.getMessage(), this.authService.signIn(signInRequest, provider)));
     }
 
     /**
@@ -90,6 +90,6 @@ public class AuthController {
     @PostMapping("/test/{provider}")
     public ResponseEntity<SuccessResponse<SignInResponse>> testLogin(@PathVariable String provider,
                                                                      @RequestBody TestRequest testRequest){
-        return ResponseEntity.ok(SuccessResponse.create(SIGN_IN_SUCCESS.getMessage(), this.authService.testSignIn(testRequest.getSocialId(),provider)));
+        return ResponseEntity.ok(SuccessResponse.create(SIGN_IN_SUCCESS.getMessage(), this.authService.testSignIn(testRequest.getFcmToken(), testRequest.getSocialId(),provider)));
     }
 }
