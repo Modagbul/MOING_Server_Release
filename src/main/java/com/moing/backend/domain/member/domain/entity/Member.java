@@ -160,11 +160,4 @@ public class Member extends BaseTimeEntity {
         this.socialId = socialId;
     }
 
-    public void deleteTeamMember(){
-        List<TeamMember> teamMemberList=this.getTeamMembers();
-        for(TeamMember teamMember:teamMemberList){
-            teamMember.deleteMember();
-        }
-    }
-
 }
