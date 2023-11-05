@@ -33,18 +33,18 @@ public class TeamScore extends BaseTimeEntity {
     }
 
     public void updateScore(Long score) {
-
         this.score += score;
     }
 
     public void levelUp() {
-        final int[] steps = {0, 2, 10, 25, 45, 100};
+        final int[] steps = {1, 2, 10, 25, 45, 100};
+// 0부터 시작하기 때문에 무조건 0에서 걸림.
 
-        for (int i = 0; i < 5; i++) {
-            if (steps[i] < this.level && this.level < steps[i + 1]) {
-                if (20 + i * 15 <= score) {
+        for (int i = 5; i > 0; i--) {
+            if (steps[i] <= this.level && this.level <= steps[i - 1]) {
+                if (20 + (i-1) * 15 <= score) { // 여길 들어가질 않음
                     this.level+=1;
-                    this.score -= score - (20 + i * 15);
+                    this.score -= (20 + (i-1) * 15);
                     return;
                 }
             }

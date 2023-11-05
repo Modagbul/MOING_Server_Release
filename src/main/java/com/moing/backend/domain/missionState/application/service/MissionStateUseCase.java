@@ -41,10 +41,21 @@ public class MissionStateUseCase {
         return done == total-1;
 
     }
+    public boolean isAbleToScoreUp(Long missionId) {
+
+        Mission mission = missionQueryService.findMissionById(missionId);
+        Long total = totalPeople(mission);
+        Long done = donePeople(mission);
+
+        log.info("done/total -> "+ done+ total);
+
+        return done >= total;
+
+    }
 
 
     public Long donePeople(Mission mission) {
-        return missionStateQueryService.stateCountByMissionId(mission.getId());
+        return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
     }
 
     public Long totalPeople(Mission mission) {
@@ -58,11 +69,11 @@ public class MissionStateUseCase {
         if (isAbleToEnd(mission.getId())) {
             mission.updateStatus(MissionStatus.SUCCESS);
         }
-
-        // 미션 인증 상태 저장
         missionStateSaveService.saveMissionState(member,mission, missionArchive.getStatus());
 
-
+        if (isAbleToScoreUp(mission.getId())) {
+            teamScoreLogicUseCase.updateTeamScore(mission.getId());
+        }
 
 
     }

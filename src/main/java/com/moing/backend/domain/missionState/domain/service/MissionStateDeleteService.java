@@ -11,17 +11,12 @@ import java.util.List;
 @DomainService
 @Transactional
 @RequiredArgsConstructor
-public class MissionStateQueryService {
+public class MissionStateDeleteService {
 
     private final MissionStateRepository missionStateRepository;
 
-    public int stateCountByMissionId(Long missionId) {
-        return missionStateRepository.getCountsByMissionId(missionId);
+    public void deleteMissionState(List<MissionState> missionStates) {
+
+        missionStateRepository.deleteAll(missionStates);
     }
-
-    public List<MissionState> findByMissionId(List<Long> missionId) {
-        return missionStateRepository.findByMissionId(missionId);
-    }
-
-
 }
