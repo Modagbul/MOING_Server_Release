@@ -174,7 +174,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                                 mission.title,
                                 missionArchive.count().coalesce(0L).as("done"),
                                 mission.number,
-                                mission.way
+                                mission.way.stringValue()
                         ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)
@@ -205,7 +205,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                     mission.title,
                     missionArchive.status.stringValue().coalesce("INCOMPLETE").as("status"),
                     mission.type.stringValue(),
-                        mission.way
+                        mission.way.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)
