@@ -40,6 +40,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
 
         List<GatherSingleMissionRes> output = Lists.newArrayList(GatherSingleMissionRes.builder()
                 .missionId(1L)
+                .teamId(1L)
                 .dueTo("2023-09-03T21:32:33.888")
                 .teamName("team name")
                 .missionTitle("mission title")
@@ -68,6 +69,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(ACTIVE_SINGLE_MISSION_SUCCESS.getMessage()),
                                         fieldWithPath("data[].missionId").description("미션 아이디"),
+                                        fieldWithPath("data[].teamId").description("팀 아이디"),
                                         fieldWithPath("data[].dueTo").description("미션 마감 시각"),
                                         fieldWithPath("data[].teamName").description("팀 이름"),
                                         fieldWithPath("data[].missionTitle").description("미션 제목")
@@ -85,6 +87,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
 
         List<GatherRepeatMissionRes> output = Lists.newArrayList(GatherRepeatMissionRes.builder()
                 .missionId(1L)
+                .teamId(1L)
                 .teamName("team name")
                 .missionTitle("mission title")
                 .doneNum("0")
@@ -114,6 +117,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(ACTIVE_REPEAT_MISSION_SUCCESS.getMessage()),
                                         fieldWithPath("data[].missionId").description("미션 아이디"),
+                                        fieldWithPath("data[].teamId").description("팀 아이디"),
                                         fieldWithPath("data[].teamName").description("팀 이름"),
                                         fieldWithPath("data[].missionTitle").description("미션 제목"),
                                         fieldWithPath("data[].doneNum").description("완료한 횟수"),

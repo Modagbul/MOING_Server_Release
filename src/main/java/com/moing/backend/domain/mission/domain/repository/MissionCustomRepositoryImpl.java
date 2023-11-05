@@ -42,6 +42,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
                         mission.id,
+                        mission.team.teamId,
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
@@ -88,6 +89,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
+                        mission.team.teamId,
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue()
