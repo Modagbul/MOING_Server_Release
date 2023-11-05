@@ -172,18 +172,19 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count().coalesce(0L).as("done"),
+                                missionArchive.count.coalesce(0L).as("done"),
                                 mission.number,
                                 mission.way.stringValue()
                         ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)
-                        .on( missionArchive.member.memberId.eq(memberId),
-                        missionArchive.mission.status.eq(status))
+                        .on( missionArchive.member.memberId.eq(memberId))
                 .where(
                         mission.team.teamId.eq(teamId),
-                        mission.type.eq(MissionType.REPEAT)
+                        mission.type.eq(MissionType.REPEAT),
+                        mission.status.eq(MissionStatus.ONGOING)
                 )
+
 //                .groupBy(missionArchive.mission)
                 .fetch());
 
