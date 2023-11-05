@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionState.domain.repository;
 
+import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -7,7 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 
@@ -40,6 +43,19 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
                         missionState.mission.id.in(missionId)
                 ).fetch();
 
+    }
+
+    @Override
+    public Optional<List<MissionState>> findFinishMission() {
+        return Optional.ofNullable(queryFactory
+                .select(missionState)
+                .from(missionState)
+                .where(
+                        missionState.mission.dueTo.ne(LocalDateTime.now()),
+                        missionState.mission.status.eq(MissionStatus.ONGOING)
+
+                ).fetch()
+        );
     }
 
 

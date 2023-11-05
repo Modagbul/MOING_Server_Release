@@ -47,7 +47,8 @@ public class MissionStateScheduleUseCase {
     }
 
     // 한시간마다 실행
-    public void singleMissionEndRoutine() {
+    // 미션 단위
+    public void singleMissionEndRoutineByMission() {
 
         Mission mission = new Mission();
 
@@ -56,5 +57,11 @@ public class MissionStateScheduleUseCase {
         if (mission.getDueTo().isAfter(now)) {
             mission.updateStatus(MissionStatus.END);
         }
+    }
+
+    public void singleMissionEndRoutine() {
+
+
+
     }
 }
