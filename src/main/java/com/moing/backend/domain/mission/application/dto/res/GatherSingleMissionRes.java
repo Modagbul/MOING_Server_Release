@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GatherSingleMissionRes {
     private Long missionId;
+    private Long teamId;
     private String teamName;
     private String missionTitle;
     private String dueTo;
