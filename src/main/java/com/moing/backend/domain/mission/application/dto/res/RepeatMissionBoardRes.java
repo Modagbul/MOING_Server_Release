@@ -15,22 +15,25 @@ public class RepeatMissionBoardRes {
 //    private String status;
     private Long done;
     private int number;
+    private String way;
 
 
-    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number) {
+    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way) {
         this.missionId = missionId;
         this.title = title;
         this.dueTo="False";
         this.number = number;
         this.done = done;
+        this.way = way;
     }
 
     @Builder
-    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number) {
+    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number,String way) {
         this.missionId = missionId;
         this.title = title;
         this.dueTo = "False";
         this.done = done;
         this.number = number;
+        this.way = way;
     }
 }
