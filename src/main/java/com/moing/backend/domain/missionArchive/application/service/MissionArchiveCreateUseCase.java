@@ -58,7 +58,12 @@ public class MissionArchiveCreateUseCase {
         }
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
-            newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
+            // 당일 1회 인증만 가능
+            if(!missionArchiveQueryService.findDoneTodayArchive(memberId,missionId))
+                newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
+            else
+                throw new NoMoreMissionArchiveException();
+
         }else {
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
         }

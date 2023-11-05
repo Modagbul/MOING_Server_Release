@@ -8,6 +8,7 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
+import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
@@ -22,11 +23,13 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateQuerySer
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
+import com.moing.backend.domain.missionState.exception.NoAccessMissionArchiveException;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -71,6 +74,10 @@ public class MissionArchiveUpdateUseCase {
             mission.updateStatus(MissionStatus.SUCCESS);
             // 점수 반영 로직
 
+        }
+        // 반복미션의 경우 당일이 지나면 업데이트 불가능
+        if (!(updateArchive.getLastModifiedDate().getDayOfWeek().equals(LocalDateTime.now().getDayOfWeek()))) {
+            throw new NoAccessMissionArchiveException();
         }
 
         updateArchive.updateArchive(missionReq);

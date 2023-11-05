@@ -66,6 +66,16 @@ public class MissionArchiveQueryService {
         }
     }
 
+    public Boolean isTodayDone(Long memberId, Long missionId) {
+        Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
+        if (byMemberId.isPresent()) {
+
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
     // team의 mission id 들 가져와서 나의 mission archive 리턴
 
     /**
@@ -104,6 +114,10 @@ public class MissionArchiveQueryService {
 
     public List<MissionArchivePhotoRes> findTop5ArchivesByTeam(List<Long> teamIds) {
         return missionArchiveRepository.findTop5ArchivesByTeam(teamIds).orElse(null);
+    }
+
+    public boolean findDoneTodayArchive(Long memberId, Long missionId) {
+        return missionArchiveRepository.findMyArchivesToday(memberId, missionId);
     }
 
 
