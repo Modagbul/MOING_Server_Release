@@ -17,9 +17,11 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Param;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +30,7 @@ import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static javax.swing.Spring.constant;
-
+@Slf4j
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
 
     private final JPAQueryFactory queryFactory;
@@ -172,7 +174,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count.coalesce(0L).as("done"),
+                                missionArchive.count.max().coalesce(0L).as("done"),
                                 mission.number,
                                 mission.way.stringValue()
                         ))
@@ -184,10 +186,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.type.eq(MissionType.REPEAT),
                         mission.status.eq(MissionStatus.ONGOING)
                 )
-
-//                .groupBy(missionArchive.mission)
+                .groupBy(mission)
                 .fetch());
-
 
     }
 
@@ -252,6 +252,29 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         return Optional.ofNullable(resultDTOs);
     }
+
+
+    public Boolean findMyArchivesToday(Long memberId, Long missionId) {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        log.info("today"+ today);
+        log.info("startToday"+startOfToday);
+        log.info("endToday"+endOfToday);
+
+        long count = queryFactory
+                .selectFrom(missionArchive)
+                .where(
+                        missionArchive.member.memberId.eq(memberId),
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.lastModifiedDate.between(startOfToday, endOfToday) // createdDate와 오늘의 시작과 끝을 비교
+                )
+                .fetchCount();
+
+        return count > 0;
+    }
+
 
 
 }

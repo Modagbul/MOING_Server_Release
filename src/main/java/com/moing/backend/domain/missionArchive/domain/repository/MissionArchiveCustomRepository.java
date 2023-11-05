@@ -28,5 +28,6 @@ public interface MissionArchiveCustomRepository {
 
     Optional<List<MissionArchivePhotoRes>> findTop5ArchivesByTeam(List<Long> teamIds);
 
+    Boolean findMyArchivesToday(Long memberId,Long missionId);
 
     }

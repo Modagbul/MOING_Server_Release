@@ -5,6 +5,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyMissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.domain.missionArchive.presentation.MissionArchiveController;
@@ -185,7 +186,9 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     public void 나의_미션_인증_조회() throws Exception {
         //given
 
-        List<MissionArchiveRes> output = Lists.newArrayList(MissionArchiveRes.builder()
+
+
+        List<MissionArchiveRes> archives = Lists.newArrayList(MissionArchiveRes.builder()
                 .archiveId(1L)
                 .archive("content[s3 Link / text / link]")
                 .way("TEXT/LINK/PHOTO")
@@ -195,6 +198,11 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .heartStatus("[True/False]")
                 .hearts(1L)
                 .build());
+
+        MyMissionArchiveRes output = MyMissionArchiveRes.builder()
+                .archives(archives)
+                .today("True/False")
+                .build();
 
         given(missionArchiveReadUseCase.getMyArchive(any(),any())).willReturn(output);
 
@@ -223,14 +231,15 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(READ_MY_ARCHIVE_SUCCESS.getMessage()),
-                                        fieldWithPath("data[].archiveId").description("미션 인증 아이디"),
-                                        fieldWithPath("data[].archive").description("미션 인증물 [s3URL/text/링크]"),
-                                        fieldWithPath("data[].way").description("미션 인증물 방식"),
-                                        fieldWithPath("data[].createdDate").description("미션 제출 시각"),
-                                        fieldWithPath("data[].status").description("미션 인증 상태"),
-                                        fieldWithPath("data[].count").description("미션 인증 횟수"),
-                                        fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수")
+                                        fieldWithPath("data.today").description("오늘 인증 여부"),
+                                        fieldWithPath("data.archives[].archiveId").description("미션 인증 아이디"),
+                                        fieldWithPath("data.archives[].archive").description("미션 인증물 [s3URL/text/링크]"),
+                                        fieldWithPath("data.archives[].way").description("미션 인증물 방식"),
+                                        fieldWithPath("data.archives[].createdDate").description("미션 제출 시각"),
+                                        fieldWithPath("data.archives[].status").description("미션 인증 상태"),
+                                        fieldWithPath("data.archives[].count").description("미션 인증 횟수"),
+                                        fieldWithPath("data.archives[].heartStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수")
 
 
                                         )
