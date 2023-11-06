@@ -37,6 +37,17 @@ public class MissionGatherBoardUseCase {
 
     }
 
+    public List<GatherSingleMissionRes> getTeamActiveSingleMissions(String userId,Long teamId) {
+        Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
+        return missionQueryService.findTeamSingleMission(memberId,teamId);
+
+    }
+    public List<GatherRepeatMissionRes> getTeamActiveRepeatMissions(String userId,Long teamId) {
+        Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
+        return missionQueryService.findTeamRepeatMission(memberId,teamId);
+
+    }
+
     public List<MissionArchivePhotoRes> getArchivePhotoByTeamRes(String userId) {
         Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
 
