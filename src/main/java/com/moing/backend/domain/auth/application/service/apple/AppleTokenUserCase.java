@@ -21,7 +21,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class AppleTokenUserCase {
 
-    @Value("${oauth2.apple.teamId}")
+    @Value("${oauth2.apple.clientId}")
     private String appId;
 
     private final AppleClient appleClient;
