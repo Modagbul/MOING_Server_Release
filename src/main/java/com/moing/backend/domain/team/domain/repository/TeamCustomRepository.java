@@ -1,5 +1,6 @@
 package com.moing.backend.domain.team.domain.repository;
 
+import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.GetTeamDetailResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
@@ -13,4 +14,5 @@ public interface TeamCustomRepository {
     Optional<Team> findTeamByTeamId(Long TeamId);
     List<Long> findTeamIdByMemberId(Long memberId);
     List<GetMyPageTeamBlock> findMyPageTeamByMemberId(Long memberId);
+    List<MyTeamsRes> findTeamNameByTeamId(List<Long> teamId);
 }
