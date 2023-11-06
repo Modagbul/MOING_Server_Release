@@ -4,6 +4,7 @@ import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mission.application.dto.res.*;
 import com.moing.backend.domain.mission.application.service.MissionGatherBoardUseCase;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.missionArchive.application.service.MissionArchiveReadUseCase;
 import com.moing.backend.domain.missionArchive.presentation.MissionGatherController;
 import org.assertj.core.util.Lists;
@@ -167,6 +168,47 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description(MISSION_ARCHIVE_BY_TEAM.getMessage()),
                                         fieldWithPath("data[].teamId").description("팀 아이디"),
                                         fieldWithPath("data[].photo[]").description("팀별 미션 인증물 사진들")
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+
+    @Test
+    public void 내가_속한_팀_조회() throws Exception {
+        //given
+
+
+        List<MyTeamsRes> output = Lists.newArrayList(MyTeamsRes.builder()
+                        .teamId(1L)
+                .teamName("teamname")
+                .build());
+
+        given(missionGatherBoardUseCase.getMyTeams(any())).willReturn(output);
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/my-teamList")
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(MISSION_ARCHIVE_BY_TEAM.getMessage()),
+                                        fieldWithPath("data[].teamId").description("팀 아이디"),
+                                        fieldWithPath("data[].teamName").description("팀 이름")
                                 )
                         )
                 )
