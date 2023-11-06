@@ -73,11 +73,11 @@ public class AppleWithdrawUserCase implements WithdrawProvider {
 
         return Jwts.builder()
                 .setHeaderParams(jwtHeader)
-                .setIssuer(teamId)    // Apple Developer 페이지에 명시되어 있는 Team ID (우측 상단에 있음)
+                .setIssuer(teamId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expirationDate)
                 .setAudience("https://appleid.apple.com")
-                .setSubject(clientId)    // Apple Developer 페이지에 App Bundle ID (com.xxx.xxx 형식)
+                .setSubject(clientId)
                 .signWith(getPrivateKey(), SignatureAlgorithm.ES256)
                 .compact();
     }
