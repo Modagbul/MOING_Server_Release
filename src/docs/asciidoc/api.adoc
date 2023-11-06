@@ -30,3 +30,5 @@ include::Board-API.adoc[]
 
 include::BoardComment_API.adoc[]
 
+include::TeamScore-API.adoc[]
+
