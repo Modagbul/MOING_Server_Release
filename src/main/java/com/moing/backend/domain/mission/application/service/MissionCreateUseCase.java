@@ -11,6 +11,7 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
+import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
 import com.moing.backend.global.util.SecurityUtils;
@@ -36,6 +37,9 @@ public class MissionCreateUseCase {
         if (member.getMemberId().equals(team.getLeaderId())) {
             Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.ONGOING);
             // teamRepository 변경 예정
+            if (team.getMissions().size() > 3) {
+                throw new NoMoreCreateMission();
+            }
             mission.setTeam(team);
             missionSaveService.save(mission);
             return MissionMapper.mapToMissionCreateRes(mission);
@@ -43,6 +47,7 @@ public class MissionCreateUseCase {
         else{
             throw new NoAccessCreateMission();
         }
+
 
 
 
