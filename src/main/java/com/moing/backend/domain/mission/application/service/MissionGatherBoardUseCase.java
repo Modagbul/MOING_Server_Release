@@ -6,6 +6,7 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
@@ -42,6 +43,15 @@ public class MissionGatherBoardUseCase {
         List<Long> teamIdByMemberId = teamGetService.getTeamIdByMemberId(memberId);
 
         return missionArchiveQueryService.findTop5ArchivesByTeam(teamIdByMemberId);
+    }
+
+
+    public List<MyTeamsRes> getMyTeams(String userId) {
+        Long memberId  = memberGetService.getMemberBySocialId(userId).getMemberId();
+        List<Long> teamIdByMemberId = teamGetService.getTeamIdByMemberId(memberId);
+
+        return teamGetService.getTeamNameByTeamId(teamIdByMemberId);
+
     }
 
 

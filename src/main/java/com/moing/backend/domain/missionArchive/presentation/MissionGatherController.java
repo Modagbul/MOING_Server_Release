@@ -6,6 +6,7 @@ import com.moing.backend.domain.mission.application.service.MissionGatherBoardUs
 
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 
+import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,13 @@ public class MissionGatherController {
     public ResponseEntity<SuccessResponse<List<MissionArchivePhotoRes>>> getArchivesByTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_BY_TEAM.getMessage(), this.missionGatherBoardUseCase.getArchivePhotoByTeamRes(user.getSocialId())));
     }
+
+    @GetMapping("/my-teamList")
+    public ResponseEntity<SuccessResponse<List<MyTeamsRes>>> getMyTeams(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_MY_TEAM_LIST_SUCCESS.getMessage(), this.missionGatherBoardUseCase.getMyTeams(user.getSocialId())));
+    }
+
+
 
 
 
