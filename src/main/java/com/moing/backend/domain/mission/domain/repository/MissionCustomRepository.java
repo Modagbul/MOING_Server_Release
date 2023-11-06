@@ -17,7 +17,6 @@ public interface MissionCustomRepository {
 
     Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId, List<Long>teams);
 
-
     Optional<List<Mission>> findMissionByDueTo();
 
     Optional<List<Long>> findOngoingRepeatMissions();

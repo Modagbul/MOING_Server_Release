@@ -43,6 +43,18 @@ public class MissionQueryService {
         return missionRepository.findSingleMissionByMemberId(memberId, teams).orElseThrow(NotFoundMissionException::new);
     }
 
+    public List<GatherRepeatMissionRes> findTeamRepeatMission(Long memberId,Long teamId) {
+        List<Long> teams = new ArrayList<>();
+        teams.add(teamId);
+        return missionRepository.findRepeatMissionByMemberId(memberId,teams).orElseThrow(NotFoundMissionException::new);
+    }
+
+    public List<GatherSingleMissionRes> findTeamSingleMission(Long memberId,Long teamId) {
+        List<Long> teams = new ArrayList<>();
+        teams.add(teamId);
+        return missionRepository.findSingleMissionByMemberId(memberId, teams).orElseThrow(NotFoundMissionException::new);
+    }
+
     /**
      * 스케쥴러에서 한시간 단위로 실행
      * 현재 시간으로부터 1시간 이내 종료 되는 미션 리턴
