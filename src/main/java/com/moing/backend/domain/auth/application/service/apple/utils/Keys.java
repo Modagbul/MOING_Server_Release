@@ -1,4 +1,4 @@
-package com.moing.backend.domain.auth.application.service.apple.feign.response;
+package com.moing.backend.domain.auth.application.service.apple.utils;
 
 import lombok.Data;
 

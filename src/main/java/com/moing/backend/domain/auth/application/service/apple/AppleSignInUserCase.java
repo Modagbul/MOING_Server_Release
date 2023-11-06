@@ -8,7 +8,7 @@ import io.jsonwebtoken.Jws;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service("apple")
+@Service("appleSignIn")
 @AllArgsConstructor
 public class AppleSignInUserCase implements SignInProvider {
 

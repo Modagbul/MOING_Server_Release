@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
@@ -23,8 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,14 +76,15 @@ public class MypageControllerTest extends CommonControllerTest {
         //given
         WithdrawRequest input = WithdrawRequest.builder()
                 .reason("REASON_TO_LEAVE")
+                .socialToken("SOCIAL_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
 
 
         //when
-        ResultActions actions = mockMvc.perform(
-                delete("/api/mypage/withdrawal")
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/mypage/withdrawal/{provider}","google,kakao,apple")
                         .header("Authorization", "Bearer ACCESS_TOKEN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -98,7 +99,11 @@ public class MypageControllerTest extends CommonControllerTest {
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
                                 ),
+                                pathParameters(
+                                        parameterWithName("provider").description("google, kakao, apple")
+                                ),
                                 requestFields(
+                                        fieldWithPath("socialToken").description("google:accessToken/ kakao:accessToken/ apple:authorization code"),
                                         fieldWithPath("reason").description("회원탈퇴하는 이유")
                                 ),
                                 responseFields(

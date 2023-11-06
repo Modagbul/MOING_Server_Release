@@ -40,7 +40,7 @@ public class SignInUserCase {
     }
 
     private Member getUserDataFromPlatform(String accessToken, String providerInfo) {
-        SignInProvider signInProvider = signInProviders.get(providerInfo);
+        SignInProvider signInProvider = signInProviders.get(providerInfo+"SignIn");
         if (signInProvider == null) {
             throw new IllegalArgumentException("Unknown provider: " + providerInfo);
         }
