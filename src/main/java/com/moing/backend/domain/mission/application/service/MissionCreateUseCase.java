@@ -42,7 +42,7 @@ public class MissionCreateUseCase {
             Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.ONGOING);
             // teamRepository 변경 예정
 
-            if (missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
+            if (mission.getType() == MissionType.REPEAT && missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
                 throw new NoMoreCreateMission();
             }
             mission.setTeam(team);
