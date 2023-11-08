@@ -104,4 +104,15 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .fetch());
     }
 
+    public boolean findRepeatMissionsByTeamId(Long teamId) {
+        return queryFactory
+                .select(mission)
+                .from(mission)
+                .where(
+                        mission.team.teamId.eq(teamId),
+                        mission.type.eq(MissionType.REPEAT),
+                        mission.status.eq(MissionStatus.ONGOING)
+                ).fetchCount() < 3;
+    }
+
 }
