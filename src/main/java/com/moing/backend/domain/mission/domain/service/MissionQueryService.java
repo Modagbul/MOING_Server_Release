@@ -66,4 +66,8 @@ public class MissionQueryService {
     public List<Long> findOngoingRepeatMissions() {
         return missionRepository.findOngoingRepeatMissions().orElseThrow(NotFoundOngoingMissionException::new);
     }
+
+    public boolean isAbleCreateRepeatMission(Long teamId) {
+        return missionRepository.findRepeatMissionsByTeamId(teamId);
+    }
 }
