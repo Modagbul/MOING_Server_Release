@@ -37,7 +37,7 @@ public class GetTeamUserCase {
         Integer boardNum = boardGetService.getUnReadBoardNum(teamId, member.getMemberId());
         List<TeamMemberInfo> teamMemberInfoList = teamMemberGetService.getTeamMemberInfo(teamId);
         Team team = teamGetService.getTeamByTeamId(teamId);
-        return teamMapper.toTeamDetailResponse(team, boardNum, teamMemberInfoList);
+        return teamMapper.toTeamDetailResponse(member.getMemberId(), team, boardNum, teamMemberInfoList);
     }
 
     public GetCurrentStatusResponse getCurrentStatus(Long teamId) {

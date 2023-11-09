@@ -194,6 +194,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .numOfMember(1)
                 .category(Category.ETC)
                 .introduction("소모임 소개글")
+                .currentUserId(1L)
                 .teamMemberInfoList(teamMemberInfoList).build();
 
         GetTeamDetailResponse output = GetTeamDetailResponse
@@ -235,6 +236,7 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.teamInfo.introduction").description("모임 소개"),
                                         fieldWithPath("data.teamInfo.isDeleted").description("삭제여부"),
                                         fieldWithPath("data.teamInfo.deletionTime").description("삭제 시간 (삭제 안했으면 null)"),
+                                        fieldWithPath("data.teamInfo.currentUserId").description("현재 유저 아이디"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].memberId").description("유저 아이디"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].nickName").description("유저 닉네임"),
                                         fieldWithPath("data.teamInfo.teamMemberInfoList[0].profileImage").description("유저 프로필 이미지"),
