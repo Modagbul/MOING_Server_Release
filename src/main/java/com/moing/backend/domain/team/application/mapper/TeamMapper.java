@@ -30,8 +30,8 @@ public class TeamMapper {
                 .build();
     }
 
-    public GetTeamDetailResponse toTeamDetailResponse(Team team, Integer boardNum, List<TeamMemberInfo> teamMemberInfoList) {
-        TeamInfo teamInfo = new TeamInfo(team.isDeleted(), team.getDeletionTime(), team.getName(), teamMemberInfoList.size(), team.getCategory(), team.getIntroduction(), teamMemberInfoList);
+    public GetTeamDetailResponse toTeamDetailResponse(Long memberId, Team team, Integer boardNum, List<TeamMemberInfo> teamMemberInfoList) {
+        TeamInfo teamInfo = new TeamInfo(team.isDeleted(), team.getDeletionTime(), team.getName(), teamMemberInfoList.size(), team.getCategory(), team.getIntroduction(), memberId, teamMemberInfoList);
         return GetTeamDetailResponse.builder()
                 .boardNum(boardNum)
                 .teamInfo(teamInfo)
