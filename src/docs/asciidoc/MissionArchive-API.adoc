@@ -12,6 +12,11 @@ operation::mission-archive-controller-test/미션_인증하기[snippets='http-re
 [[MissionArchive-재인증하기]]
 == 미션 재인증하기
 operation::mission-archive-controller-test/미션_재인증하기[snipipets='http-request,path-parameters,request-fields,http-response,response-fields']
+---
+
+[[MissionArchive-미션인증삭제]]
+== 미션 인증 삭제
+operation::mission-archive-controller-test/미션_인증_삭제[snipipets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
