@@ -21,12 +21,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(AuthController.class)
@@ -410,15 +410,14 @@ class AuthControllerTest extends CommonControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                get("/api/auth/nickname/{nickname}", "NICKNAME")
-                .contentType(MediaType.APPLICATION_JSON)
+                get("/api/auth/checkNickname?nickname=minsu")
         );
 
         // then
         actions
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("nickname").description("중복검사할 닉네임")
                         ),
                         responseFields(
@@ -437,15 +436,15 @@ class AuthControllerTest extends CommonControllerTest {
 
 
         // when
-        ResultActions actions =mockMvc.perform(
-                get("/api/auth/nickname/{nickname}", "NICKNAME"));
-
+        ResultActions actions = mockMvc.perform(
+                get("/api/auth/checkNickname?nickname=minsu")
+        );
 
         // then
         actions
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("nickname").description("중복검사할 닉네임")
                         ),
                         responseFields(

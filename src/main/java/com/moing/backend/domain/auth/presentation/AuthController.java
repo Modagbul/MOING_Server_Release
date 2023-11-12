@@ -74,11 +74,11 @@ public class AuthController {
 
     /**
      * 닉네임 중복검사
-     * [GET] api/auth/nickname
+     * [GET] api/auth/checkNickName?nickname={}
      * 작성자 : 김민수
      */
-    @GetMapping("/nickname/{nickname}")
-    public ResponseEntity<SuccessResponse<CheckNicknameResponse>> checkNickname(@PathVariable String nickname){
+    @GetMapping("/checkNickname")
+    public ResponseEntity<SuccessResponse<CheckNicknameResponse>> checkNickname(@RequestParam String nickname){
         return ResponseEntity.ok(SuccessResponse.create(CHECK_NICKNAME_SUCCESS.getMessage(), checkNicknameService.checkNickname(nickname)));
     }
 
