@@ -78,6 +78,11 @@ public class MissionStateUseCase {
 
     }
 
+    public void deleteMissionState(Member member, Mission mission, MissionArchive missionArchive) {
+
+
+    }
+
 
 
 }

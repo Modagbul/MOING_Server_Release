@@ -1,5 +1,7 @@
 package com.moing.backend.domain.missionState.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
@@ -58,5 +60,12 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
         );
     }
 
+    public Optional<MissionState> findMissionStateByMemberAndMission(Member member, Mission mission) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(missionState)
+                .where(missionState.mission.eq(mission),
+                        missionState.member.eq(member))
+                .fetchFirst());
+    }
 
 }

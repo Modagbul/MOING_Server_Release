@@ -1,5 +1,7 @@
 package com.moing.backend.domain.missionState.domain.service;
 
+import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.repository.MissionStateRepository;
 import com.moing.backend.global.annotation.DomainService;
@@ -25,6 +27,10 @@ public class MissionStateQueryService {
 
     public List<MissionState> findFinishMission() {
         return missionStateRepository.findFinishMission().orElseThrow(NotFoundMissionStateException::new);
+    }
+
+    public MissionState findMissionState(Member member, Mission mission) {
+        return missionStateRepository.findMissionStateByMemberAndMission(member, mission).orElseThrow(NotFoundMissionStateException::new);
     }
 
 
