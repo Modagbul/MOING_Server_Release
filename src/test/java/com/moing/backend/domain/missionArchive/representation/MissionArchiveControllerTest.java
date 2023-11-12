@@ -41,6 +41,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
     @MockBean
     private MissionArchiveReadUseCase missionArchiveReadUseCase;
     @MockBean
+    private MissionArchiveDeleteUseCase missionArchiveDeleteUseCase;
+    @MockBean
     private RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
     @MockBean
     private MissionHeartUseCase missionHeartUseCase;
@@ -175,6 +177,44 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수")
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+@Test
+    public void 미션_인증_삭제() throws Exception {
+        //given
+
+        Long output = 1L;
+        given(missionArchiveDeleteUseCase.deleteArchive(any(),any())).willReturn(output);
+
+        Long teamId = 1L;
+        Long missionId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                delete("/api/team/{teamId}/missions/{missionId}/archive",teamId,missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(UPDATE_ARCHIVE_SUCCESS),
+                                        fieldWithPath("data").description("삭제한 미션 인증 아이디(무시)")
                                 )
                         )
                 )

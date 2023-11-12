@@ -19,4 +19,8 @@ public class MissionStateDeleteService {
 
         missionStateRepository.deleteAll(missionStates);
     }
+    public void deleteMissionState(MissionState missionStates) {
+
+        missionStateRepository.delete(missionStates);
+    }
 }
