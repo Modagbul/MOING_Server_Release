@@ -52,10 +52,15 @@ public class MissionArchiveCreateUseCase {
 
         MissionArchive newArchive = MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission);
 
+        // 단일 미션인 경우 미션 인증 시도 시 ongoing 으로 변경
+        if (mission.getType() == MissionType.ONCE && mission.getStatus() == MissionStatus.WAIT) {
+            mission.updateStatus(MissionStatus.ONGOING);
+        }
         // 인증 완료한 미션인지 확인
         if (isDoneMission(memberId,mission)) {
             throw new NoMoreMissionArchiveException();
         }
+
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
             // 당일 1회 인증만 가능

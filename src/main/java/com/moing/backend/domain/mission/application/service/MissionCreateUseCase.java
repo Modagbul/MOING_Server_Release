@@ -39,7 +39,7 @@ public class MissionCreateUseCase {
 
         // 소모임 장 확인
         if (member.getMemberId().equals(team.getLeaderId())) {
-            Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.ONGOING);
+            Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
             // teamRepository 변경 예정
 
             if (mission.getType() == MissionType.REPEAT && missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
