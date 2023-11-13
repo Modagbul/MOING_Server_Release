@@ -28,7 +28,7 @@ public class TeamGetService {
     }
 
     public Team getTeamByTeamId(Long teamId){
-        return teamRepository.findTeamByTeamId(teamId).orElseThrow(()->new NotFoundByTeamIdException());
+        return teamRepository.findTeamByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
     }
 
     public List<GetMyPageTeamBlock> getMyPageTeamBlockByMemberId(Long memberId){
