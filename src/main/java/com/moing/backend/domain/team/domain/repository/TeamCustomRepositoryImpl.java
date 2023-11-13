@@ -36,7 +36,6 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     @Override
     public Optional<Team> findTeamByTeamId(Long teamId) {
         LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-
         return Optional.ofNullable(queryFactory.selectFrom(team)
                 .where(team.teamId.eq(teamId))
                 .where(team.isDeleted.eq(false) // 강제종료되지 않았거나
@@ -78,7 +77,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
 
     private List<TeamBlock> getTeamBlock(Long memberId) {
         LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-
+        
         return queryFactory
                 .select(new QTeamBlock(team.teamId,
                         team.approvalTime,
@@ -90,10 +89,9 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
                 .on(teamMember.member.memberId.eq(memberId))
-                .where(teamMember.isDeleted.eq(false)) // 탈퇴하지 않았다면
-                .where(team.isDeleted.eq(false) // 강제종료되지 않았거나
-                        .or(team.deletionTime.isNotNull()
-                        .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
+                .where(teamMember.isDeleted.eq(false)// 탈퇴하지 않았다면
+                        .and(team.isDeleted.eq(false) // 강제종료되지 않았거나
+                                .or(team.deletionTime.after(threeDaysAgo))))// 강제종료된 경우 3일이 지나지 않았다면
                 .orderBy(team.approvalTime.asc())
                 .groupBy(team.teamId)
                 .fetch();
