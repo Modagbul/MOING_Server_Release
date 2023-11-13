@@ -17,5 +17,8 @@ public interface MissionStateCustomRepository {
 
     Optional<List<MissionState>> findFinishMission();
 
+    Optional<MissionState> findMissionStateByMemberAndMission(Member member, Mission mission);
+
+
 
 }
