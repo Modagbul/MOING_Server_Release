@@ -31,6 +31,7 @@ public enum ErrorCode {
     NOT_FOUND_END_MISSION("M0003", "기한이 지난 미션을 찾을 수 없습니다."),
     NO_MORE_CREATE_MISSION("M0004", "반복미션은 3개까지 생성할 수 있습니다."),
     NOT_FOUND_MISSION_ARCHIVE("MA0001", "아직 미션을 제출하지 않았습니다."),
+    NOT_YET_MISSION_ARCHIVE("MA0001", "아직 미션을 제출할 수 없습니다."),
     NO_MORE_ARCHIVE_ERROR("MA0001", "지정한 횟수 이상 미션을 인증할 수 없습니다."),
 
     //불던지기 관련 에러 코드
