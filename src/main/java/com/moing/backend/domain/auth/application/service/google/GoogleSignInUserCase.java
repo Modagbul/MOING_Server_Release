@@ -29,14 +29,12 @@ public class GoogleSignInUserCase implements SignInProvider {
                 .bodyToMono(GoogleUserResponse.class)
                 .block();
 
-//        googleTokenUserCase.verifyAccessToken(googleUserResponse.getAud());
-
         if (googleUserResponse != null) {
+            googleTokenUserCase.verifyAccessToken(googleUserResponse.getAud());
             googleUserResponse.adaptResponse();
             return memberMapper.createGoogleMember(googleUserResponse);
         }
-        return null;
+        throw new TokenInvalidException();
     }
-
 
 }
