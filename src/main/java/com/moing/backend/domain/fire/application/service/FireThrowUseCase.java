@@ -35,6 +35,12 @@ public class FireThrowUseCase {
         Member throwMember = memberGetService.getMemberBySocialId(userId);
         Member receiveMember = memberGetService.getMemberByMemberId(receiveMemberId);
 
+        // 나에게 던질 수 없음
+        if (throwMember.equals(receiveMember)) {
+            throw new NoAuthThrowFireException();
+        }
+
+        // 1시간전 불 던진 기록이 있다면, 던질 수 없음
         if (!fireQueryService.hasFireCreatedWithinOneHour(throwMember.getMemberId(), receiveMemberId)) {
             throw new NoAuthThrowFireException();
         }
