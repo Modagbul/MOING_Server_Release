@@ -1,5 +1,6 @@
 package com.moing.backend.domain.auth.application.service;
 
+import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.entity.Member;
@@ -23,11 +24,11 @@ public class SignInUserCase {
     private final Map<String, SignInProvider> signInProviders;
     private final MemberGetService memberGetService;
 
-    public SignInResponse signIn(String token, String providerInfo) {
+    public SignInResponse signIn(SignInRequest signInRequest, String providerInfo) {
         //1. 사용자 정보 가져오기
-        Member member = getUserDataFromPlatform(token, providerInfo);
+        Member member = getUserDataFromPlatform(signInRequest.getSocialToken(), providerInfo);
         //2. 로그인 및 회원가입
-        Member authenticatedMember = internalAuthService.auth(member, providerInfo);
+        Member authenticatedMember = internalAuthService.auth(signInRequest.getFcmToken(), member, providerInfo);
         //3. security 처리
         AuthenticationUtil.makeAuthentication(authenticatedMember);
         //4. token 만들기
@@ -39,18 +40,18 @@ public class SignInUserCase {
     }
 
     private Member getUserDataFromPlatform(String accessToken, String providerInfo) {
-        SignInProvider signInProvider = signInProviders.get(providerInfo);
+        SignInProvider signInProvider = signInProviders.get(providerInfo+"SignIn");
         if (signInProvider == null) {
             throw new IllegalArgumentException("Unknown provider: " + providerInfo);
         }
         return signInProvider.getUserData(accessToken);
     }
 
-    public SignInResponse testSignIn(String socialId, String providerInfo) {
+    public SignInResponse testSignIn(String fcmToken, String socialId, String providerInfo) {
         //1. 사용자 정보 가져오기
         Member member = memberGetService.getMemberBySocialId(socialId);
         //2. 로그인
-        Member authenticatedMember = internalAuthService.auth(member, providerInfo);
+        Member authenticatedMember = internalAuthService.auth(fcmToken, member, providerInfo);
         //3. security 처리
         AuthenticationUtil.makeAuthentication(authenticatedMember);
         //4. token 만들기

@@ -9,7 +9,11 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 public class SignInRequest {
-    @NotBlank(message="token 을 입력해주세요.")
-    private String token;
+    @NotBlank(message="socialToken 을 입력해주세요.")
+    private String socialToken;
+
+    @NotBlank(message = "fcmToken 을 입력해주세요.")
+    private String fcmToken;
+
 }
 

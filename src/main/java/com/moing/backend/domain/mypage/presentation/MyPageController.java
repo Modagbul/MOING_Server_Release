@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.io.IOException;
+
 import static com.moing.backend.domain.mypage.presentation.constant.MypageResponseMessage.*;
 
 @RestController
@@ -44,10 +46,11 @@ public class MyPageController {
      * [DELETE] api/mypage/withdrawal
      * 작성자 : 김민수
      */
-    @DeleteMapping("/withdrawal")
+    @DeleteMapping("/withdrawal/{provider}")
     public ResponseEntity<SuccessResponse> withdraw(@AuthenticationPrincipal User user,
-                                                    @Valid @RequestBody WithdrawRequest withdrawRequest) {
-        this.withdrawService.withdraw(user.getSocialId(), withdrawRequest);
+                                                    @PathVariable String provider,
+                                                    @Valid @RequestBody WithdrawRequest withdrawRequest) throws IOException {
+        this.withdrawService.withdraw(user.getSocialId(), provider, withdrawRequest);
         return ResponseEntity.ok(SuccessResponse.create(WITHDRAWAL_SUCCESS.getMessage()));
     }
 

@@ -1,5 +1,6 @@
 package com.moing.backend.domain.team.domain.repository;
 
+import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
@@ -97,5 +98,17 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .groupBy(team.teamId)
                 .fetch();
     }
+
+    @Override
+    public List<MyTeamsRes> findTeamNameByTeamId(List<Long> teamId) {
+        return queryFactory
+                .select(Projections.constructor(MyTeamsRes.class,
+                        team.teamId,
+                        team.name))
+                .from(team)
+                .where(team.teamId.in(teamId))
+                .fetch();
+    }
+
 
 }

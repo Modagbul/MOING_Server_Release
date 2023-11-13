@@ -12,19 +12,13 @@ public class MissionArchiveRes {
 
     private Long archiveId;
     private String archive;
+    private String way;
     private String createdDate;
     private String status;
     private Long count;
     private String heartStatus;
     private Long hearts;
 
-    public void updateHeartStatus(boolean status) {
-        if (status) {
-            this.heartStatus = "True";
-        }else{
-            this.heartStatus = "False";
-        }
-    }
 
 
 }

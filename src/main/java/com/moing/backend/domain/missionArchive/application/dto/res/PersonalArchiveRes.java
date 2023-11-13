@@ -14,6 +14,7 @@ public class PersonalArchiveRes {
 
     private String archive;
     private String createdDate;
+    private String way;
 
     private String heartStatus;
     private int hearts;

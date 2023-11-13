@@ -99,11 +99,8 @@ public class Member extends BaseTimeEntity {
         this.nickName = signUpRequest.getNickName();
         this.gender = signUpRequest.getGender();
         this.birthDate = LocalDate.parse(signUpRequest.getBirthDate(), DateTimeFormatter.ISO_DATE);;
-        this.fcmToken = signUpRequest.getFcmToken();
         this.registrationStatus = RegistrationStatus.COMPLETED;
-        this.isNewUploadPush=true;
-        this.isFirePush=true;
-        this.isRemindPush=true;
+        updateAllPush(true);
     }
 
     @Builder
@@ -143,6 +140,10 @@ public class Member extends BaseTimeEntity {
         this.isNewUploadPush = allPush;
         this.isRemindPush = allPush;
         this.isFirePush = allPush;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public Member(LocalDate birthDate, String email, String fcmToken, Gender gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {

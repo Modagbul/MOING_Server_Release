@@ -10,6 +10,7 @@ import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
 import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 import com.moing.backend.domain.teamScore.domain.service.TeamScoreQueryService;
+import com.moing.backend.domain.teamScore.domain.service.TeamScoreSaveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class TeamScoreLogicUseCase {
     private final TeamGetService teamGetService;
     private final MissionQueryService missionQueryService;
     private final TeamScoreQueryService teamScoreQueryService;
+    private final TeamScoreSaveService teamScoreSaveService;
     private final MissionStateQueryService missionStateQueryService;
 
     public TeamScoreRes getTeamScoreInfo(Long teamId) {
@@ -34,7 +36,7 @@ public class TeamScoreLogicUseCase {
         ;
     }
 
-    public Long updateSingleScore(Long missionId) {
+    public Long updateTeamScore(Long missionId) {
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
@@ -42,6 +44,7 @@ public class TeamScoreLogicUseCase {
 
         teamScore.updateScore(getScoreByMission(mission));
         teamScore.levelUp();
+        teamScoreSaveService.save(teamScore);
         return teamScore.getScore();
     }
 
@@ -64,7 +67,7 @@ public class TeamScoreLogicUseCase {
     public Long donePeople(Mission mission) {
 
         log.info("done people-> {}", missionStateQueryService.stateCountByMissionId(mission.getId()));
-        return missionStateQueryService.stateCountByMissionId(mission.getId());
+        return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
     }
 
     public Long totalPeople(Mission mission) {

@@ -20,6 +20,7 @@ public class MemberSaveService {
         if(findMember.isEmpty()){
             return memberRepository.save(member);
         } else {
+            findMember.get().updateFcmToken(member.getFcmToken());
             return findMember.get();
         }
     }

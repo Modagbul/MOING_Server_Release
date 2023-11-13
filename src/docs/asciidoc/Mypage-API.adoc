@@ -9,7 +9,7 @@ operation::mypage-controller-test/sign_out[snippets='http-request,http-response,
 
 [[Mypage-회원탈퇴]]
 == Mypage 회원탈퇴
-operation::mypage-controller-test/withdraw[snippets='http-request,request-fields,http-response,response-fields']
+operation::mypage-controller-test/withdraw[snippets='path-parameters,http-request,request-fields,http-response,response-fields']
 
 [[Mypage-전체-조회]]
 == Mypage 전체 조회

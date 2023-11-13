@@ -1,7 +1,7 @@
 package com.moing.backend.domain.auth.application.service.apple;
 
-import com.moing.backend.domain.auth.application.service.apple.feign.AppleFeignClient;
-import com.moing.backend.domain.auth.application.service.apple.feign.response.Keys;
+import com.moing.backend.domain.auth.application.service.apple.utils.AppleClient;
+import com.moing.backend.domain.auth.application.service.apple.utils.Keys;
 import com.moing.backend.domain.auth.exception.TokenInvalidException;
 import com.moing.backend.global.exception.InternalServerErrorException;
 import io.jsonwebtoken.*;
@@ -21,10 +21,10 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class AppleTokenUserCase {
 
-    @Value("${app-id.apple}")
+    @Value("${oauth2.apple.clientId}")
     private String appId;
 
-    private final AppleFeignClient appleFeignClient;
+    private final AppleClient appleClient;
 
     public Jws<Claims> sigVerificationAndGetJws(String unverifiedToken) {
 
@@ -34,7 +34,7 @@ public class AppleTokenUserCase {
                     "https://appleid.apple.com",
                     appId);
 
-            Keys keys = appleFeignClient.getKeys();
+            Keys keys = appleClient.getKeys();
             Keys.PubKey pubKey = keys.getKeys().stream()
                     .filter((key) -> key.getKid().equals(kid))
                     .findAny()

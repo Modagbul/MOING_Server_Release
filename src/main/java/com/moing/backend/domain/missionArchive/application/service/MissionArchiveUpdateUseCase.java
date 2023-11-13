@@ -12,22 +12,19 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
-import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
-import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
+import com.moing.backend.domain.missionArchive.exception.NoAccessMissionArchiveException;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -72,20 +69,14 @@ public class MissionArchiveUpdateUseCase {
             // 점수 반영 로직
 
         }
-
-
-        if (mission.getType().equals(MissionType.ONCE)) {
-            updateArchive.updateCount(1L);
-        }
-        else{
-            updateArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
+        // 반복미션의 경우 당일이 지나면 업데이트 불가능
+        if (!(updateArchive.getLastModifiedDate().getDayOfWeek().equals(LocalDateTime.now().getDayOfWeek()))) {
+            throw new NoAccessMissionArchiveException();
         }
 
         updateArchive.updateArchive(missionReq);
-        missionStateSaveService.saveMissionState(member,mission, updateArchive.getStatus());
-
+//        missionStateUseCase.updateMissionState(member, mission, updateArchive);
         return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(updateArchive),memberId);
-
 
     }
     // 이 미션을 완료 했는지

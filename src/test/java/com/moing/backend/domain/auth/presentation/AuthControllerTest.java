@@ -21,12 +21,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(AuthController.class)
@@ -48,7 +48,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void Kakao_소셜_로그인_회원가입_전() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("KAKAO_ACCESS_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("KAKAO_ACCESS_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -74,7 +75,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("카카오 액세스 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -91,7 +93,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void Kakao_소셜_로그인_회원가입_후() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("KAKAO_ACCESS_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("KAKAO_ACCESS_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -117,7 +120,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("카카오 액세스 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("카카오 액세스 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -134,7 +138,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void Apple_소셜_로그인_회원가입_전() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("APPLE_IDENTITY_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("APPLE_IDENTITY_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -160,7 +165,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("애플 아이디 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("애플 아이디 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -177,7 +183,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void Apple_소셜_로그인_회원가입_후() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("APPLE_IDENTITY_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("APPLE_IDENTITY_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -203,7 +210,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("애플 아이디 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("애플 아이디 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -220,7 +228,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void GOOGLE_소셜_로그인_회원가입_전() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("APPLE_IDENTITY_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("APPLE_IDENTITY_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -246,7 +255,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("구글 아이디 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("애플 아이디 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -263,7 +273,8 @@ class AuthControllerTest extends CommonControllerTest {
     public void GOOGLE_소셜_로그인_회원가입_후() throws Exception {
         //given
         SignInRequest input = SignInRequest.builder()
-                .token("APPLE_IDENTITY_TOKEN")
+                .fcmToken("FCM_TOKEN")
+                .socialToken("APPLE_IDENTITY_TOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -289,7 +300,8 @@ class AuthControllerTest extends CommonControllerTest {
                 .andDo(
                         restDocs.document(
                                 requestFields(
-                                        fieldWithPath("token").description("구글 아이디 토큰")
+                                        fieldWithPath("fcmToken").description("FCM TOKEN"),
+                                        fieldWithPath("socialToken").description("애플 아이디 토큰")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -310,7 +322,6 @@ class AuthControllerTest extends CommonControllerTest {
                 .nickName("NICKNAME")
                 .gender(Gender.MAN)
                 .birthDate("2000-03-28")
-                .fcmToken("FCMTOKEN")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -344,8 +355,7 @@ class AuthControllerTest extends CommonControllerTest {
                                 requestFields(
                                         fieldWithPath("nickName").description("유저 닉네임"),
                                         fieldWithPath("gender").description("성별"),
-                                        fieldWithPath("birthDate").description("태어난 날짜(YYYY-MM-DD)"),
-                                        fieldWithPath("fcmToken").description("FCM TOKEN")
+                                        fieldWithPath("birthDate").description("태어난 날짜(YYYY-MM-DD)")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -400,15 +410,14 @@ class AuthControllerTest extends CommonControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                get("/api/auth/nickname/{nickname}", "NICKNAME")
-                .contentType(MediaType.APPLICATION_JSON)
+                get("/api/auth/checkNickname?nickname=minsu")
         );
 
         // then
         actions
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("nickname").description("중복검사할 닉네임")
                         ),
                         responseFields(
@@ -427,15 +436,15 @@ class AuthControllerTest extends CommonControllerTest {
 
 
         // when
-        ResultActions actions =mockMvc.perform(
-                get("/api/auth/nickname/{nickname}", "NICKNAME"));
-
+        ResultActions actions = mockMvc.perform(
+                get("/api/auth/checkNickname?nickname=minsu")
+        );
 
         // then
         actions
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("nickname").description("중복검사할 닉네임")
                         ),
                         responseFields(

@@ -10,6 +10,7 @@ import lombok.Getter;
 public class GatherRepeatMissionRes {
 
     private Long missionId;
+    private Long teamId;
     private String teamName;
     private String missionTitle;
     private String totalNum;

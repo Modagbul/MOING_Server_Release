@@ -16,4 +16,7 @@ public class WithdrawRequest {
     @NotBlank(message = "reason 을 입력해주세요.")
     @Size(min = 1, max = 500, message="reason 은 최소 1개, 최대 500개의 문자만 입력 가능합니다.")
     private String reason;
+
+    @NotBlank(message = "socialToken 을 입력해주세요.")
+    private String socialToken;
 }

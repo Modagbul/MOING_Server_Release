@@ -17,13 +17,9 @@ public class TeamScoreSaveService {
     private final TeamScoreRepository teamScoreRepository;
     private final TeamGetService teamGetService;
 
-    public TeamScore save(Long teamId, Long score) {
-        Team team = teamGetService.getTeamByTeamId(teamId);
+    public TeamScore save(TeamScore teamScore) {
 
-        return teamScoreRepository.save(TeamScore.builder()
-                .team(team)
-                .score(score)
-                .build());
+        return teamScoreRepository.save(teamScore);
     }
 
 

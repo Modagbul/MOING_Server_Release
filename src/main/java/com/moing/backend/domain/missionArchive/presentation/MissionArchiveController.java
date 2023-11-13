@@ -4,8 +4,10 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyMissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
 import com.moing.backend.domain.missionArchive.application.service.*;
+import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
 import com.moing.backend.domain.missionHeart.application.service.MissionHeartUseCase;
 import com.moing.backend.global.config.security.dto.User;
@@ -26,8 +28,10 @@ import static com.moing.backend.domain.missionArchive.domain.constant.MissionArc
 public class MissionArchiveController {
 
     private final MissionArchiveCreateUseCase missionArchiveCreateUseCase;
-    private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
     private final MissionArchiveReadUseCase missionArchiveReadUseCase;
+    private final MissionArchiveUpdateUseCase missionArchiveUpdateUseCase;
+    private final MissionArchiveDeleteUseCase missionArchiveDeleteUseCase;
+
     private final RepeatMissionArchiveReadUseCase repeatMissionArchiveReadUseCase;
     private final MissionHeartUseCase missionHeartUseCase;
 
@@ -59,6 +63,18 @@ public class MissionArchiveController {
                                                                             @RequestBody MissionArchiveReq missionArchiveReq) {
         return ResponseEntity.ok(SuccessResponse.create(UPDATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveUpdateUseCase.updateArchive(user.getSocialId(), missionId,missionArchiveReq)));
     }
+    /**
+     * 미션 인증 취소하기
+     * [DELETE] {teamId}/missions/{missionId}/archive
+     * 작성자 : 정승연
+     **/
+
+    @DeleteMapping()
+    public ResponseEntity<SuccessResponse<Long>> deleteArchive(@AuthenticationPrincipal User user,
+                                                                            @PathVariable("teamId") Long teamId,
+                                                                            @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveDeleteUseCase.deleteArchive(user.getSocialId(), missionId)));
+    }
 
     /**
      * 미션 인증 조회
@@ -67,9 +83,9 @@ public class MissionArchiveController {
      **/
 
     @GetMapping()
-    public ResponseEntity<SuccessResponse<List<MissionArchiveRes>>> getMyArchive(@AuthenticationPrincipal User user,
-                                                                            @PathVariable("teamId") Long teamId,
-                                                                            @PathVariable("missionId") Long missionId) {
+    public ResponseEntity<SuccessResponse<MyMissionArchiveRes>> getMyArchive(@AuthenticationPrincipal User user,
+                                                                             @PathVariable("teamId") Long teamId,
+                                                                             @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_MY_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMyArchive(user.getSocialId(), missionId)));
     }
 

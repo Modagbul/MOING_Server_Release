@@ -4,10 +4,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -33,11 +30,19 @@ public class MissionArchiveReadUseCase {
 
 
     // 미션 인증 조회
-    public List<MissionArchiveRes> getMyArchive(String userSocialId, Long missionId) {
+    public MyMissionArchiveRes getMyArchive(String userSocialId, Long missionId) {
 
         Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
 
-        return MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId), memberId);
+        MyMissionArchiveRes myMissionArchiveRes = new MyMissionArchiveRes();
+
+        List<MissionArchiveRes> missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId), memberId);
+        myMissionArchiveRes.updateArchives(missionArchiveRes);
+
+        myMissionArchiveRes.updateTodayStatus(missionArchiveQueryService.findDoneTodayArchive(memberId, missionId));
+
+        return myMissionArchiveRes;
+
     }
 
     // 모두의 미션 인증 목록 조회

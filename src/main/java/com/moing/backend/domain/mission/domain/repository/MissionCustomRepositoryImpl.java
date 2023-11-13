@@ -42,6 +42,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
                         mission.id,
+                        mission.team.teamId,
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
@@ -72,11 +73,23 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.dueTo.after(oneHourAgo)
                 ).fetch());
     }
+
+    @Override
+    public Optional<List<Long>> findOngoingRepeatMissions() {
+        return Optional.ofNullable(queryFactory
+                .select(mission.id)
+                .from(mission)
+                .where(mission.status.eq(MissionStatus.ONGOING),
+                        mission.type.eq(MissionType.REPEAT))
+                .fetch());
+    }
+
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
+                        mission.team.teamId,
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue()
@@ -89,6 +102,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
                 )
                 .fetch());
+    }
+
+    public boolean findRepeatMissionsByTeamId(Long teamId) {
+        return queryFactory
+                .select(mission)
+                .from(mission)
+                .where(
+                        mission.team.teamId.eq(teamId),
+                        mission.type.eq(MissionType.REPEAT),
+                        mission.status.eq(MissionStatus.ONGOING)
+                ).fetchCount() > 2;
     }
 
 }
