@@ -32,5 +32,12 @@ public class StartupRunner implements CommandLineRunner {
 
         Member test03=new Member(LocalDate.now(), "tester3@test.com", "undef", Gender.WOMAN, "undef", "modagbul_tester3", "undef", SocialProvider.APPLE, RegistrationStatus.COMPLETED, Role.USER, "APPLE@tester03");
         memberSaveService.saveMember(test03);
+
+        Member test04=new Member(LocalDate.now(), "tester4@test.com", "undef", Gender.WOMAN, "undef", "modagbul_tester4", "undef", SocialProvider.APPLE, RegistrationStatus.COMPLETED, Role.USER, "APPLE@tester04");
+        memberSaveService.saveMember(test04);
+
+        Member test05=new Member(LocalDate.now(), "tester5@test.com", "undef", Gender.WOMAN, "undef", "modagbul_tester5", "undef", SocialProvider.APPLE, RegistrationStatus.COMPLETED, Role.USER, "APPLE@tester05");
+        memberSaveService.saveMember(test05);
+        
     }
 }
