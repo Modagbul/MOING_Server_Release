@@ -18,7 +18,7 @@ public class GoogleTokenUserCase {
     public void verifyAccessToken(String aud) {
         String extractedAppId = Arrays.stream(aud.split("-"))
                 .findFirst()
-                .orElseThrow(() -> new TokenInvalidException());
+                .orElseThrow(TokenInvalidException::new);
 
         if (!appId.equals(extractedAppId)) throw new AppIdInvalidException();
     }
