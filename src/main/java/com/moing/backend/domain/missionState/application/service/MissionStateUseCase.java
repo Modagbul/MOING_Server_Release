@@ -6,6 +6,8 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionState.domain.entity.MissionState;
+import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -14,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -26,6 +31,7 @@ public class MissionStateUseCase {
     private final MissionQueryService missionQueryService;
     private final MissionStateQueryService missionStateQueryService;
     private final MissionStateSaveService missionStateSaveService;
+    private final MissionStateDeleteService missionStateDeleteService;
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
@@ -80,7 +86,18 @@ public class MissionStateUseCase {
 
     public void deleteMissionState(Member member, Mission mission, MissionArchive missionArchive) {
 
+        MissionState missionState = missionStateQueryService.findMissionState(member, mission);
+        missionStateDeleteService.deleteMissionState(missionState);
 
+    }
+
+    public void missionStateReset(List<Long> missionIds) {
+        List<MissionState> missionStates = missionStateQueryService.findByMissionId(missionIds);
+        missionStateDeleteService.deleteMissionState(missionStates);
+    }
+
+    public void deleteAllMissionState(Long missionId) {
+        missionStateDeleteService.deleteMissionStateByMission(missionId);
     }
 
 
