@@ -17,6 +17,9 @@ import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
+import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
+import com.moing.backend.global.config.fcm.service.FcmService;
 import com.moing.backend.global.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class MissionCreateUseCase {
     private final MissionQueryService missionQueryService;
     private final TeamGetService teamGetService;
     private final MemberGetService memberGetService;
+    private final SendMissionCreateAlarmUseCase sendMissionCreateAlarmUseCase;
 
     public MissionCreateRes createMission(String userSocialId, Long teamId, MissionReq missionReq) {
 
@@ -47,13 +51,17 @@ public class MissionCreateUseCase {
             }
             mission.setTeam(team);
             missionSaveService.save(mission);
+
+            // 단일 미션 최초 1회 알림
+            if (mission.getType().equals(MissionType.ONCE)) {
+                sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
+            }
+
             return MissionMapper.mapToMissionCreateRes(mission);
         }
         else{
             throw new NoAccessCreateMission();
         }
-
-
 
 
     }
