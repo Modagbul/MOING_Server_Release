@@ -10,6 +10,7 @@ import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartUpdateService;
+import com.moing.backend.domain.missionHeart.exception.NoAccessMissionHeartException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,9 @@ public class MissionHeartUseCase {
         MissionArchive archive = missionArchiveQueryService.findByMissionArchiveId(archiveId);
         MissionHeart missionHeart = MissionHeartMapper.mapToMissionHeart(memberId, archive, MissionHeartStatus.valueOf(status));
 
+        if (memberId.equals(missionHeart.getMissionArchive().getMember().getMemberId())){
+            throw new NoAccessMissionHeartException();
+        }
         if(missionHeartQueryService.isAlreadyHeart(memberId, archiveId)) {
             return MissionHeartMapper.mapToMissionHeartRes(
                     missionHeartUpdateService.update(missionHeart));
