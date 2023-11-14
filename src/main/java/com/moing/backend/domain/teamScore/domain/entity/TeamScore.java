@@ -41,7 +41,7 @@ public class TeamScore extends BaseTimeEntity {
 // 0부터 시작하기 때문에 무조건 0에서 걸림.
 
         for (int i = 5; i > 0; i--) {
-            if (steps[i] <= this.level && this.level <= steps[i - 1]) {
+            if (steps[i-1] <= this.level && this.level <= steps[i]) {
                 if (20 + (i-1) * 15 <= score) { // 여길 들어가질 않음
                     this.level+=1;
                     this.score -= (20 + (i-1) * 15);

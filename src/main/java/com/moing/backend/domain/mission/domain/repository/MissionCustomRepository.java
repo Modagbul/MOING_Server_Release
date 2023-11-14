@@ -21,6 +21,8 @@ public interface MissionCustomRepository {
 
     Optional<List<Long>> findOngoingRepeatMissions();
 
+    Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus);
+
     boolean findRepeatMissionsByTeamId(Long teamId);
 
 
