@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.Random;
+
 import static com.moing.backend.global.config.fcm.constant.FireThrowMessage.*;
 import static java.lang.Math.random;
 
@@ -19,9 +21,11 @@ public class FireThrowAlarmUseCase {
     private final FcmService fcmService;
 
     public void sendFireThrowAlarm(Member throwMember, Member receiveMember) {
-        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), (int) random() * 2);
 
-        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), (int) random() * 2);
+        Random random = new Random(System.currentTimeMillis());
+        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), random.nextInt(2));
+
+        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), random.nextInt(2));
         SingleRequest singleRequest = new SingleRequest(receiveMember.getFcmToken(), title, message);
 
         fcmService.sendSingleDevice(singleRequest);
