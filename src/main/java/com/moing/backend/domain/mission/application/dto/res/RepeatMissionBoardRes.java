@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Builder
+@Builder
 public class RepeatMissionBoardRes {
     private Long missionId;
     private String title;
@@ -16,18 +16,19 @@ public class RepeatMissionBoardRes {
     private Long done;
     private int number;
     private String way;
+    private String status;
 
 
-    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way) {
+    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way,String status) {
         this.missionId = missionId;
         this.title = title;
         this.dueTo="False";
         this.number = number;
         this.done = done;
         this.way = way;
+        this.status = status;
     }
 
-    @Builder
     public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number,String way) {
         this.missionId = missionId;
         this.title = title;
@@ -35,5 +36,16 @@ public class RepeatMissionBoardRes {
         this.done = done;
         this.number = number;
         this.way = way;
+    }
+
+    @Builder
+    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way, String status) {
+        this.missionId = missionId;
+        this.title = title;
+        this.dueTo = dueTo;
+        this.done = done;
+        this.number = number;
+        this.way = way;
+        this.status = status;
     }
 }
