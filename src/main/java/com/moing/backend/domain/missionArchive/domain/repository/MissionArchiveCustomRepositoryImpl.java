@@ -43,13 +43,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     public Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,
                                                                                     OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
-        String missionArchiveStatus = "INCOMPLETE";
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
                         mission.id,
                         mission.dueTo.stringValue(),
                         mission.title,
-                        Expressions.constant(missionArchiveStatus),
+                        mission.status.stringValue(),
                         mission.type.stringValue()
                 ))
                 .from(mission)
@@ -64,8 +63,10 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                                                         .or(missionState.mission.status.eq(MissionStatus.ONGOING))
                                         )),
                         mission.type.eq(MissionType.ONCE),
+                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
                         mission.team.teamId.eq(teamId))
                 .orderBy(orderSpecifiers).fetch());
+
 
 
     }
@@ -176,7 +177,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                                 mission.title,
                                 missionArchive.count.max().coalesce(0L).as("done"),
                                 mission.number,
-                                mission.way.stringValue()
+                                mission.way.stringValue(),
+                                mission.status.stringValue()
                         ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)
@@ -184,7 +186,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
-                        mission.status.eq(MissionStatus.ONGOING)
+                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))
                 )
                 .groupBy(mission)
                 .fetch());

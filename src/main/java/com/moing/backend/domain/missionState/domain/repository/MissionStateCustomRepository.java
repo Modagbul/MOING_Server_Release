@@ -14,6 +14,7 @@ public interface MissionStateCustomRepository {
     int getCountsByMissionId(Long missionId) ;
 
     List<MissionState> findByMissionId(List<Long> missionId);
+    List<MissionState> findByMissionId(Long missionId);
 
     Optional<List<MissionState>> findFinishMission();
 

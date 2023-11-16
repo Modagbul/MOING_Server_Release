@@ -23,4 +23,10 @@ public class MissionStateDeleteService {
 
         missionStateRepository.delete(missionStates);
     }
+
+    public void deleteMissionStateByMission(Long missionId) {
+
+        List<MissionState> missionStates = missionStateRepository.findByMissionId(missionId);
+        missionStateRepository.deleteAll(missionStates);
+    }
 }
