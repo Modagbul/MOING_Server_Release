@@ -1,6 +1,6 @@
 # MOING_server_release
 ## System Architecture
-<img width="936" alt="image" src="https://github.com/Modagbul/MOING_Server_Release/assets/86006389/6b2dd2b4-d280-4450-bbaf-da5ff7efb050">
+![image](https://github.com/Modagbul/MOING_Server_Release/assets/86006389/02032a32-da0d-429e-babe-15534476f380)
 
 ## Backend CI/CD
 <img width="810" alt="image" src="https://github.com/Modagbul/MOING_Server_Release/assets/86006389/81704c20-c79a-4b79-b652-8304a402043b">
