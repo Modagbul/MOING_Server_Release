@@ -112,12 +112,6 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-
-    public void updateMember(String nickName, String fcmToken) {
-        this.nickName = nickName;
-        this.fcmToken = fcmToken;
-    }
-
     public void updateProfile(String profileImage, String nickName, String introduction) {
         this.profileImage = profileImage;
         this.nickName = nickName;

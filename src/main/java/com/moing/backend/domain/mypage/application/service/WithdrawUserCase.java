@@ -8,6 +8,7 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.domain.service.FeedbackSaveService;
 import com.moing.backend.domain.mypage.exception.ExistingTeamException;
+import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class WithdrawUserCase {
     private final TokenUtil tokenUtil;
     private final MemberDeleteService memberDeleteService;
     private final TeamMemberGetService teamMemberGetService;
+    private final TeamGetService teamGetService;
     private final Map<String, WithdrawProvider> withdrawProviders;
 
     public void withdraw(String socialId, String providerInfo, WithdrawRequest withdrawRequest) throws IOException {
@@ -45,7 +47,7 @@ public class WithdrawUserCase {
     }
 
     private void checkMemberIsNotPartOfAnyTeam(Member member) {
-        if (!teamMemberGetService.getNotDeletedTeamMember(member.getMemberId()).isEmpty()) {
+        if (!teamGetService.getTeamIdByMemberId(member.getMemberId()).isEmpty()) {
             throw new ExistingTeamException();
         }
     }

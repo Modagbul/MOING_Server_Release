@@ -4,6 +4,7 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.moing.backend.domain.infra.image.application.dto.ImageFileExtension;
 import com.moing.backend.domain.infra.image.application.dto.ImageUrlDto;
@@ -35,6 +36,13 @@ public class S3Service {
         String url = amazonS3.generatePresignedUrl(request).toString();
 
         return ImageUrlDto.of(url, fileName);
+    }
+
+    public void deleteImage(String fileUrl) {
+        String splitStr = ".com/";
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
+
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
     private String createFileName(String fileExtension) {
