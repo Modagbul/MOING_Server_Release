@@ -7,6 +7,7 @@ import com.moing.backend.domain.team.application.dto.response.UpdateTeamResponse
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.team.exception.NotAuthByTeamException;
+import com.moing.backend.global.config.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +21,13 @@ public class UpdateTeamUserCase {
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
     private final CheckLeaderUserCase checkLeaderUserCase;
+    private final S3Service s3Service;
 
     public UpdateTeamResponse updateTeam(UpdateTeamRequest updateTeamRequest, String socialId, Long teamId){
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team=teamGetService.getTeamByTeamId(teamId);
         if (checkLeaderUserCase.isTeamLeader(member, team)) {
+            s3Service.deleteImage(team.getProfileImgUrl());
             team.updateTeam(updateTeamRequest.getName(), updateTeamRequest.getIntroduction(), updateTeamRequest.getProfileImgUrl());
         } else {
             throw new NotAuthByTeamException();
