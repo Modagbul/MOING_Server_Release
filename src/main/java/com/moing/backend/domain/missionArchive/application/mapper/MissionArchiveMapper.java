@@ -43,9 +43,10 @@ public class MissionArchiveMapper {
                         missionHeart -> missionHeart.getPushMemberId().equals(memberId) &&
                                 missionHeart.getHeartStatus().equals(MissionHeartStatus.True)
                                 )))
-                .hearts(missionArchive.getHeartList().stream().filter(
-                        missionHeart -> missionHeart.getHeartStatus().equals(MissionHeartStatus.True)
-                        ).count())
+                .hearts(missionArchive.getHeartList().stream()
+                        .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
+                        .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
+                        .count())
                 .build();
     }
 
@@ -72,7 +73,10 @@ public class MissionArchiveMapper {
                 .heartStatus(
                         String.valueOf(missionArchive.getHeartList().stream().anyMatch(
                                 missionHeart -> missionHeart.getPushMemberId().equals(memberId))))
-                .hearts(missionArchive.getHeartList().size())
+                .hearts((int) missionArchive.getHeartList().stream()
+                        .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
+                        .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
+                        .count())
                 .build();
     }
 
