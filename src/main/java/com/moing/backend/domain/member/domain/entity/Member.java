@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String socialId;
 
     @Enumerated(EnumType.STRING)
@@ -44,7 +45,7 @@ public class Member extends BaseTimeEntity {
     private RegistrationStatus registrationStatus;
 
     @Convert(converter = AesConverter.class)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     private String profileImage;
@@ -56,7 +57,6 @@ public class Member extends BaseTimeEntity {
     private LocalDate birthDate;
 
     @Convert(converter = AesConverter.class)
-    @Column(unique=true)
     private String nickName;
 
     @Column(nullable = false)
@@ -78,6 +78,10 @@ public class Member extends BaseTimeEntity {
     @ColumnDefault("true")
     @Column(nullable = false)
     private boolean isFirePush;
+
+    private boolean isDeleted;
+
+    private LocalDateTime lastSignInTime;
 
     @OneToMany(mappedBy = "member")
     private List<TeamMember> teamMembers = new ArrayList<>(); //최대 3개이므로 양방향
@@ -140,6 +144,10 @@ public class Member extends BaseTimeEntity {
         this.fcmToken = fcmToken;
     }
 
+    public void updateLastSignInTime(LocalDateTime time){
+        this.lastSignInTime=time;
+    }
+
     public Member(LocalDate birthDate, String email, String fcmToken, Gender gender, String introduction, String nickName, String profileImage, SocialProvider provider, RegistrationStatus registrationStatus, Role role, String socialId) {
         this.birthDate = birthDate;
         this.email = email;
@@ -152,6 +160,10 @@ public class Member extends BaseTimeEntity {
         this.registrationStatus = registrationStatus;
         this.role = role;
         this.socialId = socialId;
+    }
+
+    public void deleteMember(){
+        this.isDeleted=true;
     }
 
 }
