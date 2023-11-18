@@ -6,6 +6,7 @@ import com.moing.backend.global.annotation.DomainService;
 import lombok.AllArgsConstructor;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @DomainService
@@ -16,11 +17,12 @@ public class MemberSaveService {
     private final MemberRepository memberRepository;
 
     public Member saveMember(Member member) {
-        Optional<Member>findMember=memberRepository.findByEmail(member.getEmail());
+        Optional<Member>findMember=memberRepository.findNotDeletedByEmail(member.getEmail());
         if(findMember.isEmpty()){
             return memberRepository.save(member);
         } else {
             findMember.get().updateFcmToken(member.getFcmToken());
+            findMember.get().updateLastSignInTime(LocalDateTime.now());
             return findMember.get();
         }
     }

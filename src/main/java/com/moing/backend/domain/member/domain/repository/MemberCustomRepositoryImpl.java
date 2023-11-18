@@ -22,6 +22,34 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .selectOne()
                 .from(member)
                 .where(member.nickName.eq(nickname))
+                .where(member.isDeleted.eq(false))
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public Optional<Member> findNotDeletedBySocialId(String socialId) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(member)
+                .where(member.socialId.eq(socialId))
+                .where(member.isDeleted.eq(false))
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<Member> findNotDeletedByEmail(String email) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(member)
+                .where(member.email.eq(email))
+                .where(member.isDeleted.eq(false))
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<Member> findNotDeletedByMemberId(Long id) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(member)
+                .where(member.memberId.eq(id))
+                .where(member.isDeleted.eq(false))
+                .fetchOne());
     }
 }
