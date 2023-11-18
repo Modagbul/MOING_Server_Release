@@ -9,6 +9,7 @@ import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.domain.service.FeedbackSaveService;
 import com.moing.backend.domain.mypage.exception.ExistingTeamException;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,6 @@ public class WithdrawUserCase {
     private final MemberGetService memberGetService;
     private final FeedbackSaveService feedbackSaveService;
     private final TokenUtil tokenUtil;
-    private final MemberDeleteService memberDeleteService;
-    private final TeamMemberGetService teamMemberGetService;
     private final TeamGetService teamGetService;
     private final Map<String, WithdrawProvider> withdrawProviders;
 
@@ -33,7 +32,7 @@ public class WithdrawUserCase {
         Member member = memberGetService.getMemberBySocialId(socialId);
         checkMemberIsNotPartOfAnyTeam(member);
         withdraw(providerInfo, withdrawRequest.getSocialToken());
-        memberDeleteService.deleteMember(member);
+        member.deleteMember();
         feedbackSaveService.saveFeedback(member, withdrawRequest);
         tokenUtil.expireRefreshToken(socialId);
     }

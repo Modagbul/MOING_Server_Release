@@ -15,6 +15,6 @@ public class MemberGetService {
     private final MemberRepository memberRepository;
 
     public Member getMemberBySocialId(String socialId){
-        return memberRepository.findBySocialId(socialId).orElseThrow(()->new NotFoundBySocialIdException());
+        return memberRepository.findNotDeletedBySocialId(socialId).orElseThrow(()->new NotFoundBySocialIdException());
     }
 }
