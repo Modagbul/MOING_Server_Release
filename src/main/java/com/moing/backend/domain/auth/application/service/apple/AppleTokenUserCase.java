@@ -38,11 +38,11 @@ public class AppleTokenUserCase {
             Keys.PubKey pubKey = keys.getKeys().stream()
                     .filter((key) -> key.getKid().equals(kid))
                     .findAny()
-                    .orElseThrow(() -> new TokenInvalidException());
+                    .orElseThrow(TokenInvalidException::new);
 
             return getOIDCTokenJws(unverifiedToken, pubKey.getN(), pubKey.getE());
         } catch (Exception e) {
-            throw new InternalServerErrorException("Token verification failed");
+            throw new TokenInvalidException();
         }
     }
 
