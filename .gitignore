@@ -50,3 +50,4 @@ data.sql
 !**/src/main/resources/static/docs/
 *.html
 firebase-key.json
+apple-key.p8

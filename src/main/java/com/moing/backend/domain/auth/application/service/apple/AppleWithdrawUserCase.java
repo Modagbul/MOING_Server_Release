@@ -3,21 +3,14 @@ package com.moing.backend.domain.auth.application.service.apple;
 import com.moing.backend.domain.auth.application.service.WithdrawProvider;
 import com.moing.backend.domain.auth.application.service.apple.utils.AppleClient;
 import com.moing.backend.domain.auth.application.service.apple.utils.AppleToken;
+import com.moing.backend.global.config.sns.AppleConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -37,10 +30,8 @@ public class AppleWithdrawUserCase implements WithdrawProvider {
     @Value("${oauth2.apple.clientId}")
     private String clientId;
 
-    @Value("${oauth2.apple.keyPath}")
-    private String keyPath;
-
     private final AppleClient appleClient;
+    private final AppleConfig appleConfig;
 
     public void withdraw(String token) throws IOException {
         AppleToken.Response response = generateAuthToken(token);
@@ -78,18 +69,7 @@ public class AppleWithdrawUserCase implements WithdrawProvider {
                 .setExpiration(expirationDate)
                 .setAudience("https://appleid.apple.com")
                 .setSubject(clientId)
-                .signWith(getPrivateKey(), SignatureAlgorithm.ES256)
+                .signWith(appleConfig.applePrivateKey(), SignatureAlgorithm.ES256)
                 .compact();
-    }
-
-    private Key getPrivateKey() throws IOException {
-        ClassPathResource resource = new ClassPathResource(keyPath);
-        String privateKey = new String(FileCopyUtils.copyToByteArray(resource.getInputStream()));
-
-        Reader pemReader = new StringReader(privateKey);
-        PEMParser pemParser = new PEMParser(pemReader);
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
-        return converter.getPrivateKey(object);
     }
 }
