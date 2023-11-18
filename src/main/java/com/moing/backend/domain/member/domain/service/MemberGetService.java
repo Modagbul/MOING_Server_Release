@@ -19,6 +19,6 @@ public class MemberGetService {
     }
 
     public Member getMemberByMemberId(Long memberId) {
-        return memberRepository.findByMemberId(memberId).orElseThrow(()->new NotFoundBySocialIdException());
+        return memberRepository.findNotDeletedByMemberId(memberId).orElseThrow(()->new NotFoundBySocialIdException());
     }
 }

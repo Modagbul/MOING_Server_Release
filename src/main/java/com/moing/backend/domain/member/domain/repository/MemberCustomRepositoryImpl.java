@@ -43,4 +43,13 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .where(member.isDeleted.eq(false))
                 .fetchOne());
     }
+
+    @Override
+    public Optional<Member> findNotDeletedByMemberId(Long id) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(member)
+                .where(member.memberId.eq(id))
+                .where(member.isDeleted.eq(false))
+                .fetchOne());
+    }
 }

@@ -10,4 +10,5 @@ public interface MemberCustomRepository {
     Optional<Member> findNotDeletedBySocialId(String socialId);
 
     Optional<Member> findNotDeletedByEmail(String email);
+    Optional<Member> findNotDeletedByMemberId(Long id);
 }
