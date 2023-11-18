@@ -31,12 +31,15 @@ public enum ErrorCode {
     NOT_FOUND_END_MISSION("M0003", "기한이 지난 미션을 찾을 수 없습니다."),
     NO_MORE_CREATE_MISSION("M0004", "반복미션은 3개까지 생성할 수 있습니다."),
     NOT_FOUND_MISSION_ARCHIVE("MA0001", "아직 미션을 제출하지 않았습니다."),
+    NOT_YET_MISSION_ARCHIVE("MA0001", "아직 미션을 제출할 수 없습니다."),
     NO_MORE_ARCHIVE_ERROR("MA0001", "지정한 횟수 이상 미션을 인증할 수 없습니다."),
 
     //불던지기 관련 에러 코드
     NOT_FOUND_FIRE("F001","불던지기 현황을 찾을 수 없습니다"),
     NOT_FOUND_FIRE_RECEIVERS("F001","불던지기를 받을 사람을 찾을 수 없습니다"),
     NOT_AUTH_FIRE_THROW("F002","1시간 이내에 불던지기를 할 수 없습니다"),
+
+    NO_ACCESS_HEART_FOR_ME("MH001", "나에게 좋아요를 누를 수 없습니다"),
 
     //팀 관련 에러 코드
     NOT_FOUND_BY_TEAM_ID_ERROR("T0001", "해당 teamId인 팀이 존재하지 않습니다."),

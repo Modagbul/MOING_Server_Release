@@ -9,6 +9,8 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateQuerySer
 import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
+@EnableScheduling // 스케줄링 활성화
 @RequiredArgsConstructor
 public class MissionStateScheduleUseCase {
 
@@ -28,7 +31,11 @@ public class MissionStateScheduleUseCase {
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
-    // 스케쥴러에 쓰면 됨.
+    /**
+     * 반복미션 마감
+     * 일요일 마감 루틴
+     */
+    @Scheduled(cron = "0 59 23 * * SUN")
     public void sundayRepeatMissionRoutine() {
 
         // 모든 진행중인 반복 미션 모아서
@@ -41,27 +48,59 @@ public class MissionStateScheduleUseCase {
         // 미션 state 에서 지우기 ( 이것도 대용량 )
         missionStateReset(ongoingRepeatMissions);
     }
+
     public void missionStateReset(List<Long> missionIds) {
         List<MissionState> missionStates = missionStateQueryService.findByMissionId(missionIds);
         missionStateDeleteService.deleteMissionState(missionStates);
     }
 
-    // 한시간마다 실행
-    // 미션 단위
-    public void singleMissionEndRoutineByMission() {
 
-        Mission mission = new Mission();
+//    /**
+//     * 단일 미션 마감
+//     * 미션 단위 마감
+//     * 한시간 마다 실행
+//     */
+//    public void singleMissionEndRoutineByMission() {
+//
+//        Mission mission = new Mission();
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        if (mission.getDueTo().isAfter(now)) {
+//            mission.updateStatus(MissionStatus.END);
+//            teamScoreLogicUseCase.updateTeamScore(mission.getId());
+//        }
+//    }
+
+    /**
+     * 단일 미션 마감
+     * 해당 시간 미션 마감
+     * 한시간 마다 실행
+     */
+    @Scheduled(cron = "0 0 * * * *")
+    public void singleMissionEndRoutine() {
 
         LocalDateTime now = LocalDateTime.now();
 
-        if (mission.getDueTo().isAfter(now)) {
+        List<Mission> missionByDueTo = missionQueryService.findMissionByDueTo();
+
+        missionByDueTo.stream().forEach(mission -> {
             mission.updateStatus(MissionStatus.END);
-        }
+            teamScoreLogicUseCase.updateTeamScore(mission.getId());
+        });
+
+
     }
 
-    public void singleMissionEndRoutine() {
 
-
-
+    /**
+     * 미션 시작
+     * 월요일 아침
+     */
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void RepeatMissionStart() {
+        List<Mission> startMission = missionQueryService.findMissionByStatus(MissionStatus.WAIT);
+        startMission.stream().forEach(
+            mission -> mission.updateStatus(MissionStatus.ONGOING)
+        );
     }
 }

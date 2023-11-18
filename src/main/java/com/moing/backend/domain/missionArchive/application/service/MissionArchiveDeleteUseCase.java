@@ -58,10 +58,8 @@ public class MissionArchiveDeleteUseCase {
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
-        // 사진 제출 했다면,
+        // 사진 제출 했다면, s3 삭제 로직
         if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(memberId, missionId)) {
-            //s3삭제
-
 
         }
 
@@ -70,6 +68,7 @@ public class MissionArchiveDeleteUseCase {
 
         MissionState missionState = missionStateQueryService.findMissionState(member, mission);
         missionStateDeleteService.deleteMissionState(missionState);
+
         return deleteArchive.getId();
 
     }

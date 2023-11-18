@@ -9,5 +9,6 @@ public enum MissionStatus {
     END,
     ONGOING,
     SUCCESS,
-    FAIL
+    FAIL,
+    WAIT
 }

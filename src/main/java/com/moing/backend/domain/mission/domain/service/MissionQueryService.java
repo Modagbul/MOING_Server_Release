@@ -70,4 +70,9 @@ public class MissionQueryService {
     public boolean isAbleCreateRepeatMission(Long teamId) {
         return missionRepository.findRepeatMissionsByTeamId(teamId);
     }
+
+    public List<Mission> findMissionByStatus(MissionStatus missionStatus) {
+        return missionRepository.findRepeatMissionByStatus(missionStatus).orElseThrow(NotFoundMissionException::new
+        );
+    }
 }
