@@ -46,6 +46,17 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
                 ).fetch();
 
     }
+    @Override
+    public List<MissionState> findByMissionId(Long missionId) {
+
+        return queryFactory
+                .select(missionState)
+                .from(missionState)
+                .where(
+                        missionState.mission.id.in(missionId)
+                ).fetch();
+
+    }
 
     @Override
     public Optional<List<MissionState>> findFinishMission() {

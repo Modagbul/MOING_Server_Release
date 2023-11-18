@@ -85,6 +85,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     }
 
     @Override
+    public Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus) {
+        return Optional.ofNullable(queryFactory
+                .select(mission)
+                .from(mission)
+                .where(mission.status.eq(missionStatus),
+                        mission.type.eq(MissionType.REPEAT))
+                .fetch());
+    }
+
+
+    @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,

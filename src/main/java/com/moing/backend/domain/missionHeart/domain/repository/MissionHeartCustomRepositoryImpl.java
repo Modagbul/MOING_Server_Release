@@ -1,7 +1,9 @@
 package com.moing.backend.domain.missionHeart.domain.repository;
 
+import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
 import com.moing.backend.domain.missionHeart.domain.entity.MissionHeart;
 import com.moing.backend.domain.missionHeart.domain.entity.QMissionHeart;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -37,6 +39,5 @@ public class MissionHeartCustomRepositoryImpl implements MissionHeartCustomRepos
                 ).fetchFirst();
 
     }
-
 
 }

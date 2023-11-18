@@ -42,7 +42,7 @@ public class MissionBoardControllerTest extends CommonControllerTest {
                 .missionId(1L)
                 .dueTo("2023-09-03T21:32:33.888")
                 .title("Mission title")
-                .status("SKIP/COMPLETE")
+                .status("WAIT/ONGOING/SKIP/COMPLETE")
                 .missionType("ONCE/REPEAT")
                 .build());
 
@@ -94,7 +94,8 @@ public class MissionBoardControllerTest extends CommonControllerTest {
                 .dueTo("True/False")
                 .done(1L)
                 .number(3)
-                        .way("TEXT/PHOTO/LINK")
+                .way("TEXT/PHOTO/LINK")
+                .status("WAIT/ONGOING/SKIP/COMPLETE")
                 .build());
 
         given(missionArchiveBoardUseCase.getActiveRepeatMissions(any(),any())).willReturn(output);
@@ -127,7 +128,8 @@ public class MissionBoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].dueTo").description("내일 리셋 상태 리턴, 일요일이면 true[True/False]"),
                                         fieldWithPath("data[].number").description("전체 횟수"),
                                         fieldWithPath("data[].done").description("인증한 횟수"),
-                                        fieldWithPath("data[].way").description("인증 방법")
+                                        fieldWithPath("data[].way").description("인증 방법"),
+                                        fieldWithPath("data[].status").description("인증 상태")
 
                                 )
                         )

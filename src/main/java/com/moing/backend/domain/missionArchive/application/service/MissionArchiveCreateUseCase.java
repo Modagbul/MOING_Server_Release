@@ -15,6 +15,7 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDele
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
+import com.moing.backend.domain.missionArchive.exception.NotYetMissionArchiveException;
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
@@ -52,12 +53,21 @@ public class MissionArchiveCreateUseCase {
 
         MissionArchive newArchive = MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission);
 
+        // 단일 미션인 경우 미션 인증 시도 시 ongoing 으로 변경
+        if (mission.getType() == MissionType.ONCE && mission.getStatus() == MissionStatus.WAIT) {
+            mission.updateStatus(MissionStatus.ONGOING);
+        }
         // 인증 완료한 미션인지 확인
         if (isDoneMission(memberId,mission)) {
             throw new NoMoreMissionArchiveException();
         }
+
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
+            // 예정된 반복미션 접근 제한
+            if (mission.getStatus() == MissionStatus.WAIT) {
+                throw new NotYetMissionArchiveException();
+            }
             // 당일 1회 인증만 가능
             if(!missionArchiveQueryService.findDoneTodayArchive(memberId,missionId))
                 newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);

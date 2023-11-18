@@ -21,7 +21,10 @@ public class MissionHeartMapper {
         return MissionHeartRes.builder()
                 .missionArchiveId(missionHeart.getMissionArchive().getId())
                 .missionHeartStatus(missionHeart.getHeartStatus().name())
-                .hearts(missionHeart.getMissionArchive().getHeartList().size())
+                .hearts((int) missionHeart.getMissionArchive().getHeartList().stream()
+                        .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
+                        .filter(heart -> heart.getId().equals( missionHeart.getId()))// heartStatus가 true인 요소만 필터링
+                        .count())
                 .build();
     }
 }
