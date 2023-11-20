@@ -6,6 +6,7 @@ import com.slack.api.model.Field;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static com.slack.api.webhook.WebhookPayloads.payload;
 
-@Service
+@Component
 @Slf4j
 public class SlackService {
 
