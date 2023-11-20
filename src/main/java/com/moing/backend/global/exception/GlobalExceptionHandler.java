@@ -2,6 +2,8 @@ package com.moing.backend.global.exception;
 
 import com.moing.backend.global.response.ErrorCode;
 import com.moing.backend.global.response.ErrorResponse;
+import com.moing.backend.global.util.SlackService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +14,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.function.Consumer;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     private static final String LOG_FORMAT = "Class : {}, Code : {}, Message : {}";
+    private final SlackService slackService;
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponse> handleApplicationException(ApplicationException ex) {
@@ -51,7 +56,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> internalServerErrorHandler(Exception ex) {
+    public ResponseEntity<ErrorResponse> internalServerErrorHandler(Exception ex, HttpServletRequest request) {
+        slackService.sendSlackAlertErrorLog(ex, request);
         return handleException(ex, ErrorCode.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, log::error);
     }
 

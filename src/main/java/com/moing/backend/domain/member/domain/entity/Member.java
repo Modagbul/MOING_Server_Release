@@ -45,7 +45,6 @@ public class Member extends BaseTimeEntity {
     private RegistrationStatus registrationStatus;
 
     @Convert(converter = AesConverter.class)
-    @Column(nullable = false)
     private String email;
 
     private String profileImage;
