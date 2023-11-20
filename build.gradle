@@ -91,6 +91,8 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.17.230')
 	implementation 'software.amazon.awssdk:s3'
 
+	//slack
+	implementation 'com.slack.api:slack-api-client:1.30.0'
 
 }
 
