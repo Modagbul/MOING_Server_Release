@@ -8,7 +8,6 @@ import com.moing.backend.global.config.security.filter.JwtAccessDeniedHandler;
 import com.moing.backend.global.config.security.filter.JwtAuthenticationEntryPoint;
 import com.moing.backend.global.config.security.jwt.TokenUtil;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
-import com.moing.backend.global.util.SlackService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +56,6 @@ public class CommonControllerTest {
 
     @MockBean
     public MemberGetService memberQueryService;
-
-    @MockBean
-    private SlackService slackService;
 
     @BeforeEach
     public void setUp(final WebApplicationContext context, final RestDocumentationContextProvider provider) throws Exception {

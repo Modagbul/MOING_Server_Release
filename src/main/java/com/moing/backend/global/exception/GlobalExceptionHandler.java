@@ -1,10 +1,12 @@
 package com.moing.backend.global.exception;
 
+import com.moing.backend.global.config.slack.exception.dto.ExceptionEvent;
 import com.moing.backend.global.response.ErrorCode;
 import com.moing.backend.global.response.ErrorResponse;
-import com.moing.backend.global.util.SlackService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,7 +14,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Consumer;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     private static final String LOG_FORMAT = "Class : {}, Code : {}, Message : {}";
-    private final SlackService slackService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponse> handleApplicationException(ApplicationException ex) {
@@ -57,7 +58,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> internalServerErrorHandler(Exception ex, HttpServletRequest request) {
-        slackService.sendSlackAlertErrorLog(ex, request);
+        eventPublisher.publishEvent(new ExceptionEvent(request, ex));
         return handleException(ex, ErrorCode.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, log::error);
     }
 
