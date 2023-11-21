@@ -10,8 +10,9 @@ import com.moing.backend.domain.team.domain.service.TeamSaveService;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberSaveService;
 import com.moing.backend.domain.teamScore.application.mapper.TeamScoreMapper;
 import com.moing.backend.domain.teamScore.domain.service.TeamScoreSaveService;
-import com.moing.backend.global.util.SlackService;
+import com.moing.backend.global.config.slack.team.dto.TeamCreateEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,7 +28,7 @@ public class CreateTeamUserCase {
     private final TeamMapper teamMapper;
     private final TeamScoreSaveService teamScoreSaveService;
     private final TeamScoreMapper teamScoreMapper;
-    private final SlackService slackService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public CreateTeamResponse createTeam(CreateTeamRequest createTeamRequest, String socialId){
         Member member = memberGetService.getMemberBySocialId(socialId);
@@ -38,7 +39,7 @@ public class CreateTeamUserCase {
         team.approveTeam();
         //====지워야 함 (테스트 용)=====
         teamScoreSaveService.save(teamScoreMapper.mapToTeamScore(team)); // 팀스코어 엔티티 생성
-        slackService.sendSlackTeamCreatedMessage(team.getName(), team.getLeaderId());
+        eventPublisher.publishEvent(new TeamCreateEvent(team.getName(), team.getLeaderId()));
         return new CreateTeamResponse(team.getTeamId());
     }
 }
