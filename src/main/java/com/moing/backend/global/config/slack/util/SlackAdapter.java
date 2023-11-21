@@ -1,13 +1,12 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.config.slack.util;
 
 import com.slack.api.Slack;
 import com.slack.api.model.Attachment;
 import com.slack.api.model.Field;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -17,9 +16,10 @@ import java.util.List;
 
 import static com.slack.api.webhook.WebhookPayloads.payload;
 
-@Component
+@RequiredArgsConstructor
 @Slf4j
-public class SlackService {
+@Component
+public class SlackAdapter implements WebhookUtil {
 
     @Value("${webhook.slack.error_url}")
     private String errorWebhookUrl;
@@ -29,8 +29,6 @@ public class SlackService {
 
     private final Slack slackClient = Slack.getInstance();
 
-    // 공통 슬랙 메시지 전송 메서드
-    @Async
     public void sendSlackMessage(String webhookUrl, String message, List<Attachment> attachments) {
         try {
             slackClient.send(webhookUrl, payload(p -> p
@@ -42,16 +40,16 @@ public class SlackService {
         }
     }
 
-    // 슬랙 에러 알림 메서드
-    public void sendSlackAlertErrorLog(Exception e, HttpServletRequest request) {
+    @Override
+    public void sendSlackAlertErrorLog(HttpServletRequest request, Exception e) {
         String message = "[500 에러가 발생했습니다.]";
         List<Attachment> attachments = List.of(generateSlackErrorAttachment(e, request));
         sendSlackMessage(errorWebhookUrl, message, attachments);
     }
 
-    // 슬랙 소모임 생성 알림 메서드
+    @Override
     public void sendSlackTeamCreatedMessage(String teamName, Long leaderId) {
-        String message = String.format("새로운 소모임 '%s'이(가) 생성되었습니다!", teamName);
+        String message = String.format("[새로운 소모임 '%s'이(가) 생성되었습니다.]", teamName);
         List<Attachment> attachments = List.of(generateSlackTeamAttachment(teamName, leaderId));
         sendSlackMessage(teamAlarmWebhookUrl, message, attachments);
     }
@@ -76,7 +74,7 @@ public class SlackService {
                 .title(requestTime + " 발생 에러 로그")
                 .fields(List.of(
                                 generateSlackField("Request IP", xffHeader == null ? request.getRemoteAddr() : xffHeader),
-                                generateSlackField("Request URL", request.getRequestURL() + " " + request.getMethod()),
+                                generateSlackField("Request URL", request.getMethod() + " " + request.getRequestURL()),
                                 generateSlackField("Error Message", e.getMessage())
                         )
                 )
@@ -90,5 +88,4 @@ public class SlackService {
                 .valueShortEnough(false)
                 .build();
     }
-
 }
