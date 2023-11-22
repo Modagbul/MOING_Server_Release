@@ -1,4 +1,9 @@
 FROM openjdk:11-jdk
+
+# 타임존 설정
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 ARG CACHEBREAKER=1
 ARG JAR_FILE=./build/libs/backend-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
@@ -8,3 +13,4 @@ COPY ./build/docs/asciidoc/*.html /static/docs/
 
 # 애플리케이션 실행 시 -cp 옵션을 사용하여 /static/docs 디렉토리를 클래스패스에 추가
 ENTRYPOINT ["java","-cp",".:/static/docs","-jar","/app.jar"]
+
