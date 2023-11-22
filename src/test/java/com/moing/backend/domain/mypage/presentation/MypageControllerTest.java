@@ -31,19 +31,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(MyPageController.class)
 public class MypageControllerTest extends CommonControllerTest {
     @MockBean
-    private SignOutUserCase signOutService;
+    private SignOutUseCase signOutService;
 
     @MockBean
-    private WithdrawUserCase withdrawService;
+    private WithdrawUseCase withdrawService;
 
     @MockBean
-    private ProfileUserCase profileUserCase;
+    private ProfileUseCase profileUseCase;
 
     @MockBean
-    private AlarmUserCase alarmUserCase;
+    private AlarmUseCase alarmUseCase;
 
     @MockBean
-    private GetMyPageUserCase getMyPageUserCase;
+    private GetMyPageUseCase getMyPageUseCase;
 
     @Test
     public void sign_out() throws Exception {
@@ -136,7 +136,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .getMyPageTeamBlocks(getMyPageTeamBlocks)
                 .build();
 
-        given(getMyPageUserCase.getMyPageResponse(any())).willReturn(output);
+        given(getMyPageUseCase.getMyPageResponse(any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -178,7 +178,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .nickName("NICKNAME")
                 .build();
 
-        given(profileUserCase.getProfile(any())).willReturn(output);
+        given(profileUseCase.getProfile(any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -258,7 +258,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .isRemindPush(true)
                 .build();
 
-        given(alarmUserCase.getAlarm(any())).willReturn(output);
+        given(alarmUseCase.getAlarm(any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(
@@ -296,7 +296,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .isRemindPush(true)
                 .build();
 
-        given(alarmUserCase.updateAlarm(any(),any(),any())).willReturn(output);
+        given(alarmUseCase.updateAlarm(any(),any(),any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(

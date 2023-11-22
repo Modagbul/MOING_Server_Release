@@ -31,19 +31,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TeamController.class)
 public class TeamControllerTest extends CommonControllerTest {
     @MockBean
-    private CreateTeamUserCase createTeamService;
+    private CreateTeamUseCase createTeamService;
     @MockBean
-    private GetTeamUserCase getTeamUserCase;
+    private GetTeamUseCase getTeamUseCase;
     @MockBean
-    private DisbandTeamUserCase disbandTeamUserCase;
+    private DisbandTeamUseCase disbandTeamUseCase;
     @MockBean
-    private WithdrawTeamUserCase withdrawTeamUserCase;
+    private WithdrawTeamUseCase withdrawTeamUseCase;
     @MockBean
-    private SignInTeamUserCase signInTeamUserCase;
+    private SignInTeamUseCase signInTeamUseCase;
     @MockBean
-    private UpdateTeamUserCase updateTeamUserCase;
+    private UpdateTeamUseCase updateTeamUseCase;
     @MockBean
-    private ReviewTeamUserCase reviewTeamUserCase;
+    private ReviewTeamUseCase reviewTeamUseCase;
 
     @Test
     public void create_team() throws Exception {
@@ -134,7 +134,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamBlocks(teamBlocks)
                 .build();
 
-        given(getTeamUserCase.getTeam(any())).willReturn(output);
+        given(getTeamUseCase.getTeam(any())).willReturn(output);
 
 
         //when
@@ -204,7 +204,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .build();
 
 
-        given(getTeamUserCase.getTeamDetailResponse(any(),any())).willReturn(output);
+        given(getTeamUseCase.getTeamDetailResponse(any(),any())).willReturn(output);
 
 
         //when
@@ -261,7 +261,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .levelOfFire(3)
                 .build();
 
-        given(reviewTeamUserCase.reviewTeam(any(), any())).willReturn(output);
+        given(reviewTeamUseCase.reviewTeam(any(), any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
@@ -303,7 +303,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamId(teamId)
                 .build();
 
-        given(disbandTeamUserCase.disbandTeam(any(), any())).willReturn(output);
+        given(disbandTeamUseCase.disbandTeam(any(), any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
@@ -339,7 +339,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamId(teamId)
                 .build();
 
-        given(withdrawTeamUserCase.withdrawTeam(any(), any())).willReturn(output);
+        given(withdrawTeamUseCase.withdrawTeam(any(), any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
@@ -376,7 +376,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamId(teamId)
                 .build();
 
-        given(signInTeamUserCase.signInTeam(any(), any())).willReturn(output);
+        given(signInTeamUseCase.signInTeam(any(), any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
@@ -425,7 +425,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamId(1L)
                 .build();
 
-        given(updateTeamUserCase.updateTeam(any(), any(), any())).willReturn(output);
+        given(updateTeamUseCase.updateTeam(any(), any(), any())).willReturn(output);
 
 
         //when
@@ -474,7 +474,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .profileImgUrl("프로필 이미지")
                 .build();
 
-        given(getTeamUserCase.getCurrentStatus(any())).willReturn(output);
+        given(getTeamUseCase.getCurrentStatus(any())).willReturn(output);
 
 
         //when

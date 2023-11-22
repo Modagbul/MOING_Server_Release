@@ -4,10 +4,10 @@ import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.board.application.dto.request.CreateBoardRequest;
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
 import com.moing.backend.domain.board.application.dto.response.*;
-import com.moing.backend.domain.board.application.service.CreateBoardUserCase;
-import com.moing.backend.domain.board.application.service.DeleteBoardUserCase;
-import com.moing.backend.domain.board.application.service.GetBoardUserCase;
-import com.moing.backend.domain.board.application.service.UpdateBoardUserCase;
+import com.moing.backend.domain.board.application.service.CreateBoardUseCase;
+import com.moing.backend.domain.board.application.service.DeleteBoardUseCase;
+import com.moing.backend.domain.board.application.service.GetBoardUseCase;
+import com.moing.backend.domain.board.application.service.UpdateBoardUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,13 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BoardController.class)
 public class BoardControllerTest extends CommonControllerTest {
     @MockBean
-    private CreateBoardUserCase createBoardUserCase;
+    private CreateBoardUseCase createBoardUseCase;
     @MockBean
-    private UpdateBoardUserCase updateBoardUserCase;
+    private UpdateBoardUseCase updateBoardUseCase;
     @MockBean
-    private GetBoardUserCase getBoardUserCase;
+    private GetBoardUseCase getBoardUseCase;
     @MockBean
-    private DeleteBoardUserCase deleteBoardUserCase;
+    private DeleteBoardUseCase deleteBoardUseCase;
 
     @Test
     public void create_board() throws Exception {
@@ -55,7 +55,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .boardId(1L)
                 .build();
 
-        given(createBoardUserCase.createBoard(any(), any(), any())).willReturn(output);
+        given(createBoardUseCase.createBoard(any(), any(), any())).willReturn(output);
 
 
         //when
@@ -109,7 +109,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .boardId(1L)
                 .build();
 
-        given(updateBoardUserCase.updateBoard(any(), any(), any(), any())).willReturn(output);
+        given(updateBoardUseCase.updateBoard(any(), any(), any(), any())).willReturn(output);
 
 
         //when
@@ -218,7 +218,7 @@ public class BoardControllerTest extends CommonControllerTest {
 
         GetAllBoardResponse output = new GetAllBoardResponse(noticeBlocks.size(), noticeBlocks, notNoticeBlocks.size(), notNoticeBlocks);
 
-        given(getBoardUserCase.getAllBoard(any(), any())).willReturn(output);
+        given(getBoardUseCase.getAllBoard(any(), any())).willReturn(output);
 
 
         //when
@@ -287,7 +287,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .isNotice(false)
                 .build();
 
-        given(getBoardUserCase.getBoardDetail(any(), any(), any())).willReturn(output);
+        given(getBoardUseCase.getBoardDetail(any(), any(), any())).willReturn(output);
 
 
         //when

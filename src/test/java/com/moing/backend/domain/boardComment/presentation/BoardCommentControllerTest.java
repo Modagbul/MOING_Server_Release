@@ -5,9 +5,9 @@ import com.moing.backend.domain.boardComment.application.dto.request.CreateBoard
 import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.boardComment.application.dto.response.CreateBoardCommentResponse;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
-import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUserCase;
-import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUserCase;
-import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUserCase;
+import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUseCase;
+import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUseCase;
+import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUseCase;
 import com.moing.backend.domain.boardComment.presentattion.BoardCommentController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -32,11 +32,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BoardCommentControllerTest extends CommonControllerTest {
 
     @MockBean
-    private CreateBoardCommentUserCase createBoardCommentUserCase;
+    private CreateBoardCommentUseCase createBoardCommentUseCase;
     @MockBean
-    private DeleteBoardCommentUserCase deleteBoardCommentUserCase;
+    private DeleteBoardCommentUseCase deleteBoardCommentUseCase;
     @MockBean
-    private GetBoardCommentUserCase getBoardCommentUserCase;
+    private GetBoardCommentUseCase getBoardCommentUseCase;
 
     @Test
     public void create_board_comment() throws Exception {
@@ -54,7 +54,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                 .boardCommentId(1L)
                 .build();
 
-        given(createBoardCommentUserCase.createBoardComment(any(), any(), any(), any())).willReturn(output);
+        given(createBoardCommentUseCase.createBoardComment(any(), any(), any(), any())).willReturn(output);
 
 
         //when
@@ -148,7 +148,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
 
         GetBoardCommentResponse output = new GetBoardCommentResponse(commentBlocks);
 
-        given(getBoardCommentUserCase.getBoardCommentAll(any(), any(), any())).willReturn(output);
+        given(getBoardCommentUseCase.getBoardCommentAll(any(), any(), any())).willReturn(output);
 
 
         //when
