@@ -19,13 +19,13 @@ import static com.moing.backend.domain.team.presentation.constant.TeamResponseMe
 @AllArgsConstructor
 @RequestMapping("/api/team")
 public class TeamController {
-    private final CreateTeamUserCase createTeamService;
-    private final GetTeamUserCase getTeamUserCase;
-    private final SignInTeamUserCase signInTeamUserCase;
-    private final DisbandTeamUserCase disbandTeamUserCase;
-    private final WithdrawTeamUserCase withdrawTeamUserCase;
-    private final UpdateTeamUserCase updateTeamUserCase;
-    private final ReviewTeamUserCase reviewTeamUserCase;
+    private final CreateTeamUseCase createTeamService;
+    private final GetTeamUseCase getTeamUseCase;
+    private final SignInTeamUseCase signInTeamUseCase;
+    private final DisbandTeamUseCase disbandTeamUseCase;
+    private final WithdrawTeamUseCase withdrawTeamUseCase;
+    private final UpdateTeamUseCase updateTeamUseCase;
+    private final ReviewTeamUseCase reviewTeamUseCase;
 
     /**
      * 소모임 생성 (only 개설만)
@@ -45,7 +45,7 @@ public class TeamController {
      */
     @GetMapping
     public ResponseEntity<SuccessResponse<GetTeamResponse>> getTeam(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_SUCCESS.getMessage(), this.getTeamUserCase.getTeam(user.getSocialId())));
+        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_SUCCESS.getMessage(), this.getTeamUseCase.getTeam(user.getSocialId())));
     }
 
     /**
@@ -56,7 +56,7 @@ public class TeamController {
     @GetMapping("/board/{teamId}")
     public ResponseEntity<SuccessResponse<GetTeamDetailResponse>> getTeamDetail(@AuthenticationPrincipal User user,
                                                                                 @PathVariable Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_DETAIL_SUCCESS.getMessage(), this.getTeamUserCase.getTeamDetailResponse(user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_DETAIL_SUCCESS.getMessage(), this.getTeamUseCase.getTeamDetailResponse(user.getSocialId(), teamId)));
     }
 
     /**
@@ -68,7 +68,7 @@ public class TeamController {
     @PostMapping("/{teamId}")
     public ResponseEntity<SuccessResponse<CreateTeamResponse>> signInTeam(@AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
-        return ResponseEntity.ok(SuccessResponse.create(SIGNIN_TEAM_SUCCESS.getMessage(),this.signInTeamUserCase.signInTeam(user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(SIGNIN_TEAM_SUCCESS.getMessage(),this.signInTeamUseCase.signInTeam(user.getSocialId(), teamId)));
     }
 
     /**
@@ -79,7 +79,7 @@ public class TeamController {
     @DeleteMapping("/{teamId}/disband")
     public ResponseEntity<SuccessResponse<DeleteTeamResponse>> disbandTeam(@AuthenticationPrincipal User user,
                                                                            @PathVariable Long teamId){
-        return ResponseEntity.ok(SuccessResponse.create(DISBAND_TEAM_SUCCESS.getMessage(), this.disbandTeamUserCase.disbandTeam(user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(DISBAND_TEAM_SUCCESS.getMessage(), this.disbandTeamUseCase.disbandTeam(user.getSocialId(), teamId)));
     }
 
     /**
@@ -90,7 +90,7 @@ public class TeamController {
     @DeleteMapping("/{teamId}/withdraw")
     public ResponseEntity<SuccessResponse<DeleteTeamResponse>> withdrawTeam(@AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
-        return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUserCase.withdrawTeam(user.getSocialId(),teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(WITHDRAW_TEAM_SUCCESS.getMessage(), this.withdrawTeamUseCase.withdrawTeam(user.getSocialId(),teamId)));
     }
 
     /**
@@ -101,7 +101,7 @@ public class TeamController {
     @GetMapping("/{teamId}/review")
     public ResponseEntity<SuccessResponse<ReviewTeamResponse>> reviewTeam(@AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(REVIEW_TEAM_SUCCESS.getMessage(), this.reviewTeamUserCase.reviewTeam(user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(REVIEW_TEAM_SUCCESS.getMessage(), this.reviewTeamUseCase.reviewTeam(user.getSocialId(), teamId)));
     }
 
 
@@ -114,7 +114,7 @@ public class TeamController {
     public ResponseEntity<SuccessResponse<UpdateTeamResponse>> updateTeam(@Valid @RequestBody UpdateTeamRequest updateTeamRequest,
                                                                           @AuthenticationPrincipal User user,
                                                                           @PathVariable Long teamId){
-        return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUserCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_TEAM_SUCCESS.getMessage(), this.updateTeamUseCase.updateTeam(updateTeamRequest, user.getSocialId(), teamId)));
     }
 
     /**
@@ -124,7 +124,7 @@ public class TeamController {
     @GetMapping("/{teamId}")
     public ResponseEntity<SuccessResponse<GetCurrentStatusResponse>> getCurrentStatus(@AuthenticationPrincipal User user,
                                                                                       @PathVariable Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_CURRENT_STATUS_SUCCESS.getMessage(), this.getTeamUserCase.getCurrentStatus(teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_CURRENT_STATUS_SUCCESS.getMessage(), this.getTeamUseCase.getCurrentStatus(teamId)));
     }
 
 }
