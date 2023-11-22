@@ -19,7 +19,7 @@ import static com.moing.backend.global.config.fcm.constant.NewUploadTitle.UPLOAD
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SendBoardAlarmUserCase {
+public class SendBoardAlarmUseCase {
 
     private final TeamMemberGetService teamMemberGetService;
     private final FcmService fcmService;

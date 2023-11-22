@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GetMyPageUserCase {
+public class GetMyPageUseCase {
 
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;

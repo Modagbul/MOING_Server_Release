@@ -6,24 +6,16 @@ import com.moing.backend.domain.auth.application.dto.request.TestRequest;
 import com.moing.backend.domain.auth.application.dto.response.CheckNicknameResponse;
 import com.moing.backend.domain.auth.application.dto.response.ReissueTokenResponse;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
-import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
-import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
-import com.moing.backend.domain.auth.application.service.SignInUserCase;
-import com.moing.backend.domain.auth.application.service.SignUpUserCase;
+import com.moing.backend.domain.auth.application.service.CheckNicknameUseCase;
+import com.moing.backend.domain.auth.application.service.ReissueTokenUseCase;
+import com.moing.backend.domain.auth.application.service.SignInUseCase;
+import com.moing.backend.domain.auth.application.service.SignUpUseCase;
 import com.moing.backend.global.response.SuccessResponse;
-import com.moing.backend.global.response.TokenInfoResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import static com.moing.backend.domain.auth.presentation.constant.AuthResponseMessage.*;
 
@@ -32,12 +24,10 @@ import static com.moing.backend.domain.auth.presentation.constant.AuthResponseMe
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final SignInUserCase authService;
-
-    private final SignUpUserCase signUpService;
-
-    private final ReissueTokenUserCase reissueTokenService;
-    private final CheckNicknameUserCase checkNicknameService;
+    private final SignInUseCase authService;
+    private final SignUpUseCase signUpService;
+    private final ReissueTokenUseCase reissueTokenService;
+    private final CheckNicknameUseCase checkNicknameService;
 
     /**
      * 소셜 로그인 (애플/ 카카오/구글)

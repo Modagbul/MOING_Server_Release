@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GetTeamUserCase {
+public class GetTeamUseCase {
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
     private final BoardGetService boardGetService;

@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AlarmUserCase {
+public class AlarmUseCase {
 
     private final MemberGetService memberGetService;
 

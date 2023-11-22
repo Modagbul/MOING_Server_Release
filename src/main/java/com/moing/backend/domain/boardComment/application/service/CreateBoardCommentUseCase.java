@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CreateBoardCommentUserCase {
+public class CreateBoardCommentUseCase {
 
     private final BoardCommentSaveService boardCommentSaveService;
     private final BoardCommentMapper boardCommentMapper;

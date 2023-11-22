@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CreateBoardReadUserCase {
+public class CreateBoardReadUseCase {
 
     private final BoardReadMapper boardReadMapper;
     private final BoardReadSaveService boardReadSaveService;

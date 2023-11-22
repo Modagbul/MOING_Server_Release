@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UpdateBoardUserCase {
+public class UpdateBoardUseCase {
 
     private final BaseBoardService baseBoardService;
 

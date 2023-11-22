@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DeleteBoardUserCase {
+public class DeleteBoardUseCase {
 
     private final BaseBoardService baseBoardService;
     private final BoardDeleteService boardDeleteService;

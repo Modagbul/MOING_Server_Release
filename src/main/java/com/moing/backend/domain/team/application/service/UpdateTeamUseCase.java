@@ -16,17 +16,17 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UpdateTeamUserCase {
+public class UpdateTeamUseCase {
 
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
-    private final CheckLeaderUserCase checkLeaderUserCase;
+    private final CheckLeaderUseCase checkLeaderUseCase;
     private final S3Service s3Service;
 
     public UpdateTeamResponse updateTeam(UpdateTeamRequest updateTeamRequest, String socialId, Long teamId){
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team=teamGetService.getTeamByTeamId(teamId);
-        if (checkLeaderUserCase.isTeamLeader(member, team)) {
+        if (checkLeaderUseCase.isTeamLeader(member, team)) {
             s3Service.deleteImage(team.getProfileImgUrl());
             team.updateTeam(updateTeamRequest.getName(), updateTeamRequest.getIntroduction(), updateTeamRequest.getProfileImgUrl());
         } else {

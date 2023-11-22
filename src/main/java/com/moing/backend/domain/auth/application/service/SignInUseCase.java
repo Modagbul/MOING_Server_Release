@@ -17,9 +17,9 @@ import java.util.Map;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SignInUserCase {
+public class SignInUseCase {
 
-    private final MemberAuthUserCase internalAuthService;
+    private final MemberAuthUseCase internalAuthService;
     private final TokenUtil tokenUtil;
     private final Map<String, SignInProvider> signInProviders;
     private final MemberGetService memberGetService;

@@ -4,7 +4,7 @@ import com.moing.backend.domain.board.application.dto.response.GetAllBoardRespon
 import com.moing.backend.domain.board.application.dto.response.GetBoardDetailResponse;
 import com.moing.backend.domain.board.application.mapper.BoardMapper;
 import com.moing.backend.domain.board.domain.service.BoardGetService;
-import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUserCase;
+import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUseCase;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
@@ -17,13 +17,13 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GetBoardUserCase {
+public class GetBoardUseCase {
 
 
     private final BaseBoardService baseBoardService;
     private final BoardMapper boardMapper;
     private final MemberGetService memberGetService;
-    private final CreateBoardReadUserCase createBoardReadUserCase;
+    private final CreateBoardReadUseCase createBoardReadUseCase;
     private final BoardGetService boardGetService;
 
 
@@ -34,7 +34,7 @@ public class GetBoardUserCase {
         // 1. 게시글 조회
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         // 2. 읽음 처리
-        createBoardReadUserCase.createBoardRead(data.getTeam(), data.getMember(), data.getBoard());
+        createBoardReadUseCase.createBoardRead(data.getTeam(), data.getMember(), data.getBoard());
         return boardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember());
     }
 

@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileUserCase {
+public class ProfileUseCase {
 
     private final MemberGetService memberGetService;
     private final S3Service s3Service;

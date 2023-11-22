@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CreateTeamUserCase {
+public class CreateTeamUseCase {
 
     private final MemberGetService memberGetService;
     private final TeamSaveService teamSaveService;

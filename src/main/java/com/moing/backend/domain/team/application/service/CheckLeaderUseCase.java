@@ -11,7 +11,7 @@ import java.util.Objects;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CheckLeaderUserCase {
+public class CheckLeaderUseCase {
     public boolean isTeamLeader(Member member, Team team) {
         return Objects.equals(member.getMemberId(), team.getLeaderId());
     }

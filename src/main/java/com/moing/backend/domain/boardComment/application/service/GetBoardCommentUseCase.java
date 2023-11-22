@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GetBoardCommentUserCase {
+public class GetBoardCommentUseCase {
 
     private final BoardCommentGetService boardCommentGetService;
     private final BaseBoardService baseBoardService;

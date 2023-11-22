@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class SignUpUserCase {
+public class SignUpUseCase {
 
     private final TokenUtil tokenUtil;
     private final MemberGetService memberQueryService;

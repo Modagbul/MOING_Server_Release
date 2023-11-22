@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DeleteBoardCommentUserCase {
+public class DeleteBoardCommentUseCase {
 
     private final BoardCommentGetService boardCommentGetService;
     private final BoardCommentDeleteService boardCommentDeleteService;

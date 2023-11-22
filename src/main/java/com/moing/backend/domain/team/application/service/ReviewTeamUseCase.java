@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ReviewTeamUserCase {
+public class ReviewTeamUseCase {
 
     private final TeamGetService teamGetService;
     private final TeamMapper teamMapper;

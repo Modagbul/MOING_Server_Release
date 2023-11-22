@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CheckNicknameUserCase {
+public class CheckNicknameUseCase {
 
     private final MemberCheckService memberCheckService;
     public CheckNicknameResponse checkNickname(String nickname){
