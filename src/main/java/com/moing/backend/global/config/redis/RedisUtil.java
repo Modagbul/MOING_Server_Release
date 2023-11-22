@@ -21,7 +21,7 @@ public class RedisUtil {
 
     public void save(String refreshToken, String socialId) {
         //동일한 key 값으로 저장하면 value값 updat됨
-        redisTemplate.opsForValue().set(socialId, refreshToken, refreshTokenValidityTime, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(socialId, refreshToken, refreshTokenValidityTime/1000, TimeUnit.SECONDS);
     }
 
     public void deleteById(String socialId) {
