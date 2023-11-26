@@ -31,6 +31,15 @@ public class MyPageController {
     private final GetMyPageUseCase getMyPageUseCase;
 
     /**
+     * 사용자 회원가입 여부
+     * [GET] api/mypage/test
+     * 작성자: 김민수
+     */
+    @GetMapping("/test")
+    public ResponseEntity<SuccessResponse> test(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(SuccessResponse.create(TEST_SIGNUP_SUCCESS.getMessage()));
+    }
+    /**
      * 로그아웃
      * [POST] api/mypage/signOut
      * 작성자 : 김민수

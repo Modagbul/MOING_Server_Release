@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MypageResponseMessage {
+    TEST_SIGNUP_SUCCESS("회원가입이 되었습니다."),
     SIGN_OUT_SUCCESS("로그아웃을 했습니다"),
     WITHDRAWAL_SUCCESS("회원탈퇴를 했습니다"),
     GET_MYPAGE_SUCCESS("마이페이지를 조회했습니다"),
