@@ -24,8 +24,10 @@ public class CommentBlocks {
 
     private Boolean writerIsDeleted;
 
-    public void deleteMember(){
-        this.writerNickName="(알 수 없음)";
-        this.writerProfileImage="undef";
+    public void deleteMember() {
+        if (Boolean.TRUE.equals(writerIsDeleted)) {
+            this.writerNickName = "(알 수 없음)";
+            this.writerProfileImage = "undef";
+        }
     }
 }
