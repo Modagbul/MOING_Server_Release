@@ -3,7 +3,10 @@ package com.moing.backend.domain.team.application.service;
 import com.moing.backend.domain.team.application.dto.response.GetLeaderInfoResponse;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.team.domain.service.TeamUpdateService;
+import com.moing.backend.global.config.fcm.FcmConfig;
 import com.moing.backend.global.config.fcm.dto.event.FcmEvent;
+import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
+import com.moing.backend.global.config.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,7 @@ public class ApproveTeamUseCase {
 
     private final TeamUpdateService teamUpdateService;
     private final TeamGetService teamGetService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final FcmService fcmService;
 
     public void approveTeams(List<Long> teamIds){
         teamUpdateService.updateTeamStatus(true, teamIds);
@@ -29,7 +32,7 @@ public class ApproveTeamUseCase {
         for(GetLeaderInfoResponse info: leaderInfos){
             String title=APPROVE_TEAM_MESSAGE.title(info.getLeaderName(), info.getTeamName());
             String body= APPROVE_TEAM_MESSAGE.body();
-            eventPublisher.publishEvent(new FcmEvent(title, body, Collections.singletonList(info.getLeaderFcmToken())));
+            fcmService.sendSingleDevice(new SingleRequest(info.getLeaderFcmToken(), title, body));
         }
     }
 }
