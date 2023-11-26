@@ -507,4 +507,47 @@ public class TeamControllerTest extends CommonControllerTest {
                 );
     }
 
+    @Test
+    public void get_team_count() throws Exception {
+
+        // given
+        Long teamId = 1L;
+
+        GetTeamCountResponse output = GetTeamCountResponse.builder()
+                .teamName("소모임 이름")
+                .numOfTeam(2L)
+                .build();
+
+        given(getTeamUseCase.getTeamCount(any(), any())).willReturn(output);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}/count", teamId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("소모임을 수정했습니다."),
+                                        fieldWithPath("data.teamName").description("소모임 이름"),
+                                        fieldWithPath("data.numOfTeam").description("지금까지 가입한 소모임 개수")
+                                )
+                        )
+                );
+    }
+
 }

@@ -177,5 +177,21 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
         return PageableExecutionUtils.getPage(teams, pageable, () -> count);
     }
 
+    @Override
+    public Long findTeamCount(Long memberId) {
+        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
+        return queryFactory
+                .select(team.count()) // 팀의 개수를 세기 위해 수정
+                .from(teamMember)
+                .innerJoin(teamMember.team, team)
+                .on(teamMember.member.memberId.eq(memberId))
+                .where(team.approvalStatus.eq(ApprovalStatus.APPROVAL)) // 승인 되었고
+                .where(teamMember.isDeleted.eq(false) // 탈퇴하지 않았다면
+                        .and(team.isDeleted.eq(false) // 강제종료되지 않았거나
+                                .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
+                .fetchOne(); // 단일 결과 (개수) 반환
+
+    }
+
 
 }

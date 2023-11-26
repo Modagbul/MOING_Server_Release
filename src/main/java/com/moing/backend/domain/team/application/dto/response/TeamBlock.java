@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 @Builder
 @NoArgsConstructor
 public class TeamBlock {
+
     private Long teamId;
     private Long duration; //걸린시간(단위:날짜)
     private Integer levelOfFire; //불꽃 레벨

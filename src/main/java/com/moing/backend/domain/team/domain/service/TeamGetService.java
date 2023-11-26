@@ -5,6 +5,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.GetLeaderInfoResponse;
 import com.moing.backend.domain.team.application.dto.response.GetNewTeamResponse;
+import com.moing.backend.domain.team.application.dto.response.GetTeamCountResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
@@ -53,6 +54,12 @@ public class TeamGetService {
         int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
         pageable = PageRequest.of(page, pageable.getPageSize(), Sort.by("no").descending());
         return teamRepository.findNewTeam(dateSort, pageable);
+    }
+
+    public GetTeamCountResponse getTeamCountAndName(Long teamId, Long memberId) {
+        String teamName = getTeamByTeamId(teamId).getName();
+        Long numOfTeam = teamRepository.findTeamCount(memberId);
+        return new GetTeamCountResponse(teamName, numOfTeam);
     }
 
 }

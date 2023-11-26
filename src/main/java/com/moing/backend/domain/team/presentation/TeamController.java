@@ -127,4 +127,14 @@ public class TeamController {
         return ResponseEntity.ok(SuccessResponse.create(GET_CURRENT_STATUS_SUCCESS.getMessage(), this.getTeamUseCase.getCurrentStatus(teamId)));
     }
 
+    /**
+     * 소모임 닉네임과 소모임 개수 조회
+     * [GET] api/team/{teamId}/count
+     */
+    @GetMapping("/{teamId}/count")
+    public ResponseEntity<SuccessResponse<GetTeamCountResponse>> getTeamCount(@AuthenticationPrincipal User user,
+                                                                              @PathVariable Long teamId){
+        return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_COUNT_SUCCESS.getMessage(), this.getTeamUseCase.getTeamCount(user.getSocialId(),teamId)));
+    }
+
 }
