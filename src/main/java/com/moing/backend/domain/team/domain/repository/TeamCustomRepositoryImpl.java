@@ -8,6 +8,7 @@ import com.moing.backend.domain.team.domain.entity.Team;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -115,15 +116,21 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
 
     @Override
     public void updateTeamStatus(boolean isApproved, List<Long> teamIds) {
-        ApprovalStatus approvalStatus = ApprovalStatus.REJECTION;
-        if (isApproved) {
-            approvalStatus = ApprovalStatus.APPROVAL;
-        }
-        queryFactory
+        ApprovalStatus approvalStatus = isApproved ? ApprovalStatus.APPROVAL : ApprovalStatus.REJECTION;
+
+        JPAUpdateClause updateClause = queryFactory
                 .update(team)
-                .set(team.approvalStatus, approvalStatus)
+                .set(team.approvalStatus, approvalStatus);
+
+        // 승인되었을 때만 현재 시간으로 approvalTime 설정
+        if (isApproved) {
+            updateClause.set(team.approvalTime, LocalDateTime.now());
+        }
+
+        updateClause
                 .where(team.teamId.in(teamIds))
                 .execute();
+
         em.flush();
         em.clear();
     }
