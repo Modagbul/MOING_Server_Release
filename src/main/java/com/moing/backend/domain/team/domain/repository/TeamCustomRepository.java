@@ -4,6 +4,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.GetLeaderInfoResponse;
 import com.moing.backend.domain.team.application.dto.response.GetNewTeamResponse;
+import com.moing.backend.domain.team.application.dto.response.GetTeamCountResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.data.domain.Page;
@@ -21,4 +22,5 @@ public interface TeamCustomRepository {
     void updateTeamStatus(boolean isApproved, List<Long> teamIds);
     List<GetLeaderInfoResponse> findLeaderInfoByTeamIds(List<Long> teamIds);
     Page<GetNewTeamResponse> findNewTeam(String dateSort, Pageable pageable);
+    Long findTeamCount(Long memberId);
 }

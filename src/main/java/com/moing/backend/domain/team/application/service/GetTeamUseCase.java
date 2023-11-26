@@ -47,4 +47,9 @@ public class GetTeamUseCase {
     public Page<GetNewTeamResponse> getNewTeam(String dateSort, Pageable pageable) {
         return teamGetService.getNewTeams(dateSort, pageable);
     }
+
+    public GetTeamCountResponse getTeamCount(String socialId, Long teamId) {
+        Member member = memberGetService.getMemberBySocialId(socialId);
+        return teamGetService.getTeamCountAndName(teamId, member.getMemberId());
+    }
 }

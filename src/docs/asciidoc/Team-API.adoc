@@ -60,3 +60,7 @@ operation::team-controller-test/disband_team[snippets='http-request,path-paramet
 [[Team-소모임-탈퇴]]
 == Team 소모임원 강제종료
 operation::team-controller-test/withdraw_team[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-개수_이름-조회]]
+== Team 소모임 개수 이름 조회
+operation::team-controller-test/get_team_count[snippets='http-request,path-parameters,http-response,response-fields']
