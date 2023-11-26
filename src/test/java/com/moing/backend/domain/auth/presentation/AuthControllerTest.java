@@ -6,10 +6,10 @@ import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
 import com.moing.backend.domain.auth.application.dto.response.CheckNicknameResponse;
 import com.moing.backend.domain.auth.application.dto.response.ReissueTokenResponse;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
-import com.moing.backend.domain.auth.application.service.CheckNicknameUserCase;
-import com.moing.backend.domain.auth.application.service.ReissueTokenUserCase;
-import com.moing.backend.domain.auth.application.service.SignInUserCase;
-import com.moing.backend.domain.auth.application.service.SignUpUserCase;
+import com.moing.backend.domain.auth.application.service.CheckNicknameUseCase;
+import com.moing.backend.domain.auth.application.service.ReissueTokenUseCase;
+import com.moing.backend.domain.auth.application.service.SignInUseCase;
+import com.moing.backend.domain.auth.application.service.SignUpUseCase;
 import com.moing.backend.domain.member.domain.constant.Gender;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,16 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest extends CommonControllerTest {
 
     @MockBean
-    private SignInUserCase authService;
+    private SignInUseCase authService;
 
     @MockBean
-    private SignUpUserCase signUpUserCase;
+    private SignUpUseCase signUpUserCase;
 
     @MockBean
-    private ReissueTokenUserCase reissueTokenUserCase;
+    private ReissueTokenUseCase reissueTokenUseCase;
 
     @MockBean
-    private CheckNicknameUserCase checkNicknameService;
+    private CheckNicknameUseCase checkNicknameService;
 
     @Test
     public void Kakao_소셜_로그인_회원가입_전() throws Exception {
@@ -375,7 +375,7 @@ class AuthControllerTest extends CommonControllerTest {
                 .refreshToken("SERVER_REFRESH_TOKEN")
                 .build();
 
-        given(reissueTokenUserCase.reissueToken(any())).willReturn(output);
+        given(reissueTokenUseCase.reissueToken(any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(

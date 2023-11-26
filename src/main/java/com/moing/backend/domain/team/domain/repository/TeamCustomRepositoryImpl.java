@@ -2,28 +2,33 @@ package com.moing.backend.domain.team.domain.repository;
 
 import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
-import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
-import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
-import com.moing.backend.domain.team.application.dto.response.TeamBlock;
+import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.member.domain.entity.QMember.member;
 import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 
 public class TeamCustomRepositoryImpl implements TeamCustomRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final EntityManager em;
 
     public TeamCustomRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+        this.em = em;
     }
 
     @Override
@@ -106,6 +111,62 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .from(team)
                 .where(team.teamId.in(teamId))
                 .fetch();
+    }
+
+    @Override
+    public void updateTeamStatus(boolean isApproved, List<Long> teamIds) {
+        ApprovalStatus approvalStatus = ApprovalStatus.REJECTION;
+        if (isApproved) {
+            approvalStatus = ApprovalStatus.APPROVAL;
+        }
+        queryFactory
+                .update(team)
+                .set(team.approvalStatus, approvalStatus)
+                .where(team.teamId.in(teamIds))
+                .execute();
+        em.flush();
+        em.clear();
+    }
+
+    @Override
+    public List<GetLeaderInfoResponse> findLeaderInfoByTeamIds(List<Long> teamIds) {
+        return queryFactory
+                .select(Projections.constructor(GetLeaderInfoResponse.class,
+                        team.teamId,
+                        team.name,
+                        member.memberId,
+                        member.nickName,
+                        member.fcmToken))
+                .from(team)
+                .join(member).on(team.leaderId.eq(member.memberId))
+                .where(team.teamId.in(teamIds))
+                .fetch();
+    }
+
+    @Override
+    public Page<GetNewTeamResponse> findNewTeam(String dateSort, Pageable pageable) {
+        OrderSpecifier<?> orderBy = team.createdDate.asc();
+        if ("desc".equals(dateSort)) {
+            orderBy = team.createdDate.desc();
+        }
+
+        List<GetNewTeamResponse> teams = queryFactory
+                .select(Projections.constructor(GetNewTeamResponse.class,
+                        team.name, team.category, team.promise, team.introduction, team.profileImgUrl, team.createdDate))
+                .from(team)
+                .where(team.approvalStatus.eq(ApprovalStatus.NO_CONFIRMATION))
+                .orderBy(orderBy)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long count = queryFactory
+                .select(team.count())
+                .from(team)
+                .where(team.approvalStatus.eq(ApprovalStatus.NO_CONFIRMATION))
+                .fetchOne();
+
+        return PageableExecutionUtils.getPage(teams, pageable, () -> count);
     }
 
 

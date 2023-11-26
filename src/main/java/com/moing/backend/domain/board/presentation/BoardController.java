@@ -6,10 +6,10 @@ import com.moing.backend.domain.board.application.dto.response.CreateBoardRespon
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.dto.response.GetBoardDetailResponse;
 import com.moing.backend.domain.board.application.dto.response.UpdateBoardResponse;
-import com.moing.backend.domain.board.application.service.CreateBoardUserCase;
-import com.moing.backend.domain.board.application.service.DeleteBoardUserCase;
-import com.moing.backend.domain.board.application.service.GetBoardUserCase;
-import com.moing.backend.domain.board.application.service.UpdateBoardUserCase;
+import com.moing.backend.domain.board.application.service.CreateBoardUseCase;
+import com.moing.backend.domain.board.application.service.DeleteBoardUseCase;
+import com.moing.backend.domain.board.application.service.GetBoardUseCase;
+import com.moing.backend.domain.board.application.service.UpdateBoardUseCase;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -26,10 +26,10 @@ import static com.moing.backend.domain.board.presentation.constant.BoardResponse
 @RequestMapping("/api/{teamId}/board")
 public class BoardController {
 
-    private final CreateBoardUserCase createBoardUserCase;
-    private final UpdateBoardUserCase updateBoardUserCase;
-    private final GetBoardUserCase getBoardUserCase;
-    private final DeleteBoardUserCase deleteBoardUserCase;
+    private final CreateBoardUseCase createBoardUseCase;
+    private final UpdateBoardUseCase updateBoardUseCase;
+    private final GetBoardUseCase getBoardUseCase;
+    private final DeleteBoardUseCase deleteBoardUseCase;
 
     /**
      * 게시글 생성
@@ -40,7 +40,7 @@ public class BoardController {
     public ResponseEntity<SuccessResponse<CreateBoardResponse>> createBoard(@AuthenticationPrincipal User user,
                                                                             @PathVariable Long teamId,
                                                                             @Valid @RequestBody CreateBoardRequest createBoardRequest) {
-        return ResponseEntity.ok(SuccessResponse.create(CREATE_BOARD_SUCCESS.getMessage(), this.createBoardUserCase.createBoard(user.getSocialId(), teamId, createBoardRequest)));
+        return ResponseEntity.ok(SuccessResponse.create(CREATE_BOARD_SUCCESS.getMessage(), this.createBoardUseCase.createBoard(user.getSocialId(), teamId, createBoardRequest)));
     }
 
     /**
@@ -53,7 +53,7 @@ public class BoardController {
                                                                             @PathVariable Long teamId,
                                                                             @PathVariable Long boardId,
                                                                             @Valid @RequestBody UpdateBoardRequest updateBoardRequest) {
-        return ResponseEntity.ok(SuccessResponse.create(UPDATE_BOARD_SUCCESS.getMessage(), this.updateBoardUserCase.updateBoard(user.getSocialId(), teamId, boardId, updateBoardRequest)));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_BOARD_SUCCESS.getMessage(), this.updateBoardUseCase.updateBoard(user.getSocialId(), teamId, boardId, updateBoardRequest)));
     }
 
     /**
@@ -65,7 +65,7 @@ public class BoardController {
     public ResponseEntity<SuccessResponse> deleteBoard(@AuthenticationPrincipal User user,
                                                                             @PathVariable Long teamId,
                                                                             @PathVariable Long boardId) {
-        this.deleteBoardUserCase.deleteBoard(user.getSocialId(), teamId, boardId);
+        this.deleteBoardUseCase.deleteBoard(user.getSocialId(), teamId, boardId);
         return ResponseEntity.ok(SuccessResponse.create(DELETE_BOARD_SUCCESS.getMessage()));
     }
 
@@ -78,7 +78,7 @@ public class BoardController {
     public ResponseEntity<SuccessResponse<GetBoardDetailResponse>> getBoardDetail(@AuthenticationPrincipal User user,
                                                                                   @PathVariable Long teamId,
                                                                                   @PathVariable Long boardId) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_DETAIL_SUCCESS.getMessage(), this.getBoardUserCase.getBoardDetail(user.getSocialId(), teamId, boardId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_DETAIL_SUCCESS.getMessage(), this.getBoardUseCase.getBoardDetail(user.getSocialId(), teamId, boardId)));
     }
 
     /**
@@ -89,6 +89,6 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<SuccessResponse<GetAllBoardResponse>> getBoardAll(@AuthenticationPrincipal User user,
                                                                                @PathVariable Long teamId) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardUserCase.getAllBoard(user.getSocialId(), teamId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardUseCase.getAllBoard(user.getSocialId(), teamId)));
     }
 }

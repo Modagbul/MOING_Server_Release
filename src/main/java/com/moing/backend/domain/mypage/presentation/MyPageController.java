@@ -24,11 +24,11 @@ import static com.moing.backend.domain.mypage.presentation.constant.MypageRespon
 @RequestMapping("/api/mypage")
 public class MyPageController {
 
-    private final SignOutUserCase signOutService;
-    private final WithdrawUserCase withdrawService;
-    private final ProfileUserCase profileUserCase;
-    private final AlarmUserCase alarmUserCase;
-    private final GetMyPageUserCase getMyPageUserCase;
+    private final SignOutUseCase signOutService;
+    private final WithdrawUseCase withdrawService;
+    private final ProfileUseCase profileUseCase;
+    private final AlarmUseCase alarmUseCase;
+    private final GetMyPageUseCase getMyPageUseCase;
 
     /**
      * 로그아웃
@@ -61,7 +61,7 @@ public class MyPageController {
      */
     @GetMapping
     public ResponseEntity<SuccessResponse<GetMyPageResponse>> getMyPage(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(SuccessResponse.create(GET_MYPAGE_SUCCESS.getMessage(), this.getMyPageUserCase.getMyPageResponse(user.getSocialId())));
+        return ResponseEntity.ok(SuccessResponse.create(GET_MYPAGE_SUCCESS.getMessage(), this.getMyPageUseCase.getMyPageResponse(user.getSocialId())));
     }
 
     /**
@@ -71,7 +71,7 @@ public class MyPageController {
      */
     @GetMapping("/profile")
     public ResponseEntity<SuccessResponse<GetProfileResponse>> getProfile(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(SuccessResponse.create(GET_PROFILE_SUCCESS.getMessage(), this.profileUserCase.getProfile(user.getSocialId())));
+        return ResponseEntity.ok(SuccessResponse.create(GET_PROFILE_SUCCESS.getMessage(), this.profileUseCase.getProfile(user.getSocialId())));
     }
 
     /**
@@ -82,7 +82,7 @@ public class MyPageController {
     @PutMapping("/profile")
     public ResponseEntity<SuccessResponse> updatePorfile(@AuthenticationPrincipal User user,
                                                          @RequestBody UpdateProfileRequest updateProfileRequest){
-        this.profileUserCase.updateProfile(user.getSocialId(), updateProfileRequest);
+        this.profileUseCase.updateProfile(user.getSocialId(), updateProfileRequest);
         return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage()));
     }
 
@@ -93,7 +93,7 @@ public class MyPageController {
      */
     @GetMapping("/alarm")
     public ResponseEntity<SuccessResponse<GetAlarmResponse>> getAlarm(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_ALARM_SUCCESS.getMessage(), this.alarmUserCase.getAlarm(user.getSocialId())));
+        return ResponseEntity.ok(SuccessResponse.create(GET_ALARM_SUCCESS.getMessage(), this.alarmUseCase.getAlarm(user.getSocialId())));
     }
 
     /**
@@ -104,7 +104,7 @@ public class MyPageController {
     public ResponseEntity<SuccessResponse<GetAlarmResponse>> updateAlarm(@AuthenticationPrincipal User user,
                                                        @RequestParam(name = "type") String type,
                                                        @RequestParam(name = "status") String status) {
-        return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(), this.alarmUserCase.updateAlarm(user.getSocialId(), type, status)));
+        return ResponseEntity.ok(SuccessResponse.create(UPDATE_PROFILE_SUCCESS.getMessage(), this.alarmUseCase.updateAlarm(user.getSocialId(), type, status)));
     }
 
 }

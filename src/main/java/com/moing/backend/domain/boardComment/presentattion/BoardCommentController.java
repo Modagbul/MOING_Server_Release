@@ -3,9 +3,9 @@ package com.moing.backend.domain.boardComment.presentattion;
 import com.moing.backend.domain.boardComment.application.dto.request.CreateBoardCommentRequest;
 import com.moing.backend.domain.boardComment.application.dto.response.CreateBoardCommentResponse;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
-import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUserCase;
-import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUserCase;
-import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUserCase;
+import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUseCase;
+import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUseCase;
+import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUseCase;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -24,9 +24,9 @@ import static com.moing.backend.domain.boardComment.presentattion.constant.Board
 @RequestMapping("/api/{teamId}/{boardId}/comment")
 public class BoardCommentController {
 
-    private final CreateBoardCommentUserCase createBoardCommentUserCase;
-    private final DeleteBoardCommentUserCase deleteBoardCommentUserCase;
-    private final GetBoardCommentUserCase getBoardCommentUserCase;
+    private final CreateBoardCommentUseCase createBoardCommentUseCase;
+    private final DeleteBoardCommentUseCase deleteBoardCommentUseCase;
+    private final GetBoardCommentUseCase getBoardCommentUseCase;
 
     /**
      * 댓글 생성
@@ -38,7 +38,7 @@ public class BoardCommentController {
                                                                                           @PathVariable Long teamId,
                                                                                           @PathVariable Long boardId,
                                                                                           @Valid @RequestBody CreateBoardCommentRequest createBoardCommentRequest) {
-        return ResponseEntity.ok(SuccessResponse.create(CREATE_BOARD_COMMENT_SUCCESS.getMessage(), this.createBoardCommentUserCase.createBoardComment(user.getSocialId(), teamId, boardId, createBoardCommentRequest)));
+        return ResponseEntity.ok(SuccessResponse.create(CREATE_BOARD_COMMENT_SUCCESS.getMessage(), this.createBoardCommentUseCase.createBoardComment(user.getSocialId(), teamId, boardId, createBoardCommentRequest)));
     }
 
     /**
@@ -51,7 +51,7 @@ public class BoardCommentController {
                                                               @PathVariable Long teamId,
                                                               @PathVariable Long boardId,
                                                               @PathVariable Long commentId) {
-        this.deleteBoardCommentUserCase.deleteBoardComment(user.getSocialId(), teamId, boardId, commentId);
+        this.deleteBoardCommentUseCase.deleteBoardComment(user.getSocialId(), teamId, boardId, commentId);
         return ResponseEntity.ok(SuccessResponse.create(DELETE_BOARD_COMMENT_SUCCESS.getMessage()));
     }
 
@@ -65,6 +65,6 @@ public class BoardCommentController {
     public ResponseEntity<SuccessResponse<GetBoardCommentResponse>> getBoardCommentAll(@AuthenticationPrincipal User user,
                                                                                        @PathVariable Long teamId,
                                                                                        @PathVariable Long boardId) {
-        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardCommentUserCase.getBoardCommentAll(user.getSocialId(), teamId, boardId)));
+        return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardCommentUseCase.getBoardCommentAll(user.getSocialId(), teamId, boardId)));
     }
 }
