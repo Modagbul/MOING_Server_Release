@@ -16,6 +16,7 @@ public enum TeamResponseMessage {
     UPDATE_TEAM_SUCCESS("[소모임장 권한] 소모임을 수정했습니다"),
     WITHDRAW_TEAM_SUCCESS("[소모임원 권한] 소모임을 탈퇴하였습니다"),
     SEND_APPROVAL_ALARM_SUCCESS("소모임들이 승인되었습니다.."),
-    SEND_REJECTION_ALARM_SUCCESS("소모임들이 반려되었습니다.");
+    SEND_REJECTION_ALARM_SUCCESS("소모임들이 반려되었습니다."),
+    GET_NEW_TEAM_SUCCESS("새로운 소모임들을 조회했습니다.");
     private final String message;
 }

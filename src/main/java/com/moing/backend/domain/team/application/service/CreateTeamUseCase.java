@@ -35,9 +35,6 @@ public class CreateTeamUseCase {
         Team team=teamMapper.createTeam(createTeamRequest, member);
         teamSaveService.saveTeam(team);
         teamMemberSaveService.addTeamMember(team, member);
-        //====지워야 함 (테스트 용)=====
-        team.approveTeam();
-        //====지워야 함 (테스트 용)=====
         teamScoreSaveService.save(teamScoreMapper.mapToTeamScore(team)); // 팀스코어 엔티티 생성
         eventPublisher.publishEvent(new TeamCreateEvent(team.getName(), team.getLeaderId()));
         return new CreateTeamResponse(team.getTeamId());
