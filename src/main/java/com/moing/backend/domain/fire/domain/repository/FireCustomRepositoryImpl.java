@@ -1,8 +1,11 @@
 package com.moing.backend.domain.fire.domain.repository;
 
+import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.domain.entity.Fire;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -46,9 +49,27 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
     }
 
 
-    public Optional<List<Member>> getFireReceivers(Long teamId, Long missionId) {
+    public Optional<List<FireReceiveRes>> getFireReceivers(Long teamId, Long missionId, Long memberId) {
+
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1); // 현재 시간에서 1시간을 뺀 시간
+
+        BooleanExpression oneHourStatus = JPAExpressions
+                .select()
+                .from(fire)
+                .where(
+                        fire.throwMemberId.eq(memberId),
+                        fire.receiveMemberId.eq(teamMember.member.memberId),
+                        fire.createdDate.after(oneHourAgo) // createdDate가 oneHourAgo 이후인 데이터
+                )
+                .exists();
+
+
         return Optional.ofNullable(queryFactory
-                .select(teamMember.member)
+                .select(Projections.constructor(FireReceiveRes.class,
+                                teamMember.member.memberId,
+                                teamMember.member.nickName,
+                                oneHourStatus
+                                ))
                 .from(teamMember)
                 .where(
                         teamMember.team.teamId.eq(teamId),
@@ -57,7 +78,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                                         .select(missionArchive.member.memberId)
                                         .from(missionArchive,mission)
                                         .where(missionArchive.mission.id.eq(missionId),
-                                                mission.id.eq(missionId))
+                                                mission.id.eq(missionId),
+                                                missionArchive.member.memberId.notIn(memberId))
                                         .groupBy(missionArchive.member.memberId, missionArchive.mission.id,
                                                 missionArchive.count, mission.number)
                                         .having(

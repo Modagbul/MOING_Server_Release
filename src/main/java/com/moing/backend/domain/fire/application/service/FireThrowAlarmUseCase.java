@@ -23,9 +23,11 @@ public class FireThrowAlarmUseCase {
     public void sendFireThrowAlarm(Member throwMember, Member receiveMember) {
 
         Random random = new Random(System.currentTimeMillis());
-        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), random.nextInt(2));
+        int randomNum = random.nextInt(2);
 
-        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), random.nextInt(2));
+        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+
         SingleRequest singleRequest = new SingleRequest(receiveMember.getFcmToken(), title, message);
 
         fcmService.sendSingleDevice(singleRequest);

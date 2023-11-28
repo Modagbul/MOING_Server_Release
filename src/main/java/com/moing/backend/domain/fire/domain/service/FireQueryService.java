@@ -1,5 +1,6 @@
 package com.moing.backend.domain.fire.domain.service;
 
+import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.domain.entity.Fire;
 import com.moing.backend.domain.fire.domain.repository.FireCustomRepository;
 import com.moing.backend.domain.fire.domain.repository.FireRepository;
@@ -21,8 +22,8 @@ public class FireQueryService {
         return fireRepository.hasFireCreatedWithinOneHour(throwMemberId,receiveMemberId);
     }
 
-    public List<Member> getNotYetMissionMember(Long teamId, Long missionId) {
-        return fireRepository.getFireReceivers(teamId, missionId).orElseThrow(NotFoundFireReceiversException::new);
+    public List<FireReceiveRes> getNotYetMissionMember(Long teamId, Long missionId, Long memberId) {
+        return fireRepository.getFireReceivers(teamId, missionId,memberId).orElseThrow(NotFoundFireReceiversException::new);
     }
 
 }
