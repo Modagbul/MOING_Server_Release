@@ -9,6 +9,7 @@ import com.moing.backend.domain.fire.domain.service.FireSaveService;
 import com.moing.backend.domain.fire.exception.NoAuthThrowFireException;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
 import com.moing.backend.global.config.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class FireThrowUseCase {
     private final MemberGetService memberGetService;
 
     private final FireThrowAlarmUseCase fireThrowAlarmUseCase;
+
+    private final MissionArchiveQueryService missionArchiveQueryService;
 
     public FireThrowRes createFireThrow(String userId, Long receiveMemberId) {
 
@@ -54,15 +57,25 @@ public class FireThrowUseCase {
     }
 
     public List<FireReceiveRes> getFireReceiveList(String userId,Long teamId, Long missionId) {
-        Long memberId = memberGetService.getMemberBySocialId(userId).getMemberId();
+        Member member = memberGetService.getMemberBySocialId(userId);
+        Long memberId = member.getMemberId();
 
-        List<FireReceiveRes> fireReceiveRes = FireMapper.mapToFireReceiversList(fireQueryService.getNotYetMissionMember(teamId, missionId));
+        List<FireReceiveRes> fireReceiveRes = fireQueryService.getNotYetMissionMember(teamId, missionId,memberId);
         fireReceiveRes.forEach(
                 res -> res.updateFireStatus(fireQueryService.hasFireCreatedWithinOneHour(memberId,res.getReceiveMemberId())
         ));
 
+//        if (!missionArchiveQueryService.isDone(memberId, missionId)) {
+//            fireReceiveRes.add(0,FireReceiveRes.builder()
+//                    .receiveMemberId(memberId)
+//                    .nickname(member.getNickName())
+//                    .fireStatus("False")
+//                    .build());
+//        }
+
         return fireReceiveRes;
     }
+
 
 
 }

@@ -51,7 +51,7 @@ public class FireControllerTest extends CommonControllerTest {
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/missions/{missionId}/fire",teamId,missionId)
+                get("/api/team/{teamId}/missions/{missionId}/fire",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -99,7 +99,7 @@ public class FireControllerTest extends CommonControllerTest {
         Long receiveMemberId = 2L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/missions/{missionId}/fire/{receiveMemberId}",teamId,missionId,receiveMemberId)
+                post("/api/team/{teamId}/missions/{missionId}/fire/{receiveMemberId}",teamId,missionId,receiveMemberId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );

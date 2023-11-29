@@ -19,7 +19,7 @@ import static com.moing.backend.domain.mission.presentation.constant.MissionResp
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/{teamId}/missions/{missionId}/fire")
+@RequestMapping("/api/team/{teamId}/missions/{missionId}/fire")
 public class FireController {
 
     private final FireThrowUseCase fireThrowUseCase;
@@ -30,7 +30,7 @@ public class FireController {
      * 작성자 : 정승연
      */
 
-    @PostMapping("{receiveMemberId}")
+    @PostMapping("/{receiveMemberId}")
     public ResponseEntity<SuccessResponse<FireThrowRes>> throwFire (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
                                                                     @PathVariable("receiveMemberId") Long receiveMemberId) {
         return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(),receiveMemberId)));
@@ -42,7 +42,7 @@ public class FireController {
      * 작성자 : 정승연
      */
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<SuccessResponse<List<FireReceiveRes>>> throwFireList (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
                                                                                 @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(GET_RECEIVERS_SUCCESS.getMessage(), this.fireThrowUseCase.getFireReceiveList(user.getSocialId(),teamId,missionId)));

@@ -206,7 +206,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                     mission.id,
                     mission.dueTo.stringValue(),
                     mission.title,
-                    missionArchive.status.stringValue().coalesce("INCOMPLETE").as("status"),
+                    missionArchive.status.stringValue().coalesce("FAIL").as("status"),
                     mission.type.stringValue(),
                         mission.way.stringValue()
                 ))
@@ -215,7 +215,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         .on(missionArchive.member.memberId.eq(memberId))
                 .where(
                         mission.team.teamId.eq(teamId),
-                        mission.status.eq(MissionStatus.SUCCESS).or(mission.status.eq(MissionStatus.FAIL))
+                        mission.status.eq(MissionStatus.SUCCESS).or(mission.status.eq(MissionStatus.END))
                 )
                 .fetch()
         );
