@@ -22,5 +22,5 @@ public interface TeamCustomRepository {
     void updateTeamStatus(boolean isApproved, List<Long> teamIds);
     List<GetLeaderInfoResponse> findLeaderInfoByTeamIds(List<Long> teamIds);
     Page<GetNewTeamResponse> findNewTeam(String dateSort, Pageable pageable);
-    Long findTeamCount(Long memberId);
+    GetTeamCountResponse findTeamCount(Long memberId, Long teamId);
 }

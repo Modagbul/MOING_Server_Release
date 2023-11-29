@@ -178,9 +178,9 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     }
 
     @Override
-    public Long findTeamCount(Long memberId) {
+    public GetTeamCountResponse findTeamCount(Long memberId, Long teamId) {
         LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-        return queryFactory
+        long count=queryFactory
                 .select(team.count()) // 팀의 개수를 세기 위해 수정
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
@@ -191,6 +191,16 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                                 .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
                 .fetchOne(); // 단일 결과 (개수) 반환
 
+        GetTeamCountResponse response=queryFactory
+                .select(new QGetTeamCountResponse(team.name, member.nickName))
+                .from(team)
+                .join(member).on(team.leaderId.eq(member.memberId))
+                .where(team.teamId.eq(teamId))
+                .fetchOne();
+
+        response.updateCount(count);
+
+        return response;
     }
 
 

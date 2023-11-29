@@ -57,9 +57,8 @@ public class TeamGetService {
     }
 
     public GetTeamCountResponse getTeamCountAndName(Long teamId, Long memberId) {
-        String teamName = getTeamByTeamId(teamId).getName();
-        Long numOfTeam = teamRepository.findTeamCount(memberId);
-        return new GetTeamCountResponse(teamName, numOfTeam);
+
+        return teamRepository.findTeamCount(memberId, teamId);
     }
 
 }
