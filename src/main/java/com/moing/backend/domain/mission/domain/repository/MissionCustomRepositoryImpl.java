@@ -65,7 +65,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<Mission>> findMissionByDueTo() {
 
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+        LocalDateTime oneHourAgo = LocalDateTime.now();
 
         return Optional.ofNullable(queryFactory
                 .selectFrom(mission)
