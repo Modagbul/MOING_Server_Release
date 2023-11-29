@@ -18,4 +18,5 @@ public class ReviewTeamResponse {
     private Long numOfMission;
     private Integer levelOfFire; //불꽃 레벨
     private Boolean isLeader;
+    private String memberName;
 }
