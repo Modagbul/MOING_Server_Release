@@ -259,6 +259,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .duration(30L)
                 .numOfMission(90L)
                 .levelOfFire(3)
+                .isLeader(false)
                 .build();
 
         given(reviewTeamUseCase.reviewTeam(any(), any())).willReturn(output);
@@ -289,7 +290,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.numOfMember").description("모임원 명 수"),
                                         fieldWithPath("data.duration").description("소모임과 함께한 시간"),
                                         fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
-                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
+                                        fieldWithPath("data.numOfMission").description("미션 총 개수"),
+                                        fieldWithPath("data.isLeader").description("소모임장 여부")
                                 )
                         )
                 );
@@ -516,6 +518,7 @@ public class TeamControllerTest extends CommonControllerTest {
         GetTeamCountResponse output = GetTeamCountResponse.builder()
                 .teamName("소모임 이름")
                 .numOfTeam(2L)
+                .leaderName("소모임장 이름")
                 .build();
 
         given(getTeamUseCase.getTeamCount(any(), any())).willReturn(output);
@@ -544,7 +547,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("소모임을 수정했습니다."),
                                         fieldWithPath("data.teamName").description("소모임 이름"),
-                                        fieldWithPath("data.numOfTeam").description("지금까지 가입한 소모임 개수")
+                                        fieldWithPath("data.numOfTeam").description("지금까지 가입한 소모임 개수"),
+                                        fieldWithPath("data.leaderName").description("소모임장 이름")
                                 )
                         )
                 );

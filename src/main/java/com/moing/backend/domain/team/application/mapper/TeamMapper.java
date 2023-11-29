@@ -38,7 +38,7 @@ public class TeamMapper {
                 .build();
     }
 
-    public ReviewTeamResponse toReviewTeamResponse(Long numOfMission, Team team){
+    public ReviewTeamResponse toReviewTeamResponse(Long numOfMission, Team team, boolean isLeader){
         return ReviewTeamResponse
                 .builder()
                 .teamId(team.getTeamId())
@@ -47,6 +47,7 @@ public class TeamMapper {
                 .levelOfFire(team.getLevelOfFire())
                 .duration(calculateDuration(team.getApprovalTime()))
                 .numOfMission(numOfMission)
+                .isLeader(isLeader)
                 .build();
     }
 
