@@ -8,6 +8,8 @@ import com.moing.backend.global.config.fcm.dto.response.SingleResponse;
 import com.moing.backend.global.config.fcm.exception.NotificationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,7 @@ public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
 
 
+    @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public SingleResponse sendSingleDevice(SingleRequest toSingleRequest) {
 
         Notification notification = Notification.builder()
@@ -67,6 +70,7 @@ public class FcmService {
     }
 
 
+    @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public MultiResponse sendMultipleDevices(MultiRequest toMultiRequest) {
 
         Notification notification = Notification.builder()
