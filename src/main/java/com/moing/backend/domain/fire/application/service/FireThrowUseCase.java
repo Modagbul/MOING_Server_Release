@@ -65,13 +65,13 @@ public class FireThrowUseCase {
                 res -> res.updateFireStatus(fireQueryService.hasFireCreatedWithinOneHour(memberId,res.getReceiveMemberId())
         ));
 
-        if (!missionArchiveQueryService.isDone(memberId, missionId)) {
-            fireReceiveRes.add(0,FireReceiveRes.builder()
-                    .receiveMemberId(memberId)
-                    .nickname(member.getNickName())
-                    .fireStatus("False")
-                    .build());
-        }
+//        if (!missionArchiveQueryService.isDone(memberId, missionId)) {
+//            fireReceiveRes.add(0,FireReceiveRes.builder()
+//                    .receiveMemberId(memberId)
+//                    .nickname(member.getNickName())
+//                    .fireStatus("False")
+//                    .build());
+//        }
 
         return fireReceiveRes;
     }
