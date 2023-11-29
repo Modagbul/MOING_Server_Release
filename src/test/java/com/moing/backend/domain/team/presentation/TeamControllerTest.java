@@ -259,6 +259,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .duration(30L)
                 .numOfMission(90L)
                 .levelOfFire(3)
+                .isLeader(false)
                 .build();
 
         given(reviewTeamUseCase.reviewTeam(any(), any())).willReturn(output);
@@ -289,7 +290,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.numOfMember").description("모임원 명 수"),
                                         fieldWithPath("data.duration").description("소모임과 함께한 시간"),
                                         fieldWithPath("data.levelOfFire").description("소모임 불꽃 레벨"),
-                                        fieldWithPath("data.numOfMission").description("미션 총 개수")
+                                        fieldWithPath("data.numOfMission").description("미션 총 개수"),
+                                        fieldWithPath("data.isLeader").description("소모임장 여부")
                                 )
                         )
                 );
