@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +42,10 @@ public class ProfileUseCase {
     }
 
     private void deletePreviousImage(UpdateProfileRequest updateProfileRequest, Member member) {
-        if (updateProfileRequest.getProfileImage() != null) {
-            s3Service.deleteImage(member.getProfileImage());
+        if (updateProfileRequest.getProfileImage() != null && member.getProfileImage() != null) {
+            CompletableFuture.runAsync(() -> {
+                s3Service.deleteImage(member.getProfileImage());
+            });
         }
     }
 

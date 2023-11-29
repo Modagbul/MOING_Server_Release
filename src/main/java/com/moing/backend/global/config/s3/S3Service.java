@@ -42,10 +42,12 @@ public class S3Service {
         String splitStr = ".com/";
         String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
 
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        if (amazonS3.doesObjectExist(bucket, fileName)) {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        }
     }
 
-    private String createFileName(String fileExtension) {
+        private String createFileName(String fileExtension) {
         return UUID.randomUUID() + "." + fileExtension;
     }
 
