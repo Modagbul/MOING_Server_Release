@@ -27,6 +27,6 @@ public class ReviewTeamUseCase {
         Team team=teamGetService.getTeamByTeamId(teamId);
         Member member=memberGetService.getMemberBySocialId(socialId);
         boolean isLeader=checkLeaderUseCase.isTeamLeader(member, team);
-        return teamMapper.toReviewTeamResponse(missionQueryService.findMissionsCountByTeam(team.getTeamId()),team, isLeader);
+        return teamMapper.toReviewTeamResponse(missionQueryService.findMissionsCountByTeam(team.getTeamId()),team, isLeader, member.getNickName());
     }
 }
