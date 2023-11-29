@@ -29,9 +29,9 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                 .select(Projections.constructor(CommentBlocks.class,
                         boardComment.boardCommentId,
                         boardComment.content,
-                        boardComment.board.writerNickName,
-                        boardComment.board.isLeader,
-                        boardComment.board.writerProfileImage,
+                        boardComment.writerNickName,
+                        boardComment.isLeader,
+                        boardComment.writerProfileImage,
                         ExpressionUtils.as(JPAExpressions
                                 .selectOne()
                                 .from(QTeamMember.teamMember)

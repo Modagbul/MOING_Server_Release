@@ -5,6 +5,7 @@ import com.moing.backend.domain.boardComment.application.dto.response.CreateBoar
 import com.moing.backend.domain.boardComment.application.mapper.BoardCommentMapper;
 import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
 import com.moing.backend.domain.boardComment.domain.service.BoardCommentSaveService;
+import com.moing.backend.domain.team.application.service.CheckLeaderUseCase;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
 import com.moing.backend.global.util.BaseBoardService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class CreateBoardCommentUseCase {
     private final BoardCommentSaveService boardCommentSaveService;
     private final BoardCommentMapper boardCommentMapper;
     private final BaseBoardService baseBoardService;
+    private final CheckLeaderUseCase checkLeaderUseCase;
 
     /**
      * 게시글 댓글 생성
@@ -27,7 +29,8 @@ public class CreateBoardCommentUseCase {
     public CreateBoardCommentResponse createBoardComment(String socialId, Long teamId, Long boardId, CreateBoardCommentRequest createBoardCommentRequest) {
         // 1. 게시글 댓글 생성
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
-        BoardComment boardComment = boardCommentSaveService.saveBoardComment(boardCommentMapper.toBoardComment(data.getTeamMember(), data.getBoard(), createBoardCommentRequest));
+        boolean isLeader = checkLeaderUseCase.isTeamLeader(data.getMember(), data.getTeam());
+        BoardComment boardComment = boardCommentSaveService.saveBoardComment(boardCommentMapper.toBoardComment(data.getMember(), data.getTeamMember(), data.getBoard(), createBoardCommentRequest, isLeader));
         // 2. 게시글 댓글 개수 증가
         data.getBoard().incrComNum();
         return new CreateBoardCommentResponse(boardComment.getBoardCommentId());
