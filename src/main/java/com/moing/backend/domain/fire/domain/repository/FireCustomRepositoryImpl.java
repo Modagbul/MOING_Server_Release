@@ -83,7 +83,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(FireReceiveRes.class,
                                 teamMember.member.memberId,
-                                teamMember.member.nickName
+                                teamMember.member.nickName,
+                                teamMember.member.profileImage
 //                                oneHourStatus.stringValue()
 //                                teamMember.member.nickName
                                 ))
