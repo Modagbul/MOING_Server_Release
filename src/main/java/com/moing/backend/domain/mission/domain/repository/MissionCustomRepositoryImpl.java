@@ -70,7 +70,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
         return Optional.ofNullable(queryFactory
                 .selectFrom(mission)
                 .where(
-                        mission.dueTo.after(oneHourAgo)
+                        mission.dueTo.eq(oneHourAgo)
                 ).fetch());
     }
 
