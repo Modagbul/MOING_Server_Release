@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
@@ -226,7 +227,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         List<Tuple> queryResults = queryFactory
                 .select(missionArchive.mission.team.teamId, missionArchive.archive)
                 .from(missionArchive)
-                .where(missionArchive.mission.team.teamId.in(teamIds))
+                .where(missionArchive.member.memberId.in(teamIds),
+                        missionArchive.mission.way.eq(MissionWay.PHOTO))
                 .orderBy(missionArchive.createdDate.desc())
                 .limit(14)
                 .fetch();
