@@ -43,6 +43,7 @@ public class FireControllerTest extends CommonControllerTest {
                 .receiveMemberId(1L)
                 .nickname("receiver 닉네임")
                 .fireStatus("True/False")
+                        .profileImg("https://oawijowijfi")
                 .build());
 
         given(fireThrowUseCase.getFireReceiveList(any(),any(),any())).willReturn(output);
@@ -74,7 +75,8 @@ public class FireControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description(GET_RECEIVERS_SUCCESS.getMessage()),
                                         fieldWithPath("data[].receiveMemberId").description("미션 아이디"),
                                         fieldWithPath("data[].nickname").description("불 받을 사람 "),
-                                        fieldWithPath("data[].fireStatus").description("불 던질 수 있는 상태 리턴, 1시간 내 불 던진 내역에 따라 true[True/False]")
+                                        fieldWithPath("data[].fireStatus").description("불 던질 수 있는 상태 리턴, 1시간 내 불 던진 내역에 따라 true[True/False]"),
+                                        fieldWithPath("data[].profileImg").description("프로필 이미지")
 
                                 )
                         )

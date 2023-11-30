@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionState.application.service;
 
+import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUseCase;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
@@ -25,9 +26,11 @@ import java.util.List;
 public class MissionStateScheduleUseCase {
 
     private final MissionStateUseCase missionStateUseCase;
+    private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
     private final MissionQueryService missionQueryService;
     private final MissionStateQueryService missionStateQueryService;
     private final MissionStateDeleteService missionStateDeleteService;
+
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
@@ -76,10 +79,8 @@ public class MissionStateScheduleUseCase {
      * 해당 시간 미션 마감
      * 한시간 마다 실행
      */
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 1 * * * *")
     public void singleMissionEndRoutine() {
-
-        LocalDateTime now = LocalDateTime.now();
 
         List<Mission> missionByDueTo = missionQueryService.findMissionByDueTo();
 
@@ -103,4 +104,11 @@ public class MissionStateScheduleUseCase {
             mission -> mission.updateStatus(MissionStatus.ONGOING)
         );
     }
+
+
+//    @Scheduled(cron = "8 0 0 * * *")
+//    public void MissionRemindAlarm() {
+//
+//        missionRemindAlarmUseCase.sendRemindMissionAlarm();
+//    }
 }
