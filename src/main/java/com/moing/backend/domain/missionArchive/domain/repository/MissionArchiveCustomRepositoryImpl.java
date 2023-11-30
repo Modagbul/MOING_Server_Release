@@ -227,8 +227,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         List<Tuple> queryResults = queryFactory
                 .select(missionArchive.mission.team.teamId, missionArchive.archive)
                 .from(missionArchive)
-                .where(missionArchive.member.memberId.in(teamIds),
-                        missionArchive.mission.way.eq(MissionWay.PHOTO))
+                .where(missionArchive.mission.team.teamId.in(teamIds),
+                        missionArchive.mission.way.eq(MissionWay.PHOTO),
+                        missionArchive.status.eq(MissionArchiveStatus.COMPLETE))
                 .orderBy(missionArchive.createdDate.desc())
                 .limit(14)
                 .fetch();
