@@ -44,6 +44,7 @@ public class TeamScoreLogicUseCase {
 
         teamScore.updateScore(getScoreByMission(mission));
         teamScore.levelUp();
+        team.updateLevelOfFire();
         teamScoreSaveService.save(teamScore);
         return teamScore.getScore();
     }
