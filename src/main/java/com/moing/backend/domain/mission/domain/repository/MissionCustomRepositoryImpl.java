@@ -5,7 +5,9 @@ import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionR
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.moing.backend.domain.missionState.domain.entity.QMissionState;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
+import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -99,6 +102,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
@@ -108,12 +112,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.dueTo.stringValue()
                 ))
                 .from(mission)
+                .leftJoin(missionState).on(mission.id.eq(missionState.mission.id))
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE)
-
+                        mission.type.eq(MissionType.ONCE),
+                        missionState.id.isNull() // missionState에 해당하는 행이 없는 경우만 필터링
                 )
+                .orderBy(mission.dueTo.desc())
                 .fetch());
     }
 
