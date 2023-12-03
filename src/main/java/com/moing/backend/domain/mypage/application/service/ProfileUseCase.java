@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class ProfileUseCase {
     @Transactional
     public void updateProfile(String socialId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberGetService.getMemberBySocialId(socialId);
-        if(updateProfileRequest.getProfileImage()!=null){
+        if (updateProfileRequest.getProfileImage() != null && member.getProfileImage() != null) {
             s3Service.deleteImage(member.getProfileImage());
         }
         member.updateProfile(
