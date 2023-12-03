@@ -54,7 +54,10 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 ))
                 .from(mission)
                         .leftJoin(missionArchive)
-                        .on(missionArchive.mission.eq(mission), missionArchive.member.memberId.eq(memberId))
+                        .on(missionArchive.mission.eq(mission),
+                                missionArchive.member.memberId.eq(memberId)
+//                                ,missionArchive.count.max().loe(missionArchive.mission.number)
+                        )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING),
@@ -117,7 +120,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
                         mission.type.eq(MissionType.ONCE),
-                        missionState.id.isNull() // missionState에 해당하는 행이 없는 경우만 필터링
+                        missionState.id.isNull()
                 )
                 .orderBy(mission.dueTo.desc())
                 .fetch());
