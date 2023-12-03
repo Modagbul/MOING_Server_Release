@@ -42,9 +42,7 @@ public class MissionStateUseCase {
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
-        log.info("done/total -> "+ done+ total);
-
-        return done == total-1;
+        return done.equals(total);
 
     }
     public boolean isAbleToScoreUp(Long missionId) {
