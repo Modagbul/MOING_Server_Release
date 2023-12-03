@@ -1,0 +1,10 @@
+
+
+[[Report-API]]
+= Report API
+
+[[Report-신고하기]]
+=== 신고하기
+operation::report-controller-test/신고하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
