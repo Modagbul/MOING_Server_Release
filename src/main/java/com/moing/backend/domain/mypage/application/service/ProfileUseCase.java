@@ -26,7 +26,9 @@ public class ProfileUseCase {
     @Transactional
     public void updateProfile(String socialId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberGetService.getMemberBySocialId(socialId);
-        deletePreviousImage(updateProfileRequest, member);
+        if(updateProfileRequest.getProfileImage()!=null){
+            s3Service.deleteImage(member.getProfileImage());
+        }
         member.updateProfile(
                 getUpdatedValue(updateProfileRequest.getProfileImage(), member.getProfileImage()),
                 getUpdatedValue(updateProfileRequest.getNickName(), member.getNickName()),
@@ -39,14 +41,6 @@ public class ProfileUseCase {
             return newValue;
         }
         return currentValue;
-    }
-
-    private void deletePreviousImage(UpdateProfileRequest updateProfileRequest, Member member) {
-        if (updateProfileRequest.getProfileImage() != null && member.getProfileImage() != null) {
-            CompletableFuture.runAsync(() -> {
-                s3Service.deleteImage(member.getProfileImage());
-            });
-        }
     }
 
 }
