@@ -50,6 +50,8 @@ public class GetTeamUseCase {
 
     public GetTeamCountResponse getTeamCount(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
-        return teamGetService.getTeamCountAndName(teamId, member.getMemberId());
+        GetTeamCountResponse response= teamGetService.getTeamCountAndName(teamId, member.getMemberId());
+        response.updateMemberName(member.getNickName());
+        return response;
     }
 }
