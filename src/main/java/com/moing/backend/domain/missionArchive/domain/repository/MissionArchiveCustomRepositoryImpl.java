@@ -264,10 +264,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
 
-        log.info("today"+ today);
-        log.info("startToday"+startOfToday);
-        log.info("endToday"+endOfToday);
-
         long count = queryFactory
                 .selectFrom(missionArchive)
                 .where(

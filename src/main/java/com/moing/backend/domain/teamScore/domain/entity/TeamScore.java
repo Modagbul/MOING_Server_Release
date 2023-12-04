@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
 @Entity
 @Getter
@@ -38,13 +39,12 @@ public class TeamScore extends BaseTimeEntity {
 
     public void levelUp() {
         final int[] steps = {1, 2, 10, 25, 45, 100};
-// 0부터 시작하기 때문에 무조건 0에서 걸림.
 
         for (int i = 5; i > 0; i--) {
             if (steps[i-1] <= this.level && this.level <= steps[i]) {
-                if (20 + (i-1) * 15 <= score) { // 여길 들어가질 않음
+                if (20 + ((i-1) * 15) <= score) {
                     this.level+=1;
-                    this.score -= (20 + (i-1) * 15);
+                    this.score -= (20 + ((i-1) * 15));
                     return;
                 }
             }

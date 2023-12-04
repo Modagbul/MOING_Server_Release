@@ -17,6 +17,6 @@ public enum NewNoticeUploadMessage {
     }
 
     public String body(String noticeTitle) {
-        return String.format(title, noticeTitle);
+        return String.format(body, noticeTitle);
     }
 }

@@ -7,6 +7,7 @@ import com.moing.backend.domain.missionState.application.service.MissionStateUse
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.domain.team.domain.service.TeamSaveService;
 import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
 import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 import com.moing.backend.domain.teamScore.domain.service.TeamScoreQueryService;
@@ -26,6 +27,7 @@ public class TeamScoreLogicUseCase {
     private final TeamScoreQueryService teamScoreQueryService;
     private final TeamScoreSaveService teamScoreSaveService;
     private final MissionStateQueryService missionStateQueryService;
+    private final TeamSaveService teamSaveService;
 
     public TeamScoreRes getTeamScoreInfo(Long teamId) {
 
@@ -44,7 +46,11 @@ public class TeamScoreLogicUseCase {
 
         teamScore.updateScore(getScoreByMission(mission));
         teamScore.levelUp();
+        team.updateLevelOfFire();
+
         teamScoreSaveService.save(teamScore);
+        teamSaveService.saveTeam(team);
+
         return teamScore.getScore();
     }
 
@@ -65,8 +71,6 @@ public class TeamScoreLogicUseCase {
     }
 
     public Long donePeople(Mission mission) {
-
-        log.info("done people-> {}", missionStateQueryService.stateCountByMissionId(mission.getId()));
         return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
     }
 
