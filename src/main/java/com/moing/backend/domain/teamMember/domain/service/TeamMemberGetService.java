@@ -29,10 +29,6 @@ public class TeamMemberGetService {
         return teamMemberRepository.findFcmTokensByTeamIdAndMemberId(teamId, memberId);
     }
 
-    public Optional<List<String>> getFcmTokens(Long teamId) {
-        return teamMemberRepository.findFcmTokensByTeamId(teamId);
-    }
-
     public List<TeamMemberInfo> getTeamMemberInfo(Long teamId){
         return teamMemberRepository.findTeamMemberInfoByTeamId(teamId);
     }
