@@ -41,9 +41,19 @@ public class MissionArchiveQueryService {
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
         Optional<List<MissionArchive>> optional = missionArchiveRepository.findMyArchives(memberId, missionId);
+
         if (optional.isPresent() && optional.get().size() == 0) {
             return new ArrayList<>();
-//            throw new NotFoundMissionArchiveException();
+        } else {
+            return optional.get();
+        }
+    }
+    public List<MissionArchive> findOneMyArchive(Long memberId, Long missionId, Long count) {
+
+        Optional<List<MissionArchive>> optional = missionArchiveRepository.findMyArchives(memberId, missionId);
+
+        if (optional.isPresent() && optional.get().size() == 0) {
+            return new ArrayList<>();
         } else {
             return optional.get();
         }

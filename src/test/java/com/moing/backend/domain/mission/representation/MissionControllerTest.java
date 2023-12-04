@@ -80,6 +80,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .type("ONCE/REPEAT")
                 .status("END/ONGOING/SUCCESS/FAIL")
                 .way("TEXT/PHOTO/LINK")
+                .isLeader(Boolean.FALSE)
                 .build();
 
         given(missionCreateUseCase.createMission(any(),any(),any())).willReturn(output);
@@ -124,7 +125,8 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
                                         fieldWithPath("data.type").description("미션 유형(단일/반복)"),
                                         fieldWithPath("data.way").description("미션 진행 방법(사진/글/링크)"),
-                                        fieldWithPath("data.status").description("미션 진행 상태")
+                                        fieldWithPath("data.status").description("미션 진행 상태"),
+                                        fieldWithPath("data.isLeader").description("소모임장 여부")
                                 )
                         )
                 )
@@ -157,6 +159,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .type("ONCE")
                 .status("END")
                 .way("TEXT")
+                .isLeader(Boolean.FALSE)
                 .build();
 
         given(missionUpdateUseCase.updateMission(any(),any(),any())).willReturn(output);
@@ -203,7 +206,8 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.number").description("미션 반복 횟수"),
                                         fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
                                         fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
-                                        fieldWithPath("data.status").description("미션 진행 상태(END/ONGOING/SUCCESS/FAIL)")
+                                        fieldWithPath("data.status").description("미션 진행 상태(END/ONGOING/SUCCESS/FAIL)"),
+                                        fieldWithPath("data.isLeader").description("소모임장 여부")
 
                                 )
                         )
@@ -224,6 +228,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .content("content")
                 .type("ONCE")
                 .way("TEXT")
+                .isLeader(Boolean.FALSE)
                 .build();
 
         given(missionReadUseCase.getMission(any(),any())).willReturn(output);
@@ -258,7 +263,9 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.rule").description("미션 규칙"),
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
-                                        fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)")
+                                        fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
+                                        fieldWithPath("data.isLeader").description("소모임장인지 여부")
+
 
                                 )
                         )
@@ -342,4 +349,62 @@ public class MissionControllerTest extends CommonControllerTest {
                 .andReturn();
 
     }
+
+    @Test
+    public void 미션_종료() throws Exception {
+        //given
+
+
+        MissionReadRes output = MissionReadRes.builder()
+                .title("title")
+                .dueTo("2023-12-31 23:39:22.333")
+                .rule("rule")
+                .content("content")
+                .type("ONCE")
+                .way("TEXT")
+                .isLeader(Boolean.FALSE)
+                .build();
+
+        given(missionUpdateUseCase.updateMissionStatus(any(),any())).willReturn(output);
+
+        Long teamId = 2L;
+        Long missionId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                put("/api/team/{teamId}/missions/{missionId}/end",teamId,missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description("로그인을 했습니다"),
+                                        fieldWithPath("data.title").description("미션 제목"),
+                                        fieldWithPath("data.dueTo").description("미션 마감 날짜"),
+                                        fieldWithPath("data.rule").description("미션 규칙"),
+                                        fieldWithPath("data.content").description("미션 내용"),
+                                        fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
+                                        fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
+                                        fieldWithPath("data.isLeader").description("소모임장 여부")
+
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+
 }

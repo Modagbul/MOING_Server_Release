@@ -3,6 +3,7 @@ package com.moing.backend.domain.mission.domain.service;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
+import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.exception.*;
@@ -27,6 +28,9 @@ public class MissionQueryService {
 
     public Mission findMissionById(Long missionId) {
         return missionRepository.findById(missionId).orElseThrow(NotFoundMissionException::new);
+    }
+    public MissionReadRes findMissionByIds(Long memberId, Long missionId) {
+        return missionRepository.findByIds(memberId,missionId).orElseThrow(NotFoundMissionException::new);
     }
 
     public Long findMissionsCountByTeam(Long teamId) {

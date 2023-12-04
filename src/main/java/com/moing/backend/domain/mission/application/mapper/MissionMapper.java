@@ -47,6 +47,7 @@ public class MissionMapper {
                 .type(mission.getType().name())
                 .status(mission.getStatus().name())
                 .number(mission.getNumber())
+                .isLeader(Boolean.TRUE)
                 .build();
     }
 
