@@ -16,6 +16,7 @@ public interface MissionArchiveCustomRepository {
     Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,OrderCondition orderCondition);
     Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,OrderCondition orderCondition);
     Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId);
+    Optional<List<MissionArchive>> findOneMyArchives(Long memberId,Long missionId,Long count);
 
     Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) ;
 
