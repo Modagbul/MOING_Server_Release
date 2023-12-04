@@ -66,6 +66,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.type.eq(MissionType.REPEAT)
                 )
                 .groupBy(mission.id)
+                        .orderBy(missionArchive.count().desc())
                 .fetch());
     }
 
@@ -124,7 +125,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.type.eq(MissionType.ONCE),
                         missionState.id.isNull()
                 )
-                .orderBy(mission.dueTo.desc())
+                .orderBy(mission.dueTo.asc())
                 .fetch());
     }
 
