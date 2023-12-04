@@ -10,7 +10,6 @@ import java.util.Optional;
 public interface TeamMemberCustomRepository {
     List<Long> findMemberIdsByTeamId(Long teamId);
     Optional<List<String>> findFcmTokensByTeamIdAndMemberId(Long teamId, Long memberId);
-    Optional<List<String>> findFcmTokensByTeamId(Long teamId);
     List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long teamId);
     List<TeamMember> findTeamMemberByMemberId(Long memberId);
 }
