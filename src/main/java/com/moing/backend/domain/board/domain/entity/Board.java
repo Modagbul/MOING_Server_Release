@@ -6,7 +6,7 @@ import com.moing.backend.domain.boardRead.domain.entity.BoardRead;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
-import com.moing.backend.global.util.AesConverter;
+import com.moing.backend.global.utils.AesConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
