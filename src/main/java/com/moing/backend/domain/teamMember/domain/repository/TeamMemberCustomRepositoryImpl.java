@@ -1,10 +1,10 @@
 package com.moing.backend.domain.teamMember.domain.repository;
 
+import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
 import com.moing.backend.domain.team.application.dto.response.QTeamMemberInfo;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
-import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
-import com.moing.backend.domain.team.domain.entity.QTeam;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -29,6 +29,21 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.team.isDeleted.eq(false)))
                 .fetch();
+    }
+
+    @Override
+    public Optional<List<MemberIdAndToken>> findIdAndTokensByTeamIdAndMemberId(Long teamId, Long memberId) {
+        List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
+                        teamMember.member.memberId,
+                        teamMember.member.fcmToken))
+                .from(teamMember)
+                .where(teamMember.team.teamId.eq(teamId)
+                        .and(teamMember.member.isNewUploadPush.eq(true))
+                        .and(teamMember.member.memberId.ne(memberId))
+                        .and(teamMember.isDeleted.eq(false)))
+                .fetch();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     @Override
