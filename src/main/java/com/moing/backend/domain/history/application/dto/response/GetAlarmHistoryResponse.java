@@ -3,6 +3,7 @@ package com.moing.backend.domain.history.application.dto.response;
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class GetAlarmHistoryResponse {
 
     private Long alarmHistoryId;
@@ -26,7 +28,7 @@ public class GetAlarmHistoryResponse {
 
     private String name;
 
-    private boolean isRead;
+    private Boolean isRead;
 
     private String createdDate;
 
