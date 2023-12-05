@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service("appleSignIn")
 @AllArgsConstructor
-public class AppleSignInUserCase implements SignInProvider {
+public class AppleSignInUseCase implements SignInProvider {
 
-    private final AppleTokenUserCase appleTokenUserCase;
+    private final AppleTokenUseCase appleTokenUseCase;
     private final MemberMapper memberMapper;
 
 
     public Member getUserData(String identityToken) {
-        Jws<Claims> oidcTokenJws = appleTokenUserCase.sigVerificationAndGetJws(identityToken);
+        Jws<Claims> oidcTokenJws = appleTokenUseCase.sigVerificationAndGetJws(identityToken);
 
         String socialId = oidcTokenJws.getBody().getSubject();
         String email = (String) oidcTokenJws.getBody().get("email");

@@ -19,7 +19,7 @@ import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
-public class AppleTokenUserCase {
+public class AppleTokenUseCase {
 
     @Value("${oauth2.apple.clientId}")
     private String appId;

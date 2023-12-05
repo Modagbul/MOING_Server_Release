@@ -1,4 +1,4 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.utils;
 
 import org.springframework.context.annotation.Configuration;
 

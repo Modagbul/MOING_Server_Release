@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Service("kakaoWithdraw")
 @RequiredArgsConstructor
-public class KakaoWithdrawUserCase implements WithdrawProvider {
+public class KakaoWithdrawUseCase implements WithdrawProvider {
 
     private final KakaoClient kakaoClient;
 

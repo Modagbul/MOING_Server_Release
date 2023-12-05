@@ -14,11 +14,11 @@ import reactor.core.publisher.Mono;
 
 @Service("googleSignIn")
 @RequiredArgsConstructor
-public class GoogleSignInUserCase implements SignInProvider {
+public class GoogleSignInUseCase implements SignInProvider {
 
     private final MemberMapper memberMapper;
     private final WebClient webClient;
-    private final GoogleTokenUserCase googleTokenUserCase;
+    private final GoogleTokenUseCase googleTokenUseCase;
 
     public Member getUserData(String accessToken) {
         GoogleUserResponse googleUserResponse = webClient.get()
@@ -30,7 +30,7 @@ public class GoogleSignInUserCase implements SignInProvider {
                 .block();
 
         if (googleUserResponse != null) {
-            googleTokenUserCase.verifyAccessToken(googleUserResponse.getAud());
+            googleTokenUseCase.verifyAccessToken(googleUserResponse.getAud());
             googleUserResponse.adaptResponse();
             return memberMapper.createGoogleMember(googleUserResponse);
         }

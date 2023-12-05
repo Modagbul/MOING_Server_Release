@@ -14,15 +14,15 @@ import reactor.core.publisher.Mono;
 
 @Service("kakaoSignIn")
 @RequiredArgsConstructor
-public class KakaoSignInUserCase implements SignInProvider {
+public class KakaoSignInUseCase implements SignInProvider {
 
     private final WebClient webClient;
     private final MemberMapper memberMapper;
-    private final KakaoTokenUserCase kakaoTokenUserCase;
+    private final KakaoTokenUseCase kakaoTokenUseCase;
 
     public Member getUserData(String accessToken) {
 
-        kakaoTokenUserCase.verifyAccessToken(accessToken);
+        kakaoTokenUseCase.verifyAccessToken(accessToken);
 
 
         KakaoUserResponse kakaoUserResponse = webClient.get()
