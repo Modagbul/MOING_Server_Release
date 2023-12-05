@@ -34,8 +34,8 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     @Override
     public Optional<List<MemberIdAndToken>> findIdAndTokensByTeamIdAndMemberId(Long teamId, Long memberId) {
         List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
-                        teamMember.member.memberId,
-                        teamMember.member.fcmToken))
+                        teamMember.member.fcmToken,
+                        teamMember.member.memberId))
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.isNewUploadPush.eq(true))

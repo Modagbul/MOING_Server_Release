@@ -39,15 +39,18 @@ public class SendBoardAlarmUseCase {
         Member member = baseServiceResponse.getMember();
         Team team = baseServiceResponse.getTeam();
 
-        if (board.isNotice() && member.isNewUploadPush()) {
+        if (board.isNotice()) {
+            System.out.println("공지인 경우");
             String title = NEW_NOTICE_UPLOAD_MESSAGE.title(team.getName());
             String body = NEW_NOTICE_UPLOAD_MESSAGE.body(board.getTitle());
             Optional<List<MemberIdAndToken>> memberIdAndTokens = teamMemberGetService.getMemberInfoExceptMe(team.getTeamId(), member.getMemberId());
             if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
                 //알림 보내기
+                System.out.println("###알림 보내기###");
                 List<String> fcmTokens = getFcmTokens(memberIdAndTokens);
                 eventPublisher.publishEvent(new FcmEvent(title, body, fcmTokens));
                 //알림 저장하기
+                System.out.println("###알림 저장###");
                 List<Long> memberIds = getMemberIds(memberIdAndTokens);
                 String idInfo = createIdInfo(team.getTeamId(), board.getBoardId());
                 saveAlarmHistory(idInfo, memberIds, title, body, team.getName());
