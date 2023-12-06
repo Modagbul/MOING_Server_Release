@@ -2,6 +2,7 @@ package com.moing.backend.domain.mission.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
+import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,8 @@ public interface MissionCustomRepository {
     Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus);
 
     boolean findRepeatMissionsByTeamId(Long teamId);
+
+    Optional<MissionReadRes> findByIds(Long memberId, Long missionId);
 
 
     }

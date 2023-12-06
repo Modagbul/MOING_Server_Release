@@ -109,6 +109,23 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
    @Override
+    public Optional<List<MissionArchive>> findOneMyArchives(Long memberId,Long missionId,Long count) {
+
+        return Optional.ofNullable(queryFactory
+                .select(missionArchive)
+                 .from(missionArchive)
+                 .where(
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.eq(memberId),
+                         missionArchive.count.eq(count)
+                )
+                .orderBy(missionArchive.createdDate.desc())
+                .fetch()
+
+        );
+    }
+
+    @Override
     public Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId) {
 
         return Optional.ofNullable(queryFactory

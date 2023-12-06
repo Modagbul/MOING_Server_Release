@@ -2,11 +2,13 @@ package com.moing.backend.domain.mission.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
+import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionState.domain.entity.QMissionState;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -137,5 +139,27 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.status.eq(MissionStatus.ONGOING)
                 ).fetchCount() > 2;
     }
+
+    @Override
+    public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
+
+
+        BooleanExpression isLeader = mission.team.leaderId.eq(memberId);
+
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(MissionReadRes.class,
+                        mission.title,
+                        mission.dueTo.stringValue(),
+                        mission.rule,
+                        mission.content,
+                        mission.type.stringValue(),
+                        mission.way.stringValue(),
+                        isLeader))
+                .from(mission)
+                .where(mission.id.eq(missionId))
+                .fetchOne()
+        );
+    }
+
 
 }
