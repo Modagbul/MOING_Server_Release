@@ -51,7 +51,7 @@ public class MissionArchiveDeleteUseCase {
     private final MissionStateQueryService missionStateQueryService;
 
 
-    public Long deleteArchive(String userSocialId, Long missionId) {
+    public Long deleteArchive(String userSocialId, Long missionId,Long count) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Long memberId = member.getMemberId();
@@ -63,7 +63,7 @@ public class MissionArchiveDeleteUseCase {
 
         }
 
-        MissionArchive deleteArchive = missionArchiveQueryService.findMyArchive(memberId, missionId).get(0);
+        MissionArchive deleteArchive = missionArchiveQueryService.findOneMyArchive(memberId, missionId,count).get(0);
         missionArchiveDeleteService.deleteMissionArchive(deleteArchive);
 
         MissionState missionState = missionStateQueryService.findMissionState(member, mission);

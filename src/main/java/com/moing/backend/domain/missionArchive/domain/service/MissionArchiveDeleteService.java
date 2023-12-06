@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MissionArchiveDeleteService {
 
-    private MissionArchiveRepository missionArchiveRepository;
+    private final MissionArchiveRepository missionArchiveRepository;
 
     public void deleteMissionArchive(MissionArchive missionArchive) {
         missionArchiveRepository.delete(missionArchive);

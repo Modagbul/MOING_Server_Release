@@ -109,6 +109,23 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
    @Override
+    public Optional<List<MissionArchive>> findOneMyArchives(Long memberId,Long missionId,Long count) {
+
+        return Optional.ofNullable(queryFactory
+                .select(missionArchive)
+                 .from(missionArchive)
+                 .where(
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.eq(memberId),
+                         missionArchive.count.eq(count)
+                )
+                .orderBy(missionArchive.createdDate.desc())
+                .fetch()
+
+        );
+    }
+
+    @Override
     public Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId) {
 
         return Optional.ofNullable(queryFactory
@@ -263,10 +280,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-
-        log.info("today"+ today);
-        log.info("startToday"+startOfToday);
-        log.info("endToday"+endOfToday);
 
         long count = queryFactory
                 .selectFrom(missionArchive)

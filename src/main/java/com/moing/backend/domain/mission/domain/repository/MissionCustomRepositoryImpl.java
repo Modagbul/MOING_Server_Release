@@ -2,10 +2,14 @@ package com.moing.backend.domain.mission.domain.repository;
 
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
+import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.moing.backend.domain.missionState.domain.entity.QMissionState;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -16,6 +20,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
+import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -51,13 +56,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 ))
                 .from(mission)
                         .leftJoin(missionArchive)
-                        .on(missionArchive.mission.eq(mission), missionArchive.member.memberId.eq(memberId))
+                        .on(missionArchive.mission.eq(mission),
+                                missionArchive.member.memberId.eq(memberId)
+//                                ,missionArchive.count.max().loe(missionArchive.mission.number)
+                        )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING),
                         mission.type.eq(MissionType.REPEAT)
                 )
                 .groupBy(mission.id)
+                        .orderBy(missionArchive.count().desc())
                 .fetch());
     }
 
@@ -99,6 +108,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
@@ -108,12 +118,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.dueTo.stringValue()
                 ))
                 .from(mission)
+                .leftJoin(missionState).on(mission.id.eq(missionState.mission.id))
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE)
-
+                        mission.type.eq(MissionType.ONCE),
+                        missionState.id.isNull()
                 )
+                .orderBy(mission.dueTo.asc())
                 .fetch());
     }
 
@@ -127,5 +139,27 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.status.eq(MissionStatus.ONGOING)
                 ).fetchCount() > 2;
     }
+
+    @Override
+    public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
+
+
+        BooleanExpression isLeader = mission.team.leaderId.eq(memberId);
+
+        return Optional.ofNullable(queryFactory
+                .select(Projections.constructor(MissionReadRes.class,
+                        mission.title,
+                        mission.dueTo.stringValue(),
+                        mission.rule,
+                        mission.content,
+                        mission.type.stringValue(),
+                        mission.way.stringValue(),
+                        isLeader))
+                .from(mission)
+                .where(mission.id.eq(missionId))
+                .fetchOne()
+        );
+    }
+
 
 }

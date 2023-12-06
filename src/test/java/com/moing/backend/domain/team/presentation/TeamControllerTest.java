@@ -521,6 +521,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .teamName("소모임 이름")
                 .numOfTeam(2L)
                 .leaderName("소모임장 이름")
+                .memberName("멤버 이름")
                 .build();
 
         given(getTeamUseCase.getTeamCount(any(), any())).willReturn(output);
@@ -550,7 +551,8 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description("소모임을 수정했습니다."),
                                         fieldWithPath("data.teamName").description("소모임 이름"),
                                         fieldWithPath("data.numOfTeam").description("지금까지 가입한 소모임 개수"),
-                                        fieldWithPath("data.leaderName").description("소모임장 이름")
+                                        fieldWithPath("data.leaderName").description("소모임장 이름"),
+                                        fieldWithPath("data.memberName").description("유저 닉네임")
                                 )
                         )
                 );

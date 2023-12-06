@@ -91,4 +91,8 @@ public class Team extends BaseTimeEntity {
     public void deleteTeamMember(){
         numOfMember--;
     }
+
+    public void updateLevelOfFire() {
+        levelOfFire++;
+    }
 }

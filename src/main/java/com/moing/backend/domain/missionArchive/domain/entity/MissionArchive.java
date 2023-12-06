@@ -39,7 +39,7 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     @Enumerated(value = EnumType.STRING)
     private MissionArchiveStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4000)
     private String archive; //링크, 글, 사진 뭐든 가능
 
     private Long count; // 횟수

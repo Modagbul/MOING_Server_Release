@@ -13,9 +13,14 @@ public class GetTeamCountResponse {
     private String teamName;
     private Long numOfTeam;
     private String leaderName;
+    private String memberName;
 
     public void updateCount(Long count){
         this.numOfTeam=count;
+    }
+
+    public void updateMemberName(String nickName){
+        this.memberName=nickName;
     }
 
     @QueryProjection

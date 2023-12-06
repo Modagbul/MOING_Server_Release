@@ -65,6 +65,16 @@ public class MissionController {
     }
 
     /**
+     * 미션 종료
+     * [PUT] {teamId}/missions/{missionId}/end
+     * 작성자 : 정승연
+     */
+    @PutMapping("/{missionId}/end")
+    public ResponseEntity<SuccessResponse<MissionReadRes>> endMission(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId,@PathVariable Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(END_MISSION_SUCCESS.getMessage(), this.missionUpdateUseCase.updateMissionStatus(user.getSocialId(),missionId)));
+    }
+
+    /**
      * 미션 삭제
      * [DELETE] {teamId}/missions/{missionId}
      * 작성자 : 정승연
@@ -84,6 +94,11 @@ public class MissionController {
     public ResponseEntity<SuccessResponse<String>> recommendMission(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getTeamCategory(teamId)));
     }
+
+
+
+
+
 
 
 }
