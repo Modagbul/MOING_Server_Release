@@ -44,12 +44,9 @@ public class AlarmHistoryController {
         return ResponseEntity.ok(SuccessResponse.create(READ_ALARM_HISTORY.getMessage()));
     }
 
+    //TODO
     /**
      * 안 읽은 알림 개수 조회
      * [GET] api/history/alarm/count
      */
-    @GetMapping("/count")
-    public ResponseEntity<SuccessResponse<>> getAlarmHistoryCount(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(SuccessResponse.create())
-    }
 }

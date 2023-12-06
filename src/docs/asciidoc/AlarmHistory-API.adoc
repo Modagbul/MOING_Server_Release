@@ -1,5 +1,8 @@
+[[AlarmHistory-API]]
+= AlarmHistory API
+
 [[AlarmHistory-알림-모아보기]]
-= AlarmHistory 알림 모아보기
+== AlarmHistory 알림 모아보기
 operation::alarm-history-controller-test/get_all_alarm_history[snippets='http-request,http-response,response-fields']
 
 == Type Category
@@ -22,3 +25,7 @@ operation::alarm-history-controller-test/get_all_alarm_history[snippets='http-re
 | 소모임 반려
 
 |===
+
+[[AlarmHistory-알림-단건-조회하기]]
+== AlarmHistory 알림 단건 조회하기
+operation::alarm-history-controller-test/read_alarm_history[snippets='http-request,http-response,response-fields']

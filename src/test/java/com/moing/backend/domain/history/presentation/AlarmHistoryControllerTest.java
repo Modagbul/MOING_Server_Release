@@ -1,31 +1,28 @@
 package com.moing.backend.domain.history.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.history.application.dto.response.GetAlarmHistoryResponse;
 import com.moing.backend.domain.history.application.service.GetAlarmHistoryUseCase;
+import com.moing.backend.domain.history.application.service.ReadAlarmHistoryUseCase;
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static com.moing.backend.domain.fire.presentation.constant.FireResponseMessage.GET_RECEIVERS_SUCCESS;
 import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.GET_ALL_ALARM_HISTORY;
+import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.READ_ALARM_HISTORY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -34,6 +31,9 @@ class AlarmHistoryControllerTest extends CommonControllerTest {
 
     @MockBean
     private GetAlarmHistoryUseCase getAlarmHistoryUseCase;
+
+    @MockBean
+    private ReadAlarmHistoryUseCase readAlarmHistoryUseCase;
 
     @Test
     public void get_all_alarm_history() throws Exception {
@@ -86,4 +86,34 @@ class AlarmHistoryControllerTest extends CommonControllerTest {
                 .andReturn();
 
     }
+
+    @Test
+    public void read_alarm_history() throws Exception {
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                post("/api/history/alarm/read?alarmHistoryId=1")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(READ_ALARM_HISTORY.getMessage())
+
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+
 }
