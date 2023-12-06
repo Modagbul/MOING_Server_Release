@@ -1,5 +1,6 @@
 package com.moing.backend.domain.teamMember.domain.service;
 
+import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -35,5 +36,9 @@ public class TeamMemberGetService {
 
     public List<TeamMember> getNotDeletedTeamMember(Long memberId){
         return teamMemberRepository.findTeamMemberByMemberId(memberId);
+    }
+
+    public Optional<List<MemberIdAndToken>> getMemberInfoExceptMe(Long teamId, Long memberId) {
+        return teamMemberRepository.findIdAndTokensByTeamIdAndMemberId(teamId, memberId);
     }
 }

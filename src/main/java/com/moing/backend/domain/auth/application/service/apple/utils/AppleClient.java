@@ -1,6 +1,6 @@
 package com.moing.backend.domain.auth.application.service.apple.utils;
 
-import com.moing.backend.global.util.FeignClientConfig;
+import com.moing.backend.global.utils.FeignClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

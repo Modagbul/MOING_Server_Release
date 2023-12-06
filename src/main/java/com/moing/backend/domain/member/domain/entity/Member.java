@@ -7,7 +7,7 @@ import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
-import com.moing.backend.global.util.AesConverter;
+import com.moing.backend.global.utils.AesConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

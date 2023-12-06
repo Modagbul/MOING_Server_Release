@@ -1,11 +1,10 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.utils;
 
 import com.moing.backend.domain.member.domain.constant.Gender;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.member.domain.service.MemberSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

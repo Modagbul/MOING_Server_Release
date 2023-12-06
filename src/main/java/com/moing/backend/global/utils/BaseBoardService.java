@@ -1,4 +1,4 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.utils;
 
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.board.domain.service.BoardGetService;

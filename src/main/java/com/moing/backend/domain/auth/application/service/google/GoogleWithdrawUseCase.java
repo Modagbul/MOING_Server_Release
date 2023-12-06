@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Service("googleWithdraw")
 @RequiredArgsConstructor
-public class GoogleWithdrawUserCase implements WithdrawProvider {
+public class GoogleWithdrawUseCase implements WithdrawProvider {
 
     private final GoogleClient googleClient;
 
