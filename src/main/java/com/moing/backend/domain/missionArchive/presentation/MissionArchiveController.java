@@ -73,11 +73,12 @@ public class MissionArchiveController {
      * 작성자 : 정승연
      **/
 
-    @DeleteMapping()
+    @DeleteMapping("/{count}")
     public ResponseEntity<SuccessResponse<Long>> deleteArchive(@AuthenticationPrincipal User user,
-                                                               @PathVariable("teamId") Long teamId,
-                                                               @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(UPDATE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveDeleteUseCase.deleteArchive(user.getSocialId(), missionId)));
+                                                                            @PathVariable("teamId") Long teamId,
+                                                                            @PathVariable("missionId") Long missionId,
+                                                                            @PathVariable("count") Long count) {
+        return ResponseEntity.ok(SuccessResponse.create(DELETE_ARCHIVE_SUCCESS.getMessage(), this.missionArchiveDeleteUseCase.deleteArchive(user.getSocialId(), missionId,count)));
     }
 
     /**

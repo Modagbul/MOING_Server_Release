@@ -20,4 +20,6 @@ public class MissionCreateRes {
     private String status;
     private String way;
 
+    private Boolean isLeader;
+
 }

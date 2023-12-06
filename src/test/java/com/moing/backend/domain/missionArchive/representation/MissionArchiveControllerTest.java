@@ -188,13 +188,14 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         //given
 
         Long output = 1L;
-        given(missionArchiveDeleteUseCase.deleteArchive(any(),any())).willReturn(output);
+        Long count  =1L;
+        given(missionArchiveDeleteUseCase.deleteArchive(any(),any(),any())).willReturn(output);
 
         Long teamId = 1L;
         Long missionId = 1L;
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                delete("/api/team/{teamId}/missions/{missionId}/archive",teamId,missionId)
+                delete("/api/team/{teamId}/missions/{missionId}/archive/{count}",teamId,missionId,count)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -209,11 +210,12 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
-                                        parameterWithName("missionId").description("미션 아이디")
+                                        parameterWithName("missionId").description("미션 아이디"),
+                                        parameterWithName("count").description("반복미션 횟수(단일 미션일 경우 1, 반복미션일 경우 n")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
-                                        fieldWithPath("message").description(UPDATE_ARCHIVE_SUCCESS),
+                                        fieldWithPath("message").description(DELETE_ARCHIVE_SUCCESS),
                                         fieldWithPath("data").description("삭제한 미션 인증 아이디(무시)")
                                 )
                         )

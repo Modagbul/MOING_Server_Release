@@ -37,18 +37,8 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.isNewUploadPush.eq(true))
-                        .and(teamMember.member.memberId.ne(memberId)))
-                .fetch();
-
-        return result.isEmpty() ? Optional.empty() : Optional.of(result);
-    }
-
-    @Override
-    public Optional<List<String>> findFcmTokensByTeamId(Long teamId) {
-        List<String> result = queryFactory.select(teamMember.member.fcmToken)
-                .from(teamMember)
-                .where(teamMember.team.teamId.eq(teamId)
-                        .and(teamMember.member.isNewUploadPush.eq(true)))
+                        .and(teamMember.member.memberId.ne(memberId))
+                        .and(teamMember.isDeleted.eq(false)))
                 .fetch();
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result);

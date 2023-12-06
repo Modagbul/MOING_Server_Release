@@ -34,3 +34,9 @@ operation::mission-controller-test/미션_추천[snippets='http-request,path-par
 
 ---
 
+[[Mission-종료]]
+=== Mission 종료
+operation::mission-controller-test/미션_종료[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+

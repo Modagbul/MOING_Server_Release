@@ -27,9 +27,7 @@ public class MissionReadUseCase {
     public MissionReadRes getMission(String userSocialId, Long missionId) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-
-        Mission mission = missionQueryService.findMissionById(missionId);
-        return MissionMapper.mapToMissionReadRes(mission);
+        return missionQueryService.findMissionByIds(member.getMemberId(),missionId);
     }
 
     public String getTeamCategory(Long teamId) {

@@ -20,7 +20,7 @@ public class GetTeamCountResponse {
     }
 
     public void updateMemberName(String nickName){
-        this.memberName=memberName;
+        this.memberName=nickName;
     }
 
     @QueryProjection
