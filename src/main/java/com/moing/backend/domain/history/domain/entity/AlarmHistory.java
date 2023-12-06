@@ -42,4 +42,8 @@ public class AlarmHistory extends BaseTimeEntity {
     private String name;
 
     private boolean isRead;
+
+    public void readAlarmHistory(){
+        this.isRead=true;
+    }
 }

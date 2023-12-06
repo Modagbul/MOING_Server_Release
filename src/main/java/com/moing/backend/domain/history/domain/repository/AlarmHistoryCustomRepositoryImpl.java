@@ -2,12 +2,16 @@ package com.moing.backend.domain.history.domain.repository;
 
 import com.moing.backend.domain.history.application.dto.response.GetAlarmHistoryResponse;
 import com.moing.backend.domain.history.application.dto.response.QGetAlarmHistoryResponse;
+import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.moing.backend.domain.history.domain.entity.QAlarmHistory.alarmHistory;
+import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 
 public class AlarmHistoryCustomRepositoryImpl implements AlarmHistoryCustomRepository {
 
