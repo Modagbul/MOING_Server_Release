@@ -22,6 +22,6 @@ public class AlarmHistoryGetService {
     }
 
     public AlarmHistory getAlarmHistory(Long alarmHistoryId, Long memberId){
-        return alarmHistoryRepository.findAlarmHistoryByIdAndReceiverId(alarmHistoryId, alarmHistoryId).orElseThrow(NotFoundAlarmHistoryException::new);
+        return alarmHistoryRepository.findAlarmHistoryByIdAndReceiverId(alarmHistoryId, memberId).orElseThrow(NotFoundAlarmHistoryException::new);
     }
 }

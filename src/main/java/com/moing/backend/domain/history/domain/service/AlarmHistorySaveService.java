@@ -15,8 +15,12 @@ public class AlarmHistorySaveService {
 
     private final AlarmHistoryRepository alarmHistoryRepository;
 
-    public void saveAlarmHistory(List<AlarmHistory> alarmHistories){
+    public void saveAlarmHistories(List<AlarmHistory> alarmHistories){
         alarmHistoryRepository.saveAll(alarmHistories);
+    }
+
+    public void saveAlarmHistory(AlarmHistory alarmHistory){
+        alarmHistoryRepository.save(alarmHistory);
     }
 
 }
