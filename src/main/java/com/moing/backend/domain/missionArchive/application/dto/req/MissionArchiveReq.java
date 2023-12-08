@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 public class MissionArchiveReq {
 
     private String status;
-    @Size(min = 1, max = 4000)
+    @Size(min = 1, max = 1000)
     private String archive; //사진일 경우 파일명, 이외에는 text,link
 
     @Builder
