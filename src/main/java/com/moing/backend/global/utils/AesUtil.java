@@ -1,7 +1,7 @@
 package com.moing.backend.global.utils;
 
+import com.moing.backend.global.annotation.Util;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-@Component
+@Util
 public class AesUtil {
     private final String key;
     private final String alg;
