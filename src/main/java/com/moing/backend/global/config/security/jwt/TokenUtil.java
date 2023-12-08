@@ -7,6 +7,7 @@ import com.moing.backend.global.response.TokenInfoResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,9 +34,6 @@ public class TokenUtil implements InitializingBean {
 
     @Value("${jwt.refresh-token-period}")
     private long refreshTokenValidityTime;
-
-    @Value("${jwt.reissue-token-period}")
-    private Long reissueTokenValidityTime;
 
     private Key key;
 
@@ -99,45 +97,37 @@ public class TokenUtil implements InitializingBean {
         }
     }
 
+    public boolean verifyRefreshToken(String token) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     //refresh token 관련
     public void storeRefreshToken(String socialId, TokenInfoResponse token) {
         redisUtil.save(token.getRefreshToken(), socialId);
     }
 
     public TokenInfoResponse tokenReissue(String token) {
+
         String socialId = getSocialId(token);
         Member member = memberQueryService.getMemberBySocialId(socialId);
-
-        // socialId 에 해당하는 refreshToken redis 에서 가져오기
         String storedRefreshToken = redisUtil.findById(socialId).orElseThrow(NotFoundRefreshToken::new);
 
-        //가져온 refeshToken이랑 입력한 refeshToken이랑 비교
-        if(storedRefreshToken == null || !storedRefreshToken.equals(token)) throw new NotFoundRefreshToken();
+        if(storedRefreshToken == null || !storedRefreshToken.equals(token)) {
+            throw new NotFoundRefreshToken();
+        }
 
         // Token 생성
         TokenInfoResponse newToken = createToken(member, true);
 
-        // refreshToken 기간이 얼마남지 않았을 경우 (3일 미만)
-        if (isExpired(token)) {
-            log.info("Refresh token reissue");
-            storeRefreshToken(socialId, newToken);
-        }
-
-        // refreshToken 의 유효기간이 3일 이상 남았을 경우 (refreshToken 그대로 넣어서 응답)
-        else newToken.updateRefreshToken(token);
+        // Token 저장
+        storeRefreshToken(socialId, newToken);
 
         return newToken;
-    }
-
-
-    private boolean isExpired(String token) {
-        Date expireDate = getExpiration(token);
-        Date currentDate = new Date();
-
-        if (expireDate.getTime() - currentDate.getTime() < reissueTokenValidityTime)
-            return true;
-        else
-            return false;
     }
 
 
@@ -166,7 +156,6 @@ public class TokenUtil implements InitializingBean {
     public String getSocialId(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
-
 
 }
 
