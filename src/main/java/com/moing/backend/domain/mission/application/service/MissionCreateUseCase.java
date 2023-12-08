@@ -74,4 +74,13 @@ public class MissionCreateUseCase {
                 .build();
     }
 
+
+    public Boolean getIsLeader(String socialId, Long teamId) {
+        Member member = memberGetService.getMemberBySocialId(socialId);
+        Team team = teamGetService.getTeamByTeamId(teamId);
+
+        return member.getMemberId().equals(team.getLeaderId());
+
+    }
+
 }
