@@ -4,7 +4,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mypage.application.dto.request.UpdateProfileRequest;
 import com.moing.backend.domain.mypage.application.dto.response.GetProfileResponse;
-import com.moing.backend.global.config.s3.S3Service;
+import com.moing.backend.global.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class ProfileUseCase {
 
     private final MemberGetService memberGetService;
-    private final S3Service s3Service;
+    private final UpdateUtils updateUtils;
 
     public GetProfileResponse getProfile(String socialId){
         Member member=memberGetService.getMemberBySocialId(socialId);
@@ -25,21 +25,15 @@ public class ProfileUseCase {
     @Transactional
     public void updateProfile(String socialId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberGetService.getMemberBySocialId(socialId);
-        if (updateProfileRequest.getProfileImage() != null && member.getProfileImage() != null) {
-            s3Service.deleteImage(member.getProfileImage());
-        }
-        member.updateProfile(
-                getUpdatedValue(updateProfileRequest.getProfileImage(), member.getProfileImage()),
-                getUpdatedValue(updateProfileRequest.getNickName(), member.getNickName()),
-                getUpdatedValue(updateProfileRequest.getIntroduction(), member.getIntroduction())
-        );
-    }
+        String oldProfileImageUrl = member.getProfileImage();
 
-    private String getUpdatedValue(String newValue, String currentValue) {
-        if (newValue != null) {
-            return newValue;
-        }
-        return currentValue;
+        member.updateProfile(
+                UpdateUtils.getUpdatedValue(updateProfileRequest.getProfileImage(), member.getProfileImage()),
+                UpdateUtils.getUpdatedValue(updateProfileRequest.getNickName(), member.getNickName()),
+                UpdateUtils.getUpdatedValue(updateProfileRequest.getIntroduction(), member.getIntroduction())
+        );
+
+        updateUtils.deleteOldImgUrl(updateProfileRequest.getProfileImage(), oldProfileImageUrl);
     }
 
 }

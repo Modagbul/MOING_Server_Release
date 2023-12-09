@@ -47,7 +47,7 @@ public class S3Service {
         }
     }
 
-        private String createFileName(String fileExtension) {
+    private String createFileName(String fileExtension) {
         return UUID.randomUUID() + "." + fileExtension;
     }
 

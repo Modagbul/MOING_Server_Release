@@ -18,7 +18,7 @@ public class ReissueTokenUseCase {
 
     public ReissueTokenResponse reissueToken(String token) {
         // refresh 토큰이 유효한지 확인
-        if (token != null && tokenUtil.verifyToken(token)) {
+        if (token != null && tokenUtil.verifyRefreshToken(token)) {
             // 토큰 새로 받아오기
             TokenInfoResponse newToken = tokenUtil.tokenReissue(token);
 
