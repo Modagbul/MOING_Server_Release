@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface AlarmHistoryRepository extends JpaRepository<AlarmHistory, Long>, AlarmHistoryCustomRepository {
 
     Optional<AlarmHistory> findAlarmHistoryByIdAndReceiverId(Long id, Long receiverId);
+
 }
