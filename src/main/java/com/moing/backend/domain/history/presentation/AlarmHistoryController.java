@@ -1,5 +1,6 @@
 package com.moing.backend.domain.history.presentation;
 
+import com.moing.backend.domain.history.application.dto.response.GetAlarmCountResponse;
 import com.moing.backend.domain.history.application.dto.response.GetAlarmHistoryResponse;
 import com.moing.backend.domain.history.application.service.GetAlarmHistoryUseCase;
 import com.moing.backend.domain.history.application.service.ReadAlarmHistoryUseCase;
@@ -48,7 +49,7 @@ public class AlarmHistoryController {
      * [GET] api/history/alarm/count
      */
     @GetMapping("/count")
-    public ResponseEntity<SuccessResponse<String>> getUnreadAlarmCount(@AuthenticationPrincipal User user) {
+    public ResponseEntity<SuccessResponse<GetAlarmCountResponse>> getUnreadAlarmCount(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_UNREAD_ALARM_HISTORY.getMessage(), getAlarmHistoryUseCase.getUnreadAlarmCount(user.getSocialId())));
     }
 }

@@ -1,6 +1,7 @@
 package com.moing.backend.domain.history.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
+import com.moing.backend.domain.history.application.dto.response.GetAlarmCountResponse;
 import com.moing.backend.domain.history.application.dto.response.GetAlarmHistoryResponse;
 import com.moing.backend.domain.history.application.service.GetAlarmHistoryUseCase;
 import com.moing.backend.domain.history.application.service.ReadAlarmHistoryUseCase;
@@ -15,8 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.GET_ALL_ALARM_HISTORY;
-import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.READ_ALARM_HISTORY;
+import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -108,6 +108,42 @@ class AlarmHistoryControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(READ_ALARM_HISTORY.getMessage())
+
+                                )
+                        )
+                )
+                .andReturn();
+
+    }
+
+    @Test
+    public void get_alarm_count() throws Exception {
+        //given
+        GetAlarmCountResponse output = new GetAlarmCountResponse("99+");
+
+        given(getAlarmHistoryUseCase.getUnreadAlarmCount(any())).willReturn(output);
+
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                get("/api/history/alarm/count")
+                        .header("Authorization", "Bearer ACCESS_TOKEN")
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(GET_UNREAD_ALARM_HISTORY.getMessage()),
+                                        fieldWithPath("data.count").description("안 읽음 알림 개수 (99보다 크면 99+)")
+
 
                                 )
                         )

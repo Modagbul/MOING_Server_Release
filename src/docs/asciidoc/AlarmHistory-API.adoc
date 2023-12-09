@@ -29,3 +29,7 @@ operation::alarm-history-controller-test/get_all_alarm_history[snippets='http-re
 [[AlarmHistory-알림-단건-조회하기]]
 == AlarmHistory 알림 단건 조회하기
 operation::alarm-history-controller-test/read_alarm_history[snippets='http-request,http-response,response-fields']
+
+[[AlarmHistory-안읽은-알림개수-조회하기]]
+== AlarmHistory 안읽은 알림 개수 조회하기
+operation::alarm-history-controller-test/get_alarm_count[snippets='http-request,http-response,response-fields']
