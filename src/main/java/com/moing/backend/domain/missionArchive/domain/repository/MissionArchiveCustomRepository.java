@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
@@ -30,5 +31,8 @@ public interface MissionArchiveCustomRepository {
     Optional<List<MissionArchivePhotoRes>> findTop5ArchivesByTeam(List<Long> teamIds);
 
     Boolean findMyArchivesToday(Long memberId,Long missionId);
+
+    Optional<List<String>> findPeopleRemainMission();
+
 
     }

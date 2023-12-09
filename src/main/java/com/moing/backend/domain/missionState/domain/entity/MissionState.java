@@ -23,7 +23,7 @@ public class MissionState extends BaseTimeEntity {
     @Column(name = "missionState_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Mission mission;
     @OneToOne
     private Member member;

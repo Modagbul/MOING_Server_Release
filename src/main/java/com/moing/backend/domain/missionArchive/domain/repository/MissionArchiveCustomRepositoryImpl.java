@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,11 @@ import java.util.Optional;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
+import static com.moing.backend.domain.team.domain.entity.QTeam.team;
+import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 import static javax.swing.Spring.constant;
+import static org.springframework.data.jpa.domain.Specification.where;
+
 @Slf4j
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
 
@@ -291,6 +297,27 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .fetchCount();
 
         return count > 0;
+    }
+
+
+    public Optional<List<String>> findPeopleRemainMission() {
+        return Optional.ofNullable(queryFactory
+                .select(teamMember.member.nickName).distinct()
+                .from(teamMember)
+                .join(teamMember.team, team)
+                .join(team.missions, mission)
+                .join(mission.missionStateList,missionState)
+                        .where(missionState.isNull())
+                        .fetch());
+//                .where(
+//                        //  active 한 미션 필터링
+//                        (((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
+//                                .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))),
+//                        // 인증하지 않은값
+//                        missionState.id.isNull()
+
+
+//                ).fetch());
     }
 
 

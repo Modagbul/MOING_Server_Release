@@ -6,10 +6,12 @@ import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
 import com.moing.backend.domain.missionState.domain.entity.QMissionState;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -58,15 +60,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         .leftJoin(missionArchive)
                         .on(missionArchive.mission.eq(mission),
                                 missionArchive.member.memberId.eq(memberId)
-//                                ,missionArchive.count.max().loe(missionArchive.mission.number)
                         )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING),
                         mission.type.eq(MissionType.REPEAT)
+
                 )
-                .groupBy(mission.id)
-                        .orderBy(missionArchive.count().desc())
+                .groupBy(mission.id,mission.number)
+//                .having(missionArchive.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+
+                .orderBy(missionArchive.count().desc())
                 .fetch());
     }
 
