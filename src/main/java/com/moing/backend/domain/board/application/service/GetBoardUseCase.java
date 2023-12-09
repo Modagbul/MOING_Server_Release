@@ -8,7 +8,7 @@ import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUse
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.util.BaseBoardService;
+import com.moing.backend.global.utils.BaseBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class GetBoardUseCase {
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         // 2. 읽음 처리
         createBoardReadUseCase.createBoardRead(data.getTeam(), data.getMember(), data.getBoard());
-        return boardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember());
+        return boardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember(), data.getBoard().getTeamMember().isDeleted());
     }
 
     /**

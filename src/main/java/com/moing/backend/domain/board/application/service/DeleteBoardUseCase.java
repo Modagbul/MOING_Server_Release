@@ -3,7 +3,7 @@ package com.moing.backend.domain.board.application.service;
 import com.moing.backend.domain.board.domain.service.BoardDeleteService;
 import com.moing.backend.domain.board.exception.NotAuthByBoardException;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.util.BaseBoardService;
+import com.moing.backend.global.utils.BaseBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

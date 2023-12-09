@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Service("appleWithdraw")
 @RequiredArgsConstructor
-public class AppleWithdrawUserCase implements WithdrawProvider {
+public class AppleWithdrawUseCase implements WithdrawProvider {
 
     @Value("${oauth2.apple.keyId}")
     private String keyId;

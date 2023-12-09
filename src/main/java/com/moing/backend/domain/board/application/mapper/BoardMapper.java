@@ -34,12 +34,13 @@ public class BoardMapper {
         return board;
     }
 
-    public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter) {
+    public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
+        String nickName = writerIsDeleted ? "(알 수 없음)" : board.getWriterNickName();
         return GetBoardDetailResponse.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .writerNickName(board.getWriterNickName())
+                .writerNickName(nickName)
                 .writerIsLeader(board.isLeader())
                 .writerProfileImage(board.getWriterProfileImage())
                 .createdDate(getFormattedDate(board.getCreatedDate()))

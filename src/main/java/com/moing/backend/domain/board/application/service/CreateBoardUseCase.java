@@ -6,9 +6,14 @@ import com.moing.backend.domain.board.application.mapper.BoardMapper;
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.board.domain.service.BoardSaveService;
 import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUseCase;
+import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
+import com.moing.backend.domain.history.domain.entity.AlarmHistory;
+import com.moing.backend.domain.history.domain.entity.AlarmType;
+import com.moing.backend.domain.history.domain.entity.PagePath;
+import com.moing.backend.domain.history.domain.service.AlarmHistorySaveService;
 import com.moing.backend.domain.team.application.service.CheckLeaderUseCase;
 import com.moing.backend.global.response.BaseServiceResponse;
-import com.moing.backend.global.util.BaseService;
+import com.moing.backend.global.utils.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +46,7 @@ public class CreateBoardUseCase {
 
         //3. 알림 보내기 - 공지인 경우
         sendBoardAlarmUseCase.sendNewUploadAlarm(data, board);
+
         return new CreateBoardResponse(board.getBoardId());
     }
 }

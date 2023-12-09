@@ -7,7 +7,7 @@ import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
 import com.moing.backend.domain.boardComment.domain.service.BoardCommentSaveService;
 import com.moing.backend.domain.team.application.service.CheckLeaderUseCase;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.util.BaseBoardService;
+import com.moing.backend.global.utils.BaseBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

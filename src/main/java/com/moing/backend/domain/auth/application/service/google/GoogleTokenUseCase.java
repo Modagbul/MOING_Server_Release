@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
-public class GoogleTokenUserCase {
+public class GoogleTokenUseCase {
 
     @Value("${oauth2.google.appId}")
     private String appId;

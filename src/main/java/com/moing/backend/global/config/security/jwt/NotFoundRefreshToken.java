@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public class NotFoundRefreshToken extends ApplicationException {
     public NotFoundRefreshToken() {
         super(ErrorCode.NOT_FOUND_REFRESH_TOKEN_ERROR,
-                HttpStatus.NOT_FOUND);
+                HttpStatus.UNAUTHORIZED);
     }
 
 }
