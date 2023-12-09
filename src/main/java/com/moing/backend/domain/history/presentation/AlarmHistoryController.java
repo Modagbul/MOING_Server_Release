@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.GET_ALL_ALARM_HISTORY;
-import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.READ_ALARM_HISTORY;
+import static com.moing.backend.domain.history.presentation.constant.AlarmHistoryResponseMessage.*;
 
 
 @RestController
@@ -44,9 +43,12 @@ public class AlarmHistoryController {
         return ResponseEntity.ok(SuccessResponse.create(READ_ALARM_HISTORY.getMessage()));
     }
 
-    //TODO
     /**
      * 안 읽은 알림 개수 조회
      * [GET] api/history/alarm/count
      */
+    @GetMapping("/count")
+    public ResponseEntity<SuccessResponse<String>> getUnreadAlarmCount(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_UNREAD_ALARM_HISTORY.getMessage(), getAlarmHistoryUseCase.getUnreadAlarmCount(user.getSocialId())));
+    }
 }

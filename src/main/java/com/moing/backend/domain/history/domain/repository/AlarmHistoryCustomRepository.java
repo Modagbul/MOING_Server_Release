@@ -7,4 +7,5 @@ import java.util.List;
 public interface AlarmHistoryCustomRepository {
 
     List<GetAlarmHistoryResponse> findAlarmHistoriesByMemberId(Long memberId);
+    String findUnreadAlarmCount(Long memberId);
 }

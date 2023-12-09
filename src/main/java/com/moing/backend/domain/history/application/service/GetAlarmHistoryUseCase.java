@@ -23,4 +23,12 @@ public class GetAlarmHistoryUseCase {
         Member member = memberGetService.getMemberBySocialId(socialId);
         return alarmHistoryGetService.getAlarmHistories(member.getMemberId());
     }
+
+    /**
+     * 안 읽은 알림 개수 조회
+     */
+    public String getUnreadAlarmCount(String socialId){
+        Member member = memberGetService.getMemberBySocialId(socialId);
+        return alarmHistoryGetService.getUnreadAlarmCount(member.getMemberId());
+    }
 }
