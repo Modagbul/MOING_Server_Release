@@ -19,8 +19,5 @@ public class MissionArchiveRes {
     private String heartStatus;
     private Long hearts;
 
-    private boolean isAbleToEdit;
-
-
 
 }
