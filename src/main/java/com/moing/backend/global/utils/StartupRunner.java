@@ -1,19 +1,19 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.utils;
 
 import com.moing.backend.domain.member.domain.constant.Gender;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.constant.Role;
 import com.moing.backend.domain.member.domain.constant.SocialProvider;
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.member.domain.service.MemberSaveService;
+import com.moing.backend.global.annotation.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Component
+@Util
 @RequiredArgsConstructor
 public class StartupRunner implements CommandLineRunner {
 
@@ -27,7 +27,7 @@ public class StartupRunner implements CommandLineRunner {
         Member test01 = new Member(LocalDate.now(), "tester1@test.com", "undef", Gender.WOMAN, "undef", "modagbul_tester1", "undef", SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@tester01");
         memberSaveService.saveMember(test01);
 
-        Member test02=new Member(LocalDate.now(), "tester2@test.com", "undef", Gender.MAN, "undef", "modagbul_tester2", "undef", SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@tester02");
+        Member test02=new Member(LocalDate.now(), "tester2@test.com", "undef", Gender.MAN, null, "modagbul_tester2", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@tester02");
         memberSaveService.saveMember(test02);
 
         Member test03=new Member(LocalDate.now(), "tester3@test.com", "undef", Gender.WOMAN, "undef", "modagbul_tester3", "undef", SocialProvider.APPLE, RegistrationStatus.COMPLETED, Role.USER, "APPLE@tester03");

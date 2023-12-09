@@ -1,4 +1,4 @@
-package com.moing.backend.global.util;
+package com.moing.backend.global.utils;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;

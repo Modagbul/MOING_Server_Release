@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoTokenUserCase {
+public class KakaoTokenUseCase {
 
     @Value("${oauth2.kakao.appId}")
     private String appId;

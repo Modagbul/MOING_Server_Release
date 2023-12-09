@@ -7,8 +7,6 @@ import com.moing.backend.domain.mission.application.service.MissionCreateUseCase
 import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase;
 import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
 import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
-import com.moing.backend.domain.mission.domain.service.MissionDeleteService;
-import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -94,8 +92,16 @@ public class MissionController {
     public ResponseEntity<SuccessResponse<String>> recommendMission(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getTeamCategory(teamId)));
     }
+    /**
+     * 미션 추천
+     * [GET] {teamId}/missions/isLeader
+     * 작성자 : 정승연
+     */
 
-
+    @GetMapping("/isLeader")
+    public ResponseEntity<SuccessResponse<Boolean>> isLeader(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
+        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionCreateUseCase.getIsLeader(user.getSocialId(),teamId)));
+    }
 
 
 

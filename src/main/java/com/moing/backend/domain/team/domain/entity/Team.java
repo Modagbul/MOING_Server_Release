@@ -81,7 +81,9 @@ public class Team extends BaseTimeEntity {
 
     public void deleteTeam() {
         this.isDeleted=true;
-        this.deletionTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+        //TODO 테스트 용으로 현재 시간이 아닌 4일 전으로
+//        this.deletionTime = LocalDateTime.now().withNano(0);
+        this.deletionTime=LocalDateTime.now().minusDays(4).withNano(0);
     }
 
     public void addTeamMember(){
