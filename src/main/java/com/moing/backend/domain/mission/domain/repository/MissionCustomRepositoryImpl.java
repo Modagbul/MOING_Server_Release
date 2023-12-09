@@ -46,8 +46,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
-        QMissionArchive subMissionArchive = new QMissionArchive("subMissionArchive");
-
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
                         mission.id,
