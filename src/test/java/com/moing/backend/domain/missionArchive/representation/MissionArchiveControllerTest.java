@@ -108,8 +108,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.status").description("미션 인증 상태"),
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.ableToEdit").description("미션 편집 가능 여부")
+                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태")
                                 )
                         )
                 )
@@ -177,9 +176,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.status").description("미션 인증 상태"),
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.ableToEdit").description("미션 편집 가능 여부")
-
+                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수")
                                 )
                         )
                 )
@@ -284,10 +281,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archives[].status").description("미션 인증 상태"),
                                         fieldWithPath("data.archives[].count").description("미션 인증 횟수"),
                                         fieldWithPath("data.archives[].heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.archives[].ableToEdit").description("미션 편집 가능 여부")
+                                        fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수")
 
-                                )
+
+                                        )
                         )
                 )
                 .andReturn();
