@@ -68,7 +68,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
                 )
                 .groupBy(mission.id,mission.number)
-//                .having(missionArchive.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .having(missionArchive.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
 
                 .orderBy(missionArchive.count().desc())
                 .fetch());
