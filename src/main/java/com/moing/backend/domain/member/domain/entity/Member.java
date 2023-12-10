@@ -82,6 +82,8 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime lastSignInTime;
 
+    private boolean isSignOut;
+
     @OneToMany(mappedBy = "member")
     private List<TeamMember> teamMembers = new ArrayList<>(); //최대 3개이므로 양방향
 
@@ -163,6 +165,14 @@ public class Member extends BaseTimeEntity {
 
     public void deleteMember(){
         this.isDeleted=true;
+    }
+
+    public void signOut() {
+        this.isSignOut = true;
+    }
+
+    public void signIn() {
+        this.isSignOut = false;
     }
 
 }

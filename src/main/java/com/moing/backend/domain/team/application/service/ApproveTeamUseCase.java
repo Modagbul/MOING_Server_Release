@@ -31,7 +31,7 @@ public class ApproveTeamUseCase {
             String title=APPROVE_TEAM_MESSAGE.title(info.getLeaderName(), info.getTeamName());
             String body= APPROVE_TEAM_MESSAGE.body();
 
-            eventPublisher.publishEvent(new SingleFcmEvent(info.getLeaderFcmToken(), title, body, info.getLeaderId(), "", info.getTeamName(), AlarmType.APPROVE_TEAM, HOME_PATH.getValue()));
+//            eventPublisher.publishEvent(new SingleFcmEvent(info.getLeaderFcmToken(), title, body, info.getLeaderId(), "", info.getTeamName(), AlarmType.APPROVE_TEAM, HOME_PATH.getValue()));
         }
     }
 }

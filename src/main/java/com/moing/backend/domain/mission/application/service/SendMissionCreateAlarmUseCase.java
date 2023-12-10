@@ -32,10 +32,10 @@ public class SendMissionCreateAlarmUseCase {
         String title = team.getName() + " " + NEW_SINGLE_MISSION_COMING.getTitle();
         String message = mission.getTitle();
 
-        Optional<List<MemberIdAndToken>> memberIdAndTokens = teamMemberGetService.getMemberInfoExceptMe(team.getTeamId(), member.getMemberId());
-        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
-            eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokens.get(), createIdInfo(team.getTeamId(), mission.getId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
-        }
+        Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = teamMemberGetService.getNewUploadPushInfo(team.getTeamId(), member.getMemberId());
+        Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = teamMemberGetService.getNewUploadSaveInfo(team.getTeamId(), member.getMemberId());
+        // 알림 보내기
+        eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
     }
 
     private String createIdInfo(Long teamId, Long missionId) {

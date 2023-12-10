@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
@@ -13,7 +14,8 @@ public class MultiFcmEvent {
 
     private String title;
     private String body;
-    private List<MemberIdAndToken> memberIdAndTokens;
+    private Optional<List<MemberIdAndToken>> idAndTokensByPush;
+    private Optional<List<MemberIdAndToken>> idAndTokensBySave;
     private String idInfo;
     private String name;
     private AlarmType alarmType;

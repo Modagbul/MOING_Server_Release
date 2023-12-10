@@ -31,7 +31,7 @@ public class RejectTeamUseCase {
             String title = REJECT_TEAM_MESSAGE.title(info.getLeaderName(), info.getTeamName());
             String body = REJECT_TEAM_MESSAGE.body();
 
-            eventPublisher.publishEvent(new SingleFcmEvent(info.getLeaderFcmToken(), title, body, info.getLeaderId(), "", info.getTeamName(), AlarmType.REJECT_TEAM, HOME_PATH.getValue()));
+//            eventPublisher.publishEvent(new SingleFcmEvent(info.getLeaderFcmToken(), title, body, info.getLeaderId(), "", info.getTeamName(), AlarmType.REJECT_TEAM, HOME_PATH.getValue()));
         }
     }
 }
