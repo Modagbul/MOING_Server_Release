@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,18 +27,25 @@ public class AlarmHistoryMapper {
                 .build();
     }
 
-    public List<String> getFcmTokens(Optional<List<MemberIdAndToken>> memberIdAndTokens) {
-        return memberIdAndTokens.map(list -> list.stream()
-                        .map(MemberIdAndToken::getFcmToken)
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+    public static List<String> getFcmTokens(List<MemberIdAndToken> memberIdAndTokens) {
+        if (memberIdAndTokens == null || memberIdAndTokens.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return memberIdAndTokens.stream()
+                .map(MemberIdAndToken::getFcmToken)
+                .collect(Collectors.toList());
     }
 
-    public List<Long> getMemberIds(Optional<List<MemberIdAndToken>> memberIdAndTokens) {
-        return memberIdAndTokens.map(list -> list.stream()
-                        .map(MemberIdAndToken::getMemberId)
-                        .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+
+    public static List<Long> getMemberIds(List<MemberIdAndToken> memberIdAndTokens) {
+        if (memberIdAndTokens == null || memberIdAndTokens.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return memberIdAndTokens.stream()
+                .map(MemberIdAndToken::getMemberId)
+                .collect(Collectors.toList());
     }
 
     public List<AlarmHistory> getAlarmHistories(String idInfo, List<Long> memberIds, String title, String body, String teamName, AlarmType alarmType, String path) {

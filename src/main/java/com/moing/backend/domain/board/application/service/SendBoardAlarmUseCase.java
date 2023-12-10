@@ -9,7 +9,7 @@ import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
-import com.moing.backend.global.config.fcm.dto.event.FcmEvent;
+import com.moing.backend.global.config.fcm.dto.event.MultiFcmEvent;
 import com.moing.backend.global.response.BaseServiceResponse;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -29,8 +29,6 @@ public class SendBoardAlarmUseCase {
 
     private final TeamMemberGetService teamMemberGetService;
     private final ApplicationEventPublisher eventPublisher;
-    private final SaveMultiAlarmHistoryUseCase saveAlarmHistory;
-    private final AlarmHistoryMapper alarmHistoryMapper;
 
     public void sendNewUploadAlarm(BaseServiceResponse baseServiceResponse, Board board) {
         Member member = baseServiceResponse.getMember();
@@ -42,10 +40,7 @@ public class SendBoardAlarmUseCase {
             Optional<List<MemberIdAndToken>> memberIdAndTokens = teamMemberGetService.getMemberInfoExceptMe(team.getTeamId(), member.getMemberId());
             if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
                 //알림 보내기
-                List<String> fcmTokens = alarmHistoryMapper.getFcmTokens(memberIdAndTokens);
-                eventPublisher.publishEvent(new FcmEvent(title, body, fcmTokens));
-                //알림 저장하기
-                saveAlarmHistory.saveAlarmHistories(memberIdAndTokens, createIdInfo(team.getTeamId(), board.getBoardId()), title, body, team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue());
+                eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokens.get(), createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
             }
         }
     }

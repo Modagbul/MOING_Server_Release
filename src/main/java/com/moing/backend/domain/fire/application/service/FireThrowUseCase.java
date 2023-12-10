@@ -9,16 +9,16 @@ import com.moing.backend.domain.fire.domain.service.FireSaveService;
 import com.moing.backend.domain.fire.exception.NoAuthThrowFireException;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
+import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
-import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
-import com.moing.backend.global.config.fcm.service.FcmService;
+import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.team.domain.service.TeamGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.lang.Math.random;
 
 @Service
 @Transactional
@@ -28,15 +28,17 @@ public class FireThrowUseCase {
     public final FireSaveService fireSaveService;
     public final FireQueryService fireQueryService;
     private final MemberGetService memberGetService;
-
     private final FireThrowAlarmUseCase fireThrowAlarmUseCase;
-
     private final MissionArchiveQueryService missionArchiveQueryService;
+    private final MissionQueryService missionQueryService;
+    private final TeamGetService teamGetService;
 
-    public FireThrowRes createFireThrow(String userId, Long receiveMemberId) {
+    public FireThrowRes createFireThrow(String userId, Long receiveMemberId, Long missionId, Long teamId) {
 
         Member throwMember = memberGetService.getMemberBySocialId(userId);
         Member receiveMember = memberGetService.getMemberByMemberId(receiveMemberId);
+        Team team = teamGetService.getTeamByTeamId(teamId);
+        Mission mission = missionQueryService.findMissionById(missionId);
 
         // 나에게 던질 수 없음
         if (throwMember.equals(receiveMember)) {
@@ -48,7 +50,7 @@ public class FireThrowUseCase {
             throw new NoAuthThrowFireException();
         }
 
-        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember);
+        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember, team, mission);
 
         return FireMapper.mapToFireThrowRes(fireSaveService.save(Fire.builder()
                 .throwMemberId(throwMember.getMemberId())

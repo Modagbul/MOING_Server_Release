@@ -1,25 +1,23 @@
 package com.moing.backend.domain.mission.application.service;
 
-import com.moing.backend.domain.board.domain.entity.Board;
+import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.history.domain.entity.AlarmType;
+import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
-import com.moing.backend.global.config.fcm.dto.event.FcmEvent;
-import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
-import com.moing.backend.global.config.fcm.service.FcmService;
-import com.moing.backend.global.response.BaseServiceResponse;
+import com.moing.backend.global.config.fcm.dto.event.MultiFcmEvent;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.EventListener;
 import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.global.config.fcm.constant.NewMissionTitle.NEW_SINGLE_MISSION_COMING;
-import static com.moing.backend.global.config.fcm.constant.NewUploadTitle.UPLOAD_NOTICE_NEW_TITLE;
 
 @Service
 @Transactional
@@ -34,10 +32,18 @@ public class SendMissionCreateAlarmUseCase {
         String title = team.getName() + " " + NEW_SINGLE_MISSION_COMING.getTitle();
         String message = mission.getTitle();
 
-        Optional<List<String>> fcmTokens = teamMemberGetService.getFcmTokensExceptMe(team.getTeamId(), member.getMemberId());
-        if (fcmTokens.isPresent() && !fcmTokens.get().isEmpty()) {
-            eventPublisher.publishEvent(new FcmEvent(title, message, fcmTokens.get()));
+        Optional<List<MemberIdAndToken>> memberIdAndTokens = teamMemberGetService.getMemberInfoExceptMe(team.getTeamId(), member.getMemberId());
+        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
+            eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokens.get(), createIdInfo(team.getTeamId(), mission.getId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
         }
+    }
+
+    private String createIdInfo(Long teamId, Long missionId) {
+        JSONObject jo = new JSONObject();
+        jo.put("isRepeated", false);
+        jo.put("teamId", teamId);
+        jo.put("missionId", missionId);
+        return jo.toJSONString();
     }
 }
 

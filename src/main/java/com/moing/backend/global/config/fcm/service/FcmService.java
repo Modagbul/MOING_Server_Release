@@ -1,6 +1,9 @@
 package com.moing.backend.global.config.fcm.service;
 
 import com.google.firebase.messaging.*;
+import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
+import com.moing.backend.domain.history.application.service.SaveMultiAlarmHistoryUseCase;
+import com.moing.backend.domain.history.application.service.SaveSingleAlarmHistoryUseCase;
 import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
 import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
 import com.moing.backend.global.config.fcm.dto.response.MultiResponse;
@@ -23,6 +26,8 @@ import java.util.List;
 public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
+    private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
+    private final SaveSingleAlarmHistoryUseCase saveSingleAlarmHistoryUseCase;
 
     @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public SingleResponse sendSingleDevice(SingleRequest toSingleRequest) {
@@ -62,6 +67,7 @@ public class FcmService {
 
         try {
             String response = firebaseMessaging.send(message);
+            saveSingleAlarmHistoryUseCase.saveAlarmHistory(toSingleRequest.getMemberId(), toSingleRequest.getIdInfo(), toSingleRequest.getTitle(), toSingleRequest.getBody(), toSingleRequest.getName(), toSingleRequest.getAlarmType(), toSingleRequest.getPath());
             return new SingleResponse(response);
         } catch (FirebaseMessagingException e) {
             throw handleException(e);
@@ -72,6 +78,8 @@ public class FcmService {
     @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public MultiResponse sendMultipleDevices(MultiRequest toMultiRequest) {
 
+
+        List<String> fcmTokens = AlarmHistoryMapper.getFcmTokens(toMultiRequest.getMemberIdAndTokens());
         Notification notification = Notification.builder()
                 .setTitle(toMultiRequest.getTitle())
                 .setBody(toMultiRequest.getBody())
@@ -99,7 +107,7 @@ public class FcmService {
                 .build();
 
         MulticastMessage message = MulticastMessage.builder()
-                .addAllTokens(toMultiRequest.getRegistrationToken())
+                .addAllTokens(fcmTokens)
                 .setNotification(notification)
                 .setAndroidConfig(androidConfig) // Applying Android configuration
                 .setApnsConfig(apnsConfig) // Applying APNs configuration
@@ -107,15 +115,20 @@ public class FcmService {
 
         try {
             BatchResponse response = firebaseMessaging.sendMulticast(message);
+
+
             List<String> failedTokens = new ArrayList<>();
 
             if (response.getFailureCount() > 0) {
                 List<SendResponse> responses = response.getResponses();
 
+                List<Long> memberIds = AlarmHistoryMapper.getMemberIds(toMultiRequest.getMemberIdAndTokens());
+                saveMultiAlarmHistoryUseCase.saveAlarmHistories(memberIds, toMultiRequest.getIdInfo(), toMultiRequest.getTitle(), toMultiRequest.getBody(), toMultiRequest.getName(), toMultiRequest.getAlarmType(), toMultiRequest.getPath());
+
                 for (int i = 0; i < responses.size(); i++) {
                     if (!responses.get(i).isSuccessful()) {
                         // Add the failed tokens to the list
-                        failedTokens.add(toMultiRequest.getRegistrationToken().get(i));
+                        failedTokens.add(fcmTokens.get(i));
                     }
                 }
             }

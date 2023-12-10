@@ -3,7 +3,6 @@ package com.moing.backend.domain.fire.presentation;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.service.FireThrowUseCase;
-import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import static com.moing.backend.domain.fire.presentation.constant.FireResponseMessage.GET_RECEIVERS_SUCCESS;
 import static com.moing.backend.domain.fire.presentation.constant.FireResponseMessage.THROW_FIRE_SUCCESS;
-import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.READ_MISSION_SUCCESS;
 
 @RestController
 @AllArgsConstructor
@@ -32,8 +30,8 @@ public class FireController {
 
     @PostMapping("/{receiveMemberId}")
     public ResponseEntity<SuccessResponse<FireThrowRes>> throwFire (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
-                                                                    @PathVariable("receiveMemberId") Long receiveMemberId) {
-        return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(),receiveMemberId)));
+                                                                    @PathVariable("receiveMemberId") Long receiveMemberId, @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(), receiveMemberId, missionId, teamId)));
     }
 
     /**
