@@ -7,11 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
 import java.util.Random;
 
 import static com.moing.backend.global.config.fcm.constant.RemindMissionTitle.*;
-import static java.lang.Math.random;
 
 @Service
 @Transactional

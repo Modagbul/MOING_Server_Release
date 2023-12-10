@@ -5,8 +5,6 @@ import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.service.FireThrowUseCase;
 import com.moing.backend.domain.fire.presentation.FireController;
-import com.moing.backend.domain.mission.application.dto.req.MissionReq;
-import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -94,7 +93,7 @@ public class FireControllerTest extends CommonControllerTest {
                 .receiveMemberId(1L)
                 .build();
 
-        given(fireThrowUseCase.createFireThrow(any(),any())).willReturn(output);
+        given(fireThrowUseCase.createFireThrow(any(), any(), any(), any())).willReturn(output);
 
         Long teamId = 2L;
         Long missionId = 2L;

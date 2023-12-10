@@ -22,6 +22,8 @@ public class BoardComment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_comment_id")
     private Long boardCommentId;
+
+    @Column(nullable = false, length = 300)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
