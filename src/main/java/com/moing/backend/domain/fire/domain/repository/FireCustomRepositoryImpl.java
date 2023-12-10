@@ -92,7 +92,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                 .where(
                         teamMember.team.teamId.eq(teamId),
                         teamMember.member.memberId.ne(memberId),
-                        teamMember.member.memberId.notIn(missionDonePeople)
+                        teamMember.member.memberId.notIn(missionDonePeople),
+                        teamMember.member.isDeleted.ne(Boolean.TRUE)
                 )
                 .fetch());
 

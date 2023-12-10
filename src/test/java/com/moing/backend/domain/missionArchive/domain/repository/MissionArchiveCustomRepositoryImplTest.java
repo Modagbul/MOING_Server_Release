@@ -12,6 +12,7 @@
 //import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 //import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 //@SpringBootTest
+//
 //class MissionArchiveCustomRepositoryImplTest {
 //
 //    @Autowired
