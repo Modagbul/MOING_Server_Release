@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -27,9 +26,10 @@ public class TeamBlock {
     private String category;
     private String startDate;
     private LocalDateTime deletionTime;
+    private String profileImgUrl;
 
     @QueryProjection
-    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, Category category, LocalDateTime deletionTime){
+    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, Category category, LocalDateTime deletionTime, String profileImgUrl) {
         this.teamId=teamId;
         this.duration=calculateDuration(approvalTime);
         this.levelOfFire=levelOfFire;
@@ -38,6 +38,7 @@ public class TeamBlock {
         this.category=category.getMessage();
         this.startDate=approvalTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.deletionTime=deletionTime;
+        this.profileImgUrl = profileImgUrl;
     }
 
     public Long calculateDuration(LocalDateTime approvalTime) {

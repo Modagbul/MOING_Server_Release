@@ -71,7 +71,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     public List<GetMyPageTeamBlock> findMyPageTeamByMemberId(Long memberId) {
         return queryFactory
                 .select(Projections.constructor(GetMyPageTeamBlock.class,
-                        team.teamId, team.name, team.category))
+                        team.teamId, team.name, team.category, team.profileImgUrl))
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
                 .on(teamMember.member.memberId.eq(memberId))
@@ -91,7 +91,8 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                         team.name,
                         team.numOfMember,
                         team.category,
-                        team.deletionTime))
+                        team.deletionTime,
+                        team.profileImgUrl))
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
                 .on(teamMember.member.memberId.eq(memberId))

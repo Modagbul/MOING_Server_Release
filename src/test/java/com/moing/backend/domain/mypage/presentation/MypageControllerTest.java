@@ -125,6 +125,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .teamId(1L)
                 .teamName("소모임이름")
                 .category(Category.SPORTS)
+                .profileImgUrl("프로필 이미지 url")
                 .build();
         getMyPageTeamBlocks.add(blocks);
 
@@ -160,10 +161,11 @@ public class MypageControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.profileImage").description("프로필 이미지 URL"),
                                         fieldWithPath("data.nickName").description("닉네임"),
                                         fieldWithPath("data.introduction").description("한줄 소개"),
-                                        fieldWithPath("data.categories[0]").description("내 열정의 불 해시태그"),
-                                        fieldWithPath("data.getMyPageTeamBlocks[0].teamId").description("소모임 아이디"),
-                                        fieldWithPath("data.getMyPageTeamBlocks[0].teamName").description("소모임 이름"),
-                                        fieldWithPath("data.getMyPageTeamBlocks[0].category").description("소모임 카테고리")
+                                        fieldWithPath("data.categories[]").description("내 열정의 불 해시태그"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[].teamId").description("소모임 아이디"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[].teamName").description("소모임 이름"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[].category").description("소모임 카테고리"),
+                                        fieldWithPath("data.getMyPageTeamBlocks[].profileImgUrl").description("소모임 프로필 이미지 URL")
                                 )
                         )
                 );

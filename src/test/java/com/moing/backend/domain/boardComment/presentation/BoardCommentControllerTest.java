@@ -142,6 +142,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                 .writerProfileImage("작성자 프로필 이미지")
                 .writerIsDeleted(false)
                 .isWriter(true)
+                .createdDate("2023/12/05 23:29")
                 .build();
 
         commentBlocks.add(commentBlock);
@@ -174,13 +175,14 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("댓글 목록을 모두 조회했습니다."),
-                                        fieldWithPath("data.commentBlocks[0].boardCommentId").description("댓글 아이디"),
-                                        fieldWithPath("data.commentBlocks[0].content").description("댓글 내용"),
-                                        fieldWithPath("data.commentBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
-                                        fieldWithPath("data.commentBlocks[0].writerNickName").description("작성자 닉네임"),
-                                        fieldWithPath("data.commentBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
-                                        fieldWithPath("data.commentBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
-                                        fieldWithPath("data.commentBlocks[0].isWriter").description("댓글 작성자 여부")
+                                        fieldWithPath("data.commentBlocks[].boardCommentId").description("댓글 아이디"),
+                                        fieldWithPath("data.commentBlocks[].content").description("댓글 내용"),
+                                        fieldWithPath("data.commentBlocks[].writerIsLeader").description("작성자 소모임장 여부"),
+                                        fieldWithPath("data.commentBlocks[].writerNickName").description("작성자 닉네임"),
+                                        fieldWithPath("data.commentBlocks[].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.commentBlocks[].writerIsDeleted").description("작성자 삭제 여부"),
+                                        fieldWithPath("data.commentBlocks[].isWriter").description("댓글 작성자 여부"),
+                                        fieldWithPath("data.commentBlocks[].createdDate").description("생성 시간")
                                 )
 
                         )
