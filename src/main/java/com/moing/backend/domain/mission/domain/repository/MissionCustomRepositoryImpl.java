@@ -53,24 +53,23 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionArchive.count().stringValue()
+                        missionState.count().stringValue()
 
                 ))
                 .from(mission)
-                        .leftJoin(missionArchive)
-                        .on(missionArchive.mission.eq(mission),
-                                missionArchive.member.memberId.eq(memberId)
+                        .leftJoin(missionState)
+                        .on(missionState.mission.eq(mission),
+                                missionState.member.memberId.eq(memberId)
                         )
                 .where(
                         mission.team.teamId.in(teams),
-                        mission.status.eq(MissionStatus.ONGOING),
+                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
                         mission.type.eq(MissionType.REPEAT)
 
                 )
                 .groupBy(mission.id,mission.number)
-                .having(missionArchive.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
-
-                .orderBy(missionArchive.count().desc())
+                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .orderBy(missionState.count().desc())
                 .fetch());
     }
 
