@@ -42,9 +42,10 @@ public class TeamScore extends BaseTimeEntity {
 
         for (int i = 5; i > 0; i--) {
             if (steps[i-1] <= this.level && this.level <= steps[i]) {
-                if (20 + ((i-1) * 15) <= score) {
+                if ((20 + ((i-1) * 15)) <= score) {
                     this.level+=1;
                     this.score -= (20 + ((i-1) * 15));
+                    this.team.updateLevelOfFire();
                     return;
                 }
             }

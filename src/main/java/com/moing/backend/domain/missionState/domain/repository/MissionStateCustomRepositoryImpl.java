@@ -10,7 +10,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +30,19 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
 
     @Override
     public int getCountsByMissionId(Long missionId) {
+
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY; // 한 주의 시작일을 월요일로 설정
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6); // 한 주의 마지막일을 일요일로 설정
+
         return queryFactory
                 .select(missionState)
                 .from(missionState)
                 .where(
-                        missionState.mission.id.eq(missionId))
+                        missionState.mission.id.eq(missionId),
+                        missionState.createdDate.goe(startOfWeek.atStartOfDay()),
+                        missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)))
                 .fetch().size();
     }
 
