@@ -376,12 +376,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
         // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-        BooleanExpression isRepeatType = missionState.mission.type.eq(MissionType.REPEAT);
+//        BooleanExpression isRepeatType = missionState.mission.type.eq(MissionType.REPEAT);
         BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return isRepeatType.and(dateInRange);
+        return dateInRange.and(dateInRange);
     }
 
     // 날짜 조건 생성 메서드
@@ -392,12 +392,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
         // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
+//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
         BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return isRepeatType.and(dateInRange);
+        return dateInRange.and(dateInRange);
     }
 
 
