@@ -199,20 +199,25 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
                                 mission.id,
                                 mission.title,
-                                missionArchive.count.max().coalesce(0L).as("done"),
+//                                missionState.count().coalesce(0L).as("done"),
+                                missionState.count(),
                                 mission.number,
                                 mission.way.stringValue(),
                                 mission.status.stringValue()
                         ))
                 .from(mission)
-                .leftJoin(mission.missionArchiveList,missionArchive)
-                        .on( missionArchive.member.memberId.eq(memberId))
+                .leftJoin(missionState)
+                .on(missionState.mission.eq(mission),
+                        missionState.member.memberId.eq(memberId)
+                )
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))
                 )
-                .groupBy(mission)
+                .groupBy(mission.id,mission.number)
+                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .orderBy(missionState.count().desc())
                 .fetch());
 
     }

@@ -39,6 +39,7 @@ public class MissionQueryService {
 
     public List<GatherRepeatMissionRes> findAllRepeatMission(Long memberId) {
         List<Long> teams = teamGetService.getTeamIdByMemberId(memberId);
+        System.out.println(teams);
         return missionRepository.findRepeatMissionByMemberId(memberId,teams).orElseThrow(NotFoundMissionException::new);
     }
 
