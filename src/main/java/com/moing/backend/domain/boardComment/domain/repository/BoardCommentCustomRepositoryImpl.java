@@ -2,6 +2,7 @@ package com.moing.backend.domain.boardComment.domain.repository;
 
 import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
+import com.moing.backend.domain.boardComment.application.dto.response.QCommentBlocks;
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.ExpressionUtils;
@@ -26,7 +27,7 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
     @Override
     public GetBoardCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
         List<CommentBlocks> commentBlocks = queryFactory
-                .select(Projections.constructor(CommentBlocks.class,
+                .select(new QCommentBlocks(
                         boardComment.boardCommentId,
                         boardComment.content,
                         boardComment.writerNickName,
@@ -38,13 +39,12 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                                 .where(QTeamMember.teamMember.eq(teamMember)
                                         .and(QTeamMember.teamMember.eq(boardComment.teamMember)))
                                 .exists(), "isWriter"),
-                        boardComment.teamMember.isDeleted))
+                        boardComment.teamMember.isDeleted,
+                        boardComment.createdDate))
                 .from(boardComment)
                 .where(boardComment.board.boardId.eq(boardId))
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
-
-        commentBlocks.forEach(CommentBlocks::deleteMember);
 
         return new GetBoardCommentResponse(commentBlocks);
     }

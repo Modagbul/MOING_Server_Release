@@ -36,13 +36,14 @@ public class BoardMapper {
 
     public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
         String nickName = writerIsDeleted ? "(알 수 없음)" : board.getWriterNickName();
+        String writerProfileImage = writerIsDeleted ? null : board.getWriterProfileImage();
         return GetBoardDetailResponse.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writerNickName(nickName)
                 .writerIsLeader(board.isLeader())
-                .writerProfileImage(board.getWriterProfileImage())
+                .writerProfileImage(writerProfileImage)
                 .createdDate(getFormattedDate(board.getCreatedDate()))
                 .isWriter(isWriter)
                 .isNotice(board.isNotice())

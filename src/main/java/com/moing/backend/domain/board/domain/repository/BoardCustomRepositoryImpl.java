@@ -3,6 +3,7 @@ package com.moing.backend.domain.board.domain.repository;
 import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.domain.entity.Board;
+import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -24,12 +25,16 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     public GetAllBoardResponse findBoardAll(Long teamId, Long memberId) {
         // 전체 게시글 보기
         List<Board> allBoards = queryFactory.selectFrom(board)
+                .distinct()
+                .leftJoin(board.teamMember, QTeamMember.teamMember).fetchJoin() // TeamMember를 함께 로드
                 .where(board.team.teamId.eq(teamId))
                 .orderBy(board.createdDate.desc())
                 .fetch();
 
         // 읽은 게시글 보기
         List<Board> readBoards = queryFactory.selectFrom(board)
+                .distinct()
+                .leftJoin(board.teamMember, QTeamMember.teamMember).fetchJoin() // TeamMember를 함께 로드
                 .join(boardRead).on(boardRead.board.eq(board))
                 .where(board.team.teamId.eq(teamId))
                 .where(boardRead.member.memberId.eq(memberId))
@@ -57,6 +62,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
             if (isRead) {
                 boardBlocks.readBoard();
             }
+
             return boardBlocks;
         };
 
