@@ -38,7 +38,7 @@ public class SendBoardAlarmUseCase {
             Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = teamMemberGetService.getNewUploadPushInfo(team.getTeamId(), member.getMemberId());
             Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = teamMemberGetService.getNewUploadSaveInfo(team.getTeamId(), member.getMemberId());
             // 알림 보내기
-            eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
+            eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
         }
     }
 
