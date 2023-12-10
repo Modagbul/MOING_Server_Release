@@ -251,12 +251,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
-                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
+                        mission.status.eq(MissionStatus.ONGOING),
                         repeatTypeCondition
 
                 )
                 .groupBy(mission.id,mission.number)
-//                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
                 .orderBy(missionState.count().desc())
                 .fetch());
 
