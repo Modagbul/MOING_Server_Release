@@ -26,9 +26,6 @@ import java.util.List;
 public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
-    private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
-    private final SaveSingleAlarmHistoryUseCase saveSingleAlarmHistoryUseCase;
-
     @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public SingleResponse sendSingleDevice(SingleRequest toSingleRequest) {
 
@@ -67,7 +64,7 @@ public class FcmService {
 
         try {
             String response = firebaseMessaging.send(message);
-            saveSingleAlarmHistoryUseCase.saveAlarmHistory(toSingleRequest.getMemberId(), toSingleRequest.getIdInfo(), toSingleRequest.getTitle(), toSingleRequest.getBody(), toSingleRequest.getName(), toSingleRequest.getAlarmType(), toSingleRequest.getPath());
+//            saveSingleAlarmHistoryUseCase.saveAlarmHistory(toSingleRequest.getMemberId(), toSingleRequest.getIdInfo(), toSingleRequest.getTitle(), toSingleRequest.getBody(), toSingleRequest.getName(), toSingleRequest.getAlarmType(), toSingleRequest.getPath());
             return new SingleResponse(response);
         } catch (FirebaseMessagingException e) {
             throw handleException(e);
@@ -123,7 +120,6 @@ public class FcmService {
                 List<SendResponse> responses = response.getResponses();
 
                 List<Long> memberIds = AlarmHistoryMapper.getMemberIds(toMultiRequest.getMemberIdAndTokens());
-                saveMultiAlarmHistoryUseCase.saveAlarmHistories(memberIds, toMultiRequest.getIdInfo(), toMultiRequest.getTitle(), toMultiRequest.getBody(), toMultiRequest.getName(), toMultiRequest.getAlarmType(), toMultiRequest.getPath());
 
                 for (int i = 0; i < responses.size(); i++) {
                     if (!responses.get(i).isSuccessful()) {

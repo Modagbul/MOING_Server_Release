@@ -32,13 +32,57 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     }
 
     @Override
-    public Optional<List<MemberIdAndToken>> findIdAndTokensByTeamIdAndMemberId(Long teamId, Long memberId) {
+    public Optional<List<MemberIdAndToken>> findNewUploadPushInfo(Long teamId, Long memberId) {
         List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
                         teamMember.member.fcmToken,
                         teamMember.member.memberId))
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.isNewUploadPush.eq(true))
+                        .and(teamMember.member.isSignOut.eq(false))
+                        .and(teamMember.member.memberId.ne(memberId))
+                        .and(teamMember.isDeleted.eq(false)))
+                .fetch();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
+    }
+
+    @Override
+    public Optional<List<MemberIdAndToken>> findNewUploadSaveInfo(Long teamId, Long memberId) {
+        List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
+                        teamMember.member.fcmToken,
+                        teamMember.member.memberId))
+                .from(teamMember)
+                .where(teamMember.team.teamId.eq(teamId)
+                        .and(teamMember.member.memberId.ne(memberId))
+                        .and(teamMember.isDeleted.eq(false)))
+                .fetch();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
+    }
+    @Override
+    public Optional<List<MemberIdAndToken>> findRemindPushInfo(Long teamId, Long memberId) {
+        List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
+                        teamMember.member.fcmToken,
+                        teamMember.member.memberId))
+                .from(teamMember)
+                .where(teamMember.team.teamId.eq(teamId)
+                        .and(teamMember.member.isRemindPush.eq(true))
+                        .and(teamMember.member.isSignOut.eq(false))
+                        .and(teamMember.member.memberId.ne(memberId))
+                        .and(teamMember.isDeleted.eq(false)))
+                .fetch();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
+    }
+
+    @Override
+    public Optional<List<MemberIdAndToken>> findRemindSaveInfo(Long teamId, Long memberId) {
+        List<MemberIdAndToken> result = queryFactory.select(Projections.constructor(MemberIdAndToken.class,
+                        teamMember.member.fcmToken,
+                        teamMember.member.memberId))
+                .from(teamMember)
+                .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.memberId.ne(memberId))
                         .and(teamMember.isDeleted.eq(false)))
                 .fetch();
@@ -52,6 +96,7 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.isNewUploadPush.eq(true))
+                        .and(teamMember.member.isSignOut.eq(false))
                         .and(teamMember.member.memberId.ne(memberId))
                         .and(teamMember.isDeleted.eq(false)))
                 .fetch();

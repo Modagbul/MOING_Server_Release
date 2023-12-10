@@ -23,6 +23,7 @@ public class MemberSaveService {
         } else {
             findMember.get().updateFcmToken(member.getFcmToken());
             findMember.get().updateLastSignInTime(LocalDateTime.now());
+            findMember.get().signIn();
             return findMember.get();
         }
     }

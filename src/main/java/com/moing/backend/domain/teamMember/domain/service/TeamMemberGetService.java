@@ -38,7 +38,20 @@ public class TeamMemberGetService {
         return teamMemberRepository.findTeamMemberByMemberId(memberId);
     }
 
-    public Optional<List<MemberIdAndToken>> getMemberInfoExceptMe(Long teamId, Long memberId) {
-        return teamMemberRepository.findIdAndTokensByTeamIdAndMemberId(teamId, memberId);
+    public Optional<List<MemberIdAndToken>> getNewUploadPushInfo(Long teamId, Long memberId) {
+        return teamMemberRepository.findNewUploadPushInfo(teamId, memberId);
     }
+
+    public Optional<List<MemberIdAndToken>> getNewUploadSaveInfo(Long teamId, Long memberId) {
+        return teamMemberRepository.findNewUploadSaveInfo(teamId, memberId);
+    }
+
+    public Optional<List<MemberIdAndToken>> getRemindPushInfo(Long teamId, Long memberId) {
+        return teamMemberRepository.findRemindPushInfo(teamId, memberId);
+    }
+
+    public Optional<List<MemberIdAndToken>> getRemindSaveInfo(Long teamId, Long memberId) {
+        return teamMemberRepository.findRemindSaveInfo(teamId, memberId);
+    }
+
 }
