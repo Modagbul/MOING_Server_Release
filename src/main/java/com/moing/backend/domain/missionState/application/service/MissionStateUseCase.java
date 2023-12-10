@@ -79,25 +79,7 @@ public class MissionStateUseCase {
             teamScoreLogicUseCase.updateTeamScore(mission.getId());
         }
 
-
     }
-
-    public void deleteMissionState(Member member, Mission mission, MissionArchive missionArchive) {
-
-        MissionState missionState = missionStateQueryService.findMissionState(member, mission);
-        missionStateDeleteService.deleteMissionState(missionState);
-
-    }
-
-    public void missionStateReset(List<Long> missionIds) {
-        List<MissionState> missionStates = missionStateQueryService.findByMissionId(missionIds);
-        missionStateDeleteService.deleteMissionState(missionStates);
-    }
-
-    public void deleteAllMissionState(Long missionId) {
-        missionStateDeleteService.deleteMissionStateByMission(missionId);
-    }
-
 
 
 }

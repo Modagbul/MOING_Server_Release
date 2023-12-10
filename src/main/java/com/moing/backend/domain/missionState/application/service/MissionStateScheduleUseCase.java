@@ -50,31 +50,8 @@ public class MissionStateScheduleUseCase {
         for (Long id : ongoingRepeatMissions) {
             teamScoreLogicUseCase.updateTeamScore(id);
         }
-        // 미션 state 에서 지우기 ( 이것도 대용량 )
-        missionStateReset(ongoingRepeatMissions);
     }
 
-    public void missionStateReset(List<Long> missionIds) {
-        List<MissionState> missionStates = missionStateQueryService.findByMissionId(missionIds);
-        missionStateDeleteService.deleteMissionState(missionStates);
-    }
-
-
-//    /**
-//     * 단일 미션 마감
-//     * 미션 단위 마감
-//     * 한시간 마다 실행
-//     */
-//    public void singleMissionEndRoutineByMission() {
-//
-//        Mission mission = new Mission();
-//        LocalDateTime now = LocalDateTime.now();
-//
-//        if (mission.getDueTo().isAfter(now)) {
-//            mission.updateStatus(MissionStatus.END);
-//            teamScoreLogicUseCase.updateTeamScore(mission.getId());
-//        }
-//    }
 
     /**
      * 단일 미션 마감
@@ -94,7 +71,6 @@ public class MissionStateScheduleUseCase {
 
     }
 
-
     /**
      * 미션 시작
      * 월요일 아침
@@ -102,7 +78,7 @@ public class MissionStateScheduleUseCase {
     @Scheduled(cron = "0 0 0 * * MON")
     public void RepeatMissionStart() {
         List<Mission> startMission = missionQueryService.findMissionByStatus(MissionStatus.WAIT);
-        startMission.stream().forEach(
+        startMission.forEach(
             mission -> mission.updateStatus(MissionStatus.ONGOING)
         );
     }
