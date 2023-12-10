@@ -11,4 +11,5 @@ public class GetMyPageTeamBlock {
     private Long teamId;
     private String teamName;
     private Category category;
+    private String profileImgUrl;
 }

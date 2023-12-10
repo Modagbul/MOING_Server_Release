@@ -112,6 +112,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .category("ETC")
                 .startDate("2023.09.05")
                 .deletionTime(LocalDateTime.now().withNano(0))
+                .profileImgUrl("프로필 사진 url")
                 .build();
 
         TeamBlock teamBlock2=TeamBlock.builder()
@@ -123,6 +124,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .category("SPORTS")
                 .startDate("2023.09.01")
                 .deletionTime(LocalDateTime.now().withNano(0))
+                .profileImgUrl("프로필 사진 url")
                 .build();
 
         teamBlocks.add(teamBlock1);
@@ -158,14 +160,15 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description("홈 화면에서 내 소모임을 모두 조회했습니다."),
                                         fieldWithPath("data.numOfTeam").description("소모임 개수(최대 3개)"),
                                         fieldWithPath("data.memberNickName").description("유저 닉네임"),
-                                        fieldWithPath("data.teamBlocks[0].teamId").description("소모임 아이디"),
-                                        fieldWithPath("data.teamBlocks[0].duration").description("소모임과 함께한 시간"),
-                                        fieldWithPath("data.teamBlocks[0].levelOfFire").description("불꽃 레벨"),
-                                        fieldWithPath("data.teamBlocks[0].teamName").description("소모임 이름"),
-                                        fieldWithPath("data.teamBlocks[0].numOfMember").description("소모임원 명 수"),
-                                        fieldWithPath("data.teamBlocks[0].category").description("소모임 카테고리"),
-                                        fieldWithPath("data.teamBlocks[0].startDate").description("소모임 시작일"),
-                                        fieldWithPath("data.teamBlocks[0].deletionTime").description("소모임 삭제 시간 (삭제 안했으면 null)")
+                                        fieldWithPath("data.teamBlocks[].teamId").description("소모임 아이디"),
+                                        fieldWithPath("data.teamBlocks[].duration").description("소모임과 함께한 시간"),
+                                        fieldWithPath("data.teamBlocks[].levelOfFire").description("불꽃 레벨"),
+                                        fieldWithPath("data.teamBlocks[].teamName").description("소모임 이름"),
+                                        fieldWithPath("data.teamBlocks[].numOfMember").description("소모임원 명 수"),
+                                        fieldWithPath("data.teamBlocks[].category").description("소모임 카테고리"),
+                                        fieldWithPath("data.teamBlocks[].startDate").description("소모임 시작일"),
+                                        fieldWithPath("data.teamBlocks[].deletionTime").description("소모임 삭제 시간 (삭제 안했으면 null)"),
+                                        fieldWithPath("data.teamBlocks[].profileImgUrl").description("프로필 사진 url")
                                 )
 
                         )

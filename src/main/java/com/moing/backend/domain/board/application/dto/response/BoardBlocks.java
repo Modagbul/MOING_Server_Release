@@ -49,7 +49,7 @@ public class BoardBlocks {
     public void deleteMember() {
         if(Boolean.TRUE.equals(writerIsDeleted)) {
             this.writerNickName = "(알 수 없음)";
-            this.writerProfileImage = "undef";
+            this.writerProfileImage = null;
         }
     }
 }

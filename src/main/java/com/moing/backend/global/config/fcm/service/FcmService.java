@@ -24,7 +24,6 @@ public class FcmService {
 
     private final FirebaseMessaging firebaseMessaging;
 
-
     @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public SingleResponse sendSingleDevice(SingleRequest toSingleRequest) {
 

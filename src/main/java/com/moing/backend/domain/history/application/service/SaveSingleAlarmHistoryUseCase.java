@@ -16,7 +16,7 @@ public class SaveSingleAlarmHistoryUseCase {
     private final AlarmHistorySaveService alarmHistorySaveService;
 
     @Async
-    public void saveAlarmHistory(String fcmToken, Long memberId, String idInfo, String title, String body, String name, AlarmType alarmType, String path) {
+    public void saveAlarmHistory(Long memberId, String idInfo, String title, String body, String name, AlarmType alarmType, String path) {
         AlarmHistory alarmHistory = alarmHistoryMapper.toAlarmHistory(alarmType, path, idInfo, memberId, title, body, name);
         alarmHistorySaveService.saveAlarmHistory(alarmHistory);
     }
