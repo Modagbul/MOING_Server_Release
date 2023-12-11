@@ -16,7 +16,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +49,9 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
                         mission.id,
@@ -59,7 +65,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .from(mission)
                         .leftJoin(missionState)
                         .on(missionState.mission.eq(mission),
-                                missionState.member.memberId.eq(memberId)
+                                missionState.member.memberId.eq(memberId),
+                                dateInRange
                         )
                 .where(
                         mission.team.teamId.in(teams),
@@ -68,7 +75,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
                 )
                 .groupBy(mission.id,mission.number)
-                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .having(missionState.count().lt(mission.number)
+                        ) // HAVING 절을 사용하여 조건 적용
                 .orderBy(missionState.count().desc())
                 .fetch());
     }
@@ -163,6 +171,38 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .fetchOne()
         );
     }
+
+
+    private BooleanExpression createRepeatTypeConditionByArchive() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
+//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
+        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+
+        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
+        return dateInRange.and(dateInRange);
+    }
+
+    private BooleanExpression createRepeatTypeConditionByState() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
+//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
+        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+
+        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
+        return dateInRange.and(dateInRange);
+    }
+
 
 
 }
