@@ -50,7 +50,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
 
-        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression dateInRange = createRepeatTypeConditionByState();
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
