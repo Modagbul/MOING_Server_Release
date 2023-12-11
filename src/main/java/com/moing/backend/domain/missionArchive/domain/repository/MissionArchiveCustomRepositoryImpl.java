@@ -15,7 +15,6 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,10 +24,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
 import javax.swing.text.html.Option;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +48,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,
-                                                                                    OrderCondition orderCondition) {
+                                                                             OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -83,7 +79,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,
-                                                                                    OrderCondition orderCondition) {
+                                                                           OrderCondition orderCondition) {
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -118,23 +114,16 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         return orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]);
     }
 
-   @Override
+    @Override
     public Optional<List<MissionArchive>> findOneMyArchives(Long memberId,Long missionId,Long count) {
-
-
-       BooleanExpression repeatTypeCondition = createRepeatTypeConditionByArchive();
-       BooleanExpression baseCondition = missionArchive.mission.id.eq(missionId);
-       BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
 
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
-                 .from(missionArchive)
-                 .where(
-                         finalCondition,
+                .from(missionArchive)
+                .where(
+                        missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.eq(memberId),
-                         missionArchive.count.eq(count)
-
-
+                        missionArchive.count.eq(count)
                 )
                 .orderBy(missionArchive.createdDate.desc())
                 .fetch()
@@ -145,16 +134,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<MissionArchive>> findMyArchives(Long memberId,Long missionId) {
 
-
-        BooleanExpression repeatTypeCondition = createRepeatTypeConditionByArchive();
-        BooleanExpression baseCondition = missionArchive.mission.id.eq(missionId);
-        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
-
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
-                 .from(missionArchive)
-                 .where(
-                         finalCondition,
+                .from(missionArchive)
+                .where(
+                        missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.eq(memberId)
                 )
                 .orderBy(missionArchive.createdDate.desc())
@@ -167,16 +151,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) {
 
-
-        BooleanExpression repeatTypeCondition = createRepeatTypeConditionByArchive();
-        BooleanExpression baseCondition = missionArchive.mission.id.eq(missionId);
-        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
-
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
                 .from(missionArchive)
                 .where(
-                        finalCondition,
+                        missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP))
                 )
@@ -188,19 +167,13 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     @Override
     public Optional<Long> findDonePeopleByMissionId(Long missionId) {
-
-        BooleanExpression repeatTypeCondition = createRepeatTypeCondition();
-        BooleanExpression baseCondition = missionState.mission.id.eq(missionId);
-        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
-
         return Optional.of(queryFactory
-                .select(missionState)
-                .from(missionState)
+                .select(missionArchive)
+                .from(missionArchive)
                 .where(
-                        finalCondition
+                        missionArchive.mission.id.eq(missionId)
                 )
-                .groupBy(missionState.member,missionState.mission.number)
-                .having(missionState.count().goe(missionState.mission.number))
+                .groupBy(missionArchive.member)
                 .fetchCount()
 
         );
@@ -208,18 +181,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     @Override
     public Optional<Long> findMyDoneCountByMissionId(Long missionId, Long memberId) {
-
-
-        BooleanExpression repeatTypeCondition = createRepeatTypeCondition();
-        BooleanExpression baseCondition = missionState.mission.id.eq(missionId);
-        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
-
         return Optional.ofNullable(queryFactory
-                .select(missionState.count())
-                .from(missionState)
+                .select(missionArchive.count())
+                .from(missionArchive)
                 .where(
-                        finalCondition,
-                        missionState.member.memberId.eq(memberId)
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.member.memberId.eq(memberId)
                 )
                 .fetchFirst()
         );
@@ -228,21 +195,16 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     @Override
     public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
-
-
-        BooleanExpression repeatTypeCondition = createRepeatTypeCondition();
-
-
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
-                                mission.id,
-                                mission.title,
+                        mission.id,
+                        mission.title,
 //                                missionState.count().coalesce(0L).as("done"),
-                                missionState.count(),
-                                mission.number,
-                                mission.way.stringValue(),
-                                mission.status.stringValue()
-                        ))
+                        missionState.count(),
+                        mission.number,
+                        mission.way.stringValue(),
+                        mission.status.stringValue()
+                ))
                 .from(mission)
                 .leftJoin(missionState)
                 .on(missionState.mission.eq(mission),
@@ -251,12 +213,10 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
-                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        repeatTypeCondition
-
+                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))
                 )
                 .groupBy(mission.id,mission.number)
-                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+//                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
                 .orderBy(missionState.count().desc())
                 .fetch());
 
@@ -270,22 +230,19 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         Expression<String> type = Expressions.stringTemplate(String.valueOf(mission.type));
 
 
-        BooleanExpression repeatTypeCondition = createRepeatTypeCondition();
-
         return Optional.ofNullable(queryFactory
                 .selectDistinct(Projections.constructor(FinishMissionBoardRes.class,
-                    mission.id,
-                    mission.dueTo.stringValue(),
-                    mission.title,
-                    missionState.status.stringValue().coalesce("FAIL").as("status"),
-                    mission.type.stringValue(),
+                        mission.id,
+                        mission.dueTo.stringValue(),
+                        mission.title,
+                        missionArchive.status.stringValue().coalesce("FAIL").as("status"),
+                        mission.type.stringValue(),
                         mission.way.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(mission.missionArchiveList,missionArchive)
-                        .on(missionState.member.memberId.eq(memberId))
+                .on(missionArchive.member.memberId.eq(memberId))
                 .where(
-                        repeatTypeCondition,
                         mission.team.teamId.eq(teamId),
                         mission.status.eq(MissionStatus.SUCCESS).or(mission.status.eq(MissionStatus.END))
                 )
@@ -336,11 +293,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
 
         long count = queryFactory
-                .selectFrom(missionState)
+                .selectFrom(missionArchive)
                 .where(
-                        missionState.member.memberId.eq(memberId),
-                        missionState.mission.id.eq(missionId),
-                        missionState.lastModifiedDate.between(startOfToday, endOfToday) // createdDate와 오늘의 시작과 끝을 비교
+                        missionArchive.member.memberId.eq(memberId),
+                        missionArchive.mission.id.eq(missionId),
+                        missionArchive.lastModifiedDate.between(startOfToday, endOfToday) // createdDate와 오늘의 시작과 끝을 비교
                 )
                 .fetchCount();
 
@@ -355,8 +312,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .join(teamMember.team, team)
                 .join(team.missions, mission)
                 .join(mission.missionStateList,missionState)
-                        .where(missionState.isNull())
-                        .fetch());
+                .where(missionState.isNull())
+                .fetch());
 //                .where(
 //                        //  active 한 미션 필터링
 //                        (((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
@@ -366,38 +323,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
 
 //                ).fetch());
-    }
-
-    // 날짜 조건 생성 메서드
-    private BooleanExpression createRepeatTypeCondition() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
-        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionState.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
-
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
-    }
-
-    // 날짜 조건 생성 메서드
-    private BooleanExpression createRepeatTypeConditionByArchive() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
-        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
-
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
     }
 
 
