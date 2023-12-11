@@ -47,16 +47,16 @@ public class GetAlarmHistoryResponse {
 
     public String formatCreatedDate(LocalDateTime createdDate) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-
         LocalDateTime midnightOfCreatedDate = createdDate.toLocalDate().atStartOfDay();
 
         if (currentDateTime.isAfter(midnightOfCreatedDate.plusDays(1))) {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M월 d일");
-            return midnightOfCreatedDate.plusDays(1).format(dateFormatter);
+            return createdDate.format(dateFormatter);
         } else {
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("a h:mm");
-            return currentDateTime.format(timeFormatter);
+            return createdDate.format(timeFormatter);
         }
     }
+
 
 }
