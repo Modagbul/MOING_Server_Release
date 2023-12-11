@@ -70,7 +70,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         )
                 .where(
                         mission.team.teamId.in(teams),
-                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
+                        mission.status.eq(MissionStatus.ONGOING),
                         mission.type.eq(MissionType.REPEAT)
 
                 )
@@ -148,7 +148,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
                         mission.status.eq(MissionStatus.ONGOING)
-                ).fetchCount() > 2;
+                ).fetchCount() < 2;
     }
 
     @Override

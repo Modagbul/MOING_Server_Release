@@ -349,12 +349,20 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .join(teamMember.team, team)
                 .join(team.missions, mission)
                 .join(mission.missionStateList,missionState)
-                .where(missionState.isNull())
-                .fetch());
+                        .on(
+                                mission.eq(missionState.mission),
+                                teamMember.member.eq(missionState.member),
+                                mission.number.loe(missionState.count()))
+//                        .on(missionState.isNull())
+                .where(
+                        mission.status.eq(MissionStatus.END).or(mission.status.eq(MissionStatus.SUCCESS)).not()
+//                        missionState.isNull())
+                ).fetch());
 //                .where(
 //                        //  active 한 미션 필터링
 //                        (((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
 //                                .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))),
+
 //                        // 인증하지 않은값
 //                        missionState.id.isNull()
 
