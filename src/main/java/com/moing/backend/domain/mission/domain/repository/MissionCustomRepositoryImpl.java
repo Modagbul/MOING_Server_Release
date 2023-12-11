@@ -129,12 +129,15 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.dueTo.stringValue()
                 ))
                 .from(mission)
-                .leftJoin(missionState).on(mission.id.eq(missionState.mission.id))
+                .leftJoin(missionState).on(
+                        mission.eq(missionState.mission),
+                        missionState.member.memberId.eq(memberId)
+                        )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE),
-                        missionState.id.isNull()
+                        mission.type.eq(MissionType.ONCE)
+                        //missionState.id.isNull()
                 )
                 .orderBy(mission.dueTo.asc())
                 .fetch());
