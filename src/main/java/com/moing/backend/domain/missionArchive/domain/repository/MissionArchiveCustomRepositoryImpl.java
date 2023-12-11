@@ -388,8 +388,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 //        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
 //                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);
