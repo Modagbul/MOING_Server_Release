@@ -36,7 +36,7 @@ class AuthControllerTest extends CommonControllerTest {
     private SignInUseCase authService;
 
     @MockBean
-    private SignUpUseCase signUpUserCase;
+    private SignUpUseCase signUpUseCase;
 
     @MockBean
     private ReissueTokenUseCase reissueTokenUseCase;
@@ -333,7 +333,7 @@ class AuthControllerTest extends CommonControllerTest {
                 .build();
 
 
-        given(signUpUserCase.signUp(any(), any())).willReturn(output);
+        given(signUpUseCase.signUp(any(), any())).willReturn(output);
 
         //when
         ResultActions actions = mockMvc.perform(
