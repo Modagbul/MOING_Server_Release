@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardRead> boardReads = new ArrayList<>();
 
+    @BatchSize(size=10)
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardComment> boardComments = new ArrayList<>();
 

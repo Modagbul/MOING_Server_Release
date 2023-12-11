@@ -6,21 +6,21 @@ import com.moing.backend.domain.mypage.application.dto.response.GetAlarmResponse
 import com.moing.backend.domain.mypage.exception.AlarmInvalidException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AlarmUseCase {
 
     private final MemberGetService memberGetService;
 
+    @Transactional(readOnly = true)
     public GetAlarmResponse getAlarm(String socialId){
         Member member=memberGetService.getMemberBySocialId(socialId);
         return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush());
     }
 
+    @Transactional
     public GetAlarmResponse updateAlarm(String socialId, String type, String status) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         boolean push = "on".equals(status);

@@ -7,6 +7,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class GetAlarmHistoryUseCase {
     /**
      * 알림 히스토리 조회
      */
+    @Transactional(readOnly = true)
     public List<GetAlarmHistoryResponse> getAllAlarmHistories(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         return alarmHistoryGetService.getAlarmHistories(member.getMemberId());
@@ -28,6 +30,7 @@ public class GetAlarmHistoryUseCase {
     /**
      * 안 읽은 알림 개수 조회
      */
+    @Transactional(readOnly = true)
     public GetAlarmCountResponse getUnreadAlarmCount(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         return new GetAlarmCountResponse(alarmHistoryGetService.getUnreadAlarmCount(member.getMemberId()));

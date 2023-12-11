@@ -4,15 +4,15 @@ import com.moing.backend.domain.auth.application.dto.response.CheckNicknameRespo
 import com.moing.backend.domain.member.domain.service.MemberCheckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CheckNicknameUseCase {
 
     private final MemberCheckService memberCheckService;
+
+    @Transactional(readOnly=true)
     public CheckNicknameResponse checkNickname(String nickname){
         boolean isDuplicated=memberCheckService.checkNickname(nickname);
         return new CheckNicknameResponse(isDuplicated);
