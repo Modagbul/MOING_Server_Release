@@ -11,6 +11,7 @@ import com.moing.backend.global.config.security.jwt.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Map;
 
@@ -24,16 +25,17 @@ public class WithdrawUseCase {
     private final TeamGetService teamGetService;
     private final Map<String, WithdrawProvider> withdrawProviders;
 
+    @Transactional
     public void withdraw(String socialId, String providerInfo, WithdrawRequest withdrawRequest) throws IOException {
         Member member = memberGetService.getMemberBySocialId(socialId);
         checkMemberIsNotPartOfAnyTeam(member);
-        withdraw(providerInfo, withdrawRequest.getSocialToken());
+        socialWithdraw(providerInfo, withdrawRequest.getSocialToken());
         member.deleteMember();
         feedbackSaveService.saveFeedback(member, withdrawRequest);
         tokenUtil.expireRefreshToken(socialId);
     }
 
-    private void withdraw(String providerInfo, String token) throws IOException {
+    private void socialWithdraw(String providerInfo, String token) throws IOException {
         WithdrawProvider withdrawProvider=withdrawProviders.get(providerInfo+"Withdraw");
         if (withdrawProvider == null) {
             throw new IllegalArgumentException("Unknown provider: " + providerInfo);
