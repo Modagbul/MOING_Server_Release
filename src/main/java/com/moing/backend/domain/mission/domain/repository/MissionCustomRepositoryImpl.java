@@ -148,7 +148,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.teamId.eq(teamId),
                         mission.type.eq(MissionType.REPEAT),
                         mission.status.eq(MissionStatus.ONGOING)
-                ).fetchCount() > 2;
+                ).fetchCount() < 2;
     }
 
     @Override
