@@ -7,8 +7,7 @@ import com.moing.backend.domain.mypage.application.dto.response.GetProfileRespon
 import com.moing.backend.global.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +16,7 @@ public class ProfileUseCase {
     private final MemberGetService memberGetService;
     private final UpdateUtils updateUtils;
 
+    @Transactional(readOnly = true)
     public GetProfileResponse getProfile(String socialId){
         Member member=memberGetService.getMemberBySocialId(socialId);
         return new GetProfileResponse(member.getProfileImage(), member.getNickName(), member.getIntroduction());

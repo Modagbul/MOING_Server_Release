@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UpdateTeamUseCase {
 
@@ -21,7 +22,6 @@ public class UpdateTeamUseCase {
     private final CheckLeaderUseCase checkLeaderUseCase;
     private final UpdateUtils updateUtils;
 
-    @Transactional
     public UpdateTeamResponse updateTeam(UpdateTeamRequest updateTeamRequest, String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Team team = teamGetService.getTeamByTeamId(teamId);

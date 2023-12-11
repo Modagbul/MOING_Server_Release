@@ -15,7 +15,6 @@ public class MemberAuthUseCase {
 
     private final MemberSaveService memberSaveService;
 
-    @Transactional
     public Member auth(String fcmToken, Member member, String providerInfo) {
         member.updateFcmToken(fcmToken);
         Member signInMember = memberSaveService.saveMember(member);

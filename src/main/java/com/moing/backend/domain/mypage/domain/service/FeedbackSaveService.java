@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import javax.transaction.Transactional;
 
 @DomainService
-@Transactional
 @RequiredArgsConstructor
 public class FeedbackSaveService {
     private final FeedbackRepository feedbackRepository;
 
+    @Transactional
     public void saveFeedback(Member member, WithdrawRequest withdrawRequest){
         Feedback feedback=new Feedback(member.getMemberId(), withdrawRequest.getReason());
         feedbackRepository.save(feedback);

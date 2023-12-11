@@ -11,11 +11,9 @@ import com.moing.backend.global.response.BaseBoardServiceResponse;
 import com.moing.backend.global.utils.BaseBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class GetBoardUseCase {
 
@@ -30,6 +28,7 @@ public class GetBoardUseCase {
     /**
      * 게시글 상세 조회
      */
+    @Transactional
     public GetBoardDetailResponse getBoardDetail(String socialId, Long teamId, Long boardId) {
         // 1. 게시글 조회
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
@@ -41,6 +40,7 @@ public class GetBoardUseCase {
     /**
      * 게시글 전체 조회
      */
+    @Transactional(readOnly = true)
     public GetAllBoardResponse getAllBoard(String socialId, Long teamId){
         Member member=memberGetService.getMemberBySocialId(socialId);
         return boardGetService.getBoardAll(teamId, member.getMemberId());
