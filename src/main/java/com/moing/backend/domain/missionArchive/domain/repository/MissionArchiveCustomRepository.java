@@ -32,7 +32,4 @@ public interface MissionArchiveCustomRepository {
 
     Boolean findMyArchivesToday(Long memberId,Long missionId);
 
-    Optional<List<String>> findPeopleRemainMission();
-
-
     }

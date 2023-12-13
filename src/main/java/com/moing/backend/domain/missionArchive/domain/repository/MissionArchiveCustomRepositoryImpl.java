@@ -4,12 +4,16 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
+import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
+import com.moing.backend.domain.team.domain.entity.QTeam;
+import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -18,6 +22,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import feign.Param;
 import lombok.extern.slf4j.Slf4j;
@@ -342,33 +347,10 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
 
-    public Optional<List<String>> findPeopleRemainMission() {
-        return Optional.ofNullable(queryFactory
-                .select(teamMember.member.nickName).distinct()
-                .from(teamMember)
-                .join(teamMember.team, team)
-                .join(team.missions, mission)
-                .join(mission.missionStateList,missionState)
-                        .on(
-                                mission.eq(missionState.mission),
-                                teamMember.member.eq(missionState.member),
-                                mission.number.loe(missionState.count()))
-//                        .on(missionState.isNull())
-                .where(
-                        mission.status.eq(MissionStatus.END).or(mission.status.eq(MissionStatus.SUCCESS)).not()
-//                        missionState.isNull())
-                ).fetch());
 //                .where(
 //                        //  active 한 미션 필터링
 //                        (((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
 //                                .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))),
-
-//                        // 인증하지 않은값
-//                        missionState.id.isNull()
-
-
-//                ).fetch());
-    }
 
     private BooleanExpression createRepeatTypeConditionByArchive() {
         LocalDate now = LocalDate.now();
@@ -402,7 +384,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);
     }
-
 
 
 
