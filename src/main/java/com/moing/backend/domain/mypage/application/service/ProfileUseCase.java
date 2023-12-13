@@ -1,6 +1,8 @@
 package com.moing.backend.domain.mypage.application.service;
 
+import com.moing.backend.domain.auth.exception.NicknameDuplicationException;
 import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.member.domain.service.MemberCheckService;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mypage.application.dto.request.UpdateProfileRequest;
 import com.moing.backend.domain.mypage.application.dto.response.GetProfileResponse;
@@ -15,6 +17,7 @@ public class ProfileUseCase {
 
     private final MemberGetService memberGetService;
     private final UpdateUtils updateUtils;
+    private final MemberCheckService memberCheckService;
 
     @Transactional(readOnly = true)
     public GetProfileResponse getProfile(String socialId){
@@ -32,6 +35,10 @@ public class ProfileUseCase {
                 UpdateUtils.getUpdatedValue(updateProfileRequest.getNickName(), member.getNickName()),
                 UpdateUtils.getUpdatedValue(updateProfileRequest.getIntroduction(), member.getIntroduction())
         );
+
+        if(updateProfileRequest.getNickName()!=null){
+            if(memberCheckService.checkNickname(updateProfileRequest.getNickName())) throw new NicknameDuplicationException(); //닉네임 중복검사 (이중체크)
+        }
 
         updateUtils.deleteOldImgUrl(updateProfileRequest.getProfileImage(), oldProfileImageUrl);
     }
