@@ -25,7 +25,7 @@ public class MissionController {
     private final MissionUpdateUseCase missionUpdateUseCase;
     private final MissionDeleteUseCase missionDeleteUseCase;
 
-//    private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
+    private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
 
     /**
      * 미션 조회

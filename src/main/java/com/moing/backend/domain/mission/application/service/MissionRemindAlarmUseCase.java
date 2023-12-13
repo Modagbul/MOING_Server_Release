@@ -41,7 +41,7 @@ public class MissionRemindAlarmUseCase {
         Optional<List<MemberIdAndToken>> remainMissionPeople = missionArchiveScheduleQueryService.getRemainMissionPeople();
 
         eventPublisher.publishEvent(new MultiFcmEvent(title, message, remainMissionPeople, remainMissionPeople,
-                null,REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         return true;
     }
 
