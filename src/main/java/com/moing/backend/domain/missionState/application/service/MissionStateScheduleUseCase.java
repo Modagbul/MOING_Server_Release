@@ -4,6 +4,7 @@ import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUs
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
+import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
@@ -32,7 +33,6 @@ public class MissionStateScheduleUseCase {
     private final MissionQueryService missionQueryService;
     private final MissionStateQueryService missionStateQueryService;
     private final MissionStateDeleteService missionStateDeleteService;
-
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
@@ -67,7 +67,6 @@ public class MissionStateScheduleUseCase {
             mission.updateStatus(MissionStatus.END);
             teamScoreLogicUseCase.updateTeamScore(mission.getId());
         });
-
 
     }
 
