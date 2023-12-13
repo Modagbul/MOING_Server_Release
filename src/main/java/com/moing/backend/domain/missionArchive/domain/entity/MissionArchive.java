@@ -45,7 +45,7 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
 
     private Long count; // 횟수
 
-    @OneToMany(mappedBy = "missionArchive")
+    @OneToMany(mappedBy = "missionArchive", cascade = CascadeType.REMOVE)
     private List<MissionHeart> heartList = new ArrayList<>();
 
 
