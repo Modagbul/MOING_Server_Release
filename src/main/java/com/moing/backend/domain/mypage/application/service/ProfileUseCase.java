@@ -29,16 +29,15 @@ public class ProfileUseCase {
     public void updateProfile(String socialId, UpdateProfileRequest updateProfileRequest) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         String oldProfileImageUrl = member.getProfileImage();
+        if(updateProfileRequest.getNickName()!=null){
+            if(memberCheckService.checkNickname(updateProfileRequest.getNickName())) throw new NicknameDuplicationException(); //닉네임 중복검사 (이중체크)
+        }
 
         member.updateProfile(
                 UpdateUtils.getUpdatedValue(updateProfileRequest.getProfileImage(), member.getProfileImage()),
                 UpdateUtils.getUpdatedValue(updateProfileRequest.getNickName(), member.getNickName()),
                 UpdateUtils.getUpdatedValue(updateProfileRequest.getIntroduction(), member.getIntroduction())
         );
-
-        if(updateProfileRequest.getNickName()!=null){
-            if(memberCheckService.checkNickname(updateProfileRequest.getNickName())) throw new NicknameDuplicationException(); //닉네임 중복검사 (이중체크)
-        }
 
         updateUtils.deleteOldImgUrl(updateProfileRequest.getProfileImage(), oldProfileImageUrl);
     }
