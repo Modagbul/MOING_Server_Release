@@ -136,8 +136,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE)
-                        //missionState.id.isNull()
+                        mission.type.eq(MissionType.ONCE),
+                        missionState.id.isNull()
                 )
                 .orderBy(mission.dueTo.asc())
                 .fetch());
