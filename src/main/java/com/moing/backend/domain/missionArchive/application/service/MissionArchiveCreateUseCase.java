@@ -62,6 +62,8 @@ public class MissionArchiveCreateUseCase {
             throw new NoMoreMissionArchiveException();
         }
 
+        MissionArchiveRes missionArchiveRes;
+
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
             // 예정된 반복미션 접근 제한
@@ -74,12 +76,21 @@ public class MissionArchiveCreateUseCase {
             else
                 throw new NoMoreMissionArchiveException();
 
-        }else {
+            missionStateUseCase.updateMissionState(member, mission, newArchive);
+            missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
+
+
+        } else {
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
+
+            missionStateUseCase.updateMissionState(member, mission, newArchive);
+            missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
+            missionArchiveRes.updateCount(missionArchiveQueryService.findDoneSingleArchives(missionId));
         }
 
-        missionStateUseCase.updateMissionState(member, mission, newArchive);
-        return MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive),memberId);
+//        missionStateUseCase.updateMissionState(member, mission, newArchive);
+//        missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
+        return missionArchiveRes;
 
     }
 

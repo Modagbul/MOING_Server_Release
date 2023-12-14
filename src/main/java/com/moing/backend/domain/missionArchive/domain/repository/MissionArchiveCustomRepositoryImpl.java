@@ -208,6 +208,26 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         );
     }
+    @Override
+    public Optional<Long> findDonePeopleByRepeatMissionId(Long missionId) {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
+        return Optional.of(queryFactory
+                .select(missionArchive)
+                .from(missionArchive)
+                .where(
+                        missionArchive.mission.id.eq(missionId),
+
+                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
+                                .or(missionArchive.mission.type.eq(MissionType.ONCE))
+                )
+                .groupBy(missionArchive.member,missionArchive.mission.number)
+                .having(missionArchive.count().goe(missionArchive.mission.number))
+                .fetchCount()
+
+        );
+    }
 
     @Override
     public Optional<Long> findMyDoneCountByMissionId(Long missionId, Long memberId) {

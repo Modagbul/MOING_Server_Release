@@ -1,7 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.service;
 
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
-import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
@@ -17,9 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
-import static com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus.*;
-import static com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus.INCOMPLETE;
 
 @DomainService
 @Transactional
@@ -109,8 +105,11 @@ public class MissionArchiveQueryService {
     }
 
 
-    public Long findDoneArchives(Long missionId) {
+    public Long findDoneSingleArchives(Long missionId) {
         return missionArchiveRepository.findDonePeopleByMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
+    }
+    public Long findDoneRepeatArchives(Long missionId) {
+        return missionArchiveRepository.findDonePeopleByRepeatMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
     public Long findMyDoneArchives(Long memberId, Long missionId) {
