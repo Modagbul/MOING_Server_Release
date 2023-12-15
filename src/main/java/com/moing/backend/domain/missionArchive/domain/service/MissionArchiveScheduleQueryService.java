@@ -25,7 +25,7 @@ public class MissionArchiveScheduleQueryService {
     public Optional<List<MemberIdAndToken>> getRemainMissionPeople() {
         List<Map<String, Long>> maps = missionArchiveRepository.findHavingRemainMissions().orElseThrow();
 
-        return Optional.ofNullable(maps.stream()
+        return Optional.of(maps.stream()
                 .map(map -> {
                     Object memberIdObject = map.get("memberId");
                     Long memberId = ((BigInteger) memberIdObject).longValue();
