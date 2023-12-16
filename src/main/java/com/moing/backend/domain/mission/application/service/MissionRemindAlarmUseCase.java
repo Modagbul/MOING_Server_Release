@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -82,13 +83,29 @@ public class MissionRemindAlarmUseCase {
     }
 
 
-    public Boolean sendRepeatMissionRemind() {
+    public Boolean sendRepeatMissionRemindOnSunday() {
 
         List<Member> repeatMissionByStatus = missionQueryService.findRepeatMissionPeopleByStatus(MissionStatus.WAIT);
 
         Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(repeatMissionByStatus);
+        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
 
-        eventPublisher.publishEvent(new MultiFcmEvent(REMIND_ON_SUNDAY_TITLE.getMessage(), REMIND_ON_SUNDAY_MESSAGE.getMessage(), memberIdAndTokens, memberIdAndTokens,
+
+        eventPublisher.publishEvent(new MultiFcmEvent(REMIND_ON_SUNDAY_TITLE.getMessage(), REMIND_ON_SUNDAY_MESSAGE.getMessage(), pushMemberIdAndToken, memberIdAndTokens,
+                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        return true;
+
+
+    }
+
+    public Boolean sendRepeatMissionRemindOnMonday() {
+
+        List<Member> repeatMissionByStatus = missionQueryService.findRepeatMissionPeopleByStatus(MissionStatus.ONGOING);
+
+        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(repeatMissionByStatus);
+        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
+
+        eventPublisher.publishEvent(new MultiFcmEvent(REMIND_ON_MONDAY_TITLE.getMessage(), REMIND_ON_MONDAY_MESSAGE.getMessage(), pushMemberIdAndToken, memberIdAndTokens,
                 "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         return true;
 
@@ -101,6 +118,20 @@ public class MissionRemindAlarmUseCase {
                         .fcmToken(member.getFcmToken())
                         .memberId(member.getMemberId())
                         .build())
+                .collect(Collectors.toList()));
+    }
+    public Optional<List<MemberIdAndToken>> isPushMemberIdAndToken(List<Member> members) {
+        return Optional.of(members.stream()
+                .map(member -> {
+                    if (member.isRemindPush() && !member.isSignOut()) {
+                        return MemberIdAndToken.builder()
+                                .fcmToken(member.getFcmToken())
+                                .memberId(member.getMemberId())
+                                .build();
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
     }
 
