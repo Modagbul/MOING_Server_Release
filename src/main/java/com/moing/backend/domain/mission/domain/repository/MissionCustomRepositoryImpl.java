@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
+import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -106,6 +108,21 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .fetch());
     }
 
+    @Override
+    public Optional<List<Member>> findRepeatMissionPeopleByStatus(MissionStatus missionStatus) {
+
+        return Optional.ofNullable(queryFactory
+                .select(teamMember.member).distinct()
+                .from(teamMember)
+                .join(mission)
+                .on(teamMember.team.eq(mission.team))
+                .where(
+                        mission.status.eq(missionStatus),
+                        mission.type.eq(MissionType.REPEAT)
+                ).fetch());
+
+
+    }
     @Override
     public Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus) {
         return Optional.ofNullable(queryFactory

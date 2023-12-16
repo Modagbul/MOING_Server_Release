@@ -65,7 +65,11 @@ public class TeamScoreLogicUseCase {
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
-        return (done / total * 100) / 5 ;
+        if (done == 0) {
+            return 0L;
+        } else {
+            return (done / total * 100) / 5 ;
+        }
 
     }
 

@@ -104,7 +104,7 @@ public class MissionController {
 
 //    @PostMapping("/remind")
 //    public ResponseEntity<SuccessResponse<Boolean>> remindAlarm(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
-//        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionRemindAlarmUseCase.sendRemindMissionAlarm()));
+//        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionRemindAlarmUseCase.sendRepeatMissionRemind()));
 //    }
 
 

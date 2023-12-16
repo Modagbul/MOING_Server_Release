@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
@@ -24,7 +25,10 @@ public interface MissionCustomRepository {
 
     Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus);
 
-    boolean findRepeatMissionsByTeamId(Long teamId);
+    Optional<List<Member>> findRepeatMissionPeopleByStatus(MissionStatus missionStatus);
+
+
+        boolean findRepeatMissionsByTeamId(Long teamId);
 
     Optional<MissionReadRes> findByIds(Long memberId, Long missionId);
 

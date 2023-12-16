@@ -76,17 +76,24 @@ public class MissionStateScheduleUseCase {
      */
     @Scheduled(cron = "0 0 0 * * MON")
     public void RepeatMissionStart() {
-        List<Mission> startMission = missionQueryService.findMissionByStatus(MissionStatus.WAIT);
+        List<Mission> startMission = missionQueryService.findRepeatMissionByStatus(MissionStatus.WAIT);
         startMission.forEach(
             mission -> mission.updateStatus(MissionStatus.ONGOING)
         );
     }
 
 
-//    @Scheduled(cron = "8 0 0 * * *")
-//    public void MissionRemindAlarm() {
-//
-//
-//        missionRemindAlarmUseCase.sendRemindMissionAlarm();
-//    }
+    @Scheduled(cron = "0 0 8 * * *")
+    public void MissionRemindAlarm() {
+        missionRemindAlarmUseCase.sendRemindMissionAlarm();
+    }
+    @Scheduled(cron = "0 1 20 * * 0")
+    public void RepeatMissionRemindAlarmOnSunday() {
+        missionRemindAlarmUseCase.sendRepeatMissionRemindOnSunday();
+    }
+
+    @Scheduled(cron = "0 1 20 * * 1")
+    public void RepeatMissionRemindAlarmOnMonday() {
+        missionRemindAlarmUseCase.sendRepeatMissionRemindOnMonday();
+    }
 }

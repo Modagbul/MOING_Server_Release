@@ -9,10 +9,9 @@ import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
 import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
 import com.moing.backend.global.config.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class FcmMessageUtil {
     private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onMultiFcmEvent(MultiFcmEvent event) {
         if (event.getIdAndTokensByPush().isPresent() && !event.getIdAndTokensByPush().get().isEmpty()) {
             fcmService.sendMultipleDevices(new MultiRequest(event.getIdAndTokensByPush().get(), event.getTitle(), event.getBody(), event.getIdInfo(), event.getName(), event.getAlarmType(), event.getPath()));
@@ -34,7 +33,7 @@ public class FcmMessageUtil {
     }
 
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void onSingleFcmEvent(SingleFcmEvent event) {
         if (event.getMember().isFirePush() && !event.getMember().isSignOut()) { //알림 on, 로그아웃 안함
             fcmService.sendSingleDevice(new SingleRequest(event.getMember().getFcmToken(), event.getTitle(), event.getBody(), event.getMember().getMemberId(), event.getIdInfo(), event.getName(), event.getAlarmType(), event.getPath()));
