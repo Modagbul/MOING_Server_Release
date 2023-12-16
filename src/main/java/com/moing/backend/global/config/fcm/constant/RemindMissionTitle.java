@@ -23,8 +23,8 @@ public enum RemindMissionTitle {
     REMIND_ON_SUNDAY_MESSAGE("내일부터 미션을 다시 시작해봐요\uD83D\uDCAA"),
 
 
-    REMIND_ON_MONDAY_TITLE("경쾌한 한 주의 시작이에요!"),
-    REMIND_ON_MONDAY_MESSAGE("이번주에도 미션 도전을 응원해요\uD83D\uDE0A\n");
+    REMIND_ON_MONDAY_TITLE("이번주의 도전을 응원할게요\uD83D\uDC4A"),
+    REMIND_ON_MONDAY_MESSAGE("모잉과 함께 달려볼까요?");
 
 
     private final String message;
