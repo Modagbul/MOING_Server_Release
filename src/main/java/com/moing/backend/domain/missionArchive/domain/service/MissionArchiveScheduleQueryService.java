@@ -22,23 +22,23 @@ public class MissionArchiveScheduleQueryService {
 
     private final MissionArchiveRepository missionArchiveRepository;
 
-    public Optional<List<MemberIdAndToken>> getRemainMissionPeople() {
-        List<Map<String, Long>> maps = missionArchiveRepository.findHavingRemainMissions().orElseThrow();
+    public List<Member> getRemainMissionPeople() {
+        return missionArchiveRepository.findHavingRemainMissionsByQuerydsl().orElseThrow();
 
-        return Optional.of(maps.stream()
-                .map(map -> {
-                    Object memberIdObject = map.get("memberId");
-                    Long memberId = ((BigInteger) memberIdObject).longValue();
-
-                    Object fcmObject = map.get("fcmToken");
-                    String fcmToken = fcmObject.toString();
-
-                    return MemberIdAndToken.builder()
-                            .fcmToken(fcmToken)
-                            .memberId(memberId)
-                            .build();
-                })
-                .collect(Collectors.toList()));
+//        return Optional.of(maps.stream()
+//                .map(map -> {
+//                    Object memberIdObject = map.get("memberId");
+//                    Long memberId = ((BigInteger) memberIdObject).longValue();
+//
+//                    Object fcmObject = map.get("fcmToken");
+//                    String fcmToken = fcmObject.toString();
+//
+//                    return MemberIdAndToken.builder()
+//                            .fcmToken(fcmToken)
+//                            .memberId(memberId)
+//                            .build();
+//                })
+//                .collect(Collectors.toList()));
 
 //        return null;
 

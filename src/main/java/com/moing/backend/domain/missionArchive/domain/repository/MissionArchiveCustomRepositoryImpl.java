@@ -44,6 +44,7 @@ import static com.moing.backend.domain.missionState.domain.entity.QMissionState.
 import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 import static javax.swing.Spring.constant;
+import static org.springframework.data.jpa.domain.Specification.not;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
@@ -404,6 +405,66 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);
+    }
+
+//
+//    @Query(value = "SELECT distinct COALESCE(tmSub.fcm_token,'undef') as fcmToken, tmSub.member_id as memberId " +
+//            "FROM (SELECT distinct COALESCE(tm.member_id, 0) AS member_id, t.team_id, me.fcm_token " +
+//            "FROM mission m " +
+//            "LEFT JOIN team t ON m.team_id = t.team_id " +
+//            "LEFT JOIN team_member tm ON t.team_id = tm.team_id AND tm.is_deleted = 'False' " +
+//            "LEFT JOIN member me on tm.member_id = me.member_id) tmSub " +
+//            "LEFT JOIN mission m ON NOT (m.status = 'END' OR m.status = 'SUCCESS') and m.team_id = tmSub.team_id " +
+//            "LEFT JOIN mission_archive ms ON m.mission_id = ms.mission_id and ms.member_id = tmSub.member_id " +
+//            "GROUP BY tmSub.member_id, m.mission_id, m.number " +
+//            "HAVING COUNT(ms.mission_archive_id) < m.number", nativeQuery = true
+//    )
+
+    @Override
+    public Optional<List<Member>> findHavingRemainMissionsByQuerydsl() {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
+        return Optional.ofNullable(queryFactory
+                .select(teamMember.member).distinct()
+                .from(teamMember)
+                .join(mission)
+                .on(teamMember.team.eq(mission.team),
+                        ((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)))
+                                .and(mission.type.eq(MissionType.ONCE)))
+                                .or(mission.status.eq(MissionStatus.ONGOING).and(mission.type.eq(MissionType.REPEAT)))
+                )
+                .leftJoin(missionArchive)
+                .on(missionArchive.mission.eq(mission),
+                        missionArchive.member.eq(teamMember.member),
+                        ((mission.type.eq(MissionType.REPEAT).and(dateInRange))
+                                .or(mission.type.eq(MissionType.ONCE)))
+                )
+                .groupBy(teamMember.member,mission,mission.number)
+                        .having(missionArchive.count().lt(mission.number))
+                .fetch());
+
+
+
+//        return Optional.ofNullable(queryFactory
+//                        .select(teamMember.member).distinct()
+//                        .from(teamMember)
+//                        .join(mission)
+//                        .on(
+//                                teamMember.team.eq(mission.team),
+//                                ((((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
+//                                    .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))))
+//                        )
+//                        .join(missionArchive)
+//                        .on(
+//                                missionArchive.mission.eq(mission),
+//                                missionArchive.member.eq(teamMember.member),
+//                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+//                        )
+//                        .groupBy(teamMember.member,mission,mission.number)
+//                        .having(missionArchive.count().loe(mission.number))
+//                        .fetch()
+//        );
     }
 
 
