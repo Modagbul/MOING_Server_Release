@@ -23,4 +23,10 @@ public class UpdateUtils {
             s3Service.deleteImage(oldImageUrl);
         }
     }
+
+    public void deleteImgUrl(String imageUrl) {
+        if (imageUrl != null) {
+            s3Service.deleteImage(imageUrl);
+        }
+    }
 }
