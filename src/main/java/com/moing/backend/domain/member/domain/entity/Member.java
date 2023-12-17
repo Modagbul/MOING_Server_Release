@@ -103,8 +103,12 @@ public class Member extends BaseTimeEntity {
 
     public void signUp(SignUpRequest signUpRequest) {
         this.nickName = signUpRequest.getNickName();
-        this.gender = signUpRequest.getGender();
-        this.birthDate = LocalDate.parse(signUpRequest.getBirthDate(), DateTimeFormatter.ISO_DATE);;
+        if(signUpRequest.getGender()!=null) {
+            this.gender = signUpRequest.getGender();
+        }
+        if(signUpRequest.getBirthDate()!=null) {
+            this.birthDate = LocalDate.parse(signUpRequest.getBirthDate(), DateTimeFormatter.ISO_DATE);
+        }
         this.registrationStatus = RegistrationStatus.COMPLETED;
         updateAllPush(true);
     }
