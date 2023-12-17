@@ -61,7 +61,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionState.count().stringValue()
+                        missionState.count().stringValue(),
+                        mission.status.stringValue()
 
                 ))
                 .from(mission)
@@ -143,7 +144,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.teamId,
                         mission.team.name,
                         mission.title,
-                        mission.dueTo.stringValue()
+                        mission.dueTo.stringValue(),
+                        mission.status.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(missionState).on(

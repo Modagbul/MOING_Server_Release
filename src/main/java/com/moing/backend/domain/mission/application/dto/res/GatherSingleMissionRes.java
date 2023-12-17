@@ -13,6 +13,7 @@ public class GatherSingleMissionRes {
     private String teamName;
     private String missionTitle;
     private String dueTo;
+    private String status;
 
 
 }
