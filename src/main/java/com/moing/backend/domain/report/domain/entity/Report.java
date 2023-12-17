@@ -27,4 +27,5 @@ public class Report extends BaseTimeEntity {
 
     private Long reportMemberId;
     private Long targetId;
+    private String targetMemberNickName;
 }
