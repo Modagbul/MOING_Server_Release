@@ -1,6 +1,7 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
@@ -78,4 +79,7 @@ public interface MissionArchiveRepository extends JpaRepository<MissionArchive, 
 //    )
 //    Optional<List<MemberIdAndToken>> findHavingRemainMissions();
 
-}
+
+
+
+    }

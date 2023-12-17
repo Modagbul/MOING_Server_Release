@@ -44,10 +44,12 @@ public class MissionRemindAlarmUseCase {
         String title = getTitle(random.nextInt(4));
         String message = getMessage(random.nextInt(4));
 
+        List<Member> remainMissionPeople = missionArchiveScheduleQueryService.getRemainMissionPeople();
 
-        Optional<List<MemberIdAndToken>> remainMissionPeople = missionArchiveScheduleQueryService.getRemainMissionPeople();
+        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(remainMissionPeople);
+        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(remainMissionPeople);
 
-        eventPublisher.publishEvent(new MultiFcmEvent(title, message, remainMissionPeople, remainMissionPeople,
+        eventPublisher.publishEvent(new MultiFcmEvent(title, message, pushMemberIdAndToken, memberIdAndTokens,
                 "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         return true;
     }
