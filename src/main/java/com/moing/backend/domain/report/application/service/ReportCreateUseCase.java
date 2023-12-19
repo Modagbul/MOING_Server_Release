@@ -42,7 +42,7 @@ public class ReportCreateUseCase {
         if (reportType.equals(ReportType.BOARD.name())) {
             Board board = boardGetService.getBoard(targetId);
 
-            targetMemberNickName = board.getWriterNickName();
+            targetMemberNickName = board.getTeamMember().getMember().getNickName();
 
             board.updateBoard(UpdateBoardRequest.builder()
                     .title(REPORT_BOARD_TITLE)
