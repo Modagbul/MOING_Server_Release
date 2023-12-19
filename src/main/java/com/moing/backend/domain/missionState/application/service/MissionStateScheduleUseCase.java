@@ -4,6 +4,7 @@ import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUs
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
+import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
@@ -32,7 +33,6 @@ public class MissionStateScheduleUseCase {
     private final MissionQueryService missionQueryService;
     private final MissionStateQueryService missionStateQueryService;
     private final MissionStateDeleteService missionStateDeleteService;
-
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
@@ -68,7 +68,6 @@ public class MissionStateScheduleUseCase {
             teamScoreLogicUseCase.updateTeamScore(mission.getId());
         });
 
-
     }
 
     /**
@@ -77,17 +76,24 @@ public class MissionStateScheduleUseCase {
      */
     @Scheduled(cron = "0 0 0 * * MON")
     public void RepeatMissionStart() {
-        List<Mission> startMission = missionQueryService.findMissionByStatus(MissionStatus.WAIT);
+        List<Mission> startMission = missionQueryService.findRepeatMissionByStatus(MissionStatus.WAIT);
         startMission.forEach(
             mission -> mission.updateStatus(MissionStatus.ONGOING)
         );
     }
 
 
-//    @Scheduled(cron = "8 0 0 * * *")
-//    public void MissionRemindAlarm() {
-//
-//
-//        missionRemindAlarmUseCase.sendRemindMissionAlarm();
-//    }
+    @Scheduled(cron = "0 0 8 * * *")
+    public void MissionRemindAlarm() {
+        missionRemindAlarmUseCase.sendRemindMissionAlarm();
+    }
+    @Scheduled(cron = "0 1 20 * * 0")
+    public void RepeatMissionRemindAlarmOnSunday() {
+        missionRemindAlarmUseCase.sendRepeatMissionRemindOnSunday();
+    }
+
+    @Scheduled(cron = "0 1 20 * * 1")
+    public void RepeatMissionRemindAlarmOnMonday() {
+        missionRemindAlarmUseCase.sendRepeatMissionRemindOnMonday();
+    }
 }

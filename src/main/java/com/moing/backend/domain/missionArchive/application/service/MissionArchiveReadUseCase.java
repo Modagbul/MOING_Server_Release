@@ -3,6 +3,7 @@ package com.moing.backend.domain.missionArchive.application.service;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
@@ -58,9 +59,17 @@ public class MissionArchiveReadUseCase {
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
+        String done = "0";
+
+        if (mission.getType().equals(MissionType.ONCE)) {
+            done = missionArchiveQueryService.findDoneSingleArchives(missionId).toString();
+        } else {
+            done = missionArchiveQueryService.findDoneRepeatArchives(missionId).toString();
+        }
+
         return MissionArchiveStatusRes.builder()
                 .total(team.getNumOfMember().toString())
-                .done(missionArchiveQueryService.findDoneArchives(missionId).toString())
+                .done(done)
                 .build();
 
     }

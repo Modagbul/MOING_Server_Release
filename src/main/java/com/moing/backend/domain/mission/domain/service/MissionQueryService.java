@@ -39,7 +39,6 @@ public class MissionQueryService {
 
     public List<GatherRepeatMissionRes> findAllRepeatMission(Long memberId) {
         List<Long> teams = teamGetService.getTeamIdByMemberId(memberId);
-        System.out.println(teams);
         return missionRepository.findRepeatMissionByMemberId(memberId,teams).orElseThrow(NotFoundMissionException::new);
     }
 
@@ -76,7 +75,11 @@ public class MissionQueryService {
         return missionRepository.findRepeatMissionsByTeamId(teamId);
     }
 
-    public List<Mission> findMissionByStatus(MissionStatus missionStatus) {
+    public List<Member> findRepeatMissionPeopleByStatus(MissionStatus missionStatus) {
+        return missionRepository.findRepeatMissionPeopleByStatus(missionStatus).orElseThrow(NotFoundMissionException::new
+        );
+    }
+    public List<Mission> findRepeatMissionByStatus(MissionStatus missionStatus) {
         return missionRepository.findRepeatMissionByStatus(missionStatus).orElseThrow(NotFoundMissionException::new
         );
     }

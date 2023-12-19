@@ -23,6 +23,7 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteSe
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.global.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,12 +44,11 @@ public class MissionArchiveDeleteUseCase {
 
     private final MemberGetService memberGetService;
 
-    private final IssuePresignedUrlUseCase getPresignedUrlUseCase;
-
-    private final MissionStateSaveService missionStateSaveService;
-    private final MissionStateUseCase missionStateUseCase;
     private final MissionStateDeleteService missionStateDeleteService;
     private final MissionStateQueryService missionStateQueryService;
+
+    private final UpdateUtils updateUtils;
+
 
 
     public Long deleteArchive(String userSocialId, Long missionId,Long count) {
@@ -58,15 +58,23 @@ public class MissionArchiveDeleteUseCase {
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
-        // 사진 제출 했다면, s3 삭제 로직
-        if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(memberId, missionId)) {
+        MissionArchive deleteArchive = missionArchiveQueryService.findOneMyArchive(memberId, missionId,count).get(0);
+        MissionState missionState = missionStateQueryService.findMissionState(member, mission);
 
+        LocalDateTime createdDate = deleteArchive.getCreatedDate();
+        LocalDateTime today = LocalDateTime.now();
+
+        // 반복미션이면서 오늘 이전에 한 인증은 인증 취소할 수 없도록
+        if (mission.getType().equals(MissionType.REPEAT) && createdDate.toLocalDate().isBefore(today.toLocalDate())) {
+            throw new NoAccessMissionArchiveException();
         }
 
-        MissionArchive deleteArchive = missionArchiveQueryService.findOneMyArchive(memberId, missionId,count).get(0);
-        missionArchiveDeleteService.deleteMissionArchive(deleteArchive);
+        if (mission.getWay().equals(MissionWay.PHOTO)) {
+            String archive = deleteArchive.getArchive();
+            updateUtils.deleteImgUrl(archive);
+        }
 
-        MissionState missionState = missionStateQueryService.findMissionState(member, mission);
+        missionArchiveDeleteService.deleteMissionArchive(deleteArchive);
         missionStateDeleteService.deleteMissionState(missionState);
 
         return deleteArchive.getId();

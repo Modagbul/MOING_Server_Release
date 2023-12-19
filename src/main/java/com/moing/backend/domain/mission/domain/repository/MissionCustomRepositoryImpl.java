@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.domain.repository;
 
+import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
@@ -16,13 +17,17 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
+import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -46,6 +51,9 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByState();
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
                         mission.id,
@@ -53,22 +61,25 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionState.count().stringValue()
+                        missionState.count().stringValue(),
+                        mission.status.stringValue()
 
                 ))
                 .from(mission)
                         .leftJoin(missionState)
                         .on(missionState.mission.eq(mission),
-                                missionState.member.memberId.eq(memberId)
+                                missionState.member.memberId.eq(memberId),
+                                dateInRange
                         )
                 .where(
                         mission.team.teamId.in(teams),
-                        mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
+                        mission.status.eq(MissionStatus.ONGOING),
                         mission.type.eq(MissionType.REPEAT)
 
                 )
                 .groupBy(mission.id,mission.number)
-                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
+                .having(missionState.count().lt(mission.number)
+                        ) // HAVING 절을 사용하여 조건 적용
                 .orderBy(missionState.count().desc())
                 .fetch());
     }
@@ -99,6 +110,21 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     }
 
     @Override
+    public Optional<List<Member>> findRepeatMissionPeopleByStatus(MissionStatus missionStatus) {
+
+        return Optional.ofNullable(queryFactory
+                .select(teamMember.member).distinct()
+                .from(teamMember)
+                .join(mission)
+                .on(teamMember.team.eq(mission.team))
+                .where(
+                        mission.status.eq(missionStatus),
+                        mission.type.eq(MissionType.REPEAT)
+                ).fetch());
+
+
+    }
+    @Override
     public Optional<List<Mission>> findRepeatMissionByStatus(MissionStatus missionStatus) {
         return Optional.ofNullable(queryFactory
                 .select(mission)
@@ -118,10 +144,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.teamId,
                         mission.team.name,
                         mission.title,
-                        mission.dueTo.stringValue()
+                        mission.dueTo.stringValue(),
+                        mission.status.stringValue()
                 ))
                 .from(mission)
-                .leftJoin(missionState).on(mission.id.eq(missionState.mission.id))
+                .leftJoin(missionState).on(
+                        mission.eq(missionState.mission),
+                        missionState.member.memberId.eq(memberId)
+                        )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
@@ -163,6 +193,38 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .fetchOne()
         );
     }
+
+
+    private BooleanExpression createRepeatTypeConditionByArchive() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
+//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
+        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+
+        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
+        return dateInRange.and(dateInRange);
+    }
+
+    private BooleanExpression createRepeatTypeConditionByState() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
+//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
+        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+
+        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
+        return dateInRange.and(dateInRange);
+    }
+
 
 
 }
