@@ -1,14 +1,15 @@
 package com.moing.backend.domain.mypage.domain.entity;
 
 import com.moing.backend.global.entity.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @Entity
 public class Feedback extends BaseTimeEntity {
 

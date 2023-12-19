@@ -6,7 +6,6 @@ import com.moing.backend.domain.boardComment.application.dto.response.QCommentBl
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -14,6 +13,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.boardComment;
+import static com.moing.backend.domain.member.domain.entity.QMember.member;
 
 public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepository{
 
@@ -30,9 +30,9 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                 .select(new QCommentBlocks(
                         boardComment.boardCommentId,
                         boardComment.content,
-                        boardComment.writerNickName,
+                        boardComment.teamMember.member.nickName,
                         boardComment.isLeader,
-                        boardComment.writerProfileImage,
+                        boardComment.teamMember.member.profileImage,
                         ExpressionUtils.as(JPAExpressions
                                 .selectOne()
                                 .from(QTeamMember.teamMember)
@@ -42,6 +42,8 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                         boardComment.teamMember.isDeleted,
                         boardComment.createdDate))
                 .from(boardComment)
+                .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
+                .leftJoin(boardComment.teamMember.member, member)
                 .where(boardComment.board.boardId.eq(boardId))
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
