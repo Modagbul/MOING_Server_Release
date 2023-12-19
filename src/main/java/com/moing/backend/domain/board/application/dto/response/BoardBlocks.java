@@ -28,8 +28,11 @@ public class BoardBlocks {
 
     private Boolean writerIsDeleted;
 
+    private boolean isNotice;
+
+
     @QueryProjection
-    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean writerIsDeleted) {
+    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean writerIsDeleted, boolean isNotice) {
         this.boardId = boardId;
         this.writerNickName = writerNickName;
         this.writerIsLeader = writerIsLeader;
@@ -39,11 +42,16 @@ public class BoardBlocks {
         this.commentNum = commentNum;
         this.isRead = false;
         this.writerIsDeleted=writerIsDeleted;
+        this.isNotice=isNotice;
         deleteMember();
     }
 
     public void readBoard() {
         this.isRead = true;
+    }
+
+    public boolean isNotice() {
+        return isNotice;
     }
 
     public void deleteMember() {

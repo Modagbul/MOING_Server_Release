@@ -17,10 +17,8 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class BoardMapper {
 
-    public Board toBoard(Member member, TeamMember teamMember, Team team, CreateBoardRequest createBoardRequest, boolean isLeader) {
+    public Board toBoard(TeamMember teamMember, Team team, CreateBoardRequest createBoardRequest, boolean isLeader) {
         Board board = Board.builder()
-                .writerNickName(member.getNickName())
-                .writerProfileImage(member.getProfileImage())
                 .title(createBoardRequest.getTitle())
                 .content(createBoardRequest.getContent())
                 .isNotice(createBoardRequest.getIsNotice())
@@ -35,8 +33,8 @@ public class BoardMapper {
     }
 
     public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
-        String nickName = writerIsDeleted ? "(알 수 없음)" : board.getWriterNickName();
-        String writerProfileImage = writerIsDeleted ? null : board.getWriterProfileImage();
+        String nickName = writerIsDeleted ? "(알 수 없음)" : board.getTeamMember().getMember().getNickName();
+        String writerProfileImage = writerIsDeleted ? null : board.getTeamMember().getMember().getProfileImage();
         return GetBoardDetailResponse.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())

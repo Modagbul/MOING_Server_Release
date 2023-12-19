@@ -6,7 +6,6 @@ import com.moing.backend.domain.boardRead.domain.entity.BoardRead;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
-import com.moing.backend.global.utils.AesConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,14 +27,8 @@ public class Board extends BaseTimeEntity {
     @Column(name = "board_id")
     private Long boardId;
 
-    //반정규화 -> 작성자에 대한 정보
-    @Convert(converter = AesConverter.class)
-    @Column(nullable = false)
-    private String writerNickName; /*작성자 닉네임*/
-
     private boolean isLeader; /*작성자 소모임장유무*/
 
-    private String writerProfileImage; /*작성자 프로필 사진*/
 
     @Column(nullable = false, length = 15)
     private String title;
@@ -51,6 +44,7 @@ public class Board extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_member_id")
     private TeamMember teamMember;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
