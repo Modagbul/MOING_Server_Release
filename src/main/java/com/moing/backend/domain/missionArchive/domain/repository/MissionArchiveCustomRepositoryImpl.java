@@ -303,7 +303,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         mission.team.teamId.eq(teamId),
                         mission.status.eq(MissionStatus.SUCCESS).or(mission.status.eq(MissionStatus.END))
-                )
+                ).orderBy(mission.lastModifiedDate.desc())
                 .fetch()
         );
     }
