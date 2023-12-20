@@ -5,6 +5,8 @@ import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import com.moing.backend.global.config.fcm.dto.event.MultiFcmEvent;
@@ -31,18 +33,21 @@ public class SendMissionCreateAlarmUseCase {
         Team team = mission.getTeam();
         String title = team.getName() + " " + NEW_SINGLE_MISSION_COMING.getTitle();
         String message = mission.getTitle();
+        String type = mission.getType().toString();
+        String status = mission.getStatus().toString();
 
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = teamMemberGetService.getNewUploadPushInfo(team.getTeamId(), member.getMemberId());
         Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = teamMemberGetService.getNewUploadSaveInfo(team.getTeamId(), member.getMemberId());
         // 알림 보내기
-        eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
+        eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId(),mission.getType(),mission.getStatus()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
     }
 
-    private String createIdInfo(Long teamId, Long missionId) {
+    private String createIdInfo(Long teamId, Long missionId,MissionType type, MissionStatus status) {
         JSONObject jo = new JSONObject();
-        jo.put("isRepeated", false);
+        jo.put("isRepeated", type.equals(MissionType.REPEAT));
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
+        jo.put("status", status.name());
         return jo.toJSONString();
     }
 }
