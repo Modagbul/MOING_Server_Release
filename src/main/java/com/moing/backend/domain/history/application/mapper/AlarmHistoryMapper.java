@@ -1,6 +1,7 @@
 package com.moing.backend.domain.history.application.mapper;
 
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.history.domain.entity.AlarmHistory;
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,6 +54,24 @@ public class AlarmHistoryMapper {
         return memberIds.stream()
                 .map(memberId -> toAlarmHistory(alarmType, path, idInfo, memberId, title, body, teamName))
                 .collect(Collectors.toList());
+    }
+
+    public static Optional<List<MemberIdAndToken>> getNewUploadSaveInfo(Optional<List<NewUploadInfo>> optionalNewUploadInfos) {
+        return optionalNewUploadInfos.map(newUploadInfos ->
+                newUploadInfos.stream()
+                        .map(info -> new MemberIdAndToken(info.getFcmToken(), info.getMemberId()))
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public static Optional<List<MemberIdAndToken>> getNewUploadPushInfo(Optional<List<NewUploadInfo>> optionalNewUploadInfos) {
+        return optionalNewUploadInfos.map(newUploadInfos ->
+                newUploadInfos.stream()
+                        .filter(NewUploadInfo::isNewUploadPush)
+                        .filter(info -> !info.isSignOut())
+                        .map(info -> new MemberIdAndToken(info.getFcmToken(), info.getMemberId()))
+                        .collect(Collectors.toList())
+        );
     }
 
 }
