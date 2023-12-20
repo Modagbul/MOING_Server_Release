@@ -157,7 +157,10 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.eq(memberId),
-                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
+                        (missionArchive.mission.type.eq(MissionType.REPEAT)
+                                .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange))
+                                .or(missionArchive.mission.type.eq(MissionType.REPEAT)
+                                        .and(missionArchive.mission.status.eq(MissionStatus.END)))
                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))
 
                 )
@@ -180,9 +183,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP)),
-
-                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
+                        (missionArchive.mission.type.eq(MissionType.REPEAT)
+                                .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange))
+                                .or(missionArchive.mission.type.eq(MissionType.REPEAT)
+                                        .and(missionArchive.mission.status.eq(MissionStatus.END)))
                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))
+
                 )
                 .orderBy(missionArchive.createdDate.desc())
                 .fetch()
