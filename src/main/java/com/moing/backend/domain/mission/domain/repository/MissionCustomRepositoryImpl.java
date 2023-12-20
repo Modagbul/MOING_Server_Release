@@ -117,7 +117,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .from(teamMember)
                 .join(mission)
                 .on(teamMember.team.eq(mission.team),
-                        teamMember.member.isDeleted.ne(true))
+                        teamMember.member.isDeleted.ne(true),
+                        teamMember.team.isDeleted.ne(true))
                 .where(
                         mission.status.eq(missionStatus),
                         mission.type.eq(MissionType.REPEAT)

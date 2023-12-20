@@ -377,19 +377,12 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     }
 
 
-//                .where(
-//                        //  active 한 미션 필터링
-//                        (((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
-//                                .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))),
-
     private BooleanExpression createRepeatTypeConditionByArchive() {
         LocalDate now = LocalDate.now();
         DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
         BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
@@ -402,11 +395,6 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-//        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
-//                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
@@ -450,7 +438,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 )
                 .groupBy(teamMember.member,mission,mission.number)
                         .having(missionArchive.count().lt(mission.number),
-                                teamMember.member.isDeleted.ne(true))
+                                teamMember.member.isDeleted.ne(true),
+                                teamMember.team.isDeleted.ne(true))
                 .fetch());
 
 
