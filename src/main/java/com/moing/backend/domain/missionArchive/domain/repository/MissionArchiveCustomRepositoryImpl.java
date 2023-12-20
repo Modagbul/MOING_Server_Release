@@ -441,30 +441,11 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                                 .or(mission.type.eq(MissionType.ONCE)))
                 )
                 .groupBy(teamMember.member,mission,mission.number)
-                        .having(missionArchive.count().lt(mission.number))
+                        .having(missionArchive.count().lt(mission.number),
+                                teamMember.member.isDeleted.ne(true))
                 .fetch());
 
 
-
-//        return Optional.ofNullable(queryFactory
-//                        .select(teamMember.member).distinct()
-//                        .from(teamMember)
-//                        .join(mission)
-//                        .on(
-//                                teamMember.team.eq(mission.team),
-//                                ((((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT))).and(mission.type.eq(MissionType.ONCE)))
-//                                    .or((mission.status.eq(MissionStatus.ONGOING)).and(mission.type.eq(MissionType.REPEAT)))))
-//                        )
-//                        .join(missionArchive)
-//                        .on(
-//                                missionArchive.mission.eq(mission),
-//                                missionArchive.member.eq(teamMember.member),
-//                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
-//                        )
-//                        .groupBy(teamMember.member,mission,mission.number)
-//                        .having(missionArchive.count().loe(mission.number))
-//                        .fetch()
-//        );
     }
 
 

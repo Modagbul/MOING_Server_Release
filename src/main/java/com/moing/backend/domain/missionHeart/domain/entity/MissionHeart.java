@@ -28,6 +28,7 @@ public class MissionHeart extends BaseTimeEntity {
     @JoinColumn(name = "missionArchiveId")
     private MissionArchive missionArchive;
 
+    @Enumerated(EnumType.STRING)
     private MissionHeartStatus heartStatus;
 
     public void updateHeartStatus(MissionHeartStatus heartStatus) {

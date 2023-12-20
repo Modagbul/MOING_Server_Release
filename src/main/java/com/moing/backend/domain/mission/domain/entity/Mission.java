@@ -32,7 +32,10 @@ public class Mission extends BaseTimeEntity {
     private String title;
     private LocalDateTime dueTo;
     private String rule;
+
+    @Column(nullable = false, columnDefinition="TEXT", length = 300)
     private String content;
+
     private int number;
 
     @ManyToOne(fetch = FetchType.LAZY)
