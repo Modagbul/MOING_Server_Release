@@ -2,6 +2,8 @@ package com.moing.backend.domain.board.application.service;
 
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
+import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
@@ -35,8 +37,9 @@ public class SendBoardAlarmUseCase {
         if (board.isNotice()) {
             String title = NEW_NOTICE_UPLOAD_MESSAGE.title(team.getName());
             String body = NEW_NOTICE_UPLOAD_MESSAGE.body(board.getTitle());
-            Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = teamMemberGetService.getNewUploadPushInfo(team.getTeamId(), member.getMemberId());
-            Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = teamMemberGetService.getNewUploadSaveInfo(team.getTeamId(), member.getMemberId());
+            Optional<List<NewUploadInfo>> newUploadInfos=teamMemberGetService.getNewUploadInfo(team.getTeamId(), member.getMemberId());
+            Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
+            Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
             // 알림 보내기
             eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
         }
