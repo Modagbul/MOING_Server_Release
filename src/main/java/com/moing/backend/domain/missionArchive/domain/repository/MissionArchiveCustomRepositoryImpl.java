@@ -9,6 +9,7 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
@@ -20,6 +21,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -453,6 +455,32 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
 
     }
+
+    @Override
+    public MyArchiveStatus findMissionStatusById(Long memberId, Long missionId, Long teamId) {
+
+        return queryFactory
+                .select(Projections.constructor(MyArchiveStatus.class,
+                        mission.status.eq(MissionStatus.END),
+                        new CaseBuilder()
+                                .when(mission.status.eq(MissionStatus.WAIT).or(mission.status.eq(MissionStatus.ONGOING)))
+                                .then(missionArchive.status.stringValue().coalesce(mission.status.stringValue()))
+                                .otherwise(missionArchive.status.stringValue().coalesce("FAIL"))
+
+                )).distinct()
+                .from(mission)
+                .leftJoin(missionArchive)
+                .on(
+                        missionArchive.mission.eq(mission),
+                        missionArchive.member.memberId.eq(memberId))
+                .where(
+                        mission.team.teamId.eq(teamId),
+                        mission.id.eq(missionId)
+                )
+                .fetchFirst();
+
+    }
+
 
 
 

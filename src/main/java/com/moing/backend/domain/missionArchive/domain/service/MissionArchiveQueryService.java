@@ -6,6 +6,7 @@ import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRe
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.repository.MissionArchiveRepository;
 import com.moing.backend.domain.missionArchive.exception.NotFoundMissionArchiveException;
@@ -127,6 +128,10 @@ public class MissionArchiveQueryService {
 
     public boolean findDoneTodayArchive(Long memberId, Long missionId) {
         return missionArchiveRepository.findMyArchivesToday(memberId, missionId);
+    }
+
+    public MyArchiveStatus findMissionStatusById(Long memberId, Long missionId, Long teamId) {
+        return missionArchiveRepository.findMissionStatusById(memberId, missionId, teamId);
     }
 
 

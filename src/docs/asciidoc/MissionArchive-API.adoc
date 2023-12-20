@@ -50,3 +50,10 @@ operation::mission-archive-controller-test/미션_인증물_좋아요[snippets='
 
 ---
 
+
+[[MissionArchive-미션상태조회]]
+== 미션 상태 조회
+operation::mission-archive-controller-test/미션_상태_조회[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+

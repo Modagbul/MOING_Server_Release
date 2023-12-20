@@ -3,10 +3,7 @@ package com.moing.backend.domain.missionArchive.presentation;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MyMissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.service.*;
 
 
@@ -150,6 +147,15 @@ public class MissionArchiveController {
                                                                                            @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.repeatMissionArchiveReadUseCase.getMyMissionDoneStatus(user.getSocialId(), missionId)));
     }
+
+
+    @GetMapping("/mission-status")
+    public ResponseEntity<SuccessResponse<MyArchiveStatus>> getMyMissionStatus(@AuthenticationPrincipal User user,
+                                                                               @PathVariable("teamId") Long teamId,
+                                                                               @PathVariable("missionId") Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage(), this.missionArchiveReadUseCase.getMissionArchiveStatus(user.getSocialId(), missionId,teamId)));
+    }
+
 
 
 }

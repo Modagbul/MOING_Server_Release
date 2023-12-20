@@ -6,6 +6,7 @@ import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRe
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import org.springframework.stereotype.Repository;
@@ -34,5 +35,8 @@ public interface MissionArchiveCustomRepository {
     Boolean findMyArchivesToday(Long memberId,Long missionId);
 
     Optional<List<Member>> findHavingRemainMissionsByQuerydsl() ;
+
+
+    MyArchiveStatus findMissionStatusById(Long memberId, Long missionId, Long teamId);
 
     }
