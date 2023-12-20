@@ -8,6 +8,7 @@ import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.report.application.mapper.ReportMapper;
@@ -56,7 +57,7 @@ public class ReportCreateUseCase {
 
             targetMemberNickName = missionArchive.getMember().getNickName();
 
-            if (mission.getWay().equals(MissionWay.PHOTO)) {
+            if (mission.getWay().equals(MissionWay.PHOTO) && missionArchive.getStatus().equals(MissionArchiveStatus.COMPLETE)) {
                 missionArchive.updateArchive(MissionArchiveReq.builder()
                         .archive(REPORT_MISSION_PHOTO)
                         .status(missionArchive.getStatus().name())
