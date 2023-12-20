@@ -75,6 +75,15 @@ public class MissionArchiveReadUseCase {
     }
 
 
+    public MyArchiveStatus getMissionArchiveStatus(String userSocialId,Long missionId , Long teamId) {
+
+        Long memberId = memberGetService.getMemberBySocialId(userSocialId).getMemberId();
+
+        return missionArchiveQueryService.findMissionStatusById(memberId, missionId, teamId);
+
+    }
+
+
 
 
 }

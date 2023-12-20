@@ -3,10 +3,7 @@ package com.moing.backend.domain.missionArchive.representation;
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveStatusRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.MyMissionArchiveRes;
-import com.moing.backend.domain.missionArchive.application.dto.res.PersonalArchiveRes;
+import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.service.*;
 import com.moing.backend.domain.missionArchive.presentation.MissionArchiveController;
 import com.moing.backend.domain.missionHeart.application.dto.MissionHeartRes;
@@ -494,6 +491,52 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                         )
                 )
                 .andReturn();
+    }
+
+
+    @Test
+    public void 미션_상태_조회() throws Exception {
+        //given
+
+        MyArchiveStatus output = MyArchiveStatus.builder()
+                .end(Boolean.TRUE)
+                .status("WAIT/ONGOING/COMPLETE/SKIP/FAIL")
+                .build();
+
+        given(missionArchiveReadUseCase.getMissionArchiveStatus(any(),any(),any())).willReturn(output);
+
+        Long teamId = 1L;
+        Long missionId = 1L;
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                get("/api/team/{teamId}/missions/{missionId}/archive/mission-status",teamId,missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("미션 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage()),
+                                        fieldWithPath("data.end").description("미션 종료 여부"),
+                                        fieldWithPath("data.status").description("미션 인증 상태 ")
+                                )
+                        )
+                )
+                .andReturn();
+
     }
 
 

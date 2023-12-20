@@ -25,36 +25,6 @@ public class MissionArchiveScheduleQueryService {
     public List<Member> getRemainMissionPeople() {
         return missionArchiveRepository.findHavingRemainMissionsByQuerydsl().orElseThrow();
 
-//        return Optional.of(maps.stream()
-//                .map(map -> {
-//                    Object memberIdObject = map.get("memberId");
-//                    Long memberId = ((BigInteger) memberIdObject).longValue();
-//
-//                    Object fcmObject = map.get("fcmToken");
-//                    String fcmToken = fcmObject.toString();
-//
-//                    return MemberIdAndToken.builder()
-//                            .fcmToken(fcmToken)
-//                            .memberId(memberId)
-//                            .build();
-//                })
-//                .collect(Collectors.toList()));
-
-//        return null;
-
-//        return maps.stream()
-//                .map(map -> {
-//                    String fcmToken = Optional.ofNullable(map.get("fcmToken")).map(Object::toString).orElse("undef");
-//                    Long memberId = map.get("memberId");
-//
-//                    return MemberIdAndToken.builder()
-//                            .fcmToken(fcmToken)
-//                            .memberId(memberId)
-//                            .build();
-//
-//                })
-//                .collect(Collectors.toList());
-
     }
 
 
