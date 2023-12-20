@@ -14,9 +14,11 @@ import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatu
 import com.moing.backend.domain.missionHeart.domain.constant.MissionHeartStatus;
 import com.moing.backend.global.annotation.Mapper;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Mapper
 public class MissionArchiveMapper {
 
@@ -39,12 +41,13 @@ public class MissionArchiveMapper {
                 .status(missionArchive.getStatus().name())
                 .count(missionArchive.getCount())
                 .heartStatus(
-                        String.valueOf(missionArchive.getHeartList().stream().anyMatch(
-                        missionHeart -> missionHeart.getPushMemberId().equals(memberId) &&
-                                missionHeart.getHeartStatus().equals(MissionHeartStatus.True)
+                        String.valueOf(
+                                missionArchive.getHeartList().stream().anyMatch(
+                                    missionHeart -> missionHeart.getPushMemberId().equals(memberId)
+                                            && missionHeart.getHeartStatus() == (MissionHeartStatus.True)
                                 )))
                 .hearts(missionArchive.getHeartList().stream()
-                        .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
+                        .filter(heart -> heart.getHeartStatus() == ( MissionHeartStatus.True))
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
                         .count())
                 .build();
@@ -71,8 +74,11 @@ public class MissionArchiveMapper {
                 .status(missionArchive.getStatus().name())
                 .count(missionArchive.getCount())
                 .heartStatus(
-                        String.valueOf(missionArchive.getHeartList().stream().anyMatch(
-                                missionHeart -> missionHeart.getPushMemberId().equals(memberId))))
+                        String.valueOf(
+                                missionArchive.getHeartList().stream().anyMatch(
+                                        missionHeart -> missionHeart.getPushMemberId().equals(memberId)
+                                                && missionHeart.getHeartStatus() == (MissionHeartStatus.True)
+                                )))
                 .hearts((int) missionArchive.getHeartList().stream()
                         .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
