@@ -1,6 +1,7 @@
 package com.moing.backend.domain.teamMember.domain.service;
 
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -38,20 +39,9 @@ public class TeamMemberGetService {
         return teamMemberRepository.findTeamMemberByMemberId(memberId);
     }
 
-    public Optional<List<MemberIdAndToken>> getNewUploadPushInfo(Long teamId, Long memberId) {
-        return teamMemberRepository.findNewUploadPushInfo(teamId, memberId);
+    public Optional<List<NewUploadInfo>> getNewUploadInfo(Long teamId, Long memberId) {
+        return teamMemberRepository.findNewUploadInfo(teamId, memberId);
     }
 
-    public Optional<List<MemberIdAndToken>> getNewUploadSaveInfo(Long teamId, Long memberId) {
-        return teamMemberRepository.findNewUploadSaveInfo(teamId, memberId);
-    }
-
-    public Optional<List<MemberIdAndToken>> getRemindPushInfo(Long teamId, Long memberId) {
-        return teamMemberRepository.findRemindPushInfo(teamId, memberId);
-    }
-
-    public Optional<List<MemberIdAndToken>> getRemindSaveInfo(Long teamId, Long memberId) {
-        return teamMemberRepository.findRemindSaveInfo(teamId, memberId);
-    }
 
 }
