@@ -83,7 +83,8 @@ public class MissionStateScheduleUseCase {
     }
 
 
-    @Scheduled(cron = "0 0 8 * * *")
+//    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 0/10 * * * *")
     public void MissionRemindAlarm() {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
     }

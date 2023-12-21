@@ -426,6 +426,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .from(teamMember)
                 .join(mission)
                 .on(teamMember.team.eq(mission.team),
+                        teamMember.team.isDeleted.ne(true),
                         ((mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)))
                                 .and(mission.type.eq(MissionType.ONCE)))
                                 .or(mission.status.eq(MissionStatus.ONGOING).and(mission.type.eq(MissionType.REPEAT)))
@@ -438,8 +439,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 )
                 .groupBy(teamMember.member,mission,mission.number)
                         .having(missionArchive.count().lt(mission.number),
-                                teamMember.member.isDeleted.ne(true),
-                                teamMember.team.isDeleted.ne(true))
+                                teamMember.member.isDeleted.ne(true))
                 .fetch());
 
 
