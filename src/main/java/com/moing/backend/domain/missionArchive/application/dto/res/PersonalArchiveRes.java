@@ -22,4 +22,7 @@ public class PersonalArchiveRes {
     private String status;
     private Long count;
 
+    private Long makerId;
+
+
 }

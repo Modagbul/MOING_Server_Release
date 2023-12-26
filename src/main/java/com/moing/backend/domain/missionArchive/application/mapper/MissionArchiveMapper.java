@@ -83,6 +83,7 @@ public class MissionArchiveMapper {
                         .filter(heart -> heart.getHeartStatus().equals( MissionHeartStatus.True))
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
                         .count())
+                .makerId(missionArchive.getMember().getMemberId())
                 .build();
     }
 
