@@ -289,6 +289,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .createdDate("2023/09/29 23:42")
                 .isWriter(false)
                 .isNotice(false)
+                .makerId(1L)
                 .build();
 
         given(getBoardUseCase.getBoardDetail(any(), any(), any())).willReturn(output);
@@ -325,7 +326,9 @@ public class BoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.content").description("게시글 내용"),
                                         fieldWithPath("data.createdDate").description("게시글 생성 날짜, 시간"),
                                         fieldWithPath("data.isWriter").description("게시글 작성자 여부"),
-                                        fieldWithPath("data.isNotice").description("게시글 공지 여부")
+                                        fieldWithPath("data.isNotice").description("게시글 공지 여부"),
+                                        fieldWithPath("data.makerId").description("작성자 아이디")
+
                                 )
 
                         )
