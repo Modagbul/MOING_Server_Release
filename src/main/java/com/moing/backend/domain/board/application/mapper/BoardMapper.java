@@ -3,7 +3,6 @@ package com.moing.backend.domain.board.application.mapper;
 import com.moing.backend.domain.board.application.dto.request.CreateBoardRequest;
 import com.moing.backend.domain.board.application.dto.response.GetBoardDetailResponse;
 import com.moing.backend.domain.board.domain.entity.Board;
-import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,7 @@ public class BoardMapper {
     public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
         String nickName = writerIsDeleted ? "(알 수 없음)" : board.getTeamMember().getMember().getNickName();
         String writerProfileImage = writerIsDeleted ? null : board.getTeamMember().getMember().getProfileImage();
+        Long writerId = writerIsDeleted ? null : board.getTeamMember().getMember().getMemberId();
         return GetBoardDetailResponse.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
@@ -45,6 +45,7 @@ public class BoardMapper {
                 .createdDate(getFormattedDate(board.getCreatedDate()))
                 .isWriter(isWriter)
                 .isNotice(board.isNotice())
+                .makerId(writerId)
                 .build();
     }
 

@@ -60,7 +60,10 @@ public enum ErrorCode {
     NOT_AUTH_BY_BOARD_COMMENT_ID_ERROR("BC0002","권한이 없습니다."),
 
     //알림 관련 에러 코드
-    NOT_FOUND_BY_ALARM_HISOTRY_ID_ERROR("AH0001","해당 alarmHistoryId인 알림이 존재하지 않습니다.");
+    NOT_FOUND_BY_ALARM_HISOTRY_ID_ERROR("AH0001","해당 alarmHistoryId인 알림이 존재하지 않습니다."),
+
+    //차단 관련 에러 코드
+    NOT_FOUND_BLOCK_LIST("BL0001","차단한 사용자를 찾을 수 없습니다");
     private String errorCode;
     private String message;
 

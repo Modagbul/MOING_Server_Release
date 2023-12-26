@@ -303,6 +303,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .count(1L)
                 .heartStatus("[True/False]")
                 .hearts(3)
+                .makerId(1L)
                 .build());
 
         given(missionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
@@ -341,7 +342,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].status").description("미션 인증 상태"),
                                         fieldWithPath("data[].count").description("미션 인증 횟수"),
                                         fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태 "),
-                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 ")
+                                        fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
+                                        fieldWithPath("data[].makerId").description("미션 인증한 사람 ")
 
 
                                         )

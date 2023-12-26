@@ -28,4 +28,6 @@ public class GetBoardDetailResponse {
     private Boolean isWriter;
 
     private Boolean isNotice;
+
+    private Long makerId;
 }

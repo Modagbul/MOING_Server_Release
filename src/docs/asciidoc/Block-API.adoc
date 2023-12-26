@@ -1,0 +1,24 @@
+
+
+[[Block-API]]
+= Block API
+
+[[Block-차단하기]]
+=== 차단하기
+operation::block-controller-test/차단_하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+=== 차단 해제 하기
+operation::block-controller-test/차단_해제_하기[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+=== 차단한 유저 조회 List<Long>
+operation::block-controller-test/차단한_유저_목록[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+=== 차단한 유저 정보 조회
+operation::block-controller-test/차단한_유저_정보_목록[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
