@@ -36,3 +36,4 @@ include::TeamScore-API.adoc[]
 
 include::Report-API.adoc[]
 
+include::Block-API.adoc[]
