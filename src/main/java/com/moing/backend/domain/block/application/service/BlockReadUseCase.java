@@ -7,6 +7,7 @@ import com.moing.backend.domain.block.domain.service.BlockSaveService;
 import com.moing.backend.domain.board.domain.service.BoardGetService;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
+import com.moing.backend.domain.report.application.dto.BlockMemberRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,11 @@ public class BlockReadUseCase {
         Long memberId = memberGetService.getMemberBySocialId(socialId).getMemberId();
 
         return blockQueryService.getBlockLists(memberId);
+    }
+ public List<BlockMemberRes> getMyBlockInfoList(String socialId) {
+        Long memberId = memberGetService.getMemberBySocialId(socialId).getMemberId();
+
+        return blockQueryService.getBlockInfoLists(memberId);
     }
 
 }

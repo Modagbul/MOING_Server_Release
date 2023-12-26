@@ -4,6 +4,7 @@ import com.moing.backend.domain.block.application.service.BlockCreateUseCase;
 import com.moing.backend.domain.block.application.service.BlockDeleteUseCase;
 import com.moing.backend.domain.block.application.service.BlockReadUseCase;
 import com.moing.backend.domain.block.domain.service.BlockDeleteService;
+import com.moing.backend.domain.report.application.dto.BlockMemberRes;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
 import lombok.AllArgsConstructor;
@@ -41,4 +42,10 @@ public class BlockController {
     public ResponseEntity<SuccessResponse<List<Long>>> getBlocks(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_BLOCK_SUCCESS.getMessage(), this.blockReadUseCase.getMyBlockList(user.getSocialId())));
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<SuccessResponse<List<BlockMemberRes>>> getBlockList(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(SuccessResponse.create(GET_BLOCK_SUCCESS.getMessage(), this.blockReadUseCase.getMyBlockInfoList(user.getSocialId())));
+    }
+
 }
