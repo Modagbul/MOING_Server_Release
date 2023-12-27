@@ -22,6 +22,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 @WebMvcTest(ReportController.class)
 public class ReportControllerTest extends CommonControllerTest {
@@ -54,6 +56,11 @@ public class ReportControllerTest extends CommonControllerTest {
                         restDocs.document(
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
+                                ),
+
+                                pathParameters(
+                                        parameterWithName("reportType").description("MISSION/BOARD/COMMENT"),
+                                        parameterWithName("targetId").description("신고할 board,missionArchive,comment 아이디")
                                 ),
 
                                 responseFields(
