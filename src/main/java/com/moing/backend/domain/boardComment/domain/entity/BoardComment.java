@@ -1,6 +1,7 @@
 package com.moing.backend.domain.boardComment.domain.entity;
 
 import com.moing.backend.domain.board.domain.entity.Board;
+import com.moing.backend.domain.boardComment.application.dto.request.CreateBoardCommentRequest;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,10 @@ public class BoardComment extends BaseTimeEntity {
 
     public void updateTeamMember(TeamMember teamMember) {
         this.teamMember = teamMember;
+    }
+
+    public void updateBoardComment(CreateBoardCommentRequest createBoardCommentRequest) {
+        this.content = createBoardCommentRequest.getContent();
     }
 
 }

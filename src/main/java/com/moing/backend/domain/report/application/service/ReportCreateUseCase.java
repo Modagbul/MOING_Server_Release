@@ -3,6 +3,9 @@ package com.moing.backend.domain.report.application.service;
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.board.domain.service.BoardGetService;
+import com.moing.backend.domain.boardComment.application.dto.request.CreateBoardCommentRequest;
+import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
+import com.moing.backend.domain.boardComment.domain.service.BoardCommentGetService;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
@@ -29,6 +32,7 @@ public class ReportCreateUseCase {
 
     private final BoardGetService boardGetService;
     private final MissionArchiveQueryService missionArchiveQueryService;
+    private final BoardCommentGetService boardCommentGetService;
 
     private final String REPORT_BOARD_TITLE ="신고 접수된 게시물입니다.";
     private final String REPORT_BOARD_MESSAGE ="신고 접수로 삭제된 게시물입니다.";
@@ -50,6 +54,14 @@ public class ReportCreateUseCase {
                     .content(REPORT_BOARD_MESSAGE)
                     .isNotice(board.isNotice())
                     .build());
+        }
+        else if (reportType.equals(ReportType.COMMENT.name())) {
+            BoardComment boardComment = boardCommentGetService.getBoardComment(targetId);
+            targetMemberNickName = boardComment.getTeamMember().getMember().getNickName();
+
+            boardComment.updateBoardComment(CreateBoardCommentRequest.builder()
+                            .content(REPORT_BOARD_MESSAGE)
+                            .build());
         } else {
 
             MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);

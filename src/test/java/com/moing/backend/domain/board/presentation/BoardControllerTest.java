@@ -328,7 +328,7 @@ public class BoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.isWriter").description("게시글 작성자 여부"),
                                         fieldWithPath("data.isNotice").description("게시글 공지 여부"),
                                         fieldWithPath("data.makerId").description("작성자 아이디")
-
+                                        
                                 )
 
                         )
