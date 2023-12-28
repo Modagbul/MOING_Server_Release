@@ -200,6 +200,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .commentNum(2)
                 .isRead(false)
                 .isNotice(true)
+                .makerId(1L)
                 .build();
 
         BoardBlocks notNoticeBlock = BoardBlocks.builder()
@@ -213,6 +214,7 @@ public class BoardControllerTest extends CommonControllerTest {
                 .commentNum(2)
                 .isRead(false)
                 .isNotice(false)
+                .makerId(1L)
                 .build();
 
         noticeBlocks.add(noticeBlock);
@@ -246,27 +248,29 @@ public class BoardControllerTest extends CommonControllerTest {
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("게시글 목록을 모두 조회했습니다."),
                                         fieldWithPath("data.noticeNum").description("공지 개수"),
-                                        fieldWithPath("data.noticeBlocks[0].boardId").description("공지 아이디"),
-                                        fieldWithPath("data.noticeBlocks[0].writerNickName").description("작성자 닉네임"),
-                                        fieldWithPath("data.noticeBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
-                                        fieldWithPath("data.noticeBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
-                                        fieldWithPath("data.noticeBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
-                                        fieldWithPath("data.noticeBlocks[0].title").description("공지 제목"),
-                                        fieldWithPath("data.noticeBlocks[0].content").description("공지 내용"),
-                                        fieldWithPath("data.noticeBlocks[0].commentNum").description("공지 댓글 개수"),
-                                        fieldWithPath("data.noticeBlocks[0].isRead").description("공지 읽음 처리 여부"),
-                                        fieldWithPath("data.noticeBlocks[0].notice").description("true"),
+                                        fieldWithPath("data.noticeBlocks[].boardId").description("공지 아이디"),
+                                        fieldWithPath("data.noticeBlocks[].writerNickName").description("작성자 닉네임"),
+                                        fieldWithPath("data.noticeBlocks[].writerIsLeader").description("작성자 소모임장 여부"),
+                                        fieldWithPath("data.noticeBlocks[].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.noticeBlocks[].writerIsDeleted").description("작성자 삭제 여부"),
+                                        fieldWithPath("data.noticeBlocks[].title").description("공지 제목"),
+                                        fieldWithPath("data.noticeBlocks[].content").description("공지 내용"),
+                                        fieldWithPath("data.noticeBlocks[].commentNum").description("공지 댓글 개수"),
+                                        fieldWithPath("data.noticeBlocks[].isRead").description("공지 읽음 처리 여부"),
+                                        fieldWithPath("data.noticeBlocks[].notice").description("true"),
+                                        fieldWithPath("data.noticeBlocks[].makerId").description("작성자 Id"),
                                         fieldWithPath("data.notNoticeNum").description("일반 게시글 개수"),
-                                        fieldWithPath("data.notNoticeBlocks[0].boardId").description("일반 게시글 아이디"),
-                                        fieldWithPath("data.notNoticeBlocks[0].writerNickName").description("작성자 닉네임"),
-                                        fieldWithPath("data.notNoticeBlocks[0].writerIsLeader").description("작성자 소모임장 여부"),
-                                        fieldWithPath("data.notNoticeBlocks[0].writerProfileImage").description("작성자 프로필 이미지"),
-                                        fieldWithPath("data.notNoticeBlocks[0].writerIsDeleted").description("작성자 삭제 여부"),
-                                        fieldWithPath("data.notNoticeBlocks[0].title").description("일반 게시글 제목"),
-                                        fieldWithPath("data.notNoticeBlocks[0].content").description("일반 게시글 내용"),
-                                        fieldWithPath("data.notNoticeBlocks[0].commentNum").description("일반 게시글 댓글 개수"),
-                                        fieldWithPath("data.notNoticeBlocks[0].isRead").description("일반 게시글 읽음 처리 여부"),
-                                        fieldWithPath("data.notNoticeBlocks[0].notice").description("false")
+                                        fieldWithPath("data.notNoticeBlocks[].boardId").description("일반 게시글 아이디"),
+                                        fieldWithPath("data.notNoticeBlocks[].writerNickName").description("작성자 닉네임"),
+                                        fieldWithPath("data.notNoticeBlocks[].writerIsLeader").description("작성자 소모임장 여부"),
+                                        fieldWithPath("data.notNoticeBlocks[].writerProfileImage").description("작성자 프로필 이미지"),
+                                        fieldWithPath("data.notNoticeBlocks[].writerIsDeleted").description("작성자 삭제 여부"),
+                                        fieldWithPath("data.notNoticeBlocks[].title").description("일반 게시글 제목"),
+                                        fieldWithPath("data.notNoticeBlocks[].content").description("일반 게시글 내용"),
+                                        fieldWithPath("data.notNoticeBlocks[].commentNum").description("일반 게시글 댓글 개수"),
+                                        fieldWithPath("data.notNoticeBlocks[].isRead").description("일반 게시글 읽음 처리 여부"),
+                                        fieldWithPath("data.notNoticeBlocks[].notice").description("false"),
+                                        fieldWithPath("data.notNoticeBlocks[].makerId").description("작성자 Id")
                                         )
 
                         )
