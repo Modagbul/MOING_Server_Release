@@ -30,9 +30,11 @@ public class BoardBlocks {
 
     private boolean isNotice;
 
+    private Long makerId;
+
 
     @QueryProjection
-    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean writerIsDeleted, boolean isNotice) {
+    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean writerIsDeleted, boolean isNotice, Long makerId) {
         this.boardId = boardId;
         this.writerNickName = writerNickName;
         this.writerIsLeader = writerIsLeader;
@@ -43,6 +45,7 @@ public class BoardBlocks {
         this.isRead = false;
         this.writerIsDeleted=writerIsDeleted;
         this.isNotice=isNotice;
+        this.makerId = makerId;
         deleteMember();
     }
 
@@ -58,6 +61,7 @@ public class BoardBlocks {
         if(Boolean.TRUE.equals(writerIsDeleted)) {
             this.writerNickName = "(알 수 없음)";
             this.writerProfileImage = null;
+            this.makerId = null;
         }
     }
 }

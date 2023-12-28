@@ -34,7 +34,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.content,
                         board.commentNum,
                         board.teamMember.isDeleted,
-                        board.isNotice
+                        board.isNotice,
+                        board.teamMember.member.memberId
                 ))
                 .from(board)
                 .leftJoin(board.teamMember, teamMember)
