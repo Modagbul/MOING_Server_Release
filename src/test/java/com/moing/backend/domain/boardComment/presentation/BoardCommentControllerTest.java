@@ -143,6 +143,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                 .writerIsDeleted(false)
                 .isWriter(true)
                 .createdDate("2023/12/05 23:29")
+                .makerId(1L)
                 .build();
 
         commentBlocks.add(commentBlock);
@@ -182,8 +183,9 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.commentBlocks[].writerProfileImage").description("작성자 프로필 이미지"),
                                         fieldWithPath("data.commentBlocks[].writerIsDeleted").description("작성자 삭제 여부"),
                                         fieldWithPath("data.commentBlocks[].isWriter").description("댓글 작성자 여부"),
-                                        fieldWithPath("data.commentBlocks[].createdDate").description("생성 시간")
-                                )
+                                        fieldWithPath("data.commentBlocks[].createdDate").description("생성 시간"),
+                                        fieldWithPath("data.commentBlocks[].makerId").description("작성자 Id")
+                                        )
 
                         )
                 );
