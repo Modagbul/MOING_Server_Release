@@ -29,8 +29,10 @@ public class CommentBlocks {
 
     private String createdDate;
 
+    private Long makerId;
+
     @QueryProjection
-    public CommentBlocks(Long boardCommentId, String content, String writerNickName, Boolean writerIsLeader, String writerProfileImage, Boolean isWriter, Boolean writerIsDeleted, LocalDateTime createdDate) {
+    public CommentBlocks(Long boardCommentId, String content, String writerNickName, Boolean writerIsLeader, String writerProfileImage, Boolean isWriter, Boolean writerIsDeleted, LocalDateTime createdDate, Long makerId) {
         this.boardCommentId = boardCommentId;
         this.writerNickName = writerNickName;
         this.writerIsLeader = writerIsLeader;
@@ -39,11 +41,13 @@ public class CommentBlocks {
         this.isWriter = isWriter;
         this.writerIsDeleted=writerIsDeleted;
         this.createdDate = getFormattedDate(createdDate);
+        this.makerId = makerId;
         deleteMember();
     }
 
     public void deleteMember() {
         if (Boolean.TRUE.equals(writerIsDeleted)) {
+            this.makerId = null;
             this.writerNickName = "(알 수 없음)";
             this.writerProfileImage = null;
         }

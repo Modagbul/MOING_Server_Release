@@ -40,7 +40,8 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                                         .and(QTeamMember.teamMember.eq(boardComment.teamMember)))
                                 .exists(), "isWriter"),
                         boardComment.teamMember.isDeleted,
-                        boardComment.createdDate))
+                        boardComment.createdDate,
+                        boardComment.teamMember.member.memberId))
                 .from(boardComment)
                 .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
                 .leftJoin(boardComment.teamMember.member, member)
