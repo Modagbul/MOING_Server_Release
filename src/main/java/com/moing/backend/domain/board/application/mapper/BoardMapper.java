@@ -34,7 +34,7 @@ public class BoardMapper {
     public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
         String nickName = writerIsDeleted ? "(알 수 없음)" : board.getTeamMember().getMember().getNickName();
         String writerProfileImage = writerIsDeleted ? null : board.getTeamMember().getMember().getProfileImage();
-        Long writerId = writerIsDeleted ? null : board.getTeamMember().getMember().getMemberId();
+        Long writerId = writerIsDeleted ? 0L : board.getTeamMember().getMember().getMemberId();
         return GetBoardDetailResponse.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
