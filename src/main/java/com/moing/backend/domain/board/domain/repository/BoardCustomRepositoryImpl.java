@@ -27,7 +27,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
         List<BoardBlocks> allBoardBlocks = queryFactory
                 .select(new QBoardBlocks(
                         board.boardId,
-                        board.teamMember.member.nickName,
+                        board.teamMember.member.nickName.coalesce("알수없음"),
                         board.isLeader,
                         board.teamMember.member.profileImage,
                         board.title,
@@ -35,7 +35,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.commentNum,
                         board.teamMember.isDeleted,
                         board.isNotice,
-                        board.teamMember.member.memberId
+                        board.teamMember.member.memberId.coalesce(0L)
                 ))
                 .from(board)
                 .leftJoin(board.teamMember, teamMember)
