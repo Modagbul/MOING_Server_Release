@@ -6,8 +6,9 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BoardReadRepository extends JpaRepository<BoardRead, Long> {
-    Optional<BoardRead> findBoardReadByBoardAndMemberAndTeam(Board board, Member member, Team team);
+    List<BoardRead> findBoardReadByBoardAndMemberAndTeam(Board board, Member member, Team team);
 }
