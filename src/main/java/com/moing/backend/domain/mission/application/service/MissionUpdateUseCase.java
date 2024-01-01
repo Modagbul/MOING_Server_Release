@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -46,6 +48,7 @@ public class MissionUpdateUseCase {
 
         if (findMission.getTeam().getLeaderId().equals(member.getMemberId())) {
             findMission.updateStatus(MissionStatus.END);
+            findMission.updateDueTo(LocalDateTime.now());
         } else {
             throw new NoAccessCreateMission();
         }

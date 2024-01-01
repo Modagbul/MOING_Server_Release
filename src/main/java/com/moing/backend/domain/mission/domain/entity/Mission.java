@@ -91,4 +91,8 @@ public class Mission extends BaseTimeEntity {
     public void updateStatus(MissionStatus missionStatus) {
         this.status = missionStatus;
     }
+
+    public void updateDueTo(LocalDateTime dueTo) {
+        this.dueTo = dueTo;
+    }
 }
