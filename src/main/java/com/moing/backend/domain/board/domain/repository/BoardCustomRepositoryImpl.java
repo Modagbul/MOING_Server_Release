@@ -81,11 +81,12 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
         // 멤버가 읽은 게시글 수
         Long readBoards = queryFactory
-                .select(boardRead.count())
+                .select(boardRead.board.boardId)
+                .distinct()
                 .from(boardRead)
                 .where(boardRead.member.memberId.eq(memberId))
                 .where(boardRead.board.team.teamId.eq(teamId))
-                .fetchFirst();
+                .stream().count();
 
         return Math.toIntExact(allBoards - readBoards);
     }
