@@ -13,7 +13,7 @@ public class ExceptionEventHandler {
 
     private final WebhookUtil webhookUtil;
 
-    @Async("asyncTaskExecutor")
+    @Async
     @EventListener
     public void onExceptionEvent(ExceptionEvent event) {
         webhookUtil.sendSlackAlertErrorLog(event.getRequest(), event.getException());
