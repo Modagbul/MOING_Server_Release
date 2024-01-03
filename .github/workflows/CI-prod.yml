@@ -39,6 +39,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # 설정 파일 생성
+      - run: |
+          mkdir ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml 
+          echo "${{env.APPLICATION}}" > ./application.yml
+          touch ./firebase-key.json
+          echo "${{env.GOOGLE_APPLICATION_CREDENTIALS}}" | base64 --decode > ./firebase-key.json
+          touch ./apple-key.p8
+          echo "${{env.APPLE_KEY}}" > ./apple-key.p8
+
+      # 설정 파일을 작업공간에 저장
+      - uses: actions/upload-artifact@v2
+        with:
+          name: application.yml
+          path: ./src/main/resources/application.yml
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: firebase-key.json
+          path: ./src/main/resources/firebase-key.json
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: apple-key.p8
+          path: ./src/main/resources/apple-key.p8
+
       # gradlew 권한 설정
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
