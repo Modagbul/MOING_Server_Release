@@ -11,6 +11,7 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateQuerySer
 import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,6 +27,7 @@ import java.util.List;
 @EnableAsync
 @EnableScheduling // 스케줄링 활성화
 @RequiredArgsConstructor
+@Profile("prod")
 public class MissionStateScheduleUseCase {
 
     private final MissionStateUseCase missionStateUseCase;

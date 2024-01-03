@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.slack.api.webhook.WebhookPayloads.payload;
 
@@ -25,7 +27,7 @@ public class SlackAdapter implements WebhookUtil {
     private String errorWebhookUrl;
 
     @Value("${webhook.slack.team_alarm_url}")
-    private String teamAlarmWebhookUrl;
+    private String infoWebhookUrl;
 
     private final Slack slackClient = Slack.getInstance();
 
@@ -51,7 +53,7 @@ public class SlackAdapter implements WebhookUtil {
     public void sendSlackTeamCreatedMessage(String teamName, Long leaderId) {
         String message = String.format("[새로운 소모임 '%s'이(가) 생성되었습니다.]", teamName);
         List<Attachment> attachments = List.of(generateSlackTeamAttachment(teamName, leaderId));
-        sendSlackMessage(teamAlarmWebhookUrl, message, attachments);
+        sendSlackMessage(infoWebhookUrl, message, attachments);
     }
 
     private Attachment generateSlackTeamAttachment(String teamName, Long leaderId) {
@@ -61,6 +63,27 @@ public class SlackAdapter implements WebhookUtil {
                 .fields(List.of(
                         generateSlackField("소모임 이름", teamName),
                         generateSlackField("생성자 아이디", String.valueOf(leaderId))
+                ))
+                .build();
+    }
+
+    @Override
+    public void sendDailyStatsMessage(Map<String, Long> todayStats, Map<String, Long> yesterdayStats) {
+        String message = "[일일 통계 알림]";
+        List<Attachment> attachments = todayStats.keySet().stream()
+                .map(key -> generateDailyStatsAttachment(key, todayStats.get(key), yesterdayStats.getOrDefault(key, 0L)))
+                .collect(Collectors.toList());
+
+        sendSlackMessage(infoWebhookUrl, message, attachments);
+    }
+
+    private Attachment generateDailyStatsAttachment(String title, long todayCount, long yesterdayCount) {
+        return Attachment.builder()
+                .color("1A66CC") // 색상 설정
+                .title(title)
+                .fields(List.of(
+                        generateSlackField("Today", String.valueOf(todayCount) + " 개"),
+                        generateSlackField("Yesterday", String.valueOf(yesterdayCount) + " 개")
                 ))
                 .build();
     }
