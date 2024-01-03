@@ -22,7 +22,7 @@ public class SignInTeamUseCase {
     private final TeamMemberSaveService teamMemberSaveService;
     public CreateTeamResponse signInTeam(String socialId, Long teamId){
         Member member=memberGetService.getMemberBySocialId(socialId);
-        Team team=teamGetService.getTeamByTeamId(teamId);
+        Team team=teamGetService.getTeamIncludeDeletedByTeamId(teamId);
         teamMemberSaveService.addTeamMember(team, member);
         return new CreateTeamResponse(team.getTeamId());
     }

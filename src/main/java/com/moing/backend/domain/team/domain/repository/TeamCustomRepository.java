@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface TeamCustomRepository {
     GetTeamResponse findTeamByMemberId(Long memberId);
     Optional<Team> findTeamByTeamId(Long TeamId);
+    Optional<Team> findTeamIncludeDeletedByTeamId(Long teamId);
     List<Long> findTeamIdByMemberId(Long memberId);
     List<GetMyPageTeamBlock> findMyPageTeamByMemberId(Long memberId);
     List<MyTeamsRes> findTeamNameByTeamId(List<Long> teamId);
