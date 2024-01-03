@@ -46,6 +46,7 @@ public enum ErrorCode {
     NOT_AUTH_BY_TEAM_ERROR("T0002","권한이 없습니다."),
     ALREADY_WITHDRAW_ERROR("T0003","이미 탈퇴한 회원입니다."),
     ALREADY_JOIN_ERROR("T0004","이미 가입한 회원입니다."),
+    DELETED_TEAM_ERROR("T0005", "삭제된 소모임입니다."),
 
     //마이페이지 관련 에러 코드
     INVALID_ALARM_ERROR("MP0001","유효하지 않는 알람 입력값입니다"),
