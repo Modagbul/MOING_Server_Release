@@ -50,6 +50,13 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     }
 
     @Override
+    public Optional<Team> findTeamIncludeDeletedByTeamId(Long teamId){
+        return Optional.ofNullable(queryFactory.selectFrom(team)
+                .where(team.teamId.eq(teamId))
+                .fetchOne());
+    }
+
+    @Override
     public List<Long> findTeamIdByMemberId(Long memberId){
         LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
 
@@ -181,7 +188,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     @Override
     public GetTeamCountResponse findTeamCount(Long memberId, Long teamId) {
         LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
-        long count=queryFactory
+        Long count=queryFactory
                 .select(team.count()) // 팀의 개수를 세기 위해 수정
                 .from(teamMember)
                 .innerJoin(teamMember.team, team)
@@ -192,6 +199,10 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                                 .or(team.deletionTime.after(threeDaysAgo)))) // 강제종료된 경우 3일이 지나지 않았다면
                 .fetchOne(); // 단일 결과 (개수) 반환
 
+        if (count == null) {
+            count = 0L; // null인 경우 0으로 처리
+        }
+
         GetTeamCountResponse response=queryFactory
                 .select(new QGetTeamCountResponse(team.name, member.nickName))
                 .from(team)
@@ -199,7 +210,13 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .where(team.teamId.eq(teamId))
                 .fetchOne();
 
-        response.updateCount(count);
+        if (response == null) {
+            // response가 null인 경우, 적절한 기본값 설정 또는 예외 처리
+            response = new GetTeamCountResponse("기본 팀 이름", "기본 멤버 닉네임");
+            response.updateCount(0L);
+        } else {
+            response.updateCount(count);
+        }
 
         return response;
     }
