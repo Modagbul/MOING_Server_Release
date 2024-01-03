@@ -34,6 +34,10 @@ public class TeamGetService {
         return teamRepository.findTeamIdByMemberId(memberId);
     }
 
+    public Team getTeamIncludeDeletedByTeamId(Long teamId){
+        return teamRepository.findTeamIncludeDeletedByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
+    }
+
     public Team getTeamByTeamId(Long teamId){
         return teamRepository.findTeamByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
     }
