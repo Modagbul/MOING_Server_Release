@@ -5,6 +5,7 @@ import com.moing.backend.domain.statistics.application.dto.DailyStats;
 import com.moing.backend.global.config.slack.util.WebhookUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +21,7 @@ import java.util.Map;
 @EnableAsync
 @EnableScheduling
 @RequiredArgsConstructor
+@Profile("prod")
 public class DAUScheduleUseCase {
 
     private final WebhookUtil webhookUtil;
