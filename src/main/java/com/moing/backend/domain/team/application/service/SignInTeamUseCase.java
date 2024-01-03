@@ -5,6 +5,7 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.team.application.dto.response.CreateTeamResponse;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.domain.team.exception.DeletedTeamException;
 import com.moing.backend.domain.teamMember.domain.service.TeamMemberSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,4 +26,5 @@ public class SignInTeamUseCase {
         teamMemberSaveService.addTeamMember(team, member);
         return new CreateTeamResponse(team.getTeamId());
     }
+
 }
