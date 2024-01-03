@@ -1,0 +1,57 @@
+name: CI-prod
+
+on:
+  pull_request:
+    branches:
+      - release
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./
+      APPLICATION: ${{ secrets.APPLICATION_PROD }}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_PROD }}
+      APPLE_KEY: ${{ secrets.APPLE_KEY_PROD }}
+
+    steps:
+      # 소스 코드 체크아웃
+      - uses: actions/checkout@v2
+
+      # JDK 11 설정
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      # Gradle 패키지 캐시
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # gradlew 권한 설정
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: ${{ env.working-directory }}
+
+      # Gradle로 빌드
+      - name: Build with Gradle
+        run: ./gradlew build
+        working-directory: ${{ env.working-directory }}
+
+      # Gradle 캐시 정리
+      - name: Cleanup Gradle Cache
+        if: ${{ always() }}
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
