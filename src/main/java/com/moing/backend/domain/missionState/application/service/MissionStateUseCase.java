@@ -42,7 +42,7 @@ public class MissionStateUseCase {
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
-        return done.equals(total);
+        return done >= total;
 
     }
     public boolean isAbleToScoreUp(Long missionId) {
@@ -70,7 +70,7 @@ public class MissionStateUseCase {
     public void updateMissionState(Member member, Mission mission, MissionArchive missionArchive) {
 
         // 마지막 인증 시
-        if (isAbleToEnd(mission.getId())) {
+        if (mission.getType().equals(MissionType.ONCE) && isAbleToEnd(mission.getId())) {
             mission.updateStatus(MissionStatus.SUCCESS);
         }
         missionStateSaveService.saveMissionState(member,mission, missionArchive.getStatus());
