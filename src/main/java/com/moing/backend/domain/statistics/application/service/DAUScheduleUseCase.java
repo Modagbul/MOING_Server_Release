@@ -35,7 +35,7 @@ public class DAUScheduleUseCase {
     /*
     DAU 정보 : 일일 모임 생성 수, 일일 신규 가입자 수, 일일 반복 미션 생성 수, 일일 한번 미션 생성 수
      */
-    @Scheduled(cron = "0 59 23 * * *")
+    @Scheduled(cron = "0 55 23 * * *")
     public void DailyTeamCreationInfoAlarm() {
         Map<String, Long> todayStats = new LinkedHashMap<>();
         Map<String, Long> yesterdayStats = new LinkedHashMap<>();

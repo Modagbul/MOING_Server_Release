@@ -19,14 +19,14 @@ import java.util.Optional;
 public class TeamMemberSaveService {
     private final TeamMemberRepository teamMemberRepository;
     public void addTeamMember(Team team, Member member) {
-        Optional<TeamMember> teamMember = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
-
-        checkDeletion(team);
-
-        if (teamMember.isPresent()) {
-            handleExistingMember(teamMember.get());
-        } else {
-            addNewTeamMember(team, member);
+        synchronized (this) {
+            Optional<TeamMember> teamMember = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
+            checkDeletion(team);
+            if (teamMember.isPresent()) {
+                handleExistingMember(teamMember.get());
+            } else {
+                addNewTeamMember(team, member);
+            }
         }
     }
 
