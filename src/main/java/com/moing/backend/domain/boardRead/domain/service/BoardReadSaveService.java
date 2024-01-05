@@ -16,16 +16,15 @@ public class BoardReadSaveService {
 
     private final BoardReadRepository boardReadRepository;
 
-    public void saveBoardRead(Board board, BoardRead boardRead) {
-        List<BoardRead> existingBoardReads = boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam());
 
-        if (existingBoardReads.size() > 1) {
-            // 첫 번째 엔티티를 제외하고 나머지 삭제
-            List<BoardRead> duplicates = existingBoardReads.subList(1, existingBoardReads.size());
-            boardReadRepository.deleteAll(duplicates);
-        } else if (existingBoardReads.isEmpty()) {
-            boardRead.updateBoard(board);
-            boardReadRepository.save(boardRead);
+    public void saveBoardRead(Board board, BoardRead boardRead) {
+        synchronized (this) {
+            List<BoardRead> existingBoardReads = boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam());
+
+            if (existingBoardReads.isEmpty()) {
+                boardRead.updateBoard(board);
+                boardReadRepository.save(boardRead);
+            }
         }
     }
 }
