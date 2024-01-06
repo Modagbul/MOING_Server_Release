@@ -7,6 +7,7 @@ import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @DomainService
 @RequiredArgsConstructor
@@ -15,10 +16,15 @@ public class BoardReadSaveService {
 
     private final BoardReadRepository boardReadRepository;
 
+
     public void saveBoardRead(Board board, BoardRead boardRead) {
-        if ((boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam())).isEmpty()) {
-            boardRead.updateBoard(board);
-            boardReadRepository.save(boardRead);
+        synchronized (this) {
+            List<BoardRead> existingBoardReads = boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam());
+
+            if (existingBoardReads.isEmpty()) {
+                boardRead.updateBoard(board);
+                boardReadRepository.save(boardRead);
+            }
         }
     }
 }

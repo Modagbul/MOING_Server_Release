@@ -4,6 +4,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.exception.AlreadyJoinTeamException;
 import com.moing.backend.domain.team.exception.AlreadyWithdrawTeamException;
+import com.moing.backend.domain.team.exception.DeletedTeamException;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.domain.teamMember.domain.repository.TeamMemberRepository;
 import com.moing.backend.global.annotation.DomainService;
@@ -18,12 +19,14 @@ import java.util.Optional;
 public class TeamMemberSaveService {
     private final TeamMemberRepository teamMemberRepository;
     public void addTeamMember(Team team, Member member) {
-        Optional<TeamMember> teamMember = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
-
-        if (teamMember.isPresent()) {
-            handleExistingMember(teamMember.get());
-        } else {
-            addNewTeamMember(team, member);
+        synchronized (this) {
+            Optional<TeamMember> teamMember = teamMemberRepository.findTeamMemberByTeamAndMember(team, member);
+            checkDeletion(team);
+            if (teamMember.isPresent()) {
+                handleExistingMember(teamMember.get());
+            } else {
+                addNewTeamMember(team, member);
+            }
         }
     }
 
@@ -41,6 +44,11 @@ public class TeamMemberSaveService {
         newMember.updateTeam(team);
         team.addTeamMember();
         this.teamMemberRepository.save(newMember);
+    }
+
+    private void checkDeletion(Team team){
+        if(team.isDeleted())
+            throw new DeletedTeamException();
     }
 
 }
