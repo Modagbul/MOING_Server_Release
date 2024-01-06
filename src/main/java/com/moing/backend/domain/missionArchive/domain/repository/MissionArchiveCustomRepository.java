@@ -8,7 +8,6 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public interface MissionArchiveCustomRepository {
 
     Optional<List<MissionArchive>> findOthersArchives(Long memberId, Long missionId) ;
 
-    Optional<Long> findDonePeopleByMissionId(Long missionId);
+    Optional<Long> findDonePeopleBySingleMissionId(Long missionId);
     Optional<Long> findDonePeopleByRepeatMissionId(Long missionId);
     Optional<Long> findMyDoneCountByMissionId(Long missionId,Long memberId);
 

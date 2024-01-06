@@ -31,9 +31,6 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findById(missionArchiveId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
-    public MissionArchive findArchive(Long memberId, Long missionId) {
-        return missionArchiveRepository.findByMissionIdAndMemberId(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
-    }
 
     public List<MissionArchive> findMyArchive(Long memberId, Long missionId) {
 
@@ -60,9 +57,6 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findOthersArchives(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
 
-    public List<MissionArchive> findArchivesByMemberId(Long memberId) {
-        return missionArchiveRepository.findByMemberId(memberId).orElseThrow(NotFoundMissionArchiveException::new);
-    }
 
     public Boolean isDone(Long memberId, Long missionId) {
         Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
@@ -72,18 +66,6 @@ public class MissionArchiveQueryService {
             return Boolean.FALSE;
         }
     }
-
-    public Boolean isTodayDone(Long memberId, Long missionId) {
-        Optional<List<MissionArchive>> byMemberId = missionArchiveRepository.findArchivesByMissionIdAndMemberId(memberId, missionId);
-        if (byMemberId.isPresent()) {
-
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
-    }
-
-    // team의 mission id 들 가져와서 나의 mission archive 리턴
 
     /**
      * mission.getTeam() 팀의 단일미션 미션 인증 보드
@@ -107,7 +89,7 @@ public class MissionArchiveQueryService {
 
 
     public Long findDoneSingleArchives(Long missionId) {
-        return missionArchiveRepository.findDonePeopleByMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
+        return missionArchiveRepository.findDonePeopleBySingleMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
     }
     public Long findDoneRepeatArchives(Long missionId) {
         return missionArchiveRepository.findDonePeopleByRepeatMissionId(missionId).orElseThrow(NotFoundMissionArchiveException::new);
@@ -126,7 +108,7 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findTop5ArchivesByTeam(teamIds).orElse(null);
     }
 
-    public boolean findDoneTodayArchive(Long memberId, Long missionId) {
+    public boolean isAbleToArchiveToday(Long memberId, Long missionId) {
         return missionArchiveRepository.findMyArchivesToday(memberId, missionId);
     }
 
