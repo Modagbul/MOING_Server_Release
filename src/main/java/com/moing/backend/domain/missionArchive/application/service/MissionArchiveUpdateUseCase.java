@@ -46,7 +46,7 @@ public class MissionArchiveUpdateUseCase {
     private final MissionStateUseCase missionStateUseCase;
 
 
-    // 미션 재인증 (수정하기도 포함됨)
+    // 미션 재인증 (수정하기도 포함됨) -> 사용하지 않음
     public MissionArchiveRes updateArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
@@ -58,13 +58,12 @@ public class MissionArchiveUpdateUseCase {
         if (mission.getWay() == MissionWay.PHOTO && missionArchiveQueryService.isDone(memberId, missionId)) {
             //s3삭제
 
-
         }
 
         MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(memberId, missionId).get(0);
 
         // 단일 미션 && 미션 종료 직전인지 확인
-        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(missionId)) {
+        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(mission)) {
             mission.updateStatus(MissionStatus.SUCCESS);
             // 점수 반영 로직
 

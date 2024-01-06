@@ -1,6 +1,5 @@
 package com.moing.backend.domain.missionArchive.application.service;
 
-import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
@@ -9,7 +8,6 @@ import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.team.domain.repository.TeamRepository;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +38,7 @@ public class MissionArchiveReadUseCase {
         List<MissionArchiveRes> missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveResList(missionArchiveQueryService.findMyArchive(memberId, missionId), memberId);
         myMissionArchiveRes.updateArchives(missionArchiveRes);
 
-        myMissionArchiveRes.updateTodayStatus(missionArchiveQueryService.findDoneTodayArchive(memberId, missionId));
+        myMissionArchiveRes.updateTodayStatus(missionArchiveQueryService.isAbleToArchiveToday(memberId, missionId));
 
         return myMissionArchiveRes;
 

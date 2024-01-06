@@ -10,7 +10,6 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
@@ -21,6 +20,7 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateSaveServ
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
+import com.moing.backend.global.utils.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,15 +48,12 @@ public class MissionArchiveCreateUseCase {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Long memberId = member.getMemberId();
+
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
         MissionArchive newArchive = MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission);
 
-        // 단일 미션인 경우 미션 인증 시도 시 ongoing 으로 변경
-        if (mission.getType() == MissionType.ONCE && mission.getStatus() == MissionStatus.WAIT) {
-            mission.updateStatus(MissionStatus.ONGOING);
-        }
         // 인증 완료한 미션인지 확인
         if (isDoneMission(memberId,mission)) {
             throw new NoMoreMissionArchiveException();
@@ -66,30 +63,39 @@ public class MissionArchiveCreateUseCase {
 
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
-            // 예정된 반복미션 접근 제한
+            // 아직 열리지 않은 반복미션 접근 제한
             if (mission.getStatus() == MissionStatus.WAIT) {
                 throw new NotYetMissionArchiveException();
             }
+
             // 당일 1회 인증만 가능
-            if(!missionArchiveQueryService.findDoneTodayArchive(memberId,missionId))
-                newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
-            else
+            if (missionArchiveQueryService.isAbleToArchiveToday(memberId, missionId)) {
                 throw new NoMoreMissionArchiveException();
+            } else {
+                newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
+            }
 
             missionStateUseCase.updateMissionState(member, mission, newArchive);
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
+        }
 
-        } else {
+        // 한번 미션일 경우
+        else {
+
+            // 미션 생성 후 처음 미션 인증 시도 시 ongoing 으로 변경
+            if(mission.getStatus() == MissionStatus.WAIT) {
+                mission.updateStatus(MissionStatus.ONGOING);
+            }
+
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
 
             missionStateUseCase.updateMissionState(member, mission, newArchive);
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
+
+            // 인증 후 n/n명 인증 성공 리턴값 업데이트
             missionArchiveRes.updateCount(missionArchiveQueryService.findDoneSingleArchives(missionId));
         }
-
-//        missionStateUseCase.updateMissionState(member, mission, newArchive);
-//        missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
         return missionArchiveRes;
 
     }
@@ -98,9 +104,5 @@ public class MissionArchiveCreateUseCase {
     public Boolean isDoneMission(Long memberId,Mission mission) {
         return missionArchiveQueryService.findMyDoneArchives(memberId, mission.getId()) >= mission.getNumber();
     }
-
-
-
-
 
 }
