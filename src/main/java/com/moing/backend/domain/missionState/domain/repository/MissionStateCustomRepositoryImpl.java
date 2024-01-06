@@ -38,9 +38,9 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6); // 한 주의 마지막일을 일요일로 설정
 
-        BooleanExpression repeatTypeCondition = missionState.mission.type.eq(MissionType.REPEAT)
+        BooleanExpression repeatTypeCondition = (missionState.mission.type.eq(MissionType.REPEAT)
                 .and(missionState.createdDate.goe(startOfWeek.atStartOfDay()))
-                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)))).or(missionState.mission.type.eq(MissionType.ONCE));
 
         // 기본 조건
         BooleanExpression baseCondition = missionState.mission.id.eq(missionId);

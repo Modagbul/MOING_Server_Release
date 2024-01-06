@@ -199,7 +199,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
 
     @Override
-    public Optional<Long> findDonePeopleByMissionId(Long missionId) {
+    public Optional<Long> findDonePeopleBySingleMissionId(Long missionId) {
 
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
