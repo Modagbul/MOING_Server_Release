@@ -99,28 +99,43 @@ public class MissionRemindAlarmUseCase {
 
     public Boolean sendRepeatMissionRemindOnSunday() {
 
+        String title = REMIND_ON_SUNDAY_TITLE.getMessage();
+        String message = REMIND_ON_SUNDAY_MESSAGE.getMessage();
+
         List<Member> repeatMissionByStatus = missionQueryService.findRepeatMissionPeopleByStatus(MissionStatus.WAIT);
 
         Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(repeatMissionByStatus);
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
 
-
-        eventPublisher.publishEvent(new MultiFcmEvent(REMIND_ON_SUNDAY_TITLE.getMessage(), REMIND_ON_SUNDAY_MESSAGE.getMessage(), pushMemberIdAndToken, memberIdAndTokens,
-                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
+            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        }
+        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
+            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
+        }
         return true;
 
 
-    }
+        }
 
     public Boolean sendRepeatMissionRemindOnMonday() {
+
+
+        String title = REMIND_ON_MONDAY_TITLE.getMessage();
+        String message = REMIND_ON_MONDAY_MESSAGE.getMessage();
 
         List<Member> repeatMissionByStatus = missionQueryService.findRepeatMissionPeopleByStatus(MissionStatus.ONGOING);
 
         Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(repeatMissionByStatus);
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
 
-        eventPublisher.publishEvent(new MultiFcmEvent(REMIND_ON_MONDAY_TITLE.getMessage(), REMIND_ON_MONDAY_MESSAGE.getMessage(), pushMemberIdAndToken, memberIdAndTokens,
-                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
+            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        }
+        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
+            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
+        }
+
         return true;
 
 
