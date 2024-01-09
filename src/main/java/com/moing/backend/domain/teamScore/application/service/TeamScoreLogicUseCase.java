@@ -39,6 +39,7 @@ public class TeamScoreLogicUseCase {
     }
 
     public Long updateTeamScore(Long missionId) {
+        log.info("updateTeamScoreStart");
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
@@ -49,6 +50,8 @@ public class TeamScoreLogicUseCase {
 
         teamScoreSaveService.save(teamScore);
         teamSaveService.saveTeam(team);
+
+        log.info("updateTeamScoreEnd");
 
         return teamScore.getScore();
     }

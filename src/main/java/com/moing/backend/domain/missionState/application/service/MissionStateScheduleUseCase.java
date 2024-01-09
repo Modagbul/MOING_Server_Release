@@ -70,7 +70,8 @@ public class MissionStateScheduleUseCase {
 
         for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
-            teamScoreLogicUseCase.updateTeamScore(mission.getId());
+            Long aLong = teamScoreLogicUseCase.updateTeamScore(mission.getId());
+            log.info("updateTeamScoreValue" + aLong);
         }
 
     }
