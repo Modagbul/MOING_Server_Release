@@ -28,7 +28,7 @@ import java.util.List;
 @EnableAsync
 @EnableScheduling // 스케줄링 활성화
 @RequiredArgsConstructor
-@Profile("prod")
+//@Profile("prod")
 public class MissionStateScheduleUseCase {
 
     private final MissionStateUseCase missionStateUseCase;
@@ -70,8 +70,7 @@ public class MissionStateScheduleUseCase {
 
         for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
-            Long aLong = teamScoreLogicUseCase.updateTeamScore(mission.getId());
-            log.info("updateTeamScoreValue" + aLong);
+            teamScoreLogicUseCase.updateTeamScore(mission.getId());
         }
 
     }
