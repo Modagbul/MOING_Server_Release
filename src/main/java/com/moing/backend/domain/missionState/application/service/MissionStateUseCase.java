@@ -44,7 +44,7 @@ public class MissionStateUseCase {
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
-        return done >= total;
+        return done > total;
 
     }
 
