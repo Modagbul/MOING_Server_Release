@@ -28,7 +28,7 @@ import java.util.List;
 @EnableAsync
 @EnableScheduling // 스케줄링 활성화
 @RequiredArgsConstructor
-//@Profile("prod")
+@Profile("prod")
 public class MissionStateScheduleUseCase {
 
     private final MissionStateUseCase missionStateUseCase;
