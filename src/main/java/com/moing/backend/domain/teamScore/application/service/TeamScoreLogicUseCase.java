@@ -42,7 +42,6 @@ public class TeamScoreLogicUseCase {
         log.info("updateTeamScoreStart");
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
-
         TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team.getTeamId());
 
         teamScore.updateScore(getScoreByMission(mission));
@@ -69,8 +68,10 @@ public class TeamScoreLogicUseCase {
         Long done = donePeople(mission);
 
         if (done == 0) {
+            log.info("done"+done);
             return 0L;
         } else {
+            log.info("done"+(done / total * 100) / 5);
             return (done / total * 100) / 5 ;
         }
 

@@ -28,7 +28,7 @@ import java.util.List;
 @EnableAsync
 @EnableScheduling // 스케줄링 활성화
 @RequiredArgsConstructor
-//@Profile("prod")
+@Profile("prod")
 public class MissionStateScheduleUseCase {
 
     private final MissionStateUseCase missionStateUseCase;
@@ -63,7 +63,7 @@ public class MissionStateScheduleUseCase {
      * 해당 시간 미션 마감
      * 한시간 마다 실행
      */
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 1 * * * *")
     public void singleMissionEndRoutine() {
 
         List<Mission> missionByDueTo = missionQueryService.findMissionByDueTo();
