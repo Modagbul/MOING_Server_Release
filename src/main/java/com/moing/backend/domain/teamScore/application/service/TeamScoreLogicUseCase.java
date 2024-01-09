@@ -39,7 +39,6 @@ public class TeamScoreLogicUseCase {
     }
 
     public Long updateTeamScore(Long missionId) {
-        log.info("updateTeamScoreStart");
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
         TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team.getTeamId());
@@ -49,8 +48,6 @@ public class TeamScoreLogicUseCase {
 
         teamScoreSaveService.save(teamScore);
         teamSaveService.saveTeam(team);
-
-        log.info("updateTeamScoreEnd");
 
         return teamScore.getScore();
     }
@@ -64,30 +61,25 @@ public class TeamScoreLogicUseCase {
     }
 
     public Long getScoreByMission(Mission mission) {
-        Long total = totalPeople(mission);
-        Long done = donePeople(mission);
+        float total = totalPeople(mission);
+        float done = donePeople(mission);
 
         if (done == 0) {
-            log.info("done"+done);
             return 0L;
         } else {
-            log.info("done"+(done / total * 100) / 5);
-            return (done / total * 100) / 5 ;
+            return (long) ((done / total * 100) / 5);
         }
 
     }
 
-    public Long donePeople(Mission mission) {
-        return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
+    public float donePeople(Mission mission) {
+        return Float.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
     }
 
-    public Long totalPeople(Mission mission) {
-        return Long.valueOf(mission.getTeam().getNumOfMember());
+    public float totalPeople(Mission mission) {
+        return Float.valueOf(mission.getTeam().getNumOfMember());
 
     }
-
-
-
 
 
 
