@@ -68,10 +68,10 @@ public class MissionStateScheduleUseCase {
 
         List<Mission> missionByDueTo = missionQueryService.findMissionByDueTo();
 
-        missionByDueTo.stream().forEach(mission -> {
+        for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
             teamScoreLogicUseCase.updateTeamScore(mission.getId());
-        });
+        }
 
     }
 
