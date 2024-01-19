@@ -96,6 +96,7 @@ public class MissionStateCustomRepositoryImpl implements MissionStateCustomRepos
                 .selectFrom(missionState)
                 .where(missionState.mission.eq(mission),
                         missionState.member.eq(member))
+                .orderBy(missionState.createdDate.desc())
                 .fetchFirst());
     }
 
