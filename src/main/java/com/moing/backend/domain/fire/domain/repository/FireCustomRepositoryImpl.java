@@ -61,7 +61,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         JPQLQuery<Long> missionDonePeople = select(missionArchive.member.memberId)
                 .from(missionArchive, mission)
                 .where(missionArchive.mission.id.eq(missionId),
-                        mission.id.eq(missionId)
+                        mission.id.eq(missionId),
+                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
                 )
                 .groupBy(missionArchive.member.memberId,
                         missionArchive.mission.id,
@@ -69,8 +70,7 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                         mission.number)
                 .having(
                         missionArchive.mission.id.eq(missionId),
-                        missionArchive.count.max().goe(mission.number),
-                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        missionArchive.count.max().goe(mission.number)
                 );
 
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1); // 현재 시간에서 1시간을 뺀 시간
