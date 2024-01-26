@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Getter
 public class CreateBoardRequest {
     @NotBlank(message = "title 을 입력해 주세요.")
-    @Size(min = 0, max = 15, message = "제목 글자수를 초과했습니다.")
+    @Size(min = 0, max = 30, message = "제목 글자수를 초과했습니다.")
     private String title;
 
     @NotBlank(message = "content 을 입력해 주세요.")
