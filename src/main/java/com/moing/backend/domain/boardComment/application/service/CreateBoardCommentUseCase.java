@@ -19,7 +19,6 @@ import javax.transaction.Transactional;
 public class CreateBoardCommentUseCase {
 
     private final BoardCommentSaveService boardCommentSaveService;
-    private final BoardCommentMapper boardCommentMapper;
     private final BaseBoardService baseBoardService;
     private final CheckLeaderUseCase checkLeaderUseCase;
 
@@ -30,7 +29,7 @@ public class CreateBoardCommentUseCase {
         // 1. 게시글 댓글 생성
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         boolean isLeader = checkLeaderUseCase.isTeamLeader(data.getMember(), data.getTeam());
-        BoardComment boardComment = boardCommentSaveService.saveBoardComment(boardCommentMapper.toBoardComment(data.getTeamMember(), data.getBoard(), createBoardCommentRequest, isLeader));
+        BoardComment boardComment = boardCommentSaveService.saveBoardComment(BoardCommentMapper.toBoardComment(data.getTeamMember(), data.getBoard(), createBoardCommentRequest, isLeader));
         // 2. 게시글 댓글 개수 증가
         data.getBoard().incrComNum();
         return new CreateBoardCommentResponse(boardComment.getBoardCommentId());

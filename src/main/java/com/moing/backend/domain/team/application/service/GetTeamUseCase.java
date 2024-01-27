@@ -24,7 +24,6 @@ public class GetTeamUseCase {
     private final TeamGetService teamGetService;
     private final BoardGetService boardGetService;
     private final TeamMemberGetService teamMemberGetService;
-    private final TeamMapper teamMapper;
 
     public GetTeamResponse getTeam(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
@@ -36,12 +35,12 @@ public class GetTeamUseCase {
         Integer boardNum = boardGetService.getUnReadBoardNum(teamId, member.getMemberId());
         List<TeamMemberInfo> teamMemberInfoList = teamMemberGetService.getTeamMemberInfo(teamId);
         Team team = teamGetService.getTeamByTeamId(teamId);
-        return teamMapper.toTeamDetailResponse(member.getMemberId(), team, boardNum, teamMemberInfoList);
+        return TeamMapper.toTeamDetailResponse(member.getMemberId(), team, boardNum, teamMemberInfoList);
     }
 
     public GetCurrentStatusResponse getCurrentStatus(Long teamId) {
         Team team=teamGetService.getTeamByTeamId(teamId);
-        return teamMapper.toCurrentStatusResponse(team);
+        return TeamMapper.toCurrentStatusResponse(team);
     }
 
     public Page<GetNewTeamResponse> getNewTeam(String dateSort, Pageable pageable) {

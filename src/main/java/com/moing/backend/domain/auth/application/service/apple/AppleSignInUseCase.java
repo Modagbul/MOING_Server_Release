@@ -22,6 +22,6 @@ public class AppleSignInUseCase implements SignInProvider {
         String socialId = oidcTokenJws.getBody().getSubject();
         String email = (String) oidcTokenJws.getBody().get("email");
 
-        return memberMapper.createAppleMember(socialId, email);
+        return MemberMapper.createAppleMember(socialId, email);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyPageMapper {
 
-    public GetMyPageResponse toGetMyPageResponse(Member member, List<Category> categories, List<GetMyPageTeamBlock> blocks) {
+    public static GetMyPageResponse toGetMyPageResponse(Member member, List<Category> categories, List<GetMyPageTeamBlock> blocks) {
         return GetMyPageResponse.builder()
                 .profileImage(member.getProfileImage())
                 .nickName(member.getNickName())

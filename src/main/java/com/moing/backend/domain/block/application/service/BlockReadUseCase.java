@@ -1,12 +1,7 @@
 package com.moing.backend.domain.block.application.service;
 
-import com.moing.backend.domain.block.application.mapper.BlockMapper;
-import com.moing.backend.domain.block.domain.service.BlockDeleteService;
 import com.moing.backend.domain.block.domain.service.BlockQueryService;
-import com.moing.backend.domain.block.domain.service.BlockSaveService;
-import com.moing.backend.domain.board.domain.service.BoardGetService;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
-import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.report.application.dto.BlockMemberRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,9 +13,6 @@ import java.util.List;
 public class BlockReadUseCase {
 
     private final MemberGetService memberGetService;
-    private final BoardGetService boardGetService;
-    private final MissionArchiveQueryService missionArchiveQueryService;
-
     private final BlockQueryService blockQueryService;
 
     /**
@@ -31,10 +23,10 @@ public class BlockReadUseCase {
 
         return blockQueryService.getBlockLists(memberId);
     }
- public List<BlockMemberRes> getMyBlockInfoList(String socialId) {
-        Long memberId = memberGetService.getMemberBySocialId(socialId).getMemberId();
+     public List<BlockMemberRes> getMyBlockInfoList(String socialId) {
+            Long memberId = memberGetService.getMemberBySocialId(socialId).getMemberId();
 
-        return blockQueryService.getBlockInfoLists(memberId);
-    }
+            return blockQueryService.getBlockInfoLists(memberId);
+     }
 
 }
