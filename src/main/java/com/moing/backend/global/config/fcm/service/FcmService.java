@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -55,16 +57,20 @@ public class FcmService {
                         .build())
                 .build();
 
+        Map<String, String> additionalData = new HashMap<>();
+        additionalData.put("path", toSingleRequest.getPath());
+        additionalData.put("idInfo", toSingleRequest.getIdInfo());
+
         Message message = Message.builder()
                 .setToken(toSingleRequest.getRegistrationToken())
                 .setNotification(notification)
                 .setAndroidConfig(androidConfig) // Applying Android configuration
                 .setApnsConfig(apnsConfig) // Applying APNs configuration
+                .putAllData(additionalData)
                 .build();
 
         try {
             String response = firebaseMessaging.send(message);
-//            saveSingleAlarmHistoryUseCase.saveAlarmHistory(toSingleRequest.getMemberId(), toSingleRequest.getIdInfo(), toSingleRequest.getTitle(), toSingleRequest.getBody(), toSingleRequest.getName(), toSingleRequest.getAlarmType(), toSingleRequest.getPath());
             return new SingleResponse(response);
         } catch (FirebaseMessagingException e) {
             throw handleException(e);
@@ -103,11 +109,16 @@ public class FcmService {
                         .build())
                 .build();
 
+        Map<String, String> additionalData = new HashMap<>();
+        additionalData.put("path", toMultiRequest.getPath());
+        additionalData.put("idInfo", toMultiRequest.getIdInfo());
+
         MulticastMessage message = MulticastMessage.builder()
                 .addAllTokens(fcmTokens)
                 .setNotification(notification)
                 .setAndroidConfig(androidConfig) // Applying Android configuration
                 .setApnsConfig(apnsConfig) // Applying APNs configuration
+                .putAllData(additionalData)
                 .build();
 
         try {
