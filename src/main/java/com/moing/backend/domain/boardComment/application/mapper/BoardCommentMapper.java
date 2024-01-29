@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BoardCommentMapper {
-    public BoardComment toBoardComment(TeamMember teamMember, Board board, CreateBoardCommentRequest createBoardCommentRequest, boolean isLeader) {
+    public static BoardComment toBoardComment(TeamMember teamMember, Board board, CreateBoardCommentRequest createBoardCommentRequest, boolean isLeader) {
         BoardComment boardComment= BoardComment.builder()
                 .content(createBoardCommentRequest.getContent())
                 .isLeader(isLeader)

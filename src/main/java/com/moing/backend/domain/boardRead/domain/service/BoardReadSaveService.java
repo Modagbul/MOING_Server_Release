@@ -18,13 +18,11 @@ public class BoardReadSaveService {
 
 
     public void saveBoardRead(Board board, BoardRead boardRead) {
-        synchronized (this) {
-            List<BoardRead> existingBoardReads = boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam());
+        List<BoardRead> existingBoardReads = boardReadRepository.findBoardReadByBoardAndMemberAndTeam(board, boardRead.getMember(), boardRead.getTeam());
 
-            if (existingBoardReads.isEmpty()) {
-                boardRead.updateBoard(board);
-                boardReadRepository.save(boardRead);
-            }
+        if (existingBoardReads.isEmpty()) {
+            boardRead.updateBoard(board);
+            boardReadRepository.save(boardRead);
         }
     }
 }
