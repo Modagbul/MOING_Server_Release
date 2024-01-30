@@ -6,16 +6,12 @@ import com.moing.backend.domain.history.application.service.SaveMultiAlarmHistor
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveScheduleQueryService;
-import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
-import com.moing.backend.global.config.fcm.dto.event.MultiFcmEvent;
 import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
-import com.moing.backend.global.config.fcm.service.FcmService;
+import com.moing.backend.global.config.fcm.service.MultiMessageSender;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +33,7 @@ public class MissionRemindAlarmUseCase {
     private final MissionQueryService missionQueryService;
     private final ApplicationEventPublisher eventPublisher;
 
-    private final FcmService fcmService;
+    private final MultiMessageSender multiMessageSender;
     private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
 
     String REMIND_NAME = "미션 리마인드";
@@ -58,7 +54,7 @@ public class MissionRemindAlarmUseCase {
 //                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
 
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         }
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
             saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()),"",title,message,REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
@@ -108,7 +104,7 @@ public class MissionRemindAlarmUseCase {
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
 
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         }
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
             saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
@@ -130,7 +126,7 @@ public class MissionRemindAlarmUseCase {
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(repeatMissionByStatus);
 
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         }
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
             saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
