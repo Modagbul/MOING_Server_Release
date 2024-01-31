@@ -4,7 +4,6 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
-import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.domain.team.domain.entity.Team;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public class TeamMapper {
 
     public static Team createTeam(CreateTeamRequest createTeamRequest, Member member) {
         return Team.builder()
-                .category(Enum.valueOf(Category.class, createTeamRequest.getCategory()))
+                .category(createTeamRequest.getCategory())
                 .name(createTeamRequest.getName())
                 .introduction(createTeamRequest.getIntroduction())
                 .promise(createTeamRequest.getPromise())

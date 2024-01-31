@@ -64,7 +64,7 @@ public class MissionCreateUseCase {
         Team team = teamGetService.getTeamByTeamId(teamId);
 
         return MissionRecommendRes.builder()
-                .category(team.getCategory().name())
+                .category(team.getCategory())
                 .build();
     }
 

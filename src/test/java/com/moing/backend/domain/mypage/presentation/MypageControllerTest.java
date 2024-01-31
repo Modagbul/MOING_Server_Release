@@ -8,7 +8,6 @@ import com.moing.backend.domain.mypage.application.dto.response.GetMyPageRespons
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.mypage.application.dto.response.GetProfileResponse;
 import com.moing.backend.domain.mypage.application.service.*;
-import com.moing.backend.domain.team.domain.constant.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -117,14 +116,14 @@ public class MypageControllerTest extends CommonControllerTest {
     @Test
     public void get_mypage() throws Exception{
         //given
-        List<Category> categoryList=new ArrayList<>();
-        categoryList.add(Category.SPORTS);
+        List<String> categoryList=new ArrayList<>();
+        categoryList.add("SPORTS");
 
         List<GetMyPageTeamBlock> getMyPageTeamBlocks=new ArrayList<>();
         GetMyPageTeamBlock blocks= GetMyPageTeamBlock.builder()
                 .teamId(1L)
                 .teamName("소모임이름")
-                .category(Category.SPORTS)
+                .category("SPORTS")
                 .profileImgUrl("프로필 이미지 url")
                 .build();
         getMyPageTeamBlocks.add(blocks);
