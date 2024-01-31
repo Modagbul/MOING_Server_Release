@@ -1,6 +1,5 @@
 package com.moing.backend.domain.team.application.dto.response;
 
-import com.moing.backend.domain.team.domain.constant.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,7 @@ public class TeamInfo {
     private LocalDateTime deletionTime;
     private String teamName; //소모임 이름
     private Integer numOfMember; //소모임원 수
-    private Category category; //카테고리
+    private String category; //카테고리
     private String introduction; //소개
     private Long currentUserId; //현재 유저 아이디
     private List<TeamMemberInfo> teamMemberInfoList = new ArrayList<>(); //소모임원 정보

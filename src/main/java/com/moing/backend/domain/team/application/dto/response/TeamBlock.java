@@ -1,6 +1,5 @@
 package com.moing.backend.domain.team.application.dto.response;
 
-import com.moing.backend.domain.team.domain.constant.Category;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,13 +28,13 @@ public class TeamBlock {
     private String profileImgUrl;
 
     @QueryProjection
-    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, Category category, LocalDateTime deletionTime, String profileImgUrl) {
+    public TeamBlock(Long teamId, LocalDateTime approvalTime, Integer levelOfFire, String teamName, Integer numOfMember, String category, LocalDateTime deletionTime, String profileImgUrl) {
         this.teamId=teamId;
         this.duration=calculateDuration(approvalTime);
         this.levelOfFire=levelOfFire;
         this.teamName=teamName;
         this.numOfMember=numOfMember;
-        this.category=category.getMessage();
+        this.category = category;
         this.startDate=approvalTime.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.deletionTime=deletionTime;
         this.profileImgUrl = profileImgUrl;
