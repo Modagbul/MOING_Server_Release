@@ -28,7 +28,7 @@ public class DisbandTeamUseCase {
         checkLeaderUseCase.validateTeamLeader(member, team);
         team.deleteTeam();
         if (team.getNumOfMember() == 1) { // 1명인 경우 3일 유예기간 없음
-            TeamMember teamMember = teamMemberGetService.getTeamMember(member, team);
+            TeamMember teamMember = teamMemberGetService.getTeamMemberNotDeleted(member, team);
             teamMember.deleteMember(team);
         }
         return new DeleteTeamResponse(teamId);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BoardReadMapper {
-    public BoardRead toBoardRead(Team team, Member member){
+    public static BoardRead toBoardRead(Team team, Member member){
         BoardRead boardRead=new BoardRead();
         boardRead.updateTeam(team);
         boardRead.updateMember(member);

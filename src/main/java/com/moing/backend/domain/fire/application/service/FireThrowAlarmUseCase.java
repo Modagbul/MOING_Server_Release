@@ -5,9 +5,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.teamMember.domain.service.TeamMemberGetService;
 import com.moing.backend.global.config.fcm.dto.event.SingleFcmEvent;
-import com.moing.backend.global.config.fcm.service.FcmService;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,9 +22,7 @@ import static com.moing.backend.global.config.fcm.constant.FireThrowMessage.*;
 @RequiredArgsConstructor
 public class FireThrowAlarmUseCase {
 
-    private final FcmService fcmService;
     private final ApplicationEventPublisher eventPublisher;
-    private final TeamMemberGetService teamMemberGetService;
 
     public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission) {
 

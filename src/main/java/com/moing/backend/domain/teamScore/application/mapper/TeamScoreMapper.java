@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TeamScoreMapper {
 
-    public TeamScore mapToTeamScore(Team team) {
+    public static TeamScore mapToTeamScore(Team team) {
         return TeamScore.builder()
                 .score(0L)
                 .level(1L)

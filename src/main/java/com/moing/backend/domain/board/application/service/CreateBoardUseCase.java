@@ -27,7 +27,6 @@ public class CreateBoardUseCase {
 
     private final BoardSaveService boardSaveService;
     private final CheckLeaderUseCase checkLeaderUseCase;
-    private final BoardMapper boardMapper;
     private final CreateBoardReadUseCase createBoardReadUseCase;
     private final BaseService baseService;
     private final SendBoardAlarmUseCase sendBoardAlarmUseCase;
@@ -39,7 +38,7 @@ public class CreateBoardUseCase {
         //1, 게시글 생성, 저장
         BaseServiceResponse data=baseService.getCommonData(socialId, teamId);
         boolean isLeader = checkLeaderUseCase.isTeamLeader(data.getMember(), data.getTeam()); //작성자 리더 여부
-        Board board=boardSaveService.saveBoard(boardMapper.toBoard(data.getTeamMember(), data.getTeam(), createBoardRequest, isLeader));
+        Board board=boardSaveService.saveBoard(BoardMapper.toBoard(data.getTeamMember(), data.getTeam(), createBoardRequest, isLeader));
 
         //2. 읽음 처리 - 생성한 사람은 무조건 읽음
         createBoardReadUseCase.createBoardRead(data.getTeam(), data.getMember(), board);

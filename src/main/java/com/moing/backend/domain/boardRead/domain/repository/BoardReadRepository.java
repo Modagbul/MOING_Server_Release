@@ -13,6 +13,5 @@ import java.util.Optional;
 
 public interface BoardReadRepository extends JpaRepository<BoardRead, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<BoardRead> findBoardReadByBoardAndMemberAndTeam(Board board, Member member, Team team);
 }

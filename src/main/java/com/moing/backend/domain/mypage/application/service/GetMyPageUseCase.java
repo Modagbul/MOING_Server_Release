@@ -20,16 +20,15 @@ public class GetMyPageUseCase {
 
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
-    private final MyPageMapper myPageMapper;
 
     @Transactional(readOnly = true)
     public GetMyPageResponse getMyPageResponse(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         List<GetMyPageTeamBlock> getMyPageTeamBlocks = teamGetService.getMyPageTeamBlockByMemberId(member.getMemberId());
-        return myPageMapper.toGetMyPageResponse(member, calculateCategory(getMyPageTeamBlocks), getMyPageTeamBlocks);
+        return MyPageMapper.toGetMyPageResponse(member, calculateCategory(getMyPageTeamBlocks), getMyPageTeamBlocks);
     }
 
-    private List<Category> calculateCategory(List<GetMyPageTeamBlock> getMyPageTeamBlocks) {
+    private static List<Category> calculateCategory(List<GetMyPageTeamBlock> getMyPageTeamBlocks) {
         return getMyPageTeamBlocks.stream()
                 .map(GetMyPageTeamBlock::getCategory)
                 .distinct()
