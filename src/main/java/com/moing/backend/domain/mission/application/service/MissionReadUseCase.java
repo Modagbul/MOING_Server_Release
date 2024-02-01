@@ -28,7 +28,7 @@ public class MissionReadUseCase {
 
     public String getTeamCategory(Long teamId) {
         Team team = teamGetService.getTeamByTeamId(teamId);
-        return team.getCategory().name();
+        return team.getCategory();
     }
 
 }
