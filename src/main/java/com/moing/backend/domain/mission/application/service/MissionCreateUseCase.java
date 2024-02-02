@@ -28,51 +28,45 @@ public class MissionCreateUseCase {
 
     private final MissionSaveService missionSaveService;
     private final MissionQueryService missionQueryService;
-    private final TeamGetService teamGetService;
-    private final MemberGetService memberGetService;
     private final SendMissionCreateAlarmUseCase sendMissionCreateAlarmUseCase;
 
     private final BaseService baseService;
 
-    public MissionCreateRes createMission(String userSocialId, Long teamId, MissionReq missionReq) {
+    public MissionCreateRes createMission(String socialId, Long teamId, MissionReq missionReq) {
 
-        BaseServiceResponse commonData = baseService.getCommonData(userSocialId, teamId);
+        BaseServiceResponse commonData = baseService.getCommonData(socialId, teamId);
         Member member = commonData.getMember();
         Team team = commonData.getTeam();
 
-        // 소모임 장 여부 확인
-        if (member.getMemberId().equals(team.getLeaderId())) {
+        Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
+        mission.setTeam(team);
 
-            Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
-
-            if (mission.getType() == MissionType.REPEAT && missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
-                throw new NoMoreCreateMission();
+        if (mission.getType().equals(MissionType.REPEAT)) {
+            // 반복 미션 생성일 경우 소모임장만 가능
+            if (!(member.getMemberId().equals(team.getLeaderId()))) {
+                throw new NoAccessCreateMission();
+            // 반복미션은 최대 2개 생성 가능
+            } else if (missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
+                throw new NoAccessCreateMission();
             }
-            mission.setTeam(team);
+            // 반복미션 유예 해제
+            mission.updateStatus(MissionStatus.ONGOING);
 
-            // 1. 반복미션 유예 해제
-            if (mission.getType().equals(MissionType.REPEAT)) {
-                mission.updateStatus(MissionStatus.ONGOING);
-            }
-            // 2. 미션 저장
-            missionSaveService.save(mission);
-
-            // 3. 알림 보내기 - 미션 생성
-            sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
-
-            return MissionMapper.mapToMissionCreateRes(mission);
         }
-        else{
-            throw new NoAccessCreateMission();
-        }
+        // 2. 미션 저장
+        missionSaveService.save(mission);
 
+        // 3. 알림 보내기 - 미션 생성
+        sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
 
+        return MissionMapper.mapToMissionCreateRes(mission);
     }
 
 
     public Boolean getIsLeader(String socialId, Long teamId) {
-        Member member = memberGetService.getMemberBySocialId(socialId);
-        Team team = teamGetService.getTeamByTeamId(teamId);
+        BaseServiceResponse commonData = baseService.getCommonData(socialId, teamId);
+        Member member = commonData.getMember();
+        Team team = commonData.getTeam();
 
         return member.getMemberId().equals(team.getLeaderId());
 

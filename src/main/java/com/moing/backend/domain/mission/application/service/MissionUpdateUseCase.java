@@ -11,6 +11,7 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
+import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,10 +44,10 @@ public class MissionUpdateUseCase {
 
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-
         Mission findMission = missionQueryService.findMissionById(missionId);
+        Team team = findMission.getTeam();
 
-        if (findMission.getTeam().getLeaderId().equals(member.getMemberId())) {
+        if (team.getLeaderId().equals(member.getMemberId())) {
             findMission.updateStatus(MissionStatus.END);
             findMission.updateDueTo(LocalDateTime.now());
         } else {
