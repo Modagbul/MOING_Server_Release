@@ -15,6 +15,8 @@ import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
 import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.global.response.BaseServiceResponse;
+import com.moing.backend.global.utils.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,26 +32,33 @@ public class MissionCreateUseCase {
     private final MemberGetService memberGetService;
     private final SendMissionCreateAlarmUseCase sendMissionCreateAlarmUseCase;
 
+    private final BaseService baseService;
+
     public MissionCreateRes createMission(String userSocialId, Long teamId, MissionReq missionReq) {
 
-        Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Team team = teamGetService.getTeamByTeamId(teamId);
+        BaseServiceResponse commonData = baseService.getCommonData(userSocialId, teamId);
+        Member member = commonData.getMember();
+        Team team = commonData.getTeam();
 
-        // 소모임 장 확인
+        // 소모임 장 여부 확인
         if (member.getMemberId().equals(team.getLeaderId())) {
+
             Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
-            // teamRepository 변경 예정
 
             if (mission.getType() == MissionType.REPEAT && missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
                 throw new NoMoreCreateMission();
             }
             mission.setTeam(team);
+
+            // 1. 반복미션 유예 해제
+            if (mission.getType().equals(MissionType.REPEAT)) {
+                mission.updateStatus(MissionStatus.ONGOING);
+            }
+            // 2. 미션 저장
             missionSaveService.save(mission);
 
-            // 단일 미션 최초 1회 알림
-            if (mission.getType().equals(MissionType.ONCE)) {
-                sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
-            }
+            // 3. 알림 보내기 - 미션 생성
+            sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
 
             return MissionMapper.mapToMissionCreateRes(mission);
         }
@@ -58,14 +67,6 @@ public class MissionCreateUseCase {
         }
 
 
-    }
-
-    public MissionRecommendRes getCategoryByTeam(Long teamId) {
-        Team team = teamGetService.getTeamByTeamId(teamId);
-
-        return MissionRecommendRes.builder()
-                .category(team.getCategory())
-                .build();
     }
 
 
