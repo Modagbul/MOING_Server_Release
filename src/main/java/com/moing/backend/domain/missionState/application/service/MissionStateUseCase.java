@@ -36,27 +36,17 @@ public class MissionStateUseCase {
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
 
-    public boolean isAbleToEnd(Long missionId) {
+    /*
+     모든 모임원이 미션을 완료했는지 여부 확인
+     */
+    public boolean isAbleToEnd(Mission mission) {
 
-        Mission mission = missionQueryService.findMissionById(missionId);
         Long total = totalPeople(mission);
         Long done = donePeople(mission);
 
-        return done.equals(total);
+        return done > total;
 
     }
-    public boolean isAbleToScoreUp(Long missionId) {
-
-        Mission mission = missionQueryService.findMissionById(missionId);
-        Long total = totalPeople(mission);
-        Long done = donePeople(mission);
-
-        log.info("done/total -> "+ done+ total);
-
-        return done >= total;
-
-    }
-
 
     public Long donePeople(Mission mission) {
         return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
@@ -64,19 +54,22 @@ public class MissionStateUseCase {
 
     public Long totalPeople(Mission mission) {
         return Long.valueOf(mission.getTeam().getNumOfMember());
-
     }
 
     public void updateMissionState(Member member, Mission mission, MissionArchive missionArchive) {
 
-        // 마지막 인증 시
-        if (isAbleToEnd(mission.getId())) {
-            mission.updateStatus(MissionStatus.SUCCESS);
-        }
+        MissionType missionType = mission.getType();
+        Long missionId = mission.getId();
+
         missionStateSaveService.saveMissionState(member,mission, missionArchive.getStatus());
 
-        if (isAbleToScoreUp(mission.getId())) {
-            teamScoreLogicUseCase.updateTeamScore(mission.getId());
+        if (missionType == MissionType.ONCE) {
+
+            if (isAbleToEnd(mission)) {
+                mission.updateStatus(MissionStatus.SUCCESS);
+                teamScoreLogicUseCase.updateTeamScore(missionId);
+            }
+
         }
 
     }

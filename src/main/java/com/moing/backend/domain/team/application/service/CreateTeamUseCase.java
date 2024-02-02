@@ -25,21 +25,27 @@ public class CreateTeamUseCase {
     private final MemberGetService memberGetService;
     private final TeamSaveService teamSaveService;
     private final TeamMemberSaveService teamMemberSaveService;
-    private final TeamMapper teamMapper;
     private final TeamScoreSaveService teamScoreSaveService;
-    private final TeamScoreMapper teamScoreMapper;
     private final ApplicationEventPublisher eventPublisher;
 
     public CreateTeamResponse createTeam(CreateTeamRequest createTeamRequest, String socialId){
         Member member = memberGetService.getMemberBySocialId(socialId);
-        Team team=teamMapper.createTeam(createTeamRequest, member);
-        teamSaveService.saveTeam(team);
-        teamMemberSaveService.addTeamMember(team, member);
-        //====지워야 함 (테스트 용)=====
-        team.approveTeam();
-        //====지워야 함 (테스트 용)=====
-        teamScoreSaveService.save(teamScoreMapper.mapToTeamScore(team)); // 팀스코어 엔티티 생성
-        eventPublisher.publishEvent(new TeamCreateEvent(team.getName(), team.getLeaderId()));
+        Team team = createAndSaveTeam(createTeamRequest, member);
+        publishTeamCreateEvent(team);
         return new CreateTeamResponse(team.getTeamId());
     }
+
+    private Team createAndSaveTeam(CreateTeamRequest createTeamRequest, Member member) {
+        Team team = TeamMapper.createTeam(createTeamRequest, member);
+        teamSaveService.saveTeam(team);
+        teamMemberSaveService.addTeamMember(team, member);
+        team.approveTeam(); // 승인 처리
+        teamScoreSaveService.save(TeamScoreMapper.mapToTeamScore(team));
+        return team;
+    }
+
+    private void publishTeamCreateEvent(Team team) {
+        eventPublisher.publishEvent(new TeamCreateEvent(team.getName(), team.getLeaderId()));
+    }
 }
+

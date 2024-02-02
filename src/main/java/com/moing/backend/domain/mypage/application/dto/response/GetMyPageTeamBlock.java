@@ -1,7 +1,9 @@
 package com.moing.backend.domain.mypage.application.dto.response;
 
-import com.moing.backend.domain.team.domain.constant.Category;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
@@ -10,6 +12,6 @@ import lombok.*;
 public class GetMyPageTeamBlock {
     private Long teamId;
     private String teamName;
-    private Category category;
+    private String category;
     private String profileImgUrl;
 }

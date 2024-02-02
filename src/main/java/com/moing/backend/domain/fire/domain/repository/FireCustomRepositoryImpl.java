@@ -3,6 +3,7 @@ package com.moing.backend.domain.fire.domain.repository;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.domain.entity.Fire;
 import com.moing.backend.domain.member.domain.entity.Member;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,7 +12,10 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +56,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
 
     public Optional<List<FireReceiveRes>> getFireReceivers(Long teamId, Long missionId, Long memberId) {
 
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
         JPQLQuery<Long> missionDonePeople = select(missionArchive.member.memberId)
                 .from(missionArchive, mission)
                 .where(missionArchive.mission.id.eq(missionId),
@@ -63,7 +69,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                         mission.number)
                 .having(
                         missionArchive.mission.id.eq(missionId),
-                        missionArchive.count.max().goe(mission.number)
+                        missionArchive.count.max().goe(mission.number),
+                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
                 );
 
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1); // 현재 시간에서 1시간을 뺀 시간
@@ -97,6 +104,20 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                 )
                 .fetch());
 
+    }
+
+
+    private BooleanExpression createRepeatTypeConditionByArchive() {
+        LocalDate now = LocalDate.now();
+        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+
+        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
+        return dateInRange.and(dateInRange);
     }
 
 }

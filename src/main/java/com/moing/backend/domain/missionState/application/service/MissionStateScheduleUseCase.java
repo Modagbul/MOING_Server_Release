@@ -1,6 +1,7 @@
 package com.moing.backend.domain.missionState.application.service;
 
 import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUseCase;
+import com.moing.backend.domain.mission.application.service.SendMissionStartAlarmUseCase;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
@@ -38,6 +39,8 @@ public class MissionStateScheduleUseCase {
 
     private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
+    private final SendMissionStartAlarmUseCase sendMissionStartAlarmUseCase;
+
     /**
      * 반복미션 마감
      * 일요일 마감 루틴
@@ -65,10 +68,10 @@ public class MissionStateScheduleUseCase {
 
         List<Mission> missionByDueTo = missionQueryService.findMissionByDueTo();
 
-        missionByDueTo.stream().forEach(mission -> {
+        for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
             teamScoreLogicUseCase.updateTeamScore(mission.getId());
-        });
+        }
 
     }
 
@@ -80,7 +83,11 @@ public class MissionStateScheduleUseCase {
     public void RepeatMissionStart() {
         List<Mission> startMission = missionQueryService.findRepeatMissionByStatus(MissionStatus.WAIT);
         startMission.forEach(
-            mission -> mission.updateStatus(MissionStatus.ONGOING)
+            mission -> {
+                // 미션 시작 알림
+                sendMissionStartAlarmUseCase.sendRepeatMissionStartAlarm(mission);
+                mission.updateStatus(MissionStatus.ONGOING);
+            }
         );
     }
 

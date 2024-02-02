@@ -24,8 +24,15 @@ public class TeamMemberGetService {
     }
 
     public TeamMember getTeamMember(Member member, Team team){
-        return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(()-> new NotFoundByTeamIdException());
+        return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(NotFoundByTeamIdException::new);
     }
+
+    public TeamMember getTeamMemberNotDeleted(Member member, Team team) {
+        return teamMemberRepository.findTeamMemberByTeamAndMember(team, member)
+                .filter(teamMember -> !teamMember.isDeleted())
+                .orElseThrow(NotFoundByTeamIdException::new);
+    }
+
 
     public Optional<List<String>> getFcmTokensExceptMe(Long teamId, Long memberId) {
         return teamMemberRepository.findFcmTokensByTeamIdAndMemberId(teamId, memberId);

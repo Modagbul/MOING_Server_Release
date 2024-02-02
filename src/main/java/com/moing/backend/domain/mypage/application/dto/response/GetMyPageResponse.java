@@ -1,7 +1,5 @@
 package com.moing.backend.domain.mypage.application.dto.response;
 
-import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.team.domain.constant.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +16,6 @@ public class GetMyPageResponse {
     private String profileImage;
     private String nickName;
     private String introduction;
-    private List<Category> categories=new ArrayList<>();
+    private List<String> categories=new ArrayList<>();
     private List<GetMyPageTeamBlock> getMyPageTeamBlocks = new ArrayList<>();
 }
