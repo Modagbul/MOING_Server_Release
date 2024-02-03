@@ -55,22 +55,6 @@ public class MissionStateScheduleUseCase {
 
     }
 
-    /**
-     * 미션 시작
-     * 월요일 아침
-     */
-    @Scheduled(cron = "0 0 0 * * MON")
-    public void RepeatMissionStart() {
-        List<Mission> startMission = missionQueryService.findRepeatMissionByStatus(MissionStatus.WAIT);
-        startMission.forEach(
-            mission -> {
-                // 미션 시작 알림
-                sendMissionStartAlarmUseCase.sendRepeatMissionStartAlarm(mission);
-                mission.updateStatus(MissionStatus.ONGOING);
-            }
-        );
-    }
-
 
     @Scheduled(cron = "0 0 8 * * *")
     public void MissionRemindAlarm() {
