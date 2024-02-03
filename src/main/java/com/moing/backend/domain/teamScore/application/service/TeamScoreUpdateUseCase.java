@@ -26,7 +26,6 @@ public class TeamScoreUpdateUseCase {
     private final TeamScoreQueryService teamScoreQueryService;
 
     private final float SCORE_BASE_NUM = 10;
-
     private final long BONUS_SCORE_ONCE_MISSION = 1L;
     private final long BONUS_SCORE_REPEAT_MISSION = 2L;
 
@@ -48,7 +47,7 @@ public class TeamScoreUpdateUseCase {
 
     private Long calculateScoreByArchive(Integer numOfMember) {
         float allPeople = Float.valueOf(numOfMember);
-        return (long) ((SCORE_BASE_NUM/allPeople) * 2);
+        return Math.round(SCORE_BASE_NUM/allPeople) * 2L;
     }
 
     /*
