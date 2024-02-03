@@ -26,21 +26,12 @@ public class TeamScoreGetUseCase {
 
     public TeamScoreRes getTeamScoreInfo(Long teamId) {
 
+        TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(teamId);
         return TeamScoreRes.builder()
-                .score(getScore(teamId))
-                .level(getLevel(teamId))
+                .score(teamScore.getScore())
+                .level(teamScore.getLevel())
                 .build()
         ;
     }
-
-    private Long getScore(Long teamId) {
-        return teamScoreQueryService.findTeamScoreByTeam(teamId).getScore();
-    }
-
-    private Long getLevel(Long teamId) {
-        return teamScoreQueryService.findTeamScoreByTeam(teamId).getLevel();
-    }
-
-
 
 }
