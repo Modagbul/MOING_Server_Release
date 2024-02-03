@@ -14,16 +14,16 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDele
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
-import com.moing.backend.domain.missionArchive.exception.NotYetMissionArchiveException;
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -91,9 +91,12 @@ public class MissionArchiveCreateUseCase {
             missionArchiveRes.updateCount(doneSingleArchives);
 
         }
-
-        gainBonusScore(mission,newArchive);
-        teamScoreUpdateUseCase.gainScoreByArchive(mission);
+        // TODO : 소모임원 3명 이상일 경우 보너스 점수
+        if (mission.getTeam().getNumOfMember() > 2) {
+            gainBonusScore(mission, newArchive);
+        }
+        // TODO : 미션 인증 1회당 점수
+        teamScoreUpdateUseCase.gainScoreOfArchive(mission);
 
         return missionArchiveRes;
     }
@@ -109,12 +112,15 @@ public class MissionArchiveCreateUseCase {
 
             if (isAbleToFinishOnceMission(mission)) {
                 mission.updateStatus(MissionStatus.SUCCESS);
-                teamScoreUpdateUseCase.gainScoreByBonus(mission);
+                teamScoreUpdateUseCase.gainScoreOfBonus(mission);
+                log.info("isAbleToFinishOnceMission");
             }
 
         } else {
             if (isAbleToFinishRepeatMission(mission, missionArchive)) {
-                teamScoreUpdateUseCase.gainScoreByBonus(mission);
+                teamScoreUpdateUseCase.gainScoreOfBonus(mission);
+                log.info("isAbleToFinishRepeatMission");
+
             }
 
         }
@@ -131,7 +137,7 @@ public class MissionArchiveCreateUseCase {
         Integer total = team.getNumOfMember();
         Long done = missionArchiveQueryService.stateCountByMissionId(mission.getId());
 
-        return done > total;
+        return done >= total;
 
     }
 
