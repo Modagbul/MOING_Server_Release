@@ -2,6 +2,7 @@ package com.moing.backend.domain.teamScore.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreGetUseCase;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +25,7 @@ public class TeamScoreControllerTest extends CommonControllerTest {
 
 
     @MockBean
-    private TeamScoreUpdateUseCase teamScoreUpdateUseCase;
+    private TeamScoreGetUseCase teamScoreGetUseCase;
 
     @Test
     public void 팀별_불_레벨_경험치_조회() throws Exception {
@@ -35,7 +36,7 @@ public class TeamScoreControllerTest extends CommonControllerTest {
                 .level(1L)
                 .build();
 
-        given(teamScoreUpdateUseCase.getTeamScoreInfo(any())).willReturn(output);
+        given(teamScoreGetUseCase.getTeamScoreInfo(any())).willReturn(output);
 
         Long teamId = 1L;
         //when
