@@ -16,6 +16,7 @@ public class GatherRepeatMissionRes {
     private String totalNum;
     private String doneNum;
     private String status;
+    private Boolean isRead;
 
 
 }

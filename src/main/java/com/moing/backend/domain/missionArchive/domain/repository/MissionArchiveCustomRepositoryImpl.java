@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
@@ -13,6 +14,8 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStat
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
+import com.moing.backend.domain.missionRead.domain.entity.QMissionRead;
+import com.moing.backend.domain.missionRead.domain.repository.MissionReadRepositoryUtils;
 import com.moing.backend.domain.team.domain.entity.QTeam;
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.querydsl.core.Tuple;
@@ -40,8 +43,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.board.domain.entity.QBoard.board;
+import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
+import static com.moing.backend.domain.member.domain.entity.QMember.member;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
+import static com.moing.backend.domain.missionRead.domain.entity.QMissionRead.missionRead;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
@@ -61,6 +68,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,
                                                                              OrderCondition orderCondition) {
+
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -68,7 +78,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.dueTo.stringValue(),
                         mission.title,
                         mission.status.stringValue(),
-                        mission.type.stringValue()
+                        mission.type.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .where(mission.notIn
@@ -92,6 +103,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,
                                                                            OrderCondition orderCondition) {
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -99,7 +112,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.dueTo.stringValue(),
                         mission.title,
                         missionArchive.status.stringValue(),
-                        mission.type.stringValue()
+                        mission.type.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .join(mission.missionArchiveList,missionArchive)
@@ -259,6 +273,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
 
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
+
         BooleanExpression dateInRange = createRepeatTypeConditionByState();
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
@@ -268,7 +285,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionState.count(),
                         mission.number,
                         mission.way.stringValue(),
-                        mission.status.stringValue()
+                        mission.status.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .leftJoin(missionState)

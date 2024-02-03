@@ -7,14 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class GatherSingleMissionRes {
+public class MissionConfirmRes {
     private Long missionId;
-    private Long teamId;
-    private String teamName;
-    private String missionTitle;
-    private String dueTo;
-    private String status;
-    private Boolean isRead;
-
-
 }

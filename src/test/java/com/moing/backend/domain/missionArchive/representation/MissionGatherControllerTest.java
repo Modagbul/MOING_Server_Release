@@ -1,11 +1,11 @@
 package com.moing.backend.domain.missionArchive.representation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.mission.application.dto.res.*;
+import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
+import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.service.MissionGatherBoardUseCase;
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchivePhotoRes;
 import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
-import com.moing.backend.domain.missionArchive.application.service.MissionArchiveReadUseCase;
 import com.moing.backend.domain.missionArchive.presentation.MissionGatherController;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -24,9 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 
 @WebMvcTest(MissionGatherController.class)
 public class MissionGatherControllerTest extends CommonControllerTest {
@@ -46,6 +45,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .teamName("team name")
                 .missionTitle("mission title")
                 .status("WAIT/ONGOING/END/FAIL/SUCCESS")
+                .isRead(true)
                 .build());
 
         given(missionGatherBoardUseCase.getAllActiveSingleMissions(any())).willReturn(output);
@@ -75,7 +75,9 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].dueTo").description("미션 마감 시각"),
                                         fieldWithPath("data[].teamName").description("팀 이름"),
                                         fieldWithPath("data[].missionTitle").description("미션 제목"),
-                                        fieldWithPath("data[].status").description("미션 상태")
+                                        fieldWithPath("data[].status").description("미션 상태"),
+                                        fieldWithPath("data[].isRead").description("미션 읽음 여부")
+
 
                                 )
                         )
@@ -96,6 +98,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .doneNum("0")
                 .totalNum("0")
                 .status("WAIT/ONGOING/END/FAIL/SUCCESS")
+                .isRead(true)
                 .build());
 
         given(missionGatherBoardUseCase.getAllActiveRepeatMissions(any())).willReturn(output);
@@ -126,7 +129,8 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].missionTitle").description("미션 제목"),
                                         fieldWithPath("data[].doneNum").description("완료한 횟수"),
                                         fieldWithPath("data[].totalNum").description("전체 횟수"),
-                                        fieldWithPath("data[].status").description("미션 상태")
+                                        fieldWithPath("data[].status").description("미션 상태"),
+                                        fieldWithPath("data[].isRead").description("미션 읽음 여부")
 
 
                                 )
@@ -147,6 +151,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .teamName("team name")
                 .missionTitle("mission title")
                 .status("WAIT/ONGOING/END/FAIL/SUCCESS")
+                .isRead(true)
                 .build());
 
         given(missionGatherBoardUseCase.getTeamActiveSingleMissions(any(),any())).willReturn(output);
@@ -177,7 +182,9 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].dueTo").description("미션 마감 시각"),
                                         fieldWithPath("data[].teamName").description("팀 이름"),
                                         fieldWithPath("data[].missionTitle").description("미션 제목"),
-                                        fieldWithPath("data[].status").description("미션 상태")
+                                        fieldWithPath("data[].status").description("미션 상태"),
+                                        fieldWithPath("data[].isRead").description("미션 읽음 여부")
+
 
                                 )
                         )
@@ -198,6 +205,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .doneNum("0")
                 .totalNum("0")
                 .status("WAIT/ONGOING/END/FAIL/SUCCESS")
+                .isRead(true)
                 .build());
 
         given(missionGatherBoardUseCase.getTeamActiveRepeatMissions(any(),any())).willReturn(output);
@@ -229,7 +237,9 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].missionTitle").description("미션 제목"),
                                         fieldWithPath("data[].doneNum").description("완료한 횟수"),
                                         fieldWithPath("data[].totalNum").description("전체 횟수"),
-                                        fieldWithPath("data[].status").description("미션 상태")
+                                        fieldWithPath("data[].status").description("미션 상태"),
+                                        fieldWithPath("data[].isRead").description("미션 읽음 여부")
+
 
 
                                 )
