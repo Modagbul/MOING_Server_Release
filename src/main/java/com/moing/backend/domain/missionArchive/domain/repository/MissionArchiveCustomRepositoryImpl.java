@@ -470,6 +470,21 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     }
 
+    public Long getCountsByMissionId(Long missionId) {
+
+        BooleanExpression repeatTypeCondition = createRepeatTypeConditionByArchive();
+        // 기본 조건
+        BooleanExpression baseCondition = missionArchive.mission.id.eq(missionId);
+        // 조건 적용
+        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
+
+        return (long) queryFactory
+                .select(missionArchive)
+                .from(missionArchive)
+                .where(finalCondition)
+                .fetch().size();
+    }
+
 
 
 

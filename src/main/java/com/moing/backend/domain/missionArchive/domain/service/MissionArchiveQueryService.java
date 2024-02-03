@@ -116,6 +116,11 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findMissionStatusById(memberId, missionId, teamId);
     }
 
+    public Long stateCountByMissionId(Long missionId) {
+        return missionArchiveRepository.getCountsByMissionId(missionId);
+    }
+
+
 
 
 }

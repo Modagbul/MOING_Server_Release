@@ -6,18 +6,14 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
-import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -33,46 +29,20 @@ public class MissionStateUseCase {
     private final MissionStateSaveService missionStateSaveService;
     private final MissionStateDeleteService missionStateDeleteService;
 
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
+    private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
 
     /*
      모든 모임원이 미션을 완료했는지 여부 확인
      */
-    public boolean isAbleToEnd(Mission mission) {
-
-        Long total = totalPeople(mission);
-        Long done = donePeople(mission);
-
-        return done > total;
-
-    }
-
-    public Long donePeople(Mission mission) {
-        return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
-    }
-
-    public Long totalPeople(Mission mission) {
-        return Long.valueOf(mission.getTeam().getNumOfMember());
-    }
 
     public void updateMissionState(Member member, Mission mission, MissionArchive missionArchive) {
-
-        MissionType missionType = mission.getType();
-        Long missionId = mission.getId();
-
         missionStateSaveService.saveMissionState(member,mission, missionArchive.getStatus());
 
-        if (missionType == MissionType.ONCE) {
-
-            if (isAbleToEnd(mission)) {
-                mission.updateStatus(MissionStatus.SUCCESS);
-                teamScoreLogicUseCase.updateTeamScore(missionId);
-            }
-
-        }
-
     }
+
+
+
 
 
 }
