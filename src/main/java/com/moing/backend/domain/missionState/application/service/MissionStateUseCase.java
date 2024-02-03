@@ -6,18 +6,14 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
-import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -33,7 +29,7 @@ public class MissionStateUseCase {
     private final MissionStateSaveService missionStateSaveService;
     private final MissionStateDeleteService missionStateDeleteService;
 
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
+    private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
 
     /*
@@ -67,7 +63,7 @@ public class MissionStateUseCase {
 
             if (isAbleToEnd(mission)) {
                 mission.updateStatus(MissionStatus.SUCCESS);
-                teamScoreLogicUseCase.updateTeamScore(missionId);
+                teamScoreUpdateUseCase.gainScoreByBonus(missionId);
             }
 
         }

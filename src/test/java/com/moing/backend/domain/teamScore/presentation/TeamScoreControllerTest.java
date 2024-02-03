@@ -1,13 +1,8 @@
 package com.moing.backend.domain.teamScore.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionRes;
-import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
-import com.moing.backend.domain.mission.application.service.MissionGatherBoardUseCase;
-import com.moing.backend.domain.missionArchive.presentation.MissionGatherController;
 import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
-import org.assertj.core.util.Lists;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,10 +11,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
-import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.ACTIVE_REPEAT_MISSION_SUCCESS;
-import static com.moing.backend.domain.missionArchive.domain.constant.MissionArchiveResponseMessage.ACTIVE_SINGLE_MISSION_SUCCESS;
 import static com.moing.backend.domain.teamScore.presentation.constant.TeamScoreResponseMessage.GET_TEAMSCORE_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -33,7 +24,7 @@ public class TeamScoreControllerTest extends CommonControllerTest {
 
 
     @MockBean
-    private TeamScoreLogicUseCase teamScoreLogicUseCase;
+    private TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
     @Test
     public void 팀별_불_레벨_경험치_조회() throws Exception {
@@ -44,7 +35,7 @@ public class TeamScoreControllerTest extends CommonControllerTest {
                 .level(1L)
                 .build();
 
-        given(teamScoreLogicUseCase.getTeamScoreInfo(any())).willReturn(output);
+        given(teamScoreUpdateUseCase.getTeamScoreInfo(any())).willReturn(output);
 
         Long teamId = 1L;
         //when

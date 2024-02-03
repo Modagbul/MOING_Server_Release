@@ -19,8 +19,7 @@ import com.moing.backend.domain.missionState.application.service.MissionStateUse
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
-import com.moing.backend.global.utils.BaseService;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +41,7 @@ public class MissionArchiveCreateUseCase {
     private final MissionStateSaveService missionStateSaveService;
     private final MissionStateUseCase missionStateUseCase;
 
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
+    private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
     public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
@@ -50,8 +49,6 @@ public class MissionArchiveCreateUseCase {
         Long memberId = member.getMemberId();
 
         Mission mission = missionQueryService.findMissionById(missionId);
-        Team team = mission.getTeam();
-
         MissionArchive newArchive = MissionArchiveMapper.mapToMissionArchive(missionReq, member, mission);
 
         // 인증 완료한 미션인지 확인
@@ -63,10 +60,6 @@ public class MissionArchiveCreateUseCase {
 
         // 반복 미션일 경우
         if (mission.getType() == MissionType.REPEAT) {
-            // 아직 열리지 않은 반복미션 접근 제한
-            if (mission.getStatus() == MissionStatus.WAIT) {
-                throw new NotYetMissionArchiveException();
-            }
 
             // 당일 1회 인증만 가능
             if (missionArchiveQueryService.isAbleToArchiveToday(memberId, missionId)) {
@@ -83,7 +76,7 @@ public class MissionArchiveCreateUseCase {
         // 한번 미션일 경우
         else {
 
-            // 미션 생성 후 처음 미션 인증 시도 시 ongoing 으로 변경
+            // 미션 생성 후 처음 미션 인증 시도 시 ongoing 으로 변경 -> 읽음처리 구현되면 로직 삭제
             if(mission.getStatus() == MissionStatus.WAIT) {
                 mission.updateStatus(MissionStatus.ONGOING);
             }
@@ -94,10 +87,14 @@ public class MissionArchiveCreateUseCase {
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
             // 인증 후 n/n명 인증 성공 리턴값 업데이트
-            missionArchiveRes.updateCount(missionArchiveQueryService.findDoneSingleArchives(missionId));
-        }
-        return missionArchiveRes;
+            Long doneSingleArchives = missionArchiveQueryService.findDoneSingleArchives(missionId);
+            missionArchiveRes.updateCount(doneSingleArchives);
 
+        }
+
+        teamScoreUpdateUseCase.gainScoreByArchive(mission);
+
+        return missionArchiveRes;
     }
 
     // 이 미션을 완료 했는지

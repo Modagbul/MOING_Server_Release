@@ -5,11 +5,9 @@ import com.moing.backend.domain.mission.application.service.SendMissionStartAlar
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
-import com.moing.backend.domain.mission.domain.service.MissionSaveService;
-import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -19,7 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -37,25 +34,9 @@ public class MissionStateScheduleUseCase {
     private final MissionStateQueryService missionStateQueryService;
     private final MissionStateDeleteService missionStateDeleteService;
 
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
+    private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
     private final SendMissionStartAlarmUseCase sendMissionStartAlarmUseCase;
-
-    /**
-     * 반복미션 마감
-     * 일요일 마감 루틴
-     */
-    @Scheduled(cron = "0 59 23 * * SUN")
-    public void sundayRepeatMissionRoutine() {
-
-        // 모든 진행중인 반복 미션 모아서
-        List<Long> ongoingRepeatMissions = missionQueryService.findOngoingRepeatMissions();
-
-        // 팀 스코어 반영 ( 배치 처리 해야하는데 )
-        for (Long id : ongoingRepeatMissions) {
-            teamScoreLogicUseCase.updateTeamScore(id);
-        }
-    }
 
 
     /**
@@ -70,7 +51,6 @@ public class MissionStateScheduleUseCase {
 
         for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
-            teamScoreLogicUseCase.updateTeamScore(mission.getId());
         }
 
     }
