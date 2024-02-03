@@ -64,11 +64,11 @@ public class MissionArchiveCreateUseCase {
             // 당일 1회 인증만 가능
             if (missionArchiveQueryService.isAbleToArchiveToday(memberId, missionId)) {
                 throw new NoMoreMissionArchiveException();
-            } else {
-                newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
             }
 
+            newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
             missionStateUseCase.updateMissionState(member, mission, newArchive);
+
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
         }
@@ -82,8 +82,8 @@ public class MissionArchiveCreateUseCase {
             }
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
-
             missionStateUseCase.updateMissionState(member, mission, newArchive);
+
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
             // 인증 후 n/n명 인증 성공 리턴값 업데이트
@@ -92,14 +92,48 @@ public class MissionArchiveCreateUseCase {
 
         }
 
+        gainBonusScore(mission,newArchive);
         teamScoreUpdateUseCase.gainScoreByArchive(mission);
 
         return missionArchiveRes;
     }
 
     // 이 미션을 완료 했는지
-    public Boolean isDoneMission(Long memberId,Mission mission) {
+    private Boolean isDoneMission(Long memberId,Mission mission) {
         return missionArchiveQueryService.findMyDoneArchives(memberId, mission.getId()) >= mission.getNumber();
     }
+
+    private void gainBonusScore(Mission mission, MissionArchive missionArchive) {
+
+        if (mission.getType() == MissionType.ONCE) {
+
+            if (isAbleToFinishOnceMission(mission)) {
+                mission.updateStatus(MissionStatus.SUCCESS);
+                teamScoreUpdateUseCase.gainScoreByBonus(mission);
+            }
+
+        } else {
+            if (isAbleToFinishRepeatMission(mission, missionArchive)) {
+                teamScoreUpdateUseCase.gainScoreByBonus(mission);
+            }
+
+        }
+    }
+
+    private boolean isAbleToFinishRepeatMission(Mission mission, MissionArchive archive) {
+        return mission.getNumber() <= archive.getCount();
+    }
+
+    private boolean isAbleToFinishOnceMission(Mission mission) {
+
+        Team team = mission.getTeam();
+
+        Integer total = team.getNumOfMember();
+        Long done = missionArchiveQueryService.stateCountByMissionId(mission.getId());
+
+        return done > total;
+
+    }
+
 
 }

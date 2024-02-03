@@ -35,40 +35,14 @@ public class MissionStateUseCase {
     /*
      모든 모임원이 미션을 완료했는지 여부 확인
      */
-    public boolean isAbleToEnd(Mission mission) {
-
-        Long total = totalPeople(mission);
-        Long done = donePeople(mission);
-
-        return done > total;
-
-    }
-
-    public Long donePeople(Mission mission) {
-        return Long.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
-    }
-
-    public Long totalPeople(Mission mission) {
-        return Long.valueOf(mission.getTeam().getNumOfMember());
-    }
 
     public void updateMissionState(Member member, Mission mission, MissionArchive missionArchive) {
-
-        MissionType missionType = mission.getType();
-        Long missionId = mission.getId();
-
         missionStateSaveService.saveMissionState(member,mission, missionArchive.getStatus());
 
-        if (missionType == MissionType.ONCE) {
-
-            if (isAbleToEnd(mission)) {
-                mission.updateStatus(MissionStatus.SUCCESS);
-                teamScoreUpdateUseCase.gainScoreByBonus(missionId);
-            }
-
-        }
-
     }
+
+
+
 
 
 }

@@ -54,9 +54,8 @@ public class TeamScoreUpdateUseCase {
      * 보너스 점수 적립
      * 한번 미션은 소모임원 마지막 인증 시 호출, 반복 미션은 각 멤버 당 마지막 인증시 호출
      */
-    public void gainScoreByBonus(Long missionId) {
+    public void gainScoreByBonus(Mission mission) {
 
-        Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
         TeamScore teamScore = teamScoreQueryService.findTeamScoreByTeam(team.getTeamId());
 
