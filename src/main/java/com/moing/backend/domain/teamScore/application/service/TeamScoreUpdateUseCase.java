@@ -37,6 +37,7 @@ public class TeamScoreUpdateUseCase {
         Long gainScore = calculateScoreByArchive(numOfMember);
 
         teamScore.updateScore(gainScore);
+        teamScore.updateLevel();
 
     }
 
@@ -67,13 +68,9 @@ public class TeamScoreUpdateUseCase {
         } else {
             teamScore.updateScore(BONUS_SCORE_REPEAT_MISSION);
         }
+        teamScore.updateLevel();
 
     }
-
-
-
-
-
 
 
 
