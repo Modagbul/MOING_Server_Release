@@ -52,7 +52,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
-        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamIds(memberId, teams);
         BooleanExpression dateInRange = createRepeatTypeConditionByState();
 
         return Optional.ofNullable(queryFactory
@@ -63,8 +62,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.title,
                         mission.number.stringValue(),
                         missionState.count().stringValue(),
-                        mission.status.stringValue(),
-                        isReadExpression.as("isRead")
+                        mission.status.stringValue()
                 ))
                 .from(mission)
                         .leftJoin(missionState)
@@ -141,8 +139,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
 
-        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamIds(memberId, teams);
-
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
@@ -151,8 +147,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue(),
-                        mission.status.stringValue(),
-                        isReadExpression.as("isRead")
+                        mission.status.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(missionState).on(

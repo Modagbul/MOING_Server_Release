@@ -14,7 +14,6 @@ public class GatherSingleMissionRes {
     private String missionTitle;
     private String dueTo;
     private String status;
-    private Boolean isRead;
 
 
 }
