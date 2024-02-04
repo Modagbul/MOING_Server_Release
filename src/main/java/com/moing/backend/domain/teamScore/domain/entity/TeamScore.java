@@ -37,14 +37,14 @@ public class TeamScore extends BaseTimeEntity {
         this.score += score;
     }
 
-    public void levelUp() {
-        final int[] steps = {1, 2, 10, 25, 45, 100};
+    public void updateLevel() {
+        final int[] steps = {1, 2, 25, 45, 70, 120};
 
         for (int i = 5; i > 0; i--) {
             if (steps[i-1] <= this.level && this.level <= steps[i]) {
-                if ((20 + ((i-1) * 15)) <= score) {
+                if ((40 + ((i-1) * 15)) <= score) {
                     this.level+=1;
-                    this.score -= (20 + ((i-1) * 15));
+                    this.score -= (40 + ((i-1) * 15));
                     this.team.updateLevelOfFire();
                     return;
                 }

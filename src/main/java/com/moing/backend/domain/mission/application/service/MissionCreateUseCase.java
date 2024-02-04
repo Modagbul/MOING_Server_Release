@@ -13,8 +13,11 @@ import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
 import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
+import com.moing.backend.domain.missionRead.application.service.CreateMissionReadUseCase;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
+import com.moing.backend.global.response.BaseServiceResponse;
+import com.moing.backend.global.utils.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,52 +29,49 @@ public class MissionCreateUseCase {
 
     private final MissionSaveService missionSaveService;
     private final MissionQueryService missionQueryService;
-    private final TeamGetService teamGetService;
-    private final MemberGetService memberGetService;
     private final SendMissionCreateAlarmUseCase sendMissionCreateAlarmUseCase;
+    private final CreateMissionReadUseCase createMissionReadUseCase;
 
-    public MissionCreateRes createMission(String userSocialId, Long teamId, MissionReq missionReq) {
+    private final BaseService baseService;
 
-        Member member = memberGetService.getMemberBySocialId(userSocialId);
-        Team team = teamGetService.getTeamByTeamId(teamId);
+    public MissionCreateRes createMission(String socialId, Long teamId, MissionReq missionReq) {
 
-        // 소모임 장 확인
-        if (member.getMemberId().equals(team.getLeaderId())) {
-            Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
-            // teamRepository 변경 예정
+        BaseServiceResponse commonData = baseService.getCommonData(socialId, teamId);
+        Member member = commonData.getMember();
+        Team team = commonData.getTeam();
 
-            if (mission.getType() == MissionType.REPEAT && missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
-                throw new NoMoreCreateMission();
+        Mission mission = MissionMapper.mapToMission(missionReq, member, MissionStatus.WAIT);
+        mission.setTeam(team);
+
+        if (mission.getType().equals(MissionType.REPEAT)) {
+            // 반복 미션 생성일 경우 소모임장만 가능
+            if (!(member.getMemberId().equals(team.getLeaderId()))) {
+                throw new NoAccessCreateMission();
+            // 반복미션은 최대 2개 생성 가능
+            } else if (missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
+                throw new NoAccessCreateMission();
             }
-            mission.setTeam(team);
-            missionSaveService.save(mission);
+            // 반복미션 유예 해제
+            mission.updateStatus(MissionStatus.ONGOING);
 
-            // 단일 미션 최초 1회 알림
-            if (mission.getType().equals(MissionType.ONCE)) {
-                sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
-            }
-
-            return MissionMapper.mapToMissionCreateRes(mission);
         }
-        else{
-            throw new NoAccessCreateMission();
-        }
+        // 2. 미션 저장
+        missionSaveService.save(mission);
 
+        // 3. 미션 읽음 처리
+        createMissionReadUseCase.createMissionRead(team,member, mission);
 
-    }
+        // 4. 알림 보내기 - 미션 생성
+        sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
 
-    public MissionRecommendRes getCategoryByTeam(Long teamId) {
-        Team team = teamGetService.getTeamByTeamId(teamId);
-
-        return MissionRecommendRes.builder()
-                .category(team.getCategory())
-                .build();
+        return MissionMapper.mapToMissionCreateRes(mission);
     }
 
 
     public Boolean getIsLeader(String socialId, Long teamId) {
-        Member member = memberGetService.getMemberBySocialId(socialId);
-        Team team = teamGetService.getTeamByTeamId(teamId);
+        BaseServiceResponse commonData = baseService.getCommonData(socialId, teamId);
+        Member member = commonData.getMember();
+        Team team = commonData.getTeam();
 
         return member.getMemberId().equals(team.getLeaderId());
 

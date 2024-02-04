@@ -39,6 +39,7 @@ out/
 ### yml ###
 application.yml
 application-local.yml
+application-dev.yml
 .DS_Store
 src/main/resources/firebase-key.json
 
