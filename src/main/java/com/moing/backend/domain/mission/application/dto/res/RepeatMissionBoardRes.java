@@ -17,9 +17,10 @@ public class RepeatMissionBoardRes {
     private int number;
     private String way;
     private String status;
+    private Boolean isRead;
 
 
-    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way,String status) {
+    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way,String status, Boolean isRead) {
         this.missionId = missionId;
         this.title = title;
         this.dueTo="False";
@@ -27,6 +28,7 @@ public class RepeatMissionBoardRes {
         this.done = done;
         this.way = way;
         this.status = status;
+        this.isRead=isRead;
     }
 
     public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number,String way) {
@@ -39,7 +41,7 @@ public class RepeatMissionBoardRes {
     }
 
     @Builder
-    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way, String status) {
+    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way, String status, Boolean isRead) {
         this.missionId = missionId;
         this.title = title;
         this.dueTo = dueTo;
@@ -47,5 +49,6 @@ public class RepeatMissionBoardRes {
         this.number = number;
         this.way = way;
         this.status = status;
+        this.isRead=isRead;
     }
 }

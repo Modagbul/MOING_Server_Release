@@ -3,9 +3,13 @@ package com.moing.backend.domain.board.domain.repository;
 import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.dto.response.QBoardBlocks;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,9 +27,16 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     @Override
     public GetAllBoardResponse findBoardAll(Long teamId, Long memberId) {
 
-        // 전체 게시글 보기
+        BooleanExpression isReadExpression = JPAExpressions
+                .select(boardRead.board.boardId)
+                .from(boardRead)
+                .where(boardRead.member.memberId.eq(memberId),
+                        boardRead.board.team.teamId.eq(teamId),
+                        boardRead.board.boardId.eq(board.boardId))
+                .exists();
+
         List<BoardBlocks> allBoardBlocks = queryFactory
-                .select(new QBoardBlocks(
+                .select(Projections.constructor(BoardBlocks.class,
                         board.boardId,
                         board.teamMember.member.nickName.coalesce("알수없음"),
                         board.isLeader,
@@ -33,10 +44,10 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         board.commentNum,
+                        isReadExpression.as("isRead"), // 읽음 여부
                         board.teamMember.isDeleted,
                         board.isNotice,
-                        board.teamMember.member.memberId.coalesce(0L)
-                ))
+                        board.teamMember.member.memberId.coalesce(0L)))
                 .from(board)
                 .leftJoin(board.teamMember, teamMember)
                 .leftJoin(board.teamMember.member, member)
@@ -44,28 +55,16 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .orderBy(board.createdDate.desc())
                 .fetch();
 
-        // 읽은 게시글 목록 조회
-        List<Long> readBoardIds = queryFactory
-                .select(boardRead.board.boardId)
-                .from(boardRead)
-                .where(boardRead.member.memberId.eq(memberId))
-                .where(boardRead.board.team.teamId.eq(teamId))
-                .fetch();
-
-        // 읽은 게시글 표시
-        allBoardBlocks.forEach(boardBlock -> {
-            if (readBoardIds.contains(boardBlock.getBoardId())) {
-                boardBlock.readBoard();
+        // 공지와 일반 게시글로 나누기 및 읽음 여부 적용
+        List<BoardBlocks> noticeBlocks = new ArrayList<>();
+        List<BoardBlocks> regularBlocks = new ArrayList<>();
+        allBoardBlocks.forEach(block -> {
+            if (block.isNotice()) {
+                noticeBlocks.add(block);
+            } else {
+                regularBlocks.add(block);
             }
         });
-
-        // 공지와 일반 게시글로 나누기
-        List<BoardBlocks> noticeBlocks = allBoardBlocks.stream()
-                .filter(BoardBlocks::isNotice)
-                .collect(Collectors.toList());
-        List<BoardBlocks> regularBlocks = allBoardBlocks.stream()
-                .filter(b -> !b.isNotice())
-                .collect(Collectors.toList());
 
         return new GetAllBoardResponse(noticeBlocks.size(), noticeBlocks, regularBlocks.size(), regularBlocks);
     }
