@@ -122,17 +122,7 @@ public class MissionController {
     }
 
 
-//    @PostMapping("/test")
-//    public void test() {
-//        Thread thread1 = new Thread(() -> {
-//            this.missionReadUseCase.confirmMission("KAKAO@tester01", 1L,1L);
-//        });
-//        Thread thread2 = new Thread(() -> {
-//            this.missionReadUseCase.confirmMission("KAKAO@tester01", 1L,1L);
-//        });
-//        thread1.start();
-//        thread2.start();
-//    }
+
 
 
 }
