@@ -419,7 +419,7 @@ public class MissionControllerTest extends CommonControllerTest {
         given(missionReadUseCase.confirmMission(any(),any(),any())).willReturn(output);
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/team/{teamId}/missions/{missionId}/confirm",teamId,missionId)
+                post("/api/team/{teamId}/missions/{missionId}/confirm",teamId,missionId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );
