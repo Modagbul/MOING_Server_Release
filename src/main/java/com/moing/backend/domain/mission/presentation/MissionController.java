@@ -110,10 +110,10 @@ public class MissionController {
 
     /**
      * 미션 설명 확인 (미션 읽음 처리)
-     * [GET] {teamId}/missions/{missionId}/read
+     * [POST] {teamId}/missions/{missionId}/read
      * 작성자 : 김민수
      */
-    @GetMapping("/{missionId}/confirm")
+    @PostMapping("/{missionId}/confirm")
     public ResponseEntity<SuccessResponse<MissionConfirmRes>> confirmMissionExplanation(@AuthenticationPrincipal User user,
                                                                               @PathVariable Long teamId,
                                                                               @PathVariable Long missionId){
@@ -122,6 +122,17 @@ public class MissionController {
     }
 
 
+//    @PostMapping("/test")
+//    public void test() {
+//        Thread thread1 = new Thread(() -> {
+//            this.missionReadUseCase.confirmMission("KAKAO@tester01", 1L,1L);
+//        });
+//        Thread thread2 = new Thread(() -> {
+//            this.missionReadUseCase.confirmMission("KAKAO@tester01", 1L,1L);
+//        });
+//        thread1.start();
+//        thread2.start();
+//    }
 
 
 }
