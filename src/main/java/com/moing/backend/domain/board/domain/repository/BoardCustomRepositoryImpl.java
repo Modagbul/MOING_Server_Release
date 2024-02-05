@@ -36,7 +36,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .exists();
 
         List<BoardBlocks> allBoardBlocks = queryFactory
-                .select(Projections.constructor(BoardBlocks.class,
+                .select(new QBoardBlocks(
                         board.boardId,
                         board.teamMember.member.nickName.coalesce("알수없음"),
                         board.isLeader,
