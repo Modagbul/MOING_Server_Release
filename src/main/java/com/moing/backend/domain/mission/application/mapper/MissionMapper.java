@@ -30,6 +30,7 @@ public class MissionMapper {
                 .type(MissionType.valueOf(missionReq.getType()))
                 .number(missionReq.getNumber())
                 .status(status)
+                .makerId(member.getMemberId())
                 .build();
 
     }
@@ -47,7 +48,7 @@ public class MissionMapper {
                 .type(mission.getType().name())
                 .status(mission.getStatus().name())
                 .number(mission.getNumber())
-                .isLeader(Boolean.TRUE)
+                .isLeader(mission.getTeam().getLeaderId().equals(mission.getMakerId()))
                 .build();
     }
 
@@ -60,6 +61,7 @@ public class MissionMapper {
                 .way(mission.getWay().name())
                 .content(mission.getContent())
                 .type(mission.getType().name())
+                .isLeader(mission.getTeam().getLeaderId().equals(mission.getMakerId()))
                 .build();
     }
 }

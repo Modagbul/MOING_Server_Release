@@ -38,6 +38,8 @@ public class Mission extends BaseTimeEntity {
 
     private int number;
 
+    private Long makerId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
@@ -58,7 +60,7 @@ public class Mission extends BaseTimeEntity {
     List<MissionState> missionStateList = new ArrayList<>();
 
     @Builder
-    public Mission(String title, LocalDateTime dueTo, String rule, String content, int number, Team team, MissionType type, MissionStatus status, MissionWay way) {
+    public Mission(String title, LocalDateTime dueTo, String rule, String content, int number, Team team, MissionType type, MissionStatus status, MissionWay way,Long makerId) {
         this.title = title;
         this.dueTo = dueTo;
         this.rule = rule;
@@ -68,6 +70,7 @@ public class Mission extends BaseTimeEntity {
         this.type = type;
         this.status = status;
         this.way = way;
+        this.makerId = makerId;
     }
 
 

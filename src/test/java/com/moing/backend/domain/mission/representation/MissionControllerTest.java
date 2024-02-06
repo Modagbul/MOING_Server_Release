@@ -126,7 +126,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.type").description("미션 유형(단일/반복)"),
                                         fieldWithPath("data.way").description("미션 진행 방법(사진/글/링크)"),
                                         fieldWithPath("data.status").description("미션 진행 상태"),
-                                        fieldWithPath("data.isLeader").description("소모임장 여부")
+                                        fieldWithPath("data.isLeader").description("미션 생성자 여부")
                                 )
                         )
                 )
@@ -207,7 +207,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
                                         fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
                                         fieldWithPath("data.status").description("미션 진행 상태(END/ONGOING/SUCCESS/FAIL)"),
-                                        fieldWithPath("data.isLeader").description("소모임장 여부")
+                                        fieldWithPath("data.isLeader").description("미션 생성자 여부")
 
                                 )
                         )
@@ -264,7 +264,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
                                         fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
-                                        fieldWithPath("data.isLeader").description("소모임장인지 여부")
+                                        fieldWithPath("data.isLeader").description("미션 생성자 여부")
 
 
                                 )
@@ -277,7 +277,6 @@ public class MissionControllerTest extends CommonControllerTest {
     @Test
     public void 미션_삭제() throws Exception {
         //given
-
 
         Long teamId = 2L;
         Long missionId = 1L;
@@ -398,7 +397,7 @@ public class MissionControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.content").description("미션 내용"),
                                         fieldWithPath("data.way").description("미션 진행 방법(TEXT/PHOTO/LINK)"),
                                         fieldWithPath("data.type").description("미션 유형(ONCE/REPEAT)"),
-                                        fieldWithPath("data.isLeader").description("소모임장 여부")
+                                        fieldWithPath("data.isLeader").description("미션 생성자 여부")
 
                                 )
                         )
