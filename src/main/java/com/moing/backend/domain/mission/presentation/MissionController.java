@@ -3,6 +3,7 @@ package com.moing.backend.domain.mission.presentation;
 import com.moing.backend.domain.mission.application.dto.req.MissionReq;
 import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
+import com.moing.backend.domain.mission.application.dto.res.MissionConfirmRes;
 import com.moing.backend.domain.mission.application.service.*;
 import com.moing.backend.global.config.security.dto.User;
 import com.moing.backend.global.response.SuccessResponse;
@@ -106,6 +107,19 @@ public class MissionController {
 //    public ResponseEntity<SuccessResponse<Boolean>> remindAlarm(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
 //        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionRemindAlarmUseCase.sendRepeatMissionRemind()));
 //    }
+
+    /**
+     * 미션 설명 확인 (미션 읽음 처리)
+     * [POST] {teamId}/missions/{missionId}/read
+     * 작성자 : 김민수
+     */
+    @PostMapping("/{missionId}/confirm")
+    public ResponseEntity<SuccessResponse<MissionConfirmRes>> confirmMissionExplanation(@AuthenticationPrincipal User user,
+                                                                              @PathVariable Long teamId,
+                                                                              @PathVariable Long missionId){
+        return ResponseEntity.ok(SuccessResponse.create(CONFIRM_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.confirmMission(user.getSocialId(), missionId, teamId)));
+
+    }
 
 
 

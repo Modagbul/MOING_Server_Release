@@ -33,7 +33,7 @@ public class FireThrowAlarmUseCase {
         String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
         String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
 
-        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), AlarmType.FIRE, MISSION_PATH.getValue()));
+        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), AlarmType.FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
     }
 
     public String getMessage(String pusher, String receiver, int num) {

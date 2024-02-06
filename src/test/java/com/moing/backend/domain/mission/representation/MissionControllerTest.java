@@ -2,6 +2,7 @@ package com.moing.backend.domain.mission.representation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.mission.application.dto.req.MissionReq;
+import com.moing.backend.domain.mission.application.dto.res.MissionConfirmRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionCreateRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.application.service.MissionCreateUseCase;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.CONFIRM_MISSION_SUCCESS;
 import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.RECOMMEND_MISSION_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -405,6 +407,44 @@ public class MissionControllerTest extends CommonControllerTest {
                 )
                 .andReturn();
 
+    }
+
+    @Test
+    public void 미션_설명_확인() throws Exception {
+        //given
+        Long teamId = 2L;
+        Long missionId = 1L;
+        MissionConfirmRes output=new MissionConfirmRes(missionId);
+
+        given(missionReadUseCase.confirmMission(any(),any(),any())).willReturn(output);
+        //when
+        ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
+                post("/api/team/{teamId}/missions/{missionId}/confirm",teamId,missionId)
+                .header("Authorization", "Bearer ACCESS_TOKEN")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        //then
+        actions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(
+                        restDocs.document(
+                                requestHeaders(
+                                        headerWithName("Authorization").description("접근 토큰")
+                                ),
+                                pathParameters(
+                                        parameterWithName("teamId").description("팀 아이디"),
+                                        parameterWithName("missionId").description("확인 미션 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("isSuccess").description("true"),
+                                        fieldWithPath("message").description(CONFIRM_MISSION_SUCCESS.getMessage()),
+                                        fieldWithPath("data.missionId").description("확인한 미션의 아이디")
+                                )
+                        )
+                )
+                .andReturn();
     }
 
 }
