@@ -11,6 +11,8 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
+import com.moing.backend.domain.mission.exception.NoAccessDeleteMission;
+import com.moing.backend.domain.mission.exception.NoAccessUpdateMission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +33,18 @@ public class MissionUpdateUseCase {
 
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Mission mission = missionQueryService.findMissionById(missionId);
 
-        // 소모임장 확인 로직 추가
-        Mission findMission = missionQueryService.findMissionById(missionId);
-        findMission.updateMission(missionReq);
+        /**
+         *  미션 생성자 확인
+         */
 
-        return MissionMapper.mapToMissionCreateRes(findMission);
+        if (!member.getMemberId().equals(mission.getMakerId())) {
+            throw new NoAccessUpdateMission();
+        }
+        mission.updateMission(missionReq);
+
+        return MissionMapper.mapToMissionCreateRes(mission);
 
     }
 
@@ -47,11 +55,11 @@ public class MissionUpdateUseCase {
         Mission findMission = missionQueryService.findMissionById(missionId);
         Team team = findMission.getTeam();
 
-        if (team.getLeaderId().equals(member.getMemberId())) {
+        if (findMission.getMakerId().equals(member.getMemberId())) {
             findMission.updateStatus(MissionStatus.END);
             findMission.updateDueTo(LocalDateTime.now());
         } else {
-            throw new NoAccessCreateMission();
+            throw new NoAccessUpdateMission();
         }
 
         return MissionMapper.mapToMissionReadRes(findMission);
