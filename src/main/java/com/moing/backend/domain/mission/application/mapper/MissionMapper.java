@@ -35,7 +35,7 @@ public class MissionMapper {
 
     }
 
-    public static MissionCreateRes mapToMissionCreateRes(Mission mission) {
+    public static MissionCreateRes mapToMissionCreateRes(Mission mission,Member member) {
 
 
         return MissionCreateRes.builder()
@@ -48,11 +48,11 @@ public class MissionMapper {
                 .type(mission.getType().name())
                 .status(mission.getStatus().name())
                 .number(mission.getNumber())
-                .isLeader(mission.getTeam().getLeaderId().equals(mission.getMakerId()))
+                .isLeader( mission.getMakerId().equals(member.getMemberId()) || mission.getTeam().getLeaderId().equals(member.getMemberId()))
                 .build();
     }
 
-    public static MissionReadRes mapToMissionReadRes(Mission mission) {
+    public static MissionReadRes mapToMissionReadRes(Mission mission,Member member) {
 
         return MissionReadRes.builder()
                 .title(mission.getTitle())
@@ -61,7 +61,7 @@ public class MissionMapper {
                 .way(mission.getWay().name())
                 .content(mission.getContent())
                 .type(mission.getType().name())
-                .isLeader(mission.getTeam().getLeaderId().equals(mission.getMakerId()))
+                .isLeader( mission.getMakerId().equals(member.getMemberId()) || mission.getTeam().getLeaderId().equals(member.getMemberId()))
                 .build();
     }
 }
