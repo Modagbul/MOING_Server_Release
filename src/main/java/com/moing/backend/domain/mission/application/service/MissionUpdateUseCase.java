@@ -34,17 +34,20 @@ public class MissionUpdateUseCase {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Mission mission = missionQueryService.findMissionById(missionId);
+        Team team = mission.getTeam();
+
+        Long memberId = member.getMemberId();
 
         /**
          *  미션 생성자 확인
          */
 
-        if (!member.getMemberId().equals(mission.getMakerId())) {
+        if (!memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId())) {
             throw new NoAccessUpdateMission();
         }
         mission.updateMission(missionReq);
 
-        return MissionMapper.mapToMissionCreateRes(mission);
+        return MissionMapper.mapToMissionCreateRes(mission,member);
 
     }
 
@@ -62,7 +65,7 @@ public class MissionUpdateUseCase {
             throw new NoAccessUpdateMission();
         }
 
-        return MissionMapper.mapToMissionReadRes(findMission);
+        return MissionMapper.mapToMissionReadRes(findMission,member);
 
     }
 }
