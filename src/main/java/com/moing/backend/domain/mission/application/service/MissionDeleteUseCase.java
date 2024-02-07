@@ -30,10 +30,12 @@ public class MissionDeleteUseCase {
 
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
-
         Mission mission = missionQueryService.findMissionById(missionId);
+        Team team = mission.getTeam();
 
-        if (!member.getMemberId().equals(mission.getMakerId())) {
+        Long memberId = member.getMemberId();
+
+        if (!memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId())) {
             throw new NoAccessDeleteMission();
         }
         return missionDeleteService.deleteMission(missionId);
