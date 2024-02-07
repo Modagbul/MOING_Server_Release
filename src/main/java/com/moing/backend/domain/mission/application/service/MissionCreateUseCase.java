@@ -59,7 +59,7 @@ public class MissionCreateUseCase {
         // 3. 알림 보내기 - 미션 생성
         sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
 
-        return MissionMapper.mapToMissionCreateRes(mission);
+        return MissionMapper.mapToMissionCreateRes(mission,member);
     }
 
 

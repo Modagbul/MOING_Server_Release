@@ -178,7 +178,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
 
-        BooleanExpression isLeader = mission.makerId.eq(memberId);
+        BooleanExpression isLeader = mission.makerId.eq(memberId).or(mission.team.leaderId.eq(memberId));
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(MissionReadRes.class,

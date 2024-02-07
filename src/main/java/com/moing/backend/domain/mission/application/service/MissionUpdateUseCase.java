@@ -44,7 +44,7 @@ public class MissionUpdateUseCase {
         }
         mission.updateMission(missionReq);
 
-        return MissionMapper.mapToMissionCreateRes(mission);
+        return MissionMapper.mapToMissionCreateRes(mission,member);
 
     }
 
@@ -62,7 +62,7 @@ public class MissionUpdateUseCase {
             throw new NoAccessUpdateMission();
         }
 
-        return MissionMapper.mapToMissionReadRes(findMission);
+        return MissionMapper.mapToMissionReadRes(findMission,member);
 
     }
 }
