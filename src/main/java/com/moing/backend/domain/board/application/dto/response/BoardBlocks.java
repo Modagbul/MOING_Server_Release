@@ -7,7 +7,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
 public class BoardBlocks {
 
     private Long boardId;
@@ -34,7 +33,7 @@ public class BoardBlocks {
 
 
     @QueryProjection
-    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean writerIsDeleted, boolean isNotice, Long makerId) {
+    public BoardBlocks(Long boardId, String writerNickName, Boolean writerIsLeader, String writerProfileImage, String title, String content, Integer commentNum, Boolean isRead, Boolean writerIsDeleted, boolean isNotice, Long makerId) {
         this.boardId = boardId;
         this.writerNickName = writerNickName;
         this.writerIsLeader = writerIsLeader;
@@ -42,7 +41,7 @@ public class BoardBlocks {
         this.title = title;
         this.content = content;
         this.commentNum = commentNum;
-        this.isRead = false;
+        this.isRead = isRead;
         this.writerIsDeleted=writerIsDeleted;
         this.isNotice=isNotice;
         this.makerId = makerId;
