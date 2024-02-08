@@ -15,4 +15,13 @@ public class BlockRepositoryUtils {
                         block.targetId.eq(targetMemberId))
                 .notExists();
     }
+
+    public static BooleanExpression blockCondition(NumberPath<Long> memberId, Long targetMemberId) {
+        return JPAExpressions
+                .select(block.id)
+                .from(block)
+                .where(block.blockMemberId.eq(memberId),
+                        block.targetId.eq(targetMemberId))
+                .notExists();
+    }
 }

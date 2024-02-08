@@ -159,6 +159,20 @@ public class BoardRepositoryTest {
 
         //then
         assertThat(response.getNotNoticeBlocks().size()).isEqualTo(0);
-
     }
+
+    @Test
+    @DisplayName("유저 차단 경우 목표보드 게시글 개수")
+    void 유저_차단_게시글_조회(){
+        //given
+        Board board = boardRepository.save(BoardMapper.toBoard(tm2NotDeleted, team, createBoardRequest, false)); //작성자 탈퇴한 경우
+        Block block = blockRepository.save(new Block(checkingMember.getMemberId(), member2.getMemberId()));
+
+        //when
+        Integer unReadBoardNum= boardRepository.findUnReadBoardNum(team.getTeamId(), checkingMember.getMemberId());
+
+        //then
+        assertThat(unReadBoardNum).isEqualTo(0);
+    }
+
 }

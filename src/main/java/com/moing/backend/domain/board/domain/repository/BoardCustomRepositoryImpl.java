@@ -66,24 +66,24 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     @Override
     public Integer findUnReadBoardNum(Long teamId, Long memberId) {
-        // 전체 게시글 수
-        Long allBoards = queryFactory
+        BooleanExpression isNotReadExpression = isReadExpression(memberId, teamId).not();
+
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(memberId, board.teamMember.member.memberId);
+
+        Long unReadBoardsCount = queryFactory
                 .select(board.count())
                 .from(board)
-                .where(board.team.teamId.eq(teamId))
-                .fetchFirst();
+                .leftJoin(boardRead)
+                .on(board.boardId.eq(boardRead.board.boardId)
+                        .and(boardRead.member.memberId.eq(memberId)))
+                .where(board.team.teamId.eq(teamId)
+                        .and(isNotReadExpression)
+                        .and(blockCondition))
+                .fetchOne();
 
-        // 멤버가 읽은 게시글 수
-        Long readBoards = queryFactory
-                .select(boardRead.board.boardId)
-                .distinct()
-                .from(boardRead)
-                .where(boardRead.member.memberId.eq(memberId))
-                .where(boardRead.board.team.teamId.eq(teamId))
-                .stream().count();
-
-        return Math.toIntExact(allBoards - readBoards);
+        return Math.toIntExact(unReadBoardsCount != null ? unReadBoardsCount : 0);
     }
+
 
     private BooleanExpression isReadExpression(Long memberId, Long teamId) {
         return JPAExpressions
