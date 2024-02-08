@@ -11,6 +11,8 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
+import com.moing.backend.domain.mission.exception.NoAccessDeleteMission;
+import com.moing.backend.domain.mission.exception.NoAccessUpdateMission;
 import com.moing.backend.domain.team.domain.entity.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +33,21 @@ public class MissionUpdateUseCase {
 
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Mission mission = missionQueryService.findMissionById(missionId);
+        Team team = mission.getTeam();
 
-        // 소모임장 확인 로직 추가
-        Mission findMission = missionQueryService.findMissionById(missionId);
-        findMission.updateMission(missionReq);
+        Long memberId = member.getMemberId();
 
-        return MissionMapper.mapToMissionCreateRes(findMission);
+        /**
+         *  미션 생성자 확인
+         */
+
+        if (!memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId())) {
+            throw new NoAccessUpdateMission();
+        }
+        mission.updateMission(missionReq);
+
+        return MissionMapper.mapToMissionCreateRes(mission,member);
 
     }
 
@@ -47,14 +58,14 @@ public class MissionUpdateUseCase {
         Mission findMission = missionQueryService.findMissionById(missionId);
         Team team = findMission.getTeam();
 
-        if (team.getLeaderId().equals(member.getMemberId())) {
+        if (findMission.getMakerId().equals(member.getMemberId())) {
             findMission.updateStatus(MissionStatus.END);
             findMission.updateDueTo(LocalDateTime.now());
         } else {
-            throw new NoAccessCreateMission();
+            throw new NoAccessUpdateMission();
         }
 
-        return MissionMapper.mapToMissionReadRes(findMission);
+        return MissionMapper.mapToMissionReadRes(findMission,member);
 
     }
 }
