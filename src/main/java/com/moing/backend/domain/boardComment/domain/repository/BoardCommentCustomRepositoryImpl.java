@@ -6,12 +6,15 @@ import com.moing.backend.domain.boardComment.application.dto.response.QCommentBl
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.moing.backend.domain.block.domain.entity.QBlock.block;
+import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.boardComment;
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
 
@@ -26,6 +29,14 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
 
     @Override
     public GetBoardCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
+
+        BooleanExpression blockCondition = JPAExpressions
+                .select(block.id)
+                .from(block)
+                .where(block.blockMemberId.eq(teamMember.getMember().getMemberId()),
+                        block.targetId.eq(boardComment.teamMember.member.memberId))
+                .notExists();
+
         List<CommentBlocks> commentBlocks = queryFactory
                 .select(new QCommentBlocks(
                         boardComment.boardCommentId,
@@ -45,7 +56,8 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                 .from(boardComment)
                 .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
                 .leftJoin(boardComment.teamMember.member, member)
-                .where(boardComment.board.boardId.eq(boardId))
+                .where(boardComment.board.boardId.eq(boardId)
+                        .and(blockCondition))
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
 
