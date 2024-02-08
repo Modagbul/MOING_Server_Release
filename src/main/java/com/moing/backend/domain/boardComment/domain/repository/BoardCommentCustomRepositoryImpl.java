@@ -1,11 +1,13 @@
 package com.moing.backend.domain.boardComment.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
 import com.moing.backend.domain.boardComment.application.dto.response.QCommentBlocks;
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -26,6 +28,9 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
 
     @Override
     public GetBoardCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
+
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(teamMember.getTeamMemberId(), boardComment.teamMember.member.memberId);
+
         List<CommentBlocks> commentBlocks = queryFactory
                 .select(new QCommentBlocks(
                         boardComment.boardCommentId,
@@ -45,7 +50,8 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                 .from(boardComment)
                 .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
                 .leftJoin(boardComment.teamMember.member, member)
-                .where(boardComment.board.boardId.eq(boardId))
+                .where(boardComment.board.boardId.eq(boardId)
+                        .and(blockCondition))
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
 

@@ -1,9 +1,9 @@
 package com.moing.backend.domain.board.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.dto.response.QBoardBlocks;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +11,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
@@ -27,13 +26,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     @Override
     public GetAllBoardResponse findBoardAll(Long teamId, Long memberId) {
 
-        BooleanExpression isReadExpression = JPAExpressions
-                .select(boardRead.board.boardId)
-                .from(boardRead)
-                .where(boardRead.member.memberId.eq(memberId),
-                        boardRead.board.team.teamId.eq(teamId),
-                        boardRead.board.boardId.eq(board.boardId))
-                .exists();
+
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(memberId, board.teamMember.member.memberId);
 
         List<BoardBlocks> allBoardBlocks = queryFactory
                 .select(new QBoardBlocks(
@@ -44,14 +38,15 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         board.commentNum,
-                        isReadExpression.as("isRead"), // 읽음 여부
+                        isReadExpression(memberId, teamId).as("isRead"),
                         board.teamMember.isDeleted,
                         board.isNotice,
-                        board.teamMember.member.memberId.coalesce(0L)))
+                        board.teamMember.member.memberId))
                 .from(board)
                 .leftJoin(board.teamMember, teamMember)
                 .leftJoin(board.teamMember.member, member)
-                .where(board.team.teamId.eq(teamId))
+                .where(board.team.teamId.eq(teamId)
+                        .and(blockCondition))
                 .orderBy(board.createdDate.desc())
                 .fetch();
 
@@ -71,22 +66,32 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
 
     @Override
     public Integer findUnReadBoardNum(Long teamId, Long memberId) {
-        // 전체 게시글 수
-        Long allBoards = queryFactory
+        BooleanExpression isNotReadExpression = isReadExpression(memberId, teamId).not();
+
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(memberId, board.teamMember.member.memberId);
+
+        Long unReadBoardsCount = queryFactory
                 .select(board.count())
                 .from(board)
-                .where(board.team.teamId.eq(teamId))
-                .fetchFirst();
+                .leftJoin(boardRead)
+                .on(board.boardId.eq(boardRead.board.boardId)
+                        .and(boardRead.member.memberId.eq(memberId)))
+                .where(board.team.teamId.eq(teamId)
+                        .and(isNotReadExpression)
+                        .and(blockCondition))
+                .fetchOne();
 
-        // 멤버가 읽은 게시글 수
-        Long readBoards = queryFactory
+        return Math.toIntExact(unReadBoardsCount != null ? unReadBoardsCount : 0);
+    }
+
+
+    private BooleanExpression isReadExpression(Long memberId, Long teamId) {
+        return JPAExpressions
                 .select(boardRead.board.boardId)
-                .distinct()
                 .from(boardRead)
-                .where(boardRead.member.memberId.eq(memberId))
-                .where(boardRead.board.team.teamId.eq(teamId))
-                .stream().count();
-
-        return Math.toIntExact(allBoards - readBoards);
+                .where(boardRead.member.memberId.eq(memberId),
+                        boardRead.board.team.teamId.eq(teamId),
+                        boardRead.board.boardId.eq(board.boardId))
+                .exists();
     }
 }

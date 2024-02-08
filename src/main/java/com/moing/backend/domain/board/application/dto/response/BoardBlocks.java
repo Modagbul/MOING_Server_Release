@@ -60,7 +60,6 @@ public class BoardBlocks {
         if(Boolean.TRUE.equals(writerIsDeleted)) {
             this.writerNickName = "(알 수 없음)";
             this.writerProfileImage = null;
-            this.makerId = 0L;
         }
     }
 }

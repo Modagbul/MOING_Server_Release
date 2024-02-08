@@ -47,7 +47,6 @@ public class CommentBlocks {
 
     public void deleteMember() {
         if (Boolean.TRUE.equals(writerIsDeleted)) {
-            this.makerId = 0L;
             this.writerNickName = "(알 수 없음)";
             this.writerProfileImage = null;
         }

@@ -1,5 +1,7 @@
 package com.moing.backend.domain.board.domain;
 
+import com.moing.backend.domain.block.domain.entity.Block;
+import com.moing.backend.domain.block.domain.repository.BlockRepository;
 import com.moing.backend.domain.board.application.dto.request.CreateBoardRequest;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.mapper.BoardMapper;
@@ -23,7 +25,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,17 +53,21 @@ public class BoardRepositoryTest {
     @Autowired
     BoardReadRepository boardReadRepository;
 
-    private Member minsu, seungyeon;
+    @Autowired
+    BlockRepository blockRepository;
+
+    private Member checkingMember, member1, member2;
 
     private Team team;
-    private TeamMember deletedTM, validTM;
+    private TeamMember checkingTM, tm1Deleted, tm2NotDeleted;
     private CreateBoardRequest createBoardRequest;
 
     @BeforeEach
     void setUp() {
         //given
-        minsu = memberRepository.save(new Member(null, "minsu@naver.com", "undef", Gender.WOMAN, null, "민수", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@minsu"));
-        seungyeon = memberRepository.save(new Member(null, "seungyeon@naver.com", "undef", Gender.WOMAN, null, "승연", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@seungyeon"));
+        checkingMember = memberRepository.save(new Member(null, "alstn@naver.com", "undef", Gender.WOMAN, null, "민수", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@alstn"));
+        member1 = memberRepository.save(new Member(null, "tmddus@naver.com", "undef", Gender.WOMAN, null, "승연", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@tmddus"));
+        member2 = memberRepository.save(new Member(null, "codud@naver.com", "undef", Gender.WOMAN, null, "채영", null, SocialProvider.KAKAO, RegistrationStatus.COMPLETED, Role.USER, "KAKAO@codud"));
 
         team = teamRepository.save(Team.builder()
                 .category("ETC")
@@ -76,8 +81,9 @@ public class BoardRepositoryTest {
                 .levelOfFire(1)
                 .build());
 
-        validTM=teamMemberRepository.save(TeamMember.builder().team(team).member(minsu).isDeleted(false).build());
-        deletedTM=teamMemberRepository.save(TeamMember.builder().team(team).member(seungyeon).isDeleted(true).build());
+        checkingTM = teamMemberRepository.save(TeamMember.builder().team(team).member(checkingMember).isDeleted(false).build());
+        tm1Deleted = teamMemberRepository.save(TeamMember.builder().team(team).member(member1).isDeleted(true).build());
+        tm2NotDeleted = teamMemberRepository.save(TeamMember.builder().team(team).member(member2).isDeleted(true).build());
 
         createBoardRequest = CreateBoardRequest.builder()
                 .title("게시글 제목")
@@ -90,12 +96,12 @@ public class BoardRepositoryTest {
     @DisplayName("게시글을 읽은 경우")
     void whenBoardIsRead_thenMarkAsRead() {
         //given
-        Board board = boardRepository.save(BoardMapper.toBoard(validTM, team, createBoardRequest, false));
+        Board board = boardRepository.save(BoardMapper.toBoard(checkingTM, team, createBoardRequest, false));
 
-        boardReadRepository.save(new BoardRead(null, board, team, minsu));
+        boardReadRepository.save(new BoardRead(null, board, team, checkingMember));
 
         //when
-        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), minsu.getMemberId());
+        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), checkingMember.getMemberId());
 
         //then
         assertThat(response.getNotNoticeBlocks().get(0).getIsRead()).isTrue();
@@ -105,10 +111,10 @@ public class BoardRepositoryTest {
     @DisplayName("게시글을 읽지 않은 경우")
     void whenBoardIsNotRead_thenMarkAsUnread() {
         //given
-        Board board = boardRepository.save(BoardMapper.toBoard(validTM, team, createBoardRequest, false));
-        
+        Board board = boardRepository.save(BoardMapper.toBoard(checkingTM, team, createBoardRequest, false));
+
         //when
-        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), minsu.getMemberId());
+        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), checkingMember.getMemberId());
 
         //then
         assertThat(response.getNotNoticeBlocks().get(0).getIsRead()).isFalse();
@@ -117,12 +123,56 @@ public class BoardRepositoryTest {
     @DisplayName("작성자가 삭제된 경우")
     void 게시글_작성자가_탈퇴하지_않은_경우_게시글_전체_조회() {
         //given
-        Board board = boardRepository.save(BoardMapper.toBoard(deletedTM, team, createBoardRequest, false)); //작성자 탈퇴한 경우
+        Board board = boardRepository.save(BoardMapper.toBoard(tm1Deleted, team, createBoardRequest, false)); //작성자 탈퇴한 경우
 
         //when
-        GetAllBoardResponse response=boardRepository.findBoardAll(team.getTeamId(),minsu.getMemberId());
+        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), checkingMember.getMemberId());
 
         //then
         assertThat(response.getNotNoticeBlocks().get(0).getWriterNickName()).isEqualTo("(알 수 없음)");
     }
+
+    @Test
+    @DisplayName("유저 차단 경우 작성자 탈퇴 아님")
+    void 유저_탈퇴안했을때_차단_조회() {
+        //given
+        Board board = boardRepository.save(BoardMapper.toBoard(tm2NotDeleted, team, createBoardRequest, false)); //작성자 탈퇴한 경우
+        Block block = blockRepository.save(new Block(checkingMember.getMemberId(), member2.getMemberId()));
+
+        //when
+        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), checkingMember.getMemberId());
+
+        //then
+        assertThat(response.getNotNoticeBlocks().size()).isEqualTo(0);
+
+    }
+
+    @Test
+    @DisplayName("유저 차단 경우 작성자 탈퇴")
+    void 유저_탈퇴했을때_차단_조회() {
+        //given
+        Board board = boardRepository.save(BoardMapper.toBoard(tm1Deleted, team, createBoardRequest, false)); //작성자 탈퇴한 경우
+        Block block = blockRepository.save(new Block(checkingMember.getMemberId(), member1.getMemberId()));
+
+        //when
+        GetAllBoardResponse response = boardRepository.findBoardAll(team.getTeamId(), checkingMember.getMemberId());
+
+        //then
+        assertThat(response.getNotNoticeBlocks().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("유저 차단 경우 목표보드 게시글 개수")
+    void 유저_차단_게시글_조회(){
+        //given
+        Board board = boardRepository.save(BoardMapper.toBoard(tm2NotDeleted, team, createBoardRequest, false)); //작성자 탈퇴한 경우
+        Block block = blockRepository.save(new Block(checkingMember.getMemberId(), member2.getMemberId()));
+
+        //when
+        Integer unReadBoardNum= boardRepository.findUnReadBoardNum(team.getTeamId(), checkingMember.getMemberId());
+
+        //then
+        assertThat(unReadBoardNum).isEqualTo(0);
+    }
+
 }
