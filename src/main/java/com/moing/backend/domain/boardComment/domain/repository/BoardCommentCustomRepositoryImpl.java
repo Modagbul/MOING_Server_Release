@@ -1,5 +1,6 @@
 package com.moing.backend.domain.boardComment.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
 import com.moing.backend.domain.boardComment.application.dto.response.QCommentBlocks;
@@ -13,8 +14,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.moing.backend.domain.block.domain.entity.QBlock.block;
-import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.boardComment;
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
 
@@ -30,12 +29,7 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
     @Override
     public GetBoardCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
 
-        BooleanExpression blockCondition = JPAExpressions
-                .select(block.id)
-                .from(block)
-                .where(block.blockMemberId.eq(teamMember.getMember().getMemberId()),
-                        block.targetId.eq(boardComment.teamMember.member.memberId))
-                .notExists();
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(teamMember.getTeamMemberId(), boardComment.teamMember.member.memberId);
 
         List<CommentBlocks> commentBlocks = queryFactory
                 .select(new QCommentBlocks(

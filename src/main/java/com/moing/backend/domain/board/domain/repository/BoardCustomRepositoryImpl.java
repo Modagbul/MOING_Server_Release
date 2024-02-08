@@ -1,10 +1,9 @@
 package com.moing.backend.domain.board.domain.repository;
 
-import com.moing.backend.domain.block.domain.entity.QBlock;
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.dto.response.QBoardBlocks;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,9 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.moing.backend.domain.block.domain.entity.QBlock.block;
 import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
@@ -29,20 +26,8 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     @Override
     public GetAllBoardResponse findBoardAll(Long teamId, Long memberId) {
 
-        BooleanExpression isReadExpression = JPAExpressions
-                .select(boardRead.board.boardId)
-                .from(boardRead)
-                .where(boardRead.member.memberId.eq(memberId),
-                        boardRead.board.team.teamId.eq(teamId),
-                        boardRead.board.boardId.eq(board.boardId))
-                .exists();
 
-        BooleanExpression blockCondition = JPAExpressions
-                .select(block.id)
-                .from(block)
-                .where(block.blockMemberId.eq(memberId),
-                        block.targetId.eq(board.teamMember.member.memberId))
-                .notExists();
+        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(memberId, board.teamMember.member.memberId);
 
         List<BoardBlocks> allBoardBlocks = queryFactory
                 .select(new QBoardBlocks(
@@ -53,7 +38,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         board.commentNum,
-                        isReadExpression.as("isRead"),
+                        isReadExpression(memberId, teamId).as("isRead"),
                         board.teamMember.isDeleted,
                         board.isNotice,
                         board.teamMember.member.memberId))
@@ -98,5 +83,15 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                 .stream().count();
 
         return Math.toIntExact(allBoards - readBoards);
+    }
+
+    private BooleanExpression isReadExpression(Long memberId, Long teamId) {
+        return JPAExpressions
+                .select(boardRead.board.boardId)
+                .from(boardRead)
+                .where(boardRead.member.memberId.eq(memberId),
+                        boardRead.board.team.teamId.eq(teamId),
+                        boardRead.board.boardId.eq(board.boardId))
+                .exists();
     }
 }
