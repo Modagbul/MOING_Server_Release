@@ -24,4 +24,8 @@ public class Block extends BaseTimeEntity {
     private Long blockMemberId;
     private Long targetId;
 
+    public Block(Long blockMemberId, Long targetId) {
+        this.blockMemberId=blockMemberId;
+        this.targetId=targetId;
+    }
 }

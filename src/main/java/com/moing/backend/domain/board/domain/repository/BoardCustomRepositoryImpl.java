@@ -1,5 +1,6 @@
 package com.moing.backend.domain.board.domain.repository;
 
+import com.moing.backend.domain.block.domain.entity.QBlock;
 import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
 import com.moing.backend.domain.board.application.dto.response.GetAllBoardResponse;
 import com.moing.backend.domain.board.application.dto.response.QBoardBlocks;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.moing.backend.domain.block.domain.entity.QBlock.block;
 import static com.moing.backend.domain.board.domain.entity.QBoard.board;
 import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
@@ -35,6 +37,13 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         boardRead.board.boardId.eq(board.boardId))
                 .exists();
 
+        BooleanExpression blockCondition = JPAExpressions
+                .select(block.id)
+                .from(block)
+                .where(block.blockMemberId.eq(memberId),
+                        block.targetId.eq(board.teamMember.member.memberId))
+                .notExists();
+
         List<BoardBlocks> allBoardBlocks = queryFactory
                 .select(new QBoardBlocks(
                         board.boardId,
@@ -44,14 +53,15 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                         board.title,
                         board.content,
                         board.commentNum,
-                        isReadExpression.as("isRead"), // 읽음 여부
+                        isReadExpression.as("isRead"),
                         board.teamMember.isDeleted,
                         board.isNotice,
-                        board.teamMember.member.memberId.coalesce(0L)))
+                        board.teamMember.member.memberId))
                 .from(board)
                 .leftJoin(board.teamMember, teamMember)
                 .leftJoin(board.teamMember.member, member)
-                .where(board.team.teamId.eq(teamId))
+                .where(board.team.teamId.eq(teamId)
+                        .and(blockCondition))
                 .orderBy(board.createdDate.desc())
                 .fetch();
 
