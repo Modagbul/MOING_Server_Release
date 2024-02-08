@@ -80,16 +80,24 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         return missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
     }
+    private BooleanExpression hasAlreadyVerifiedToday() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        return missionArchive.createdDate.between(startOfToday, endOfToday);
+    }
 
     private JPQLQuery<Long> todayRepeatMissionDone(Long missionId) {
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
 
         return
                 select(missionArchive.member.memberId)
                         .from(missionArchive, mission)
                         .where(missionArchive.mission.id.eq(missionId),
                                 mission.id.eq(missionId),
-                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)).or(missionArchive.mission.type.eq(MissionType.ONCE))
                         )
                         .groupBy(missionArchive.member.memberId,
                                 missionArchive.mission.id,
