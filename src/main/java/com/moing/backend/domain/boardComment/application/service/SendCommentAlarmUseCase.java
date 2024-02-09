@@ -38,23 +38,23 @@ public class SendCommentAlarmUseCase {
         Team team = response.getTeam();
         Board board = response.getBoard();
 
+        Optional<List<NewUploadInfo>> newUploadInfos = boardCommentGetService.getNewUploadInfo(member.getMemberId(), board.getBoardId());
         String title = NEW_COMMENT_UPLOAD_MESSAGE.title(comment.getContent());
         String body = NEW_COMMENT_UPLOAD_MESSAGE.body(member.getNickName(),board.getTitle());
 
-        sendBoardWriter(board, member, title, body, team);
-        sendBoardCommentWriter(board, member, title, body, team);
+        sendBoardCommentWriter(board, member, title, body, team, newUploadInfos);
+        sendBoardWriter(board, member, title, body, team, newUploadInfos);
     }
 
-    private void sendBoardWriter(Board board, Member member, String title, String body, Team team) {
+    private void sendBoardWriter(Board board, Member member, String title, String body, Team team, Optional<List<NewUploadInfo>> newUploadInfos) {
         Member receiver = board.getTeamMember().getMember();
 
-        if (checkBoardWriter(receiver, member)) {
+        if (checkBoardWriter(receiver, member, newUploadInfos)) {
             eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue(), receiver.isNewUploadPush()));
         }
     }
 
-    private void sendBoardCommentWriter(Board board, Member member, String title, String body, Team team) {
-        Optional<List<NewUploadInfo>> newUploadInfos = boardCommentGetService.getNewUploadInfo(member.getMemberId(), board.getBoardId());
+    private void sendBoardCommentWriter(Board board, Member member, String title, String body, Team team, Optional<List<NewUploadInfo>> newUploadInfos) {
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
         Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
 
@@ -68,8 +68,17 @@ public class SendCommentAlarmUseCase {
         return jo.toJSONString();
     }
 
-    private boolean checkBoardWriter(Member boardWriter, Member commentWriter) { //댓글 작성자와 게시글 작성자가 동일한 경우
-        return !Objects.equals(boardWriter.getMemberId(), commentWriter.getMemberId());
+    private boolean checkBoardWriter(Member boardWriter, Member commentWriter, Optional<List<NewUploadInfo>> newUploadInfos) {
+        // 댓글 작성자와 게시글 작성자가 동일한 경우 알림을 보내지 않는다.
+        if (Objects.equals(boardWriter.getMemberId(), commentWriter.getMemberId())) {
+            return false;
+        }
+
+        // newUploadInfos 리스트에 boardWriter의 memberId가 없는 경우만 알림을 보낸다.
+        // 리스트가 비어있거나, boardWriter의 memberId가 리스트에 없으면 true를 반환.
+        return newUploadInfos
+                .map(infos -> infos.stream().noneMatch(info -> info.getMemberId().equals(boardWriter.getMemberId())))
+                .orElse(true);
     }
 
 
