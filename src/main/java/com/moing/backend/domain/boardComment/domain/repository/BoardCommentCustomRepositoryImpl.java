@@ -72,8 +72,8 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                         boardComment.teamMember.member.isNewUploadPush,
                         boardComment.teamMember.member.isSignOut))
                 .distinct()
-                .from(teamMember)
-                .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
+                .from(boardComment)
+                .leftJoin(boardComment.teamMember, teamMember)
                 .leftJoin(boardComment.teamMember.member, member)
                 .where(boardComment.board.boardId.eq(boardId) //게시글의 댓글인데
                         .and(boardComment.teamMember.member.memberId.ne(memberId)) //나는 포함 안하고
