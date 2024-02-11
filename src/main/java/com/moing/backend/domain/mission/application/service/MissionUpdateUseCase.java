@@ -42,7 +42,7 @@ public class MissionUpdateUseCase {
          *  미션 생성자 확인
          */
 
-        if (!memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId())) {
+        if (!(memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId()))) {
             throw new NoAccessUpdateMission();
         }
         mission.updateMission(missionReq);
