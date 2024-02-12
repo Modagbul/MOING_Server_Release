@@ -33,7 +33,7 @@ public class GetTeamUseCase {
     public GetTeamDetailResponse getTeamDetailResponse(String socialId, Long teamId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         Integer boardNum = boardGetService.getUnReadBoardNum(teamId, member.getMemberId());
-        List<TeamMemberInfo> teamMemberInfoList = teamMemberGetService.getTeamMemberInfo(teamId);
+        List<TeamMemberInfo> teamMemberInfoList = teamMemberGetService.getTeamMemberInfo(member.getMemberId(), teamId);
         Team team = teamGetService.getTeamByTeamId(teamId);
         return TeamMapper.toTeamDetailResponse(member.getMemberId(), team, boardNum, teamMemberInfoList);
     }

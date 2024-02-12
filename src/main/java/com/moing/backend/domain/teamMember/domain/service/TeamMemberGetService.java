@@ -29,8 +29,8 @@ public class TeamMemberGetService {
     }
 
 
-    public List<TeamMemberInfo> getTeamMemberInfo(Long teamId){
-        return teamMemberRepository.findTeamMemberInfoByTeamId(teamId);
+    public List<TeamMemberInfo> getTeamMemberInfo(Long memberId, Long teamId){
+        return teamMemberRepository.findTeamMemberInfoByTeamId(memberId, teamId);
     }
 
     public Optional<List<NewUploadInfo>> getNewUploadInfo(Long teamId, Long memberId) {

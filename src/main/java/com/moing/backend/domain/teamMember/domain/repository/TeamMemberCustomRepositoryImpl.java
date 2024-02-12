@@ -42,7 +42,11 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     }
 
     @Override
-    public List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long teamId){
+    public List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long memberId, Long teamId){
+
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, teamMember.member.memberId);
+
+
         return queryFactory
                 .select(new QTeamMemberInfo(
                         teamMember.member.memberId,
@@ -53,7 +57,8 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .from(teamMember)
                 .innerJoin(teamMember.team, team) // innerJoin을 사용하여 최적화
                 .where(teamMember.team.teamId.eq(teamId) // where 절을 하나로 합침
-                        .and(teamMember.isDeleted.eq(false)))
+                        .and(teamMember.isDeleted.eq(false))
+                        .and(blockCondition))
                 .groupBy(teamMember.member.memberId)
                 .fetch();
     }
