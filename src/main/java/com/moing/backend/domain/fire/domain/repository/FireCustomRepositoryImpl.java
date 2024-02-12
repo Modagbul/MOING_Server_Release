@@ -1,5 +1,6 @@
 package com.moing.backend.domain.fire.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.querydsl.core.types.Projections;
@@ -52,6 +53,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
 
         JPQLQuery<Long> completedMembersOfAll = allMissionDone(missionId);
 
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, teamMember.member.memberId);
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(FireReceiveRes.class,
                         teamMember.member.memberId,
@@ -64,7 +67,8 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
                         teamMember.member.memberId.ne(memberId),
                         teamMember.member.memberId.notIn(completedMembersOfAll)
                                 .and(teamMember.member.memberId.notIn(todayCompletedMemberOfRepeat)),
-                        teamMember.isDeleted.ne(Boolean.TRUE)
+                        teamMember.isDeleted.ne(Boolean.TRUE),
+                        blockCondition
                 )
                 .fetch());
 

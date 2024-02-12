@@ -184,8 +184,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP)),
+                        blockCondition,
                         (missionArchive.mission.type.eq(MissionType.REPEAT)
-                                .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange)).and(blockCondition)
+                                .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange))
                                 .or(missionArchive.mission.type.eq(MissionType.REPEAT)
                                         .and(missionArchive.mission.status.eq(MissionStatus.END)))
                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))
