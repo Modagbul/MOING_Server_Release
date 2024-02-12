@@ -1,11 +1,10 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
-import com.moing.backend.domain.board.application.dto.response.BoardBlocks;
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
-import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
@@ -13,11 +12,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
-import com.moing.backend.domain.missionRead.domain.entity.QMissionRead;
 import com.moing.backend.domain.missionRead.domain.repository.MissionReadRepositoryUtils;
-import com.moing.backend.domain.team.domain.entity.QTeam;
-import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -27,14 +22,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import feign.Param;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.Option;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,18 +34,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.moing.backend.domain.board.domain.entity.QBoard.board;
-import static com.moing.backend.domain.boardRead.domain.entity.QBoardRead.boardRead;
-import static com.moing.backend.domain.member.domain.entity.QMember.member;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
-import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
-import static com.moing.backend.domain.missionRead.domain.entity.QMissionRead.missionRead;
+import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
-import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
-import static javax.swing.Spring.constant;
-import static org.springframework.data.jpa.domain.Specification.not;
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
@@ -192,6 +175,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, missionArchive.member.memberId);
+
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
                 .from(missionArchive)
@@ -199,6 +184,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP)),
+                        blockCondition,
                         (missionArchive.mission.type.eq(MissionType.REPEAT)
                                 .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange))
                                 .or(missionArchive.mission.type.eq(MissionType.REPEAT)
