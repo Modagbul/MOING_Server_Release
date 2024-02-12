@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface TeamMemberCustomRepository {
     Optional<List<NewUploadInfo>> findNewUploadInfo(Long teamId, Long memberId);
-    List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long teamId);
+    List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long memberId, Long teamId);
 }
