@@ -32,14 +32,10 @@ public class MissionArchiveCreateUseCase {
 
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
-    private final MissionArchiveDeleteService missionArchiveDeleteService;
-
-    private final MissionHeartQueryService missionHeartQueryService;
 
     private final MissionQueryService missionQueryService;
     private final MemberGetService memberGetService;
 
-    private final MissionStateSaveService missionStateSaveService;
     private final MissionStateUseCase missionStateUseCase;
 
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
