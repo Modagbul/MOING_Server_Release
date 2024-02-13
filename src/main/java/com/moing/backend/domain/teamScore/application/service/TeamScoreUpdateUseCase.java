@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
 import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 import com.moing.backend.domain.teamScore.domain.service.TeamScoreQueryService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class TeamScoreUpdateUseCase {
     /**
      * 매번 미션 인증 시 점수 적립
      */
-    public void gainScoreOfArchive(Mission mission) {
+    public void gainScoreOfArchive(Mission mission, ScoreStatus scoreStatus) {
 
 
         Team team = mission.getTeam();
@@ -36,7 +37,7 @@ public class TeamScoreUpdateUseCase {
         Integer numOfMember = team.getNumOfMember();
         Long gainScore = calculateScoreByArchive(numOfMember);
 
-        teamScore.updateScore(gainScore);
+        teamScore.updateScore(gainScore * scoreStatus.getValue());
         teamScore.updateLevel();
 
     }
