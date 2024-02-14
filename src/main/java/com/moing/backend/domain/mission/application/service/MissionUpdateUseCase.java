@@ -42,7 +42,7 @@ public class MissionUpdateUseCase {
          *  미션 생성자 확인
          */
 
-        if (!(memberId.equals(mission.getMakerId()) || memberId.equals(team.getLeaderId()))) {
+        if (!((memberId.equals(mission.getMakerId())) || memberId.equals(team.getLeaderId())) ) {
             throw new NoAccessUpdateMission();
         }
         mission.updateMission(missionReq);
@@ -55,10 +55,11 @@ public class MissionUpdateUseCase {
 
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
+        Long memberId = member.getMemberId();
         Mission findMission = missionQueryService.findMissionById(missionId);
         Team team = findMission.getTeam();
 
-        if (findMission.getMakerId().equals(member.getMemberId())) {
+        if ((memberId.equals(findMission.getMakerId())) || memberId.equals(team.getLeaderId()) ) {
             findMission.updateStatus(MissionStatus.END);
             findMission.updateDueTo(LocalDateTime.now());
         } else {
