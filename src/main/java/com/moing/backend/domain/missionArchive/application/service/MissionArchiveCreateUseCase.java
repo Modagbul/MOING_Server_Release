@@ -19,6 +19,7 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateSaveServ
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
+import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,10 @@ public class MissionArchiveCreateUseCase {
 
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
-    private final MissionArchiveDeleteService missionArchiveDeleteService;
-
-    private final MissionHeartQueryService missionHeartQueryService;
 
     private final MissionQueryService missionQueryService;
     private final MemberGetService memberGetService;
 
-    private final MissionStateSaveService missionStateSaveService;
     private final MissionStateUseCase missionStateUseCase;
 
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
@@ -96,7 +93,7 @@ public class MissionArchiveCreateUseCase {
             gainBonusScore(mission, newArchive);
         }
         // TODO : 미션 인증 1회당 점수
-        teamScoreUpdateUseCase.gainScoreOfArchive(mission);
+        teamScoreUpdateUseCase.gainScoreOfArchive(mission, ScoreStatus.PLUS);
 
         return missionArchiveRes;
     }
@@ -113,13 +110,11 @@ public class MissionArchiveCreateUseCase {
             if (isAbleToFinishOnceMission(mission)) {
                 mission.updateStatus(MissionStatus.SUCCESS);
                 teamScoreUpdateUseCase.gainScoreOfBonus(mission);
-                log.info("isAbleToFinishOnceMission");
             }
 
         } else {
             if (isAbleToFinishRepeatMission(mission, missionArchive)) {
                 teamScoreUpdateUseCase.gainScoreOfBonus(mission);
-                log.info("isAbleToFinishRepeatMission");
 
             }
 
