@@ -12,6 +12,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
@@ -74,7 +75,7 @@ public class MissionArchiveDeleteUseCase {
             throw new NoAccessMissionArchiveException();
         }
 
-        if (mission.getWay().equals(MissionWay.PHOTO)) {
+        if (deleteArchive.getStatus().equals(MissionArchiveStatus.COMPLETE) && mission.getWay().equals(MissionWay.PHOTO)) {
             String archive = deleteArchive.getArchive();
             updateUtils.deleteImgUrl(archive);
         }
