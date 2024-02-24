@@ -56,17 +56,9 @@ public class MissionStateScheduleUseCase {
     }
 
 
-    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 0 20 * * *")
     public void MissionRemindAlarm() {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
     }
-    @Scheduled(cron = "0 1 20 * * 0")
-    public void RepeatMissionRemindAlarmOnSunday() {
-        missionRemindAlarmUseCase.sendRepeatMissionRemindOnSunday();
-    }
 
-    @Scheduled(cron = "0 1 20 * * 1")
-    public void RepeatMissionRemindAlarmOnMonday() {
-        missionRemindAlarmUseCase.sendRepeatMissionRemindOnMonday();
-    }
 }
