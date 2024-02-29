@@ -9,7 +9,7 @@ public enum RemindMissionTitle {
 
     REMIND_MISSION_TITLE1("오늘도 좋은 하루 보내세요!"),
     REMIND_MISSION_TITLE2("혹시 ... 잊으신 건 아니죠?\uD83D\uDC40"),
-    REMIND_MISSION_TITLE3("좋은 아침이에요! ☀\uFE0F"),
+    REMIND_MISSION_TITLE3("아직 인증하지 않은 미션이 있어요!"),
     REMIND_MISSION_TITLE4("오늘의 열정이 타오르불\uD83D\uDD25"),
 
 
