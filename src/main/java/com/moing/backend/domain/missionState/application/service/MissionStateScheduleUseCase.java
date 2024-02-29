@@ -61,9 +61,9 @@ public class MissionStateScheduleUseCase {
     }
 
 
-    @Scheduled(cron = "0 0 17 * * *")
-    public void UpdatePushAlarm() {
-        updateRemindAlarmUseCase.sendUpdateAppPushAlarm();
-    }
+//    @Scheduled(cron = "0 0 17 * * *")
+//    public void UpdatePushAlarm() {
+//        updateRemindAlarmUseCase.sendUpdateAppPushAlarm();
+//    }
 
 }
