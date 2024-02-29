@@ -10,7 +10,7 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mission.application.service.SendMissionStartAlarmUseCase;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
-import com.moing.backend.global.config.fcm.service.FcmService;
+import com.moing.backend.global.config.fcm.service.MultiMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -32,8 +32,8 @@ import static com.moing.backend.global.config.fcm.constant.RemindMissionTitle.RE
 public class UpdateRemindAlarmUseCase {
 
     private final MemberGetService memberGetService;
-    private final FcmService fcmService;
     private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
+    private final MultiMessageSender multiMessageSender;
 
     String REMIND_NAME = "미션 리마인드";
 
@@ -49,12 +49,11 @@ public class UpdateRemindAlarmUseCase {
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(allMemberOfPushAlarm);
 
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            fcmService.sendMultipleDevices(new MultiRequest(pushMemberIdAndToken.get(), title,message,  "",REMIND_NAME, AlarmType.REMIND, PagePath.HOME_PATH.getValue()));
+            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         }
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
-            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.HOME_PATH.getValue());
+            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
         }
-
         return true;
 
 
