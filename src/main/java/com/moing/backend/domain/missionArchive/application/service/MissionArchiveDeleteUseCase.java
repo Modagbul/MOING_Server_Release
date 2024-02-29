@@ -12,6 +12,7 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
@@ -23,6 +24,8 @@ import com.moing.backend.domain.missionState.domain.service.MissionStateDeleteSe
 import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
 import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.team.domain.entity.Team;
+import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
+import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
 import com.moing.backend.global.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,8 @@ public class MissionArchiveDeleteUseCase {
     private final MissionStateDeleteService missionStateDeleteService;
     private final MissionStateQueryService missionStateQueryService;
 
+    private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
+
     private final UpdateUtils updateUtils;
 
 
@@ -55,10 +60,11 @@ public class MissionArchiveDeleteUseCase {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
         Long memberId = member.getMemberId();
+
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
 
-        MissionArchive deleteArchive = missionArchiveQueryService.findOneMyArchive(memberId, missionId,count).get(0);
+        MissionArchive deleteArchive = missionArchiveQueryService.findOneMyArchive(memberId, missionId,count);
         MissionState missionState = missionStateQueryService.findMissionState(member, mission);
 
         LocalDateTime createdDate = deleteArchive.getCreatedDate();
@@ -69,13 +75,15 @@ public class MissionArchiveDeleteUseCase {
             throw new NoAccessMissionArchiveException();
         }
 
-        if (mission.getWay().equals(MissionWay.PHOTO)) {
+        if (deleteArchive.getStatus().equals(MissionArchiveStatus.COMPLETE) && mission.getWay().equals(MissionWay.PHOTO)) {
             String archive = deleteArchive.getArchive();
             updateUtils.deleteImgUrl(archive);
         }
 
         missionArchiveDeleteService.deleteMissionArchive(deleteArchive);
         missionStateDeleteService.deleteMissionState(missionState);
+
+        teamScoreUpdateUseCase.gainScoreOfArchive(mission, ScoreStatus.MINUS);
 
         return deleteArchive.getId();
 

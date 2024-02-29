@@ -17,9 +17,6 @@ import java.util.List;
 public class BlockCreateUseCase {
 
     private final MemberGetService memberGetService;
-    private final BoardGetService boardGetService;
-    private final MissionArchiveQueryService missionArchiveQueryService;
-
     private final BlockSaveService blockSaveService;
 
 

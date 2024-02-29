@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SaveSingleAlarmHistoryUseCase {
 
-    private final AlarmHistoryMapper alarmHistoryMapper;
     private final AlarmHistorySaveService alarmHistorySaveService;
 
     @Async
     public void saveAlarmHistory(Long memberId, String idInfo, String title, String body, String name, AlarmType alarmType, String path) {
-        AlarmHistory alarmHistory = alarmHistoryMapper.toAlarmHistory(alarmType, path, idInfo, memberId, title, body, name);
+        AlarmHistory alarmHistory = AlarmHistoryMapper.toAlarmHistory(alarmType, path, idInfo, memberId, title, body, name);
         alarmHistorySaveService.saveAlarmHistory(alarmHistory);
     }
 }

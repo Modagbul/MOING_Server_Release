@@ -17,9 +17,6 @@ import java.util.List;
 public class BlockDeleteUseCase {
 
     private final MemberGetService memberGetService;
-    private final BoardGetService boardGetService;
-    private final MissionArchiveQueryService missionArchiveQueryService;
-
     private final BlockDeleteService blockDeleteService;
 
 

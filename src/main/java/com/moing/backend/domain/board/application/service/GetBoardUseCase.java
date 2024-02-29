@@ -19,7 +19,6 @@ public class GetBoardUseCase {
 
 
     private final BaseBoardService baseBoardService;
-    private final BoardMapper boardMapper;
     private final MemberGetService memberGetService;
     private final CreateBoardReadUseCase createBoardReadUseCase;
     private final BoardGetService boardGetService;
@@ -34,7 +33,7 @@ public class GetBoardUseCase {
         BaseBoardServiceResponse data = baseBoardService.getCommonData(socialId, teamId, boardId);
         // 2. 읽음 처리
         createBoardReadUseCase.createBoardRead(data.getTeam(), data.getMember(), data.getBoard());
-        return boardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember(), data.getBoard().getTeamMember().isDeleted());
+        return BoardMapper.toBoardDetail(data.getBoard(), data.getTeamMember() == data.getBoard().getTeamMember(), data.getBoard().getTeamMember().isDeleted());
     }
 
     /**

@@ -16,11 +16,10 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class CreateBoardReadUseCase {
 
-    private final BoardReadMapper boardReadMapper;
     private final BoardReadSaveService boardReadSaveService;
 
     public void createBoardRead(Team team, Member member, Board board){
-        BoardRead boardRead = boardReadMapper.toBoardRead(team, member);
+        BoardRead boardRead = BoardReadMapper.toBoardRead(team, member);
         boardReadSaveService.saveBoardRead(board, boardRead);
     }
 }

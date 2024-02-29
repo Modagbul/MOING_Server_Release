@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 public class KakaoSignInUseCase implements SignInProvider {
 
     private final WebClient webClient;
-    private final MemberMapper memberMapper;
     private final KakaoTokenUseCase kakaoTokenUseCase;
 
     public Member getUserData(String accessToken) {
@@ -35,6 +34,6 @@ public class KakaoSignInUseCase implements SignInProvider {
                 .block();
         kakaoUserResponse.adaptResponse();
 
-        return memberMapper.createKakaoMember(kakaoUserResponse);
+        return MemberMapper.createKakaoMember(kakaoUserResponse);
     }
 }

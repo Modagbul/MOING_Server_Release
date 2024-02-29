@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GoogleSignInUseCase implements SignInProvider {
 
-    private final MemberMapper memberMapper;
     private final WebClient webClient;
     private final GoogleTokenUseCase googleTokenUseCase;
 
@@ -32,7 +31,7 @@ public class GoogleSignInUseCase implements SignInProvider {
         if (googleUserResponse != null) {
             googleTokenUseCase.verifyAccessToken(googleUserResponse.getAud());
             googleUserResponse.adaptResponse();
-            return memberMapper.createGoogleMember(googleUserResponse);
+            return MemberMapper.createGoogleMember(googleUserResponse);
         }
         throw new TokenInvalidException();
     }
