@@ -14,12 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaveMultiAlarmHistoryUseCase {
 
-    private final AlarmHistoryMapper alarmHistoryMapper;
     private final AlarmHistorySaveService alarmHistorySaveService;
 
     @Async
     public void saveAlarmHistories(List<Long> memberIds, String idInfo, String title, String body, String name, AlarmType alarmType, String path) {
-        List<AlarmHistory> alarmHistories = alarmHistoryMapper.getAlarmHistories(idInfo, memberIds, title, body, name, alarmType, path);
+        List<AlarmHistory> alarmHistories = AlarmHistoryMapper.getAlarmHistories(idInfo, memberIds, title, body, name, alarmType, path);
         alarmHistorySaveService.saveAlarmHistories(alarmHistories);
     }
 }

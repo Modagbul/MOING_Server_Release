@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlarmHistoryMapper {
 
-    public AlarmHistory toAlarmHistory(AlarmType type, String path, String idInfo, Long receiverId, String title, String body, String name){
+    public static AlarmHistory toAlarmHistory(AlarmType type, String path, String idInfo, Long receiverId, String title, String body, String name){
         return AlarmHistory.builder()
                 .type(type)
                 .path(path)
@@ -50,7 +50,7 @@ public class AlarmHistoryMapper {
                 .collect(Collectors.toList());
     }
 
-    public List<AlarmHistory> getAlarmHistories(String idInfo, List<Long> memberIds, String title, String body, String teamName, AlarmType alarmType, String path) {
+    public static List<AlarmHistory> getAlarmHistories(String idInfo, List<Long> memberIds, String title, String body, String teamName, AlarmType alarmType, String path) {
         return memberIds.stream()
                 .map(memberId -> toAlarmHistory(alarmType, path, idInfo, memberId, title, body, teamName))
                 .collect(Collectors.toList());

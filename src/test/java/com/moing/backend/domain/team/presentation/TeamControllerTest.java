@@ -5,7 +5,6 @@ import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.*;
 import com.moing.backend.domain.team.application.service.*;
-import com.moing.backend.domain.team.domain.constant.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -195,7 +194,7 @@ public class TeamControllerTest extends CommonControllerTest {
                 .deletionTime(LocalDateTime.now())
                 .teamName("소모임 이름")
                 .numOfMember(1)
-                .category(Category.ETC)
+                .category("ETC")
                 .introduction("소모임 소개글")
                 .currentUserId(1L)
                 .teamMemberInfoList(teamMemberInfoList).build();

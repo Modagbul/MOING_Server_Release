@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionRead.domain.entity.MissionRead;
 import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.entity.BaseTimeEntity;
@@ -38,6 +39,8 @@ public class Mission extends BaseTimeEntity {
 
     private int number;
 
+    private Long makerId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
@@ -57,8 +60,11 @@ public class Mission extends BaseTimeEntity {
     @OneToMany(mappedBy = "mission")
     List<MissionState> missionStateList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "mission")
+    List<MissionRead> missionReads=new ArrayList<>();
+
     @Builder
-    public Mission(String title, LocalDateTime dueTo, String rule, String content, int number, Team team, MissionType type, MissionStatus status, MissionWay way) {
+    public Mission(String title, LocalDateTime dueTo, String rule, String content, int number, Team team, MissionType type, MissionStatus status, MissionWay way,Long makerId) {
         this.title = title;
         this.dueTo = dueTo;
         this.rule = rule;
@@ -68,6 +74,7 @@ public class Mission extends BaseTimeEntity {
         this.type = type;
         this.status = status;
         this.way = way;
+        this.makerId = makerId;
     }
 
 

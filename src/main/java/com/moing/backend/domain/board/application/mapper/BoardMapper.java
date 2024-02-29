@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class BoardMapper {
 
-    public Board toBoard(TeamMember teamMember, Team team, CreateBoardRequest createBoardRequest, boolean isLeader) {
+    public static Board toBoard(TeamMember teamMember, Team team, CreateBoardRequest createBoardRequest, boolean isLeader) {
         Board board = Board.builder()
                 .title(createBoardRequest.getTitle())
                 .content(createBoardRequest.getContent())
@@ -31,7 +31,7 @@ public class BoardMapper {
         return board;
     }
 
-    public GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
+    public static GetBoardDetailResponse toBoardDetail(Board board, boolean isWriter, boolean writerIsDeleted) {
         String nickName = writerIsDeleted ? "(알 수 없음)" : board.getTeamMember().getMember().getNickName();
         String writerProfileImage = writerIsDeleted ? null : board.getTeamMember().getMember().getProfileImage();
         Long writerId = writerIsDeleted ? 0L : board.getTeamMember().getMember().getMemberId();
@@ -49,7 +49,7 @@ public class BoardMapper {
                 .build();
     }
 
-    public String getFormattedDate(LocalDateTime localDateTime) {
+    public static String getFormattedDate(LocalDateTime localDateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
         return localDateTime.format(formatter);
     }

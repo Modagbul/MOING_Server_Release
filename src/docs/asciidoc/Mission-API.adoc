@@ -29,14 +29,19 @@ operation::mission-controller-test/미션_삭제[snippets='http-request,path-par
 
 
 [[Mission-추천]]
-=== Mission 추천
+== Mission 추천
 operation::mission-controller-test/미션_추천[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
 
 [[Mission-종료]]
-=== Mission 종료
+== Mission 종료
 operation::mission-controller-test/미션_종료[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ---
+
+
+[[Mission-설명-확인]]
+== Mission 설명 확인
+operation::mission-controller-test/미션_설명_확인[snippets='http-request,path-parameters,http-response,response-fields']
 

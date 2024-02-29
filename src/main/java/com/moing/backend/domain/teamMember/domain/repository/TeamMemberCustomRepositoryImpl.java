@@ -1,11 +1,11 @@
 package com.moing.backend.domain.teamMember.domain.repository;
 
-import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.team.application.dto.response.QTeamMemberInfo;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
-import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -23,17 +23,9 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
     }
 
     @Override
-    public List<Long> findMemberIdsByTeamId(Long teamId) {
-        return queryFactory
-                .select(teamMember.member.memberId)
-                .from(teamMember)
-                .where(teamMember.team.teamId.eq(teamId)
-                        .and(teamMember.team.isDeleted.eq(false)))
-                .fetch();
-    }
-
-    @Override
     public Optional<List<NewUploadInfo>> findNewUploadInfo(Long teamId, Long memberId) {
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(teamMember.member.memberId, memberId);
+
         List<NewUploadInfo> result = queryFactory.select(Projections.constructor(NewUploadInfo.class,
                         teamMember.member.fcmToken,
                         teamMember.member.memberId,
@@ -42,28 +34,19 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .from(teamMember)
                 .where(teamMember.team.teamId.eq(teamId)
                         .and(teamMember.member.memberId.ne(memberId))
-                        .and(teamMember.isDeleted.eq(false)))
+                        .and(teamMember.isDeleted.eq(false)
+                                .and(blockCondition)))
                 .fetch();
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
     @Override
-    public Optional<List<String>> findFcmTokensByTeamIdAndMemberId(Long teamId, Long memberId) {
-        List<String> result = queryFactory.select(teamMember.member.fcmToken)
-                .from(teamMember)
-                .where(teamMember.team.teamId.eq(teamId)
-                        .and(teamMember.member.isNewUploadPush.eq(true))
-                        .and(teamMember.member.isSignOut.eq(false))
-                        .and(teamMember.member.memberId.ne(memberId))
-                        .and(teamMember.isDeleted.eq(false)))
-                .fetch();
+    public List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long memberId, Long teamId){
 
-        return result.isEmpty() ? Optional.empty() : Optional.of(result);
-    }
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, teamMember.member.memberId);
 
-    @Override
-    public List<TeamMemberInfo> findTeamMemberInfoByTeamId(Long teamId){
+
         return queryFactory
                 .select(new QTeamMemberInfo(
                         teamMember.member.memberId,
@@ -74,16 +57,10 @@ public class TeamMemberCustomRepositoryImpl implements TeamMemberCustomRepositor
                 .from(teamMember)
                 .innerJoin(teamMember.team, team) // innerJoin을 사용하여 최적화
                 .where(teamMember.team.teamId.eq(teamId) // where 절을 하나로 합침
-                        .and(teamMember.isDeleted.eq(false)))
+                        .and(teamMember.isDeleted.eq(false))
+                        .and(blockCondition))
                 .groupBy(teamMember.member.memberId)
                 .fetch();
     }
 
-    @Override
-    public List<TeamMember> findTeamMemberByMemberId(Long memberId) {
-        return queryFactory.selectFrom(teamMember)
-                .where(teamMember.member.memberId.eq(memberId)
-                        .and(teamMember.isDeleted.eq(false)))
-                .fetch();
-    }
 }

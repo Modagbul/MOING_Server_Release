@@ -5,7 +5,6 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageResponse;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
 import com.moing.backend.domain.mypage.application.mapper.MyPageMapper;
-import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +19,15 @@ public class GetMyPageUseCase {
 
     private final MemberGetService memberGetService;
     private final TeamGetService teamGetService;
-    private final MyPageMapper myPageMapper;
 
     @Transactional(readOnly = true)
     public GetMyPageResponse getMyPageResponse(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         List<GetMyPageTeamBlock> getMyPageTeamBlocks = teamGetService.getMyPageTeamBlockByMemberId(member.getMemberId());
-        return myPageMapper.toGetMyPageResponse(member, calculateCategory(getMyPageTeamBlocks), getMyPageTeamBlocks);
+        return MyPageMapper.toGetMyPageResponse(member, calculateCategory(getMyPageTeamBlocks), getMyPageTeamBlocks);
     }
 
-    private List<Category> calculateCategory(List<GetMyPageTeamBlock> getMyPageTeamBlocks) {
+    private static List<String> calculateCategory(List<GetMyPageTeamBlock> getMyPageTeamBlocks) {
         return getMyPageTeamBlocks.stream()
                 .map(GetMyPageTeamBlock::getCategory)
                 .distinct()

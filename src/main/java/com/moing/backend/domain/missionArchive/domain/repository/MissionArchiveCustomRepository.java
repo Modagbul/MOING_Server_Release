@@ -38,4 +38,7 @@ public interface MissionArchiveCustomRepository {
 
     MyArchiveStatus findMissionStatusById(Long memberId, Long missionId, Long teamId);
 
+    Long getCountsByMissionId(Long missionId);
+
+
     }

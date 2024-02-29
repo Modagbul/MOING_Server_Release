@@ -2,7 +2,6 @@ package com.moing.backend.domain.team.domain.entity;
 
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
-import com.moing.backend.domain.team.domain.constant.Category;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,9 +26,8 @@ public class Team extends BaseTimeEntity {
     @Column(name = "team_id")
     private Long teamId;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private Category category;
+    private String category;
 
     @Column(nullable = false, length = 10)
     private String name;
@@ -92,7 +90,7 @@ public class Team extends BaseTimeEntity {
         numOfMember--;
     }
 
-    public void updateLevelOfFire() {
-        levelOfFire++;
+    public void updateLevelOfFire(Integer level) {
+        this.levelOfFire = level;
     }
 }

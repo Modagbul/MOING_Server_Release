@@ -5,9 +5,11 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
+import com.moing.backend.domain.missionRead.domain.repository.MissionReadRepositoryUtils;
 import com.moing.backend.domain.missionState.domain.entity.QMissionState;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -24,6 +26,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.mission.domain.entity.QMission.*;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
@@ -51,7 +54,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
-
         BooleanExpression dateInRange = createRepeatTypeConditionByState();
 
         return Optional.ofNullable(queryFactory
@@ -63,7 +65,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.number.stringValue(),
                         missionState.count().stringValue(),
                         mission.status.stringValue()
-
                 ))
                 .from(mission)
                         .leftJoin(missionState)
@@ -140,6 +141,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
 
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
@@ -178,22 +180,28 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
 
+        Mission mission = queryFactory
+                .selectFrom(QMission.mission)
+                .where(QMission.mission.id.eq(missionId))
+                .fetchOne();
 
-        BooleanExpression isLeader = mission.team.leaderId.eq(memberId);
+        if (mission == null) {
+            return Optional.empty();
+        }
 
-        return Optional.ofNullable(queryFactory
-                .select(Projections.constructor(MissionReadRes.class,
-                        mission.title,
-                        mission.dueTo.stringValue(),
-                        mission.rule,
-                        mission.content,
-                        mission.type.stringValue(),
-                        mission.way.stringValue(),
-                        isLeader))
-                .from(mission)
-                .where(mission.id.eq(missionId))
-                .fetchOne()
+        boolean isLeader = mission.getMakerId().equals(memberId) || mission.getTeam().getLeaderId().equals(memberId);
+
+        MissionReadRes result = new MissionReadRes(
+                mission.getTitle(),
+                mission.getDueTo().toString(),
+                mission.getRule(),
+                mission.getContent(),
+                mission.getType().toString(),
+                mission.getWay().toString(),
+                isLeader
         );
+
+        return Optional.of(result);
     }
 
 

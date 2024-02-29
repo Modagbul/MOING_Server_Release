@@ -30,7 +30,7 @@ public class Board extends BaseTimeEntity {
     private boolean isLeader; /*작성자 소모임장유무*/
 
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 30)
     private String title;
 
     @Column(nullable = false, length = 300)
