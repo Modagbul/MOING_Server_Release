@@ -24,6 +24,7 @@ public enum ErrorCode {
     TOKEN_INVALID_ERROR("AU0002", "입력 토큰이 유효하지 않습니다."),
     APPID_INVALID_ERROR("AU0003", "appId가 유효하지 않습니다"),
     NICKNAME_DUPLICATION_ERROR("AU0004", "닉네임이 중복됩니다."),
+    NOT_FOUND_ALL_MEMBER("AU0005","푸시 알림을 위한 모든 멤버를 불러오는데 실패했습니다."),
 
     //미션 관련 에러코드
     NO_ACCESS_CREATE_MISSION("M0001", "소모임장만 미션을 생성할 수 있습니다."),

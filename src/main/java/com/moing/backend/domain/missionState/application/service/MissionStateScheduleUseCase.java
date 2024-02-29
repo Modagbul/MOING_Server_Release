@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionState.application.service;
 
+import com.moing.backend.domain.member.application.service.UpdateRemindAlarmUseCase;
 import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUseCase;
 import com.moing.backend.domain.mission.application.service.SendMissionStartAlarmUseCase;
 import com.moing.backend.domain.mission.domain.entity.Mission;
@@ -31,13 +32,11 @@ public class MissionStateScheduleUseCase {
     private final MissionStateUseCase missionStateUseCase;
     private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
     private final MissionQueryService missionQueryService;
-    private final MissionStateQueryService missionStateQueryService;
-    private final MissionStateDeleteService missionStateDeleteService;
+    private final UpdateRemindAlarmUseCase updateRemindAlarmUseCase;
 
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
     private final SendMissionStartAlarmUseCase sendMissionStartAlarmUseCase;
-
 
     /**
      * 단일 미션 마감
@@ -59,6 +58,12 @@ public class MissionStateScheduleUseCase {
     @Scheduled(cron = "0 0 20 * * *")
     public void MissionRemindAlarm() {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
+    }
+
+
+    @Scheduled(cron = "0 0 17 * * *")
+    public void UpdatePushAlarm() {
+        updateRemindAlarmUseCase.sendUpdateAppPushAlarm();
     }
 
 }
