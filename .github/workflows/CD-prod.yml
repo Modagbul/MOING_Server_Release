@@ -85,8 +85,8 @@ jobs:
       # Docker 이미지 빌드 및 푸시
       - name: Docker build
         run: |
-          docker build --no-cache -f ./.deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME_PROD }}/moing_prod:green .
-          docker build --no-cache -f ./.deploy/Dockerfile -t ${{ secrets.DOCKER_USERNAME_PROD }}/moing_prod:blue .
+          docker build --no-cache -f ./.deploy/prod_dockerfile -t ${{ secrets.DOCKER_USERNAME_PROD }}/moing_prod:green .
+          docker build --no-cache -f ./.deploy/prod_dockerfile -t ${{ secrets.DOCKER_USERNAME_PROD }}/moing_prod:blue .
 
 
       - name: Docker Hub Login
