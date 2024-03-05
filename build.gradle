@@ -97,6 +97,13 @@ dependencies {
 	//json
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 
+	//log
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus") // 프로메테우스 마이크로미터
+
+
 }
 
 tasks.named('test') {
