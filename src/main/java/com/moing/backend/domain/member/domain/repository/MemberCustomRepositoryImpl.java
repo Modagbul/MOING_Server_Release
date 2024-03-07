@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
@@ -124,5 +125,19 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 todayOnceMissions,
                 yesterdayOnceMissions);
     }
+
+    @Override
+    public Optional<List<Member>> findAllMemberOnPushAlarm() {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(member)
+                        .where(
+                                member.isDeleted.eq(false),
+                                member.isRemindPush.eq(true),
+                                member.isSignOut.eq(false)
+                                )
+                        .fetch()
+        );
+    }
+
 
 }

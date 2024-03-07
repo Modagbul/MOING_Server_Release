@@ -1,13 +1,10 @@
 package com.moing.backend.domain.fire.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
-import com.moing.backend.domain.fire.domain.entity.Fire;
-import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -20,12 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.domain.fire.domain.entity.QFire.fire;
-import static com.moing.backend.domain.member.domain.entity.QMember.member;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
-import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
-import static com.querydsl.jpa.JPAExpressions.max;
 import static com.querydsl.jpa.JPAExpressions.select;
 
 public class FireCustomRepositoryImpl implements FireCustomRepository {
@@ -53,54 +47,28 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         return count <= 0; // 1시간 이내에 생성된 데이터가 존재하면 true를 반환, 그렇지 않으면 false 반환
     }
 
-
     public Optional<List<FireReceiveRes>> getFireReceivers(Long teamId, Long missionId, Long memberId) {
 
-        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        JPQLQuery<Long> todayCompletedMemberOfRepeat = todayRepeatMissionDone(missionId);
 
-        JPQLQuery<Long> missionDonePeople = select(missionArchive.member.memberId)
-                .from(missionArchive, mission)
-                .where(missionArchive.mission.id.eq(missionId),
-                        mission.id.eq(missionId)
-                )
-                .groupBy(missionArchive.member.memberId,
-                        missionArchive.mission.id,
-                        missionArchive.count,
-                        mission.number)
-                .having(
-                        missionArchive.mission.id.eq(missionId),
-                        missionArchive.count.max().goe(mission.number),
-                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
-                );
+        JPQLQuery<Long> completedMembersOfAll = allMissionDone(missionId);
 
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1); // 현재 시간에서 1시간을 뺀 시간
-
-        BooleanExpression oneHourStatus = JPAExpressions
-                .select()
-                .from(fire)
-                .where(
-                        fire.throwMemberId.eq(memberId),
-                        fire.receiveMemberId.notIn(missionDonePeople),
-                        fire.createdDate.after(oneHourAgo) // createdDate가 oneHourAgo 이후인 데이터
-                )
-
-                .exists();
-
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, teamMember.member.memberId);
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(FireReceiveRes.class,
-                                teamMember.member.memberId,
-                                teamMember.member.nickName,
-                                teamMember.member.profileImage
-//                                oneHourStatus.stringValue()
-//                                teamMember.member.nickName
-                                ))
+                        teamMember.member.memberId,
+                        teamMember.member.nickName,
+                        teamMember.member.profileImage
+                ))
                 .from(teamMember)
                 .where(
                         teamMember.team.teamId.eq(teamId),
                         teamMember.member.memberId.ne(memberId),
-                        teamMember.member.memberId.notIn(missionDonePeople),
-                        teamMember.isDeleted.ne(Boolean.TRUE)
+                        teamMember.member.memberId.notIn(completedMembersOfAll)
+                                .and(teamMember.member.memberId.notIn(todayCompletedMemberOfRepeat)),
+                        teamMember.isDeleted.ne(Boolean.TRUE),
+                        blockCondition
                 )
                 .fetch());
 
@@ -113,11 +81,60 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+        return missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
-
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
     }
+    private BooleanExpression hasAlreadyVerifiedToday() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        return missionArchive.createdDate.between(startOfToday, endOfToday);
+    }
+
+    private JPQLQuery<Long> todayRepeatMissionDone(Long missionId) {
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
+
+        return
+                select(missionArchive.member.memberId)
+                        .from(missionArchive, mission)
+                        .where(missionArchive.mission.id.eq(missionId),
+                                mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        )
+                        .groupBy(missionArchive.member.memberId,
+                                missionArchive.mission.id,
+                                missionArchive.count,
+                                mission.number,
+                                missionArchive.mission.type,
+                                missionArchive.createdDate)
+                        .having(
+                                missionArchive.mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        );
+    }
+
+    private JPQLQuery<Long> allMissionDone(Long missionId) {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
+        return
+                select(missionArchive.member.memberId)
+                        .from(missionArchive, mission)
+                        .where(missionArchive.mission.id.eq(missionId),
+                                mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        )
+                        .groupBy(missionArchive.member.memberId,
+                                missionArchive.mission.id,
+                                missionArchive.count,
+                                mission.number)
+                        .having(
+                                missionArchive.mission.id.eq(missionId),
+                                missionArchive.count.max().goe(mission.number)
+                        );
+    }
+
 
 }

@@ -13,6 +13,7 @@ import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.domain.service.MissionSaveService;
 import com.moing.backend.domain.mission.exception.NoAccessCreateMission;
 import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
+import com.moing.backend.domain.missionRead.application.service.CreateMissionReadUseCase;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.global.response.BaseServiceResponse;
@@ -29,6 +30,7 @@ public class MissionCreateUseCase {
     private final MissionSaveService missionSaveService;
     private final MissionQueryService missionQueryService;
     private final SendMissionCreateAlarmUseCase sendMissionCreateAlarmUseCase;
+    private final CreateMissionReadUseCase createMissionReadUseCase;
 
     private final BaseService baseService;
 
@@ -56,10 +58,13 @@ public class MissionCreateUseCase {
         // 2. 미션 저장
         missionSaveService.save(mission);
 
-        // 3. 알림 보내기 - 미션 생성
+        // 3. 미션 읽음 처리
+        createMissionReadUseCase.createMissionRead(team,member, mission);
+
+        // 4. 알림 보내기 - 미션 생성
         sendMissionCreateAlarmUseCase.sendNewMissionUploadAlarm(member, mission);
 
-        return MissionMapper.mapToMissionCreateRes(mission);
+        return MissionMapper.mapToMissionCreateRes(mission,member);
     }
 
 

@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class TeamMember extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="team_member_id")
     private Long teamMemberId;
 

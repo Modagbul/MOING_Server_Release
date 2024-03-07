@@ -90,7 +90,7 @@ public class Team extends BaseTimeEntity {
         numOfMember--;
     }
 
-    public void updateLevelOfFire() {
-        levelOfFire++;
+    public void updateLevelOfFire(Integer level) {
+        this.levelOfFire = level;
     }
 }
