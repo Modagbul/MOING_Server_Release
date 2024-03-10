@@ -6,10 +6,10 @@ import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionR
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
-import com.moing.backend.domain.mission.exception.*;
-import com.moing.backend.domain.mission.exception.NotFoundMissionException;
 import com.moing.backend.domain.mission.domain.repository.MissionRepository;
-import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
+import com.moing.backend.domain.mission.exception.NotFoundEndMissionException;
+import com.moing.backend.domain.mission.exception.NotFoundMissionException;
+import com.moing.backend.domain.mission.exception.NotFoundOngoingMissionException;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
@@ -82,5 +82,21 @@ public class MissionQueryService {
     public List<Mission> findRepeatMissionByStatus(MissionStatus missionStatus) {
         return missionRepository.findRepeatMissionByStatus(missionStatus).orElseThrow(NotFoundMissionException::new
         );
+    }
+
+    public Long getTodayOnceMissions(){
+        return missionRepository.getTodayOnceMissions();
+    }
+
+    public Long getYesterdayOnceMissions(){
+        return missionRepository.getYesterdayOnceMissions();
+    }
+
+    public Long getTodayRepeatMissions(){
+        return missionRepository.getTodayRepeatMissions();
+    }
+
+    public Long getYesterdayRepeatMissions(){
+        return missionRepository.getYesterdayRepeatMissions();
     }
 }

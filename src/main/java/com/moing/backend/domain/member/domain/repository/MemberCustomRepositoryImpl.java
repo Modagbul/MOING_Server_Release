@@ -1,8 +1,6 @@
 package com.moing.backend.domain.member.domain.repository;
 
 import com.moing.backend.domain.member.domain.entity.Member;
-import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
-import com.moing.backend.domain.statistics.application.dto.DailyStats;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -12,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.domain.member.domain.entity.QMember.member;
-import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
-import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 
 public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 
@@ -61,7 +57,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public DailyStats getDailyStats() {
+    public Long getTodayNewMembers() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
         LocalDateTime endOfToday = startOfToday.plusDays(1);
@@ -72,58 +68,23 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .where(member.createdDate.between(startOfToday, endOfToday))
                 .fetchCount();
 
+        return todayNewMembers;
+    }
+
+    @Override
+    public Long getYesterdayNewMembers() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+
         long yesterdayNewMembers = queryFactory
                 .selectFrom(member)
                 .where(member.createdDate.between(startOfYesterday, startOfToday))
                 .fetchCount();
 
-        long todayNewTeams = queryFactory
-                .selectFrom(team)
-                .where(team.createdDate.between(startOfToday, endOfToday))
-                .fetchCount();
-
-        long yesterdayNewTeams = queryFactory
-                .selectFrom(team)
-                .where(team.createdDate.between(startOfYesterday, startOfToday))
-                .fetchCount();
-
-        long todayRepeatMissions = queryFactory
-                .select(mission)
-                .from(mission)
-                .where(mission.createdDate.between(startOfToday, endOfToday)
-                        .and(mission.type.eq(MissionType.REPEAT)))
-                .fetchCount();
-
-        long yesterdayRepeatMissions = queryFactory
-                .select(mission)
-                .from(mission)
-                .where(mission.createdDate.between(startOfYesterday, startOfToday)
-                        .and(mission.type.eq(MissionType.REPEAT)))
-                .fetchCount();
-
-        long todayOnceMissions = queryFactory
-                .select(mission)
-                .from(mission)
-                .where(mission.createdDate.between(startOfToday, endOfToday)
-                        .and(mission.type.eq(MissionType.ONCE)))
-                .fetchCount();
-
-        long yesterdayOnceMissions = queryFactory
-                .select(mission)
-                .from(mission)
-                .where(mission.createdDate.between(startOfYesterday, startOfToday)
-                        .and(mission.type.eq(MissionType.ONCE)))
-                .fetchCount();
-
-        return new DailyStats(
-                todayNewMembers,
-                yesterdayNewMembers,
-                todayNewTeams,
-                yesterdayNewTeams,
-                todayRepeatMissions,
-                yesterdayRepeatMissions,
-                todayOnceMissions,
-                yesterdayOnceMissions);
+        return yesterdayNewMembers;
     }
 
     @Override
