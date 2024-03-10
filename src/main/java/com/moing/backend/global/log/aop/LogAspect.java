@@ -20,7 +20,7 @@ public class LogAspect {
         return getObject(joinPoint);
     }
 
-    @Around("com.moing.backend.global.log.aop.Pointcuts.allService()")
+    @Around("com.moing.backend.global.log.aop.Pointcuts.allController()")
     public Object controllerLog(ProceedingJoinPoint joinPoint) throws Throwable {
         return getObject(joinPoint);
     }
