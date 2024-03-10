@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -489,7 +490,35 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .fetch().size();
     }
 
+    @Override
+    public Long getTodayMissionArchives() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
 
+        long todayMissionArchives = queryFactory
+                .selectFrom(missionArchive)
+                .where(missionArchive.createdDate.between(startOfToday, endOfToday))
+                .fetchCount();
+
+        return todayMissionArchives;
+    }
+
+    @Override
+    public Long getYesterdayMissionArchives() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayMissionArchives = queryFactory
+                .selectFrom(missionArchive)
+                .where(missionArchive.createdDate.between(startOfYesterday, startOfToday))
+                .fetchCount();
+
+        return yesterdayMissionArchives;
+    }
 
 
 }
