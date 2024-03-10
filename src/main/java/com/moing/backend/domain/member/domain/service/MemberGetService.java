@@ -4,12 +4,10 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.repository.MemberRepository;
 import com.moing.backend.domain.member.exception.NotFoundBySocialIdException;
 import com.moing.backend.domain.member.exception.NotFoundRemindAlarmException;
-import com.moing.backend.domain.statistics.application.dto.DailyStats;
 import com.moing.backend.global.annotation.DomainService;
 import lombok.RequiredArgsConstructor;
 
 import javax.transaction.Transactional;
-import java.math.BigInteger;
 import java.util.List;
 
 @DomainService
@@ -26,9 +24,14 @@ public class MemberGetService {
         return memberRepository.findNotDeletedByMemberId(memberId).orElseThrow(()->new NotFoundBySocialIdException());
     }
 
-    public DailyStats getDailyStats(){
-        return memberRepository.getDailyStats();
+    public Long getTodayNewMembers(){
+        return memberRepository.getTodayNewMembers();
     }
+
+    public Long getYesterdayNewMembers(){
+        return memberRepository.getYesterdayNewMembers();
+    }
+
 
     public List<Member> getAllMemberOfPushAlarm() {
         return memberRepository.findAllMemberOnPushAlarm().orElseThrow(NotFoundRemindAlarmException::new);
