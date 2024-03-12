@@ -40,7 +40,6 @@ jobs:
 
       # 설정 파일 생성
       - run: |
-          mkdir ./src/main/resources
           cd ./src/main/resources
           touch ./application.yml 
           echo "${{env.APPLICATION}}" > ./application.yml

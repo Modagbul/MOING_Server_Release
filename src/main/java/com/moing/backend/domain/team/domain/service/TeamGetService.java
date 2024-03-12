@@ -65,4 +65,11 @@ public class TeamGetService {
         return teamRepository.findTeamCount(memberId, teamId);
     }
 
+    public Long getTodayNewTeams(){
+        return teamRepository.getTodayNewTeams();
+    }
+
+    public Long getYesterdayNewTeams(){
+        return teamRepository.getYesterdayNewTeams();
+    }
 }

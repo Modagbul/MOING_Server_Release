@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +75,36 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
 
     }
 
+    @Override
+    public Long getTodayFires() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long todayFires = queryFactory
+                .selectFrom(fire)
+                .where(fire.createdDate.between(startOfToday, endOfToday))
+                .fetchCount();
+
+        return todayFires;
+    }
+
+    @Override
+    public Long getYesterdayFires(){
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayFires = queryFactory
+                .selectFrom(fire)
+                .where(fire.createdDate.between(startOfYesterday, startOfToday))
+                .fetchCount();
+
+        return yesterdayFires;
+    }
+
 
     private BooleanExpression createRepeatTypeConditionByArchive() {
         LocalDate now = LocalDate.now();
@@ -84,6 +115,7 @@ public class FireCustomRepositoryImpl implements FireCustomRepository {
         return missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
     }
+
     private BooleanExpression hasAlreadyVerifiedToday() {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
