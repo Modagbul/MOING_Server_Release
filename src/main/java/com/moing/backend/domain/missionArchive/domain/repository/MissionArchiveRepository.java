@@ -5,6 +5,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.missionState.domain.repository.MissionArchiveStateCustomRepository;
 import com.querydsl.core.Tuple;
 import feign.Param;
 import org.hibernate.annotations.NamedNativeQuery;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public interface MissionArchiveRepository extends JpaRepository<MissionArchive, Long>,MissionArchiveCustomRepository {
+public interface MissionArchiveRepository extends JpaRepository<MissionArchive, Long>,MissionArchiveCustomRepository , MissionArchiveStateCustomRepository {
 
     @Query("select m from MissionArchive as m where m.member =:memberId" )
     Optional<List<MissionArchive>> findByMemberId(@Param("memberId") Long memberId);
