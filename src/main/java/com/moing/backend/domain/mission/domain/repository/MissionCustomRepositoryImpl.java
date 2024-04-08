@@ -9,11 +9,14 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
 import com.moing.backend.domain.missionState.domain.entity.QMissionState;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.core.Tuple;
+
 
 import javax.persistence.EntityManager;
 
@@ -28,6 +31,7 @@ import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
+import static com.querydsl.jpa.JPAExpressions.select;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -140,6 +144,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
 
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
                         mission.id,
@@ -147,18 +153,19 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue(),
-                        mission.status.stringValue()
+                        mission.status.stringValue(),
+                        mission.team.numOfMember.longValue()
                 ))
                 .from(mission)
-                .leftJoin(missionState).on(
-                        mission.eq(missionState.mission),
-                        missionState.member.memberId.eq(memberId)
-                        )
+                .leftJoin(missionArchive)
+                .on(
+                        mission.eq(missionArchive.mission),
+                        missionArchive.member.memberId.eq(memberId)
+                )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE),
-                        missionState.id.isNull()
+                        mission.type.eq(MissionType.ONCE)
                 )
                 .orderBy(mission.dueTo.asc())
                 .fetch());
@@ -220,8 +227,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
         // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
 //        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);
