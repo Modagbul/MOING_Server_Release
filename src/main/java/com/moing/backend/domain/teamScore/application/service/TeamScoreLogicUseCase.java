@@ -3,8 +3,7 @@ package com.moing.backend.domain.teamScore.application.service;
 
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
-import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateQueryService;
+import com.moing.backend.domain.missionState.domain.service.MissionArchiveStateQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
 import com.moing.backend.domain.team.domain.service.TeamSaveService;
@@ -18,16 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class TeamScoreLogicUseCase {
 
-    private final TeamGetService teamGetService;
     private final MissionQueryService missionQueryService;
     private final TeamScoreQueryService teamScoreQueryService;
-    private final TeamScoreSaveService teamScoreSaveService;
-    private final MissionStateQueryService missionStateQueryService;
-    private final TeamSaveService teamSaveService;
+    private final MissionArchiveStateQueryService missionArchiveStateQueryService;
 
     public TeamScoreRes getTeamScoreInfo(Long teamId) {
 
@@ -38,6 +33,7 @@ public class TeamScoreLogicUseCase {
         ;
     }
 
+    @Transactional
     public Long updateTeamScore(Long missionId) {
         Mission mission = missionQueryService.findMissionById(missionId);
         Team team = mission.getTeam();
@@ -45,9 +41,6 @@ public class TeamScoreLogicUseCase {
 
         teamScore.updateScore(getScoreByMission(mission));
         teamScore.levelUp();
-
-        teamScoreSaveService.save(teamScore);
-        teamSaveService.saveTeam(team);
 
         return teamScore.getScore();
     }
@@ -73,7 +66,7 @@ public class TeamScoreLogicUseCase {
     }
 
     public float donePeople(Mission mission) {
-        return Float.valueOf(missionStateQueryService.stateCountByMissionId(mission.getId()));
+        return Float.valueOf(missionArchiveStateQueryService.stateCountByMissionId(mission.getId()));
     }
 
     public float totalPeople(Mission mission) {
