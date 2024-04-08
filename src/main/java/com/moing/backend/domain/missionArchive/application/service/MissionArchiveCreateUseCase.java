@@ -16,11 +16,9 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSave
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
 import com.moing.backend.domain.missionArchive.exception.NotYetMissionArchiveException;
 import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
-import com.moing.backend.global.utils.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,17 +30,11 @@ public class MissionArchiveCreateUseCase {
 
     private final MissionArchiveSaveService missionArchiveSaveService;
     private final MissionArchiveQueryService missionArchiveQueryService;
-    private final MissionArchiveDeleteService missionArchiveDeleteService;
-
-    private final MissionHeartQueryService missionHeartQueryService;
-
     private final MissionQueryService missionQueryService;
-    private final MemberGetService memberGetService;
 
-    private final MissionStateSaveService missionStateSaveService;
+    private final MemberGetService memberGetService;
     private final MissionStateUseCase missionStateUseCase;
 
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
 
     public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
@@ -101,7 +93,7 @@ public class MissionArchiveCreateUseCase {
     }
 
     // 이 미션을 완료 했는지
-    public Boolean isDoneMission(Long memberId,Mission mission) {
+    private Boolean isDoneMission(Long memberId,Mission mission) {
         return missionArchiveQueryService.findMyDoneArchives(memberId, mission.getId()) >= mission.getNumber();
     }
 
