@@ -7,15 +7,10 @@ import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
-import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
-import com.moing.backend.domain.missionState.domain.entity.QMissionState;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.core.Tuple;
 
 
 import javax.persistence.EntityManager;
@@ -29,9 +24,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
-import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
-import static com.querydsl.jpa.JPAExpressions.select;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -56,7 +49,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
 
-        BooleanExpression dateInRange = createRepeatTypeConditionByState();
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
@@ -65,14 +59,26 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionState.count().stringValue(),
-                        mission.status.stringValue()
+                        missionArchive.count().stringValue(), //고쳐야함 -> 내가 지금까지 한
+                        missionArchive.status.coalesce(mission.status).stringValue(),
+
+                        JPAExpressions
+                                .select(missionArchive.member.count().stringValue())
+                                .from(missionArchive)
+                                .where(
+                                        missionArchive.mission.id.eq(mission.id),
+                                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)
+                                                .or(missionArchive.mission.type.eq(MissionType.ONCE))
+                                ),
+
+                        mission.team.numOfMember.stringValue()
 
                 ))
                 .from(mission)
-                        .leftJoin(missionState)
-                        .on(missionState.mission.eq(mission),
-                                missionState.member.memberId.eq(memberId),
+                        .leftJoin(missionArchive)
+                        .on(missionArchive.mission.eq(mission),
+                                missionArchive.member.memberId.eq(memberId),
+//                                hasAlreadyVerifiedToday,
                                 dateInRange
                         )
                 .where(
@@ -81,10 +87,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.type.eq(MissionType.REPEAT)
 
                 )
-                .groupBy(mission.id,mission.number)
-                .having(missionState.count().lt(mission.number)
-                        ) // HAVING 절을 사용하여 조건 적용
-                .orderBy(missionState.count().desc())
+                .groupBy(mission)
+//                .groupBy(mission.id,mission.number)
+//                .having(missionArchive.count().lt(mission.number)
+//                ) // HAVING 절을 사용하여 조건 적용
+                .orderBy(mission.createdDate.desc())
                 .fetch());
     }
 
@@ -153,7 +160,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue(),
-                        mission.status.stringValue(),
+                        missionArchive.status.coalesce(mission.status).stringValue(),
+
+                        JPAExpressions
+                                .select(missionArchive.member.count().longValue())
+                                .from(missionArchive)
+                                .where(
+                                        missionArchive.mission.id.eq(mission.id),
+                                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
+                                                .or(missionArchive.mission.type.eq(MissionType.ONCE))
+                                ),
+
                         mission.team.numOfMember.longValue()
                 ))
                 .from(mission)
@@ -232,6 +249,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);
+    }
+
+    private BooleanExpression hasAlreadyVerifiedToday() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        return missionArchive.createdDate.between(startOfToday, endOfToday);
     }
 
 
