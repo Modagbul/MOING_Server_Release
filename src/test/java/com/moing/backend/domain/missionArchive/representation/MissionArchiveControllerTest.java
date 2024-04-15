@@ -433,7 +433,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
-                                        fieldWithPath("message").description(MISSION_ARCHIVE_PEOPLE_STATUS_SUCCESS.getMessage()),
+                                        fieldWithPath("message").description(MISSION_ARCHIVE_MY_STATUS_SUCCESS.getMessage()),
                                         fieldWithPath("data.total").description("전체 미션 참여자"),
                                         fieldWithPath("data.done").description("미션 인증 완료한 미션 참여자 ")
 
