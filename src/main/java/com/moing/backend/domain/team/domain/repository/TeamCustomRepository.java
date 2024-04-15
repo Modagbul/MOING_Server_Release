@@ -24,4 +24,6 @@ public interface TeamCustomRepository {
     List<GetLeaderInfoResponse> findLeaderInfoByTeamIds(List<Long> teamIds);
     Page<GetNewTeamResponse> findNewTeam(String dateSort, Pageable pageable);
     GetTeamCountResponse findTeamCount(Long memberId, Long teamId);
+    Long getTodayNewTeams();
+    Long getYesterdayNewTeams();
 }

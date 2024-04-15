@@ -40,5 +40,6 @@ public interface MissionArchiveCustomRepository {
 
     Long getCountsByMissionId(Long missionId);
 
-
-    }
+    Long getTodayMissionArchives();
+    Long getYesterdayMissionArchives();
+}

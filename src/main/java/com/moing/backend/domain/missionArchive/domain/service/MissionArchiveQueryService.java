@@ -118,7 +118,10 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.getCountsByMissionId(missionId);
     }
 
-
-
-
+    public Long getTodayMissionArchives(){
+        return missionArchiveRepository.getTodayMissionArchives();
+    }
+    public Long getYesterdayMissionArchives(){
+        return missionArchiveRepository.getYesterdayMissionArchives();
+    }
 }
