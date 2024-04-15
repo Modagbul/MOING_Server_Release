@@ -48,7 +48,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
-
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
         BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
 
@@ -59,7 +58,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionArchive.count().stringValue(), //고쳐야함 -> 내가 지금까지 한
+                        missionArchive.count.max().coalesce(0L).stringValue(),
                         missionArchive.status.coalesce(mission.status).stringValue(),
 
                         JPAExpressions
@@ -88,9 +87,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
                 )
                 .groupBy(mission)
-//                .groupBy(mission.id,mission.number)
-//                .having(missionArchive.count().lt(mission.number)
-//                ) // HAVING 절을 사용하여 조건 적용
                 .orderBy(mission.createdDate.desc())
                 .fetch());
     }
@@ -227,29 +223,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+        return missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
     }
 
-    private BooleanExpression createRepeatTypeConditionByState() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
-        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
-
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
-    }
 
     private BooleanExpression hasAlreadyVerifiedToday() {
         LocalDateTime today = LocalDateTime.now();
