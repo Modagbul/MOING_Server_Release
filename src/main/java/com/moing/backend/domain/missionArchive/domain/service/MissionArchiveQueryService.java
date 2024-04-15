@@ -1,5 +1,6 @@
 package com.moing.backend.domain.missionArchive.domain.service;
 
+import com.moing.backend.domain.member.domain.repository.MemberRepository;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
@@ -26,6 +27,7 @@ public class MissionArchiveQueryService {
     private final MissionRepository missionRepository;
     private final MissionArchiveRepository missionArchiveRepository;
     private final TeamMemberRepository teamMemberRepository;
+    private final MemberRepository memberRepository;
 
     public MissionArchive findByMissionArchiveId(Long missionArchiveId) {
         return missionArchiveRepository.findById(missionArchiveId).orElseThrow(NotFoundMissionArchiveException::new);
@@ -42,15 +44,11 @@ public class MissionArchiveQueryService {
             return optional.get();
         }
     }
-    public List<MissionArchive> findOneMyArchive(Long memberId, Long missionId, Long count) {
+    public MissionArchive findOneMyArchive(Long memberId, Long missionId, Long count) {
 
-        Optional<List<MissionArchive>> optional = missionArchiveRepository.findMyArchives(memberId, missionId);
+        List<MissionArchive> missionArchives = missionArchiveRepository.findMyArchives(memberId, missionId).orElseThrow(NotFoundMissionArchiveException::new);
+        return missionArchives.stream().filter( m -> m.getCount().equals(count)).findFirst().orElseThrow(NotFoundMissionArchiveException::new);
 
-        if (optional.isPresent() && optional.get().size() == 0) {
-            return new ArrayList<>();
-        } else {
-            return optional.get();
-        }
     }
 
     public List<MissionArchive> findOthersArchive(Long memberId, Long missionId) {
@@ -116,6 +114,14 @@ public class MissionArchiveQueryService {
         return missionArchiveRepository.findMissionStatusById(memberId, missionId, teamId);
     }
 
+    public Long stateCountByMissionId(Long missionId) {
+        return missionArchiveRepository.getCountsByMissionId(missionId);
+    }
 
-
+    public Long getTodayMissionArchives(){
+        return missionArchiveRepository.getTodayMissionArchives();
+    }
+    public Long getYesterdayMissionArchives(){
+        return missionArchiveRepository.getYesterdayMissionArchives();
+    }
 }

@@ -1,9 +1,15 @@
+#!/bin/bash
+
 DOCKER_APP_NAME=meetup
 DOCKER_USERNAME=modagbul
 
 # 최신 이미지 가져오기
 docker pull ${DOCKER_USERNAME}/moing_dev:blue
 docker pull ${DOCKER_USERNAME}/moing_dev:green
+
+# 로그 디렉토리 설정
+LOG_DIR=$(pwd)/logs/logback
+mkdir -p $LOG_DIR
 
 # 현재 실행 중인 컨테이너를 확인 (blue 또는 green)
 EXIST_BLUE=$(docker ps --filter name=${DOCKER_APP_NAME}-blue --filter status=running -q)
@@ -18,7 +24,8 @@ if [ -z "$EXIST_BLUE" ] && [ -z "$EXIST_GREEN" ]; then
         docker rm ${DOCKER_APP_NAME}-blue
     fi
 
-    docker run -d --name ${DOCKER_APP_NAME}-blue -p 8081:8080 -e TZ=Asia/Seoul ${DOCKER_USERNAME}/moing_dev:blue
+    docker run -d --name ${DOCKER_APP_NAME}-blue -p 8081:8080 -e TZ=Asia/Seoul \
+    -v $LOG_DIR:/logs/logback ${DOCKER_USERNAME}/moing_dev:blue
     BEFORE_COMPOSE_COLOR="green"
     AFTER_COMPOSE_COLOR="blue"
 elif [ -z "$EXIST_BLUE" ]; then
@@ -29,7 +36,8 @@ elif [ -z "$EXIST_BLUE" ]; then
         docker rm ${DOCKER_APP_NAME}-blue
     fi
 
-    docker run -d --name ${DOCKER_APP_NAME}-blue -p 8081:8080 -e TZ=Asia/Seoul ${DOCKER_USERNAME}/moing_dev:blue
+    docker run -d --name ${DOCKER_APP_NAME}-blue -p 8081:8080 -e TZ=Asia/Seoul \
+    -v $LOG_DIR:/logs/logback ${DOCKER_USERNAME}/moing_dev:blue
     BEFORE_COMPOSE_COLOR="green"
     AFTER_COMPOSE_COLOR="blue"
 else
@@ -40,11 +48,11 @@ else
         docker rm ${DOCKER_APP_NAME}-green
     fi
 
-    docker run -d --name ${DOCKER_APP_NAME}-green -p 8082:8080 -e TZ=Asia/Seoul ${DOCKER_USERNAME}/moing_dev:green
+    docker run -d --name ${DOCKER_APP_NAME}-green -p 8082:8080 -e TZ=Asia/Seoul \
+    -v $LOG_DIR:/logs/logback ${DOCKER_USERNAME}/moing_dev:green
     BEFORE_COMPOSE_COLOR="blue"
     AFTER_COMPOSE_COLOR="green"
 fi
-
 
 sleep 40
 

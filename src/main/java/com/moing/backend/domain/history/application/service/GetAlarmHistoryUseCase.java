@@ -21,7 +21,7 @@ public class GetAlarmHistoryUseCase {
     /**
      * 알림 히스토리 조회
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<GetAlarmHistoryResponse> getAllAlarmHistories(String socialId) {
         Member member = memberGetService.getMemberBySocialId(socialId);
         return alarmHistoryGetService.getAlarmHistories(member.getMemberId());

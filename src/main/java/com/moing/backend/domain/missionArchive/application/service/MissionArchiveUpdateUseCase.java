@@ -54,11 +54,11 @@ public class MissionArchiveUpdateUseCase {
         MissionArchive updateArchive = missionArchiveQueryService.findMyArchive(memberId, missionId).get(0);
 
         // 단일 미션 && 미션 종료 직전인지 확인
-        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(mission)) {
-            mission.updateStatus(MissionStatus.SUCCESS);
-            // 점수 반영 로직
-
-        }
+//        if (mission.getType() == MissionType.ONCE && missionStateUseCase.isAbleToEnd(mission)) {
+//            mission.updateStatus(MissionStatus.SUCCESS);
+//            // 점수 반영 로직
+//
+//        }
         // 반복미션의 경우 당일이 지나면 업데이트 불가능
         if (!(updateArchive.getLastModifiedDate().getDayOfWeek().equals(LocalDateTime.now().getDayOfWeek()))) {
             throw new NoAccessMissionArchiveException();

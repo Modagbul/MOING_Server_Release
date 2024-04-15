@@ -17,7 +17,7 @@ public interface MissionCustomRepository {
 
     Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams);
 
-    Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId, List<Long>teams);
+    Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId, List<Long> teams);
 
     Optional<List<Mission>> findMissionByDueTo();
 
@@ -27,10 +27,15 @@ public interface MissionCustomRepository {
 
     Optional<List<Member>> findRepeatMissionPeopleByStatus(MissionStatus missionStatus);
 
-
-        boolean findRepeatMissionsByTeamId(Long teamId);
+    boolean findRepeatMissionsByTeamId(Long teamId);
 
     Optional<MissionReadRes> findByIds(Long memberId, Long missionId);
 
+    Long getTodayOnceMissions();
 
-    }
+    Long getYesterdayOnceMissions();
+
+    Long getTodayRepeatMissions();
+
+    Long getYesterdayRepeatMissions();
+}

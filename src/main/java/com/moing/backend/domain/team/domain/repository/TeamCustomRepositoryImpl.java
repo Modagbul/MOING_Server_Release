@@ -15,6 +15,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -219,6 +220,36 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
         }
 
         return response;
+    }
+
+    @Override
+    public Long getTodayNewTeams() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long todayNewTeams = queryFactory
+                .selectFrom(team)
+                .where(team.createdDate.between(startOfToday, endOfToday))
+                .fetchCount();
+        return todayNewTeams;
+
+    }
+
+    @Override
+    public Long getYesterdayNewTeams() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayNewTeams = queryFactory
+                .selectFrom(team)
+                .where(team.createdDate.between(startOfYesterday, startOfToday))
+                .fetchCount();
+
+        return yesterdayNewTeams;
     }
 
 

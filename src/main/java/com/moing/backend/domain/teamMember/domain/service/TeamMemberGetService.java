@@ -1,6 +1,5 @@
 package com.moing.backend.domain.teamMember.domain.service;
 
-import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
 import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.application.dto.response.TeamMemberInfo;
@@ -19,10 +18,6 @@ import java.util.Optional;
 public class TeamMemberGetService {
     private final TeamMemberRepository teamMemberRepository;
 
-    public List<Long> getTeamMemberIds(Long teamId){
-        return teamMemberRepository.findMemberIdsByTeamId(teamId);
-    }
-
     public TeamMember getTeamMember(Member member, Team team){
         return teamMemberRepository.findTeamMemberByTeamAndMember(team, member).orElseThrow(NotFoundByTeamIdException::new);
     }
@@ -34,16 +29,8 @@ public class TeamMemberGetService {
     }
 
 
-    public Optional<List<String>> getFcmTokensExceptMe(Long teamId, Long memberId) {
-        return teamMemberRepository.findFcmTokensByTeamIdAndMemberId(teamId, memberId);
-    }
-
-    public List<TeamMemberInfo> getTeamMemberInfo(Long teamId){
-        return teamMemberRepository.findTeamMemberInfoByTeamId(teamId);
-    }
-
-    public List<TeamMember> getNotDeletedTeamMember(Long memberId){
-        return teamMemberRepository.findTeamMemberByMemberId(memberId);
+    public List<TeamMemberInfo> getTeamMemberInfo(Long memberId, Long teamId){
+        return teamMemberRepository.findTeamMemberInfoByTeamId(memberId, teamId);
     }
 
     public Optional<List<NewUploadInfo>> getNewUploadInfo(Long teamId, Long memberId) {

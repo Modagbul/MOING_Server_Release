@@ -19,4 +19,6 @@ public class SingleFcmEvent {
     private String name;
     private AlarmType alarmType;
     private String path;
+    private boolean isAlarmPush;
+
 }
