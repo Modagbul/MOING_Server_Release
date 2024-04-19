@@ -8,6 +8,7 @@ import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
 import com.moing.backend.domain.teamScore.domain.entity.TeamScore;
 import com.moing.backend.domain.teamScore.domain.service.TeamScoreQueryService;
+import com.moing.backend.domain.teamScore.domain.service.TeamScoreUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class TeamScoreUpdateUseCase {
 
     private final MissionQueryService missionQueryService;
     private final TeamScoreQueryService teamScoreQueryService;
+    private final TeamScoreUpdateService teamScoreUpdateService;
 
     private final float SCORE_BASE_NUM = 10;
     private final long BONUS_SCORE_ONCE_MISSION = 1L;
@@ -64,9 +66,11 @@ public class TeamScoreUpdateUseCase {
          */
 
         if (mission.getType().equals(MissionType.ONCE)) {
-            teamScore.updateScore(BONUS_SCORE_ONCE_MISSION * numOfMember);
+//            teamScore.updateScore(BONUS_SCORE_ONCE_MISSION * numOfMember);
+            teamScoreUpdateService.updateScore(teamScore,BONUS_SCORE_ONCE_MISSION * numOfMember);
         } else {
-            teamScore.updateScore(BONUS_SCORE_REPEAT_MISSION);
+//            teamScore.updateScore(BONUS_SCORE_REPEAT_MISSION);
+            teamScoreUpdateService.updateScore(teamScore,BONUS_SCORE_REPEAT_MISSION);
         }
 
     }
