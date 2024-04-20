@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface MissionArchiveStateCustomRepository {
 
-    int getCountsByMissionId(Long missionId) ;
+    Long getCountsByMissionId(Long missionId) ;
 
 
 }

@@ -1,10 +1,10 @@
 package com.moing.backend.domain.missionArchive.domain.repository;
 
+import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
-import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
@@ -12,9 +12,7 @@ import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MyArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive;
-import com.moing.backend.domain.team.domain.entity.QTeam;
-import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
+import com.moing.backend.domain.missionRead.domain.repository.MissionReadRepositoryUtils;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -24,30 +22,23 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import feign.Param;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.Option;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
-import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.*;
+import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
-import static com.moing.backend.domain.team.domain.entity.QTeam.team;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
-import static javax.swing.Spring.constant;
-import static org.springframework.data.jpa.domain.Specification.not;
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
 public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomRepository {
@@ -61,6 +52,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionInComplete(Long memberId, Long teamId, MissionStatus status,
                                                                              OrderCondition orderCondition) {
+
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -68,7 +62,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.dueTo.stringValue(),
                         mission.title,
                         mission.status.stringValue(),
-                        mission.type.stringValue()
+                        mission.type.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .where(mission.notIn
@@ -92,6 +87,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<SingleMissionBoardRes>> findSingleMissionComplete(Long memberId, Long teamId, MissionStatus status,
                                                                            OrderCondition orderCondition) {
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
         OrderSpecifier[] orderSpecifiers = createOrderSpecifier(orderCondition);
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(SingleMissionBoardRes.class,
@@ -99,7 +96,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.dueTo.stringValue(),
                         mission.title,
                         missionArchive.status.stringValue(),
-                        mission.type.stringValue()
+                        mission.type.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .join(mission.missionArchiveList,missionArchive)
@@ -178,6 +176,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
+        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(memberId, missionArchive.member.memberId);
+
         return Optional.ofNullable(queryFactory
                 .select(missionArchive)
                 .from(missionArchive)
@@ -185,6 +185,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionArchive.mission.id.eq(missionId),
                         missionArchive.member.memberId.ne(memberId),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE).or(missionArchive.status.eq(MissionArchiveStatus.SKIP)),
+                        blockCondition,
                         (missionArchive.mission.type.eq(MissionType.REPEAT)
                                 .and(missionArchive.mission.status.eq(MissionStatus.ONGOING)).and(dateInRange))
                                 .or(missionArchive.mission.type.eq(MissionType.REPEAT)
@@ -259,6 +260,9 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
     @Override
     public Optional<List<RepeatMissionBoardRes>> findRepeatMissionArchivesByMemberId(Long memberId, Long teamId, MissionStatus status) {
 
+        BooleanExpression isReadExpression = MissionReadRepositoryUtils.isMissionReadByMemberIdAndTeamId(memberId, teamId);
+
+
         BooleanExpression dateInRange = createRepeatTypeConditionByState();
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(RepeatMissionBoardRes.class,
@@ -268,7 +272,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         missionState.count(),
                         mission.number,
                         mission.way.stringValue(),
-                        mission.status.stringValue()
+                        mission.status.stringValue(),
+                        isReadExpression.as("isRead")
                 ))
                 .from(mission)
                 .leftJoin(missionState)
@@ -470,7 +475,50 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
 
     }
 
+    public Long getCountsByMissionId(Long missionId) {
 
+        BooleanExpression repeatTypeCondition = createRepeatTypeConditionByArchive();
+        // 기본 조건
+        BooleanExpression baseCondition = missionArchive.mission.id.eq(missionId);
+        // 조건 적용
+        BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
+
+        return (long) queryFactory
+                .select(missionArchive)
+                .from(missionArchive)
+                .where(finalCondition)
+                .fetch().size();
+    }
+
+    @Override
+    public Long getTodayMissionArchives() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long todayMissionArchives = queryFactory
+                .selectFrom(missionArchive)
+                .where(missionArchive.createdDate.between(startOfToday, endOfToday))
+                .fetchCount();
+
+        return todayMissionArchives;
+    }
+
+    @Override
+    public Long getYesterdayMissionArchives() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayMissionArchives = queryFactory
+                .selectFrom(missionArchive)
+                .where(missionArchive.createdDate.between(startOfYesterday, startOfToday))
+                .fetchCount();
+
+        return yesterdayMissionArchives;
+    }
 
 
 }

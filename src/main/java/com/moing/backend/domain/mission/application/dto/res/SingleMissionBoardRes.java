@@ -15,5 +15,6 @@ public class SingleMissionBoardRes {
     private String title;
     private String status;
     private String missionType;
+    private Boolean isRead;
 
 }

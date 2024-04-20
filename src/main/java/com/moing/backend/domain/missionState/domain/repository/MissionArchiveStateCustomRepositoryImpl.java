@@ -21,7 +21,7 @@ public class MissionArchiveStateCustomRepositoryImpl implements MissionArchiveSt
 
 
     @Override
-    public int getCountsByMissionId(Long missionId) {
+    public Long getCountsByMissionId(Long missionId) {
 
         LocalDate now = LocalDate.now();
         DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY; // 한 주의 시작일을 월요일로 설정
@@ -38,7 +38,7 @@ public class MissionArchiveStateCustomRepositoryImpl implements MissionArchiveSt
         BooleanExpression finalCondition = baseCondition.and(repeatTypeCondition);
 
 
-        return queryFactory
+        return (long) queryFactory
                 .select(missionArchive)
                 .from(missionArchive)
                 .where(finalCondition)

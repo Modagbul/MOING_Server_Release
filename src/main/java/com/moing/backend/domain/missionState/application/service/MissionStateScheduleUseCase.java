@@ -1,11 +1,9 @@
 package com.moing.backend.domain.missionState.application.service;
 
 import com.moing.backend.domain.mission.application.service.MissionRemindAlarmUseCase;
-import com.moing.backend.domain.mission.application.service.SendMissionStartAlarmUseCase;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
-import com.moing.backend.domain.teamScore.application.service.TeamScoreLogicUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -26,29 +24,8 @@ import java.util.List;
 @Profile("prod")
 public class MissionStateScheduleUseCase {
 
-    private final MissionStateUseCase missionStateUseCase;
     private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
     private final MissionQueryService missionQueryService;
-    private final TeamScoreLogicUseCase teamScoreLogicUseCase;
-
-    private final SendMissionStartAlarmUseCase sendMissionStartAlarmUseCase;
-
-    /**
-     * 반복미션 마감
-     * 일요일 마감 루틴
-     */
-    @Scheduled(cron = "0 59 23 * * SUN")
-    public void sundayRepeatMissionRoutine() {
-
-        // 모든 진행중인 반복 미션 모아서
-        List<Long> ongoingRepeatMissions = missionQueryService.findOngoingRepeatMissions();
-
-        // 팀 스코어 반영
-        for (Long id : ongoingRepeatMissions) {
-            teamScoreLogicUseCase.updateTeamScore(id);
-        }
-    }
-
 
     /**
      * 단일 미션 마감
@@ -62,39 +39,20 @@ public class MissionStateScheduleUseCase {
 
         for (Mission mission : missionByDueTo) {
             mission.updateStatus(MissionStatus.END);
-            teamScoreLogicUseCase.updateTeamScore(mission.getId());
         }
 
     }
 
-    /**
-     * 미션 시작
-     * 월요일 아침
-     */
-    @Scheduled(cron = "0 0 0 * * MON")
-    public void RepeatMissionStart() {
-        List<Mission> startMission = missionQueryService.findRepeatMissionByStatus(MissionStatus.WAIT);
-        startMission.forEach(
-            mission -> {
-                // 미션 시작 알림
-                sendMissionStartAlarmUseCase.sendRepeatMissionStartAlarm(mission);
-                mission.updateStatus(MissionStatus.ONGOING);
-            }
-        );
-    }
 
-
-    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 0 20 * * *")
     public void MissionRemindAlarm() {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
     }
-    @Scheduled(cron = "0 1 20 * * 0")
-    public void RepeatMissionRemindAlarmOnSunday() {
-        missionRemindAlarmUseCase.sendRepeatMissionRemindOnSunday();
-    }
 
-    @Scheduled(cron = "0 1 20 * * 1")
-    public void RepeatMissionRemindAlarmOnMonday() {
-        missionRemindAlarmUseCase.sendRepeatMissionRemindOnMonday();
-    }
+
+//    @Scheduled(cron = "0 0 17 * * *")
+//    public void UpdatePushAlarm() {
+//        updateRemindAlarmUseCase.sendUpdateAppPushAlarm();
+//    }
+
 }
