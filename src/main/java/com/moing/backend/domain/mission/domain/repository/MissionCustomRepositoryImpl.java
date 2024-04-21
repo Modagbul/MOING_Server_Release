@@ -5,6 +5,7 @@ import com.moing.backend.domain.mission.application.dto.res.GatherRepeatMissionR
 import com.moing.backend.domain.mission.application.dto.res.GatherSingleMissionRes;
 import com.moing.backend.domain.mission.application.dto.res.MissionReadRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.querydsl.core.types.Projections;
@@ -12,16 +13,17 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-
 import javax.persistence.EntityManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.mission.domain.entity.QMission.*;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
@@ -195,26 +197,107 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 ).fetchCount() > 2;
     }
 
+
+
     @Override
     public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
 
+        Mission mission = queryFactory
+                .selectFrom(QMission.mission)
+                .where(QMission.mission.id.eq(missionId))
+                .fetchOne();
 
-        BooleanExpression isLeader = mission.team.leaderId.eq(memberId);
+        if (mission == null) {
+            return Optional.empty();
+        }
 
-        return Optional.ofNullable(queryFactory
-                .select(Projections.constructor(MissionReadRes.class,
-                        mission.title,
-                        mission.dueTo.stringValue(),
-                        mission.rule,
-                        mission.content,
-                        mission.type.stringValue(),
-                        mission.way.stringValue(),
-                        isLeader))
-                .from(mission)
-                .where(mission.id.eq(missionId))
-                .fetchOne()
+        boolean isLeader = mission.getMakerId().equals(memberId) || mission.getTeam().getLeaderId().equals(memberId);
+
+        MissionReadRes result = new MissionReadRes(
+                mission.getTitle(),
+                mission.getDueTo().toString(),
+                mission.getRule(),
+                mission.getContent(),
+                mission.getType().toString(),
+                mission.getWay().toString(),
+                isLeader
         );
+
+        return Optional.of(result);
     }
+
+    @Override
+    public Long getTodayOnceMissions() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+
+        long todayOnceMissions = queryFactory
+                .select(mission)
+                .from(mission)
+                .where(mission.createdDate.between(startOfToday, endOfToday)
+                        .and(mission.type.eq(MissionType.ONCE)))
+                .fetchCount();
+
+        return todayOnceMissions;
+
+    }
+
+    @Override
+    public Long getYesterdayOnceMissions() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayOnceMissions = queryFactory
+                .select(mission)
+                .from(mission)
+                .where(mission.createdDate.between(startOfYesterday, startOfToday)
+                        .and(mission.type.eq(MissionType.ONCE)))
+                .fetchCount();
+
+        return yesterdayOnceMissions;
+    }
+
+    @Override
+    public Long getTodayRepeatMissions() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long todayRepeatMissions = queryFactory
+                .select(mission)
+                .from(mission)
+                .where(mission.createdDate.between(startOfToday, endOfToday)
+                        .and(mission.type.eq(MissionType.REPEAT)))
+                .fetchCount();
+
+        return todayRepeatMissions;
+    }
+
+    @Override
+    public Long getYesterdayRepeatMissions() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime startOfToday = now.toLocalDate().atStartOfDay();
+        LocalDateTime endOfToday = startOfToday.plusDays(1);
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+
+        long yesterdayRepeatMissions = queryFactory
+                .select(mission)
+                .from(mission)
+                .where(mission.createdDate.between(startOfYesterday, startOfToday)
+                        .and(mission.type.eq(MissionType.REPEAT)))
+                .fetchCount();
+
+
+        return yesterdayRepeatMissions;
+    }
+
+
 
 
     private BooleanExpression createRepeatTypeConditionByArchive() {
@@ -227,7 +310,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
     }
-
 
     private BooleanExpression hasAlreadyVerifiedToday() {
         LocalDateTime today = LocalDateTime.now();
