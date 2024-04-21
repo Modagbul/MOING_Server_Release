@@ -51,6 +51,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         MissionArchiveReq input = MissionArchiveReq.builder()
                 .status("COMPLETE/SKIP")
                 .archive("content[s3 Link / text / link]")
+                .contents("contents")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -123,6 +124,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
         MissionArchiveReq input = MissionArchiveReq.builder()
                 .status("COMPLETE/SKIP")
                 .archive("content[s3 Link / text / link]")
+                .contents("contents")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
