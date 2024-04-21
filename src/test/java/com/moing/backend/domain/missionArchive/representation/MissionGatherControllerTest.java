@@ -97,7 +97,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .doneNum("0")
                 .totalNum("0")
                 .status("WAIT/ONGOING/SKIP/COMPLETE")
-                .donePeople("0")
+                .donePeople(0L)
                 .totalPeople("0")
                 .build());
 
@@ -207,7 +207,7 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .doneNum("0")
                 .totalNum("0")
                 .status("WAIT/ONGOING/SKIP/COMPLETE")
-                .donePeople("0")
+                .donePeople(0L)
                 .totalPeople("0")
                 .build());
 

@@ -10,7 +10,9 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
@@ -20,13 +22,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static com.moing.backend.domain.mission.domain.entity.QMission.*;
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
+import static com.querydsl.jpa.JPAExpressions.select;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -51,7 +52,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
-        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
@@ -64,12 +64,13 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         missionArchive.status.coalesce(mission.status).stringValue(),
 
                         JPAExpressions
-                                .select(missionArchive.member.count().stringValue())
-                                .from(missionArchive)
+                                .select(teamMember.member.countDistinct())
+                                .from(teamMember)
                                 .where(
-                                        missionArchive.mission.id.eq(mission.id),
-                                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)
-                                                .or(missionArchive.mission.type.eq(MissionType.ONCE))
+                                        teamMember.team.eq(mission.team),
+                                        teamMember.member.memberId.in(allMissionDone(mission.id))
+                                                .or(teamMember.member.memberId.in(todayRepeatMissionDone(mission.id))),
+                                        teamMember.isDeleted.ne(Boolean.TRUE)
                                 ),
 
                         mission.team.numOfMember.stringValue()
@@ -79,7 +80,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         .leftJoin(missionArchive)
                         .on(missionArchive.mission.eq(mission),
                                 missionArchive.member.memberId.eq(memberId),
-//                                hasAlreadyVerifiedToday,
                                 dateInRange
                         )
                 .where(
@@ -91,6 +91,47 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .groupBy(mission)
                 .orderBy(mission.createdDate.desc())
                 .fetch());
+    }
+
+    private JPQLQuery<Long> todayRepeatMissionDone(NumberPath<Long> missionId) {
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
+
+        return
+                select(missionArchive.member.memberId)
+                        .from(missionArchive, mission)
+                        .where(missionArchive.mission.id.eq(missionId),
+                                mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        )
+                        .groupBy(missionArchive.member.memberId,
+                                missionArchive.mission.id,
+                                missionArchive.count,
+                                mission.number,
+                                missionArchive.mission.type);
+//                        .having(
+////                                missionArchive.mission.id.eq(missionId)
+//                        );
+    }
+
+    private JPQLQuery<Long> allMissionDone(NumberPath<Long> missionId) {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
+        return
+                select(missionArchive.member.memberId)
+                        .from(missionArchive, mission)
+                        .where(missionArchive.mission.id.eq(missionId),
+                                mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
+                        )
+                        .groupBy(missionArchive.member.memberId,
+                                missionArchive.mission.id,
+                                missionArchive.count,
+                                mission.number)
+                        .having(
+                                missionArchive.count.max().goe(mission.number)
+                        );
     }
 
 
