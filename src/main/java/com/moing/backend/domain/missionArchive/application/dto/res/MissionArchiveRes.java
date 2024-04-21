@@ -18,6 +18,7 @@ public class MissionArchiveRes {
     private Long count;
     private String heartStatus;
     private Long hearts;
+    private String contents;
 
     public void updateCount(Long count) {
         this.count = count;

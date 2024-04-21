@@ -1,7 +1,6 @@
 package com.moing.backend.domain.missionArchive.representation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveHeartReq;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import com.moing.backend.domain.missionArchive.application.dto.res.*;
 import com.moing.backend.domain.missionArchive.application.service.*;
@@ -65,6 +64,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .count(1L)
                 .heartStatus("[True/False]")
                 .hearts(1L)
+                .contents("contents")
                 .build();
 
         given(missionArchiveCreateUseCase.createArchive(any(),any(),any())).willReturn(output);
@@ -93,7 +93,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("status").description("미션 인증 상태 [COMPLETE/SKIP]"),
-                                        fieldWithPath("archive").description("미션 인증물 [s3URL/text/링크] ")
+                                        fieldWithPath("archive").description("미션 인증물 [s3URL/text/링크] "),
+                                        fieldWithPath("contents").description("미션 인증 문구 [null 허용] ")
+
+
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -105,7 +108,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.status").description("미션 인증 상태"),
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태")
+                                        fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
+                                        fieldWithPath("data.contents").description("미션 인증 문구")
                                 )
                         )
                 )
@@ -132,6 +136,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .count(1L)
                 .heartStatus("[True/False]")
                 .hearts(1L)
+                .contents("contents")
                 .build();
 
         given(missionArchiveUpdateUseCase.updateArchive(any(),any(),any())).willReturn(output);
@@ -160,7 +165,9 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("status").description("미션 인증 상태 [COMPLETE/SKIP]"),
-                                        fieldWithPath("archive").description("미션 인증물 [s3URL/text/링크] ")
+                                        fieldWithPath("archive").description("미션 인증물 [s3URL/text/링크] "),
+                                        fieldWithPath("contents").description("미션 인증 문구 [null 허용] ")
+
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -173,7 +180,9 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.status").description("미션 인증 상태"),
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수")
+                                        fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
+                                        fieldWithPath("data.contents").description("미션 인증 문구")
+
                                 )
                         )
                 )
@@ -236,6 +245,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .count(1L)
                 .heartStatus("[True/False]")
                 .hearts(1L)
+                .contents("contents")
                 .build());
 
         MyMissionArchiveRes output = MyMissionArchiveRes.builder()
@@ -278,7 +288,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archives[].status").description("미션 인증 상태"),
                                         fieldWithPath("data.archives[].count").description("미션 인증 횟수"),
                                         fieldWithPath("data.archives[].heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수")
+                                        fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수"),
+                                        fieldWithPath("data.archives[].contents").description("미션 인증 문구")
 
 
                                         )
@@ -304,6 +315,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .heartStatus("[True/False]")
                 .hearts(3)
                 .makerId(1L)
+                .contents("contents")
                 .build());
 
         given(missionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
@@ -343,10 +355,11 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].count").description("미션 인증 횟수"),
                                         fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태 "),
                                         fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
-                                        fieldWithPath("data[].makerId").description("미션 인증한 사람 ")
+                                        fieldWithPath("data[].makerId").description("미션 인증한 사람 "),
+                                        fieldWithPath("data[].contents").description("미션 인증 문구")
 
 
-                                        )
+                                )
                         )
                 )
                 .andReturn();
