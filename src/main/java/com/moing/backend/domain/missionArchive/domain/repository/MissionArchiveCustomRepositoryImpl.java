@@ -37,7 +37,7 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
-import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
+//import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
 
 @Slf4j
@@ -68,13 +68,13 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .from(mission)
                 .where(mission.notIn
                                 (JPAExpressions
-                                        .select(missionState.mission)
-                                        .from(missionState)
-                                        .where(missionState.member.memberId.eq(memberId),
-                                                missionState.mission.team.teamId.eq(teamId),
-                                                missionState.mission.type.eq(MissionType.ONCE),
-                                                missionState.mission.status.eq(MissionStatus.SUCCESS)
-                                                        .or(missionState.mission.status.eq(MissionStatus.ONGOING))
+                                        .select(missionArchive.mission)
+                                        .from(missionArchive)
+                                        .where(missionArchive.member.memberId.eq(memberId),
+                                                missionArchive.mission.team.teamId.eq(teamId),
+                                                missionArchive.mission.type.eq(MissionType.ONCE),
+                                                missionArchive.mission.status.eq(MissionStatus.SUCCESS)
+                                                        .or(missionArchive.mission.status.eq(MissionStatus.ONGOING))
                                         )),
                         mission.type.eq(MissionType.ONCE),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
@@ -269,16 +269,16 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                         mission.id,
                         mission.title,
 //                                missionState.count().coalesce(0L).as("done"),
-                        missionState.count(),
+                        missionArchive.count(),
                         mission.number,
                         mission.way.stringValue(),
                         mission.status.stringValue(),
                         isReadExpression.as("isRead")
                 ))
                 .from(mission)
-                .leftJoin(missionState)
-                .on(missionState.mission.eq(mission),
-                        missionState.member.memberId.eq(memberId),
+                .leftJoin(missionArchive)
+                .on(missionArchive.mission.eq(mission),
+                        missionArchive.member.memberId.eq(memberId),
                         dateInRange
                 )
                 .where(
@@ -288,7 +288,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 )
                 .groupBy(mission.id,mission.number)
 //                .having(missionState.count().lt(mission.number)) // HAVING 절을 사용하여 조건 적용
-                .orderBy(missionState.count().desc())
+                .orderBy(missionArchive.count().desc())
                 .fetch());
 
     }
@@ -401,8 +401,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
+        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+                .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
         // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
         return dateInRange.and(dateInRange);

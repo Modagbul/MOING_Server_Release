@@ -13,7 +13,6 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
-import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.report.application.mapper.ReportMapper;
 import com.moing.backend.domain.report.domain.entity.Report;
 import com.moing.backend.domain.report.domain.entity.constant.ReportType;
