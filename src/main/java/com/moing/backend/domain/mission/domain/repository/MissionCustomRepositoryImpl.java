@@ -64,7 +64,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         missionArchive.status.coalesce(mission.status).stringValue(),
 
                         JPAExpressions
-                                .select(teamMember.member.countDistinct())
+                                .select(teamMember.member.countDistinct().stringValue())
                                 .from(teamMember)
                                 .where(
                                         teamMember.team.eq(mission.team),
