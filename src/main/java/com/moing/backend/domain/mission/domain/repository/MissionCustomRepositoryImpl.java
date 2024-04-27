@@ -64,12 +64,12 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         missionArchive.status.coalesce(mission.status).stringValue(),
 
                         JPAExpressions
-                                .select(teamMember.member.countDistinct())
+                                .select(teamMember.member.countDistinct().stringValue())
                                 .from(teamMember)
                                 .where(
                                         teamMember.team.eq(mission.team),
-                                        teamMember.member.memberId.in(allMissionDone(mission.id))
-                                                .or(teamMember.member.memberId.in(todayRepeatMissionDone(mission.id))),
+                                        teamMember.member.memberId.in(RepeatMissionDonePeopleByWeek(mission.id))
+                                        .or(teamMember.member.memberId.in(RepeatMissionDonePeopleByDay(mission.id))),
                                         teamMember.isDeleted.ne(Boolean.TRUE)
                                 ),
 
@@ -93,45 +93,34 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                 .fetch());
     }
 
-    private JPQLQuery<Long> todayRepeatMissionDone(NumberPath<Long> missionId) {
+    private JPQLQuery<Long> RepeatMissionDonePeopleByDay(NumberPath<Long> missionId) {
+
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
         BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
 
         return
                 select(missionArchive.member.memberId)
                         .from(missionArchive, mission)
-                        .where(missionArchive.mission.id.eq(missionId),
-                                mission.id.eq(missionId),
-                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday)).or(missionArchive.mission.type.eq(MissionType.ONCE))
-                        )
-                        .groupBy(missionArchive.member.memberId,
-                                missionArchive.mission.id,
-                                missionArchive.count,
-                                mission.number,
-                                missionArchive.mission.type);
-//                        .having(
-////                                missionArchive.mission.id.eq(missionId)
-//                        );
+                        .where(
+                                missionArchive.mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday))
+                        ).distinct();
     }
 
-    private JPQLQuery<Long> allMissionDone(NumberPath<Long> missionId) {
+    private JPQLQuery<Long> RepeatMissionDonePeopleByWeek(NumberPath<Long> missionId) {
 
         BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
-        return
-                select(missionArchive.member.memberId)
-                        .from(missionArchive, mission)
-                        .where(missionArchive.mission.id.eq(missionId),
-                                mission.id.eq(missionId),
-                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)).or(missionArchive.mission.type.eq(MissionType.ONCE))
-                        )
-                        .groupBy(missionArchive.member.memberId,
-                                missionArchive.mission.id,
-                                missionArchive.count,
-                                mission.number)
-                        .having(
-                                missionArchive.count.max().goe(mission.number)
-                        );
+        return select(missionArchive.member.memberId)
+                                .from(missionArchive)
+                                .where(
+                                        missionArchive.mission.id.eq(missionId),
+                                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange))
+                                )
+                                .groupBy(missionArchive.mission.number, missionArchive.count)
+                                .having(missionArchive.count.max().goe(missionArchive.mission.number))
+                .distinct();
+
     }
 
 

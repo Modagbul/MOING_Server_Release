@@ -18,7 +18,7 @@ public class GatherRepeatMissionRes {
     private String totalNum;
     private String doneNum;
     private String status;
-    private Long donePeople;
+    private String donePeople;
     private String totalPeople;
 
 
