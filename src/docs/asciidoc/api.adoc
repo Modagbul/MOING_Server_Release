@@ -22,6 +22,8 @@ include::Mission-API.adoc[]
 
 include::MissionArchive-API.adoc[]
 
+include::MissionArchiveComment_API.adoc[]
+
 include::MissionBoard-API.adoc[]
 
 include::MissionGatherBoard-API.adoc[]

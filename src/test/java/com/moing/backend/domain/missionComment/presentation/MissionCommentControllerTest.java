@@ -1,14 +1,13 @@
-package com.moing.backend.domain.boardComment.presentation;
+package com.moing.backend.domain.missionComment.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUseCase;
-import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUseCase;
-import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUseCase;
-import com.moing.backend.domain.boardComment.presentattion.BoardCommentController;
 import com.moing.backend.domain.comment.application.dto.request.CreateCommentRequest;
 import com.moing.backend.domain.comment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.comment.application.dto.response.CreateCommentResponse;
 import com.moing.backend.domain.comment.application.dto.response.GetCommentResponse;
+import com.moing.backend.domain.missionComment.application.service.CreateMissionCommentUseCase;
+import com.moing.backend.domain.missionComment.application.service.DeleteMissionCommentUseCase;
+import com.moing.backend.domain.missionComment.application.service.GetMissionCommentUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,22 +27,22 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BoardCommentController.class)
-public class BoardCommentControllerTest extends CommonControllerTest {
+@WebMvcTest(MissionCommentController.class)
+public class MissionCommentControllerTest extends CommonControllerTest {
 
     @MockBean
-    private CreateBoardCommentUseCase createBoardCommentUseCase;
+    private CreateMissionCommentUseCase createMissionCommentUseCase;
     @MockBean
-    private DeleteBoardCommentUseCase deleteBoardCommentUseCase;
+    private DeleteMissionCommentUseCase deleteMissionCommentUseCase;
     @MockBean
-    private GetBoardCommentUseCase getBoardCommentUseCase;
+    private GetMissionCommentUseCase getMissionCommentUseCase;
 
     @Test
-    public void create_board_comment() throws Exception {
+    public void create_mission_comment() throws Exception {
 
         //given
         Long teamId = 1L;
-        Long boardId = 1L;
+        Long missionArchiveId = 1L;
         CreateCommentRequest input = CreateCommentRequest.builder()
                 .content("게시글 내용")
                 .build();
@@ -54,12 +53,12 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                 .commentId(1L)
                 .build();
 
-        given(createBoardCommentUseCase.createBoardComment(any(), any(), any(), any())).willReturn(output);
+        given(createMissionCommentUseCase.createBoardComment(any(), any(), any(), any())).willReturn(output);
 
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                post("/api/{teamId}/{boardId}/comment", teamId, boardId)
+                post("/api/{teamId}/{missionArchiveId}/mcomment", teamId, missionArchiveId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -75,7 +74,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
-                                        parameterWithName("boardId").description("게시글 아이디")
+                                        parameterWithName("missionArchiveId").description("미션 게시물 아이디")
                                 ),
                                 requestFields(
                                         fieldWithPath("content").description("댓글 내용")
@@ -90,17 +89,17 @@ public class BoardCommentControllerTest extends CommonControllerTest {
     }
 
     @Test
-    public void delete_board_comment() throws Exception {
+    public void delete_mission_comment() throws Exception {
 
         //given
         Long teamId = 1L;
         Long boardId = 1L;
-        Long boardCommentId = 1L;
+        Long missionArchiveId = 1L;
 
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                delete("/api/{teamId}/{boardId}/comment/{boardCommentId}", teamId, boardId, boardCommentId)
+                delete("/api/{teamId}/{missionArchiveId}/mcomment/{boardCommentId}", teamId, boardId, missionArchiveId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -115,7 +114,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
-                                        parameterWithName("boardId").description("게시글 아이디"),
+                                        parameterWithName("missionArchiveId").description("미션 게시글 아이디"),
                                         parameterWithName("boardCommentId").description("댓글 아이디")
                                 ),
                                 responseFields(
@@ -150,12 +149,12 @@ public class BoardCommentControllerTest extends CommonControllerTest {
 
         GetCommentResponse output = new GetCommentResponse(commentBlocks);
 
-        given(getBoardCommentUseCase.getBoardCommentAll(any(), any(), any())).willReturn(output);
+        given(getMissionCommentUseCase.getBoardCommentAll(any(), any(), any())).willReturn(output);
 
 
         //when
         ResultActions actions = mockMvc.perform(RestDocumentationRequestBuilders.
-                get("/api/{teamId}/{boardId}/comment", teamId, boardId)
+                get("/api/{teamId}/{missionArchiveId}/mcomment", teamId, boardId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
         );
@@ -171,7 +170,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
-                                        parameterWithName("boardId").description("게시글 아이디")
+                                        parameterWithName("missionArchiveId").description("게시글 아이디")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
@@ -185,7 +184,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.commentBlocks[].isWriter").description("댓글 작성자 여부"),
                                         fieldWithPath("data.commentBlocks[].createdDate").description("생성 시간"),
                                         fieldWithPath("data.commentBlocks[].makerId").description("작성자 Id")
-                                        )
+                                )
 
                         )
                 );
