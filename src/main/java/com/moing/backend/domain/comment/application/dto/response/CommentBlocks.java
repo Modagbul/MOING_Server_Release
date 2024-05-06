@@ -1,4 +1,4 @@
-package com.moing.backend.domain.boardComment.application.dto.response;
+package com.moing.backend.domain.comment.application.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class CommentBlocks {
 
-    private Long boardCommentId;
+    private Long commentId;
 
     private String content;
 
@@ -32,8 +32,8 @@ public class CommentBlocks {
     private Long makerId;
 
     @QueryProjection
-    public CommentBlocks(Long boardCommentId, String content, String writerNickName, Boolean writerIsLeader, String writerProfileImage, Boolean isWriter, Boolean writerIsDeleted, LocalDateTime createdDate, Long makerId) {
-        this.boardCommentId = boardCommentId;
+    public CommentBlocks(Long commentId, String content, String writerNickName, Boolean writerIsLeader, String writerProfileImage, Boolean isWriter, Boolean writerIsDeleted, LocalDateTime createdDate, Long makerId) {
+        this.commentId = commentId;
         this.writerNickName = writerNickName;
         this.writerIsLeader = writerIsLeader;
         this.writerProfileImage = writerProfileImage;

@@ -2,7 +2,6 @@ package com.moing.backend.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -62,6 +61,10 @@ public enum ErrorCode {
     //게시글 댓글 관련 에러 코드
     NOT_FOUND_BY_BOARD_COMMENT_ID_ERROR("BC0001","해당 boardCommentId인 댓글이 존재하지 않습니다."),
     NOT_AUTH_BY_BOARD_COMMENT_ID_ERROR("BC0002","권한이 없습니다."),
+
+    //미션 댓글 관련 에러 코드
+    NOT_FOUND_BY_MISSION_COMMENT_ID_ERROR("MC0001", "해당 missionCommentId인 댓글이 존재하지 않습니다."),
+    NOT_AUTH_BY_MISSION_COMMENT_ID_ERROR("MC0002", "권한이 없습니다."),
 
     //알림 관련 에러 코드
     NOT_FOUND_BY_ALARM_HISOTRY_ID_ERROR("AH0001","해당 alarmHistoryId인 알림이 존재하지 않습니다."),

@@ -66,6 +66,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .heartStatus("[True/False]")
                 .hearts(1L)
                 .contents("contents")
+                .comments(1L)
                 .build();
 
         given(missionArchiveCreateUseCase.createArchive(any(),any(),any())).willReturn(output);
@@ -110,8 +111,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
                                         fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
-                                        fieldWithPath("data.contents").description("미션 인증 문구")
-                                )
+                                        fieldWithPath("data.contents").description("미션 인증 문구"),
+                                        fieldWithPath("data.comments").description("미션 댓글 개수")
+
+                                        )
                         )
                 )
                        .andReturn();
@@ -139,6 +142,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .heartStatus("[True/False]")
                 .hearts(1L)
                 .contents("contents")
+                .comments(1L)
                 .build();
 
         given(missionArchiveUpdateUseCase.updateArchive(any(),any(),any())).willReturn(output);
@@ -183,9 +187,10 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.count").description("미션 인증 횟수"),
                                         fieldWithPath("data.heartStatus").description("미션 인증 좋아요 상태"),
                                         fieldWithPath("data.hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.contents").description("미션 인증 문구")
+                                        fieldWithPath("data.contents").description("미션 인증 문구"),
+                                        fieldWithPath("data.comments").description("미션 댓글 개수")
 
-                                )
+                                        )
                         )
                 )
                 .andReturn();
@@ -248,6 +253,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .heartStatus("[True/False]")
                 .hearts(1L)
                 .contents("contents")
+                .comments(1L)
                 .build());
 
         MyMissionArchiveRes output = MyMissionArchiveRes.builder()
@@ -291,7 +297,8 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.archives[].count").description("미션 인증 횟수"),
                                         fieldWithPath("data.archives[].heartStatus").description("미션 인증 좋아요 상태"),
                                         fieldWithPath("data.archives[].hearts").description("미션 인증 좋아요 수"),
-                                        fieldWithPath("data.archives[].contents").description("미션 인증 문구")
+                                        fieldWithPath("data.archives[].contents").description("미션 인증 문구"),
+                                        fieldWithPath("data.archives[].comments").description("미션 댓글 개수")
 
 
                                         )
