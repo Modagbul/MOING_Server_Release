@@ -91,4 +91,17 @@ public class BoardController {
                                                                                @PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardUseCase.getAllBoard(user.getSocialId(), teamId)));
     }
+
+    @PostMapping("/test")
+    public void test() {
+        Thread thread1 = new Thread(() -> {
+            this.getBoardUseCase.getBoardDetail("KAKAO@tester01", 1L,1L);
+        });
+        Thread thread2 = new Thread(() -> {
+            this.getBoardUseCase.getBoardDetail("KAKAO@tester01", 1L,1L);
+        });
+        thread1.start();
+        thread2.start();
+    }
+
 }
