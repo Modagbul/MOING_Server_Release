@@ -49,7 +49,7 @@ public class MissionCreateUseCase {
                 throw new NoAccessCreateMission();
             // 반복미션은 최대 2개 생성 가능
             } else if (missionQueryService.isAbleCreateRepeatMission(team.getTeamId())) {
-                throw new NoAccessCreateMission();
+                throw new NoMoreCreateMission();
             }
             // 반복미션 유예 해제
             mission.updateStatus(MissionStatus.ONGOING);
