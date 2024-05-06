@@ -200,7 +200,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))
                                 ),
 
-                        mission.team.numOfMember.longValue()
+                        mission.team.numOfMember.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(missionArchive)
