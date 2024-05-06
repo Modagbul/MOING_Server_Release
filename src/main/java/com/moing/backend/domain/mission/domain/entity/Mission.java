@@ -6,7 +6,6 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionRead.domain.entity.MissionRead;
-import com.moing.backend.domain.missionState.domain.entity.MissionState;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.entity.BaseTimeEntity;
 import lombok.AllArgsConstructor;
@@ -56,9 +55,6 @@ public class Mission extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "mission")
     List<MissionArchive> missionArchiveList = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "mission")
-    List<MissionState> missionStateList = new ArrayList<>();
 
     @OneToMany(mappedBy = "mission")
     List<MissionRead> missionReads=new ArrayList<>();

@@ -10,13 +10,9 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
-import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
-import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
@@ -35,8 +31,6 @@ public class MissionArchiveCreateUseCase {
 
     private final MissionQueryService missionQueryService;
     private final MemberGetService memberGetService;
-
-    private final MissionStateUseCase missionStateUseCase;
 
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
@@ -64,8 +58,6 @@ public class MissionArchiveCreateUseCase {
             }
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
-            missionStateUseCase.updateMissionState(member, mission, newArchive);
-
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
         }
@@ -79,8 +71,6 @@ public class MissionArchiveCreateUseCase {
             }
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
-            missionStateUseCase.updateMissionState(member, mission, newArchive);
-
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
             // 인증 후 n/n명 인증 성공 리턴값 업데이트
