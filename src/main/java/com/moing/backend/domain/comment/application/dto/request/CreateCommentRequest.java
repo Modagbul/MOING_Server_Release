@@ -1,4 +1,4 @@
-package com.moing.backend.domain.boardComment.application.dto.request;
+package com.moing.backend.domain.comment.application.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @Getter
-public class CreateBoardCommentRequest {
+public class CreateCommentRequest {
 
     @NotBlank(message = "content 을 입력해 주세요.")
     @Size(min = 0, max = 300, message = "댓글 글자수를 초과했습니다.")
