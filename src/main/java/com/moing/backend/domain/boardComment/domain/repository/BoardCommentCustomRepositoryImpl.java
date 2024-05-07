@@ -1,9 +1,9 @@
 package com.moing.backend.domain.boardComment.domain.repository;
 
 import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
-import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
-import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
-import com.moing.backend.domain.boardComment.application.dto.response.QCommentBlocks;
+import com.moing.backend.domain.comment.application.dto.response.CommentBlocks;
+import com.moing.backend.domain.comment.application.dto.response.GetCommentResponse;
+import com.moing.backend.domain.comment.application.dto.response.QCommentBlocks;
 import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.teamMember.domain.entity.QTeamMember;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
@@ -31,7 +31,7 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
 
 
     @Override
-    public GetBoardCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
+    public GetCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
 
         BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(teamMember.getTeamMemberId(), boardComment.teamMember.member.memberId);
 
@@ -59,7 +59,7 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
                 .orderBy(boardComment.createdDate.asc())
                 .fetch();
 
-        return new GetBoardCommentResponse(commentBlocks);
+        return new GetCommentResponse(commentBlocks);
     }
 
     @Override

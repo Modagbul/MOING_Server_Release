@@ -10,21 +10,24 @@ import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.moing.backend.domain.mission.domain.entity.QMission.mission;
 import static com.moing.backend.domain.missionArchive.domain.entity.QMissionArchive.missionArchive;
-import static com.moing.backend.domain.missionState.domain.entity.QMissionState.missionState;
 import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
+import static com.querydsl.jpa.JPAExpressions.select;
 
 public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
@@ -48,7 +51,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherRepeatMissionRes>> findRepeatMissionByMemberId(Long memberId,List<Long>teams) {
 
-        BooleanExpression dateInRange = createRepeatTypeConditionByState();
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherRepeatMissionRes.class,
@@ -57,13 +60,26 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.number.stringValue(),
-                        missionState.count().stringValue(),
-                        mission.status.stringValue()
+                        missionArchive.count.max().coalesce(0L).stringValue(),
+                        missionArchive.status.coalesce(mission.status).stringValue(),
+
+                        JPAExpressions
+                                .select(teamMember.member.countDistinct().stringValue())
+                                .from(teamMember)
+                                .where(
+                                        teamMember.team.eq(mission.team),
+                                        teamMember.member.memberId.in(RepeatMissionDonePeopleByWeek(mission.id))
+                                        .or(teamMember.member.memberId.in(RepeatMissionDonePeopleByDay(mission.id))),
+                                        teamMember.isDeleted.ne(Boolean.TRUE)
+                                ),
+
+                        mission.team.numOfMember.stringValue()
+
                 ))
                 .from(mission)
-                        .leftJoin(missionState)
-                        .on(missionState.mission.eq(mission),
-                                missionState.member.memberId.eq(memberId),
+                        .leftJoin(missionArchive)
+                        .on(missionArchive.mission.eq(mission),
+                                missionArchive.member.memberId.eq(memberId),
                                 dateInRange
                         )
                 .where(
@@ -72,11 +88,40 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.type.eq(MissionType.REPEAT)
 
                 )
-                .groupBy(mission.id,mission.number)
-                .having(missionState.count().lt(mission.number)
-                        ) // HAVING 절을 사용하여 조건 적용
-                .orderBy(missionState.count().desc())
+                .groupBy(mission)
+                .orderBy(mission.createdDate.desc())
                 .fetch());
+    }
+
+    private JPQLQuery<Long> RepeatMissionDonePeopleByDay(NumberPath<Long> missionId) {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+        BooleanExpression hasAlreadyVerifiedToday = hasAlreadyVerifiedToday();
+
+        return
+                select(missionArchive.member.memberId)
+                        .from(missionArchive)
+                        .where(
+                                missionArchive.mission.id.eq(missionId),
+                                (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday))
+                        ).distinct();
+    }
+
+    private JPQLQuery<Long> RepeatMissionDonePeopleByWeek(NumberPath<Long> missionId) {
+
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
+
+        return select(missionArchive.member.memberId)
+                                .from(missionArchive)
+                                .where(
+                                        missionArchive.mission.id.eq(missionId),
+                                        (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange))
+                                )
+                                .groupBy(missionArchive.mission.number, missionArchive.count)
+                                .having(
+                                        missionArchive.count.max().goe(missionArchive.mission.number))
+                .distinct();
+
     }
 
 
@@ -135,6 +180,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<GatherSingleMissionRes>> findSingleMissionByMemberId(Long memberId, List<Long> teams) {
 
+        BooleanExpression dateInRange = createRepeatTypeConditionByArchive();
 
         return Optional.ofNullable(queryFactory
                 .select(Projections.constructor(GatherSingleMissionRes.class,
@@ -143,18 +189,29 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.team.name,
                         mission.title,
                         mission.dueTo.stringValue(),
-                        mission.status.stringValue()
+                        missionArchive.status.coalesce(mission.status).stringValue(),
+
+                        JPAExpressions
+                                .select(missionArchive.member.count().stringValue())
+                                .from(missionArchive)
+                                .where(
+                                        missionArchive.mission.id.eq(mission.id),
+                                        missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
+                                                .or(missionArchive.mission.type.eq(MissionType.ONCE))
+                                ),
+
+                        mission.team.numOfMember.stringValue()
                 ))
                 .from(mission)
-                .leftJoin(missionState).on(
-                        mission.eq(missionState.mission),
-                        missionState.member.memberId.eq(memberId)
-                        )
+                .leftJoin(missionArchive)
+                .on(
+                        mission.eq(missionArchive.mission),
+                        missionArchive.member.memberId.eq(memberId)
+                )
                 .where(
                         mission.team.teamId.in(teams),
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
-                        mission.type.eq(MissionType.ONCE),
-                        missionState.id.isNull()
+                        mission.type.eq(MissionType.ONCE)
                 )
                 .orderBy(mission.dueTo.asc())
                 .fetch());
@@ -170,6 +227,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.status.eq(MissionStatus.ONGOING)
                 ).fetchCount() > 2;
     }
+
+
 
     @Override
     public Optional<MissionReadRes> findByIds(Long memberId, Long missionId) {
@@ -270,34 +329,25 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     }
 
 
+
+
     private BooleanExpression createRepeatTypeConditionByArchive() {
         LocalDate now = LocalDate.now();
         DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
         LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
+        return missionArchive.createdDate.goe(startOfWeek.atStartOfDay())
                 .and(missionArchive.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
 
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
     }
 
-    private BooleanExpression createRepeatTypeConditionByState() {
-        LocalDate now = LocalDate.now();
-        DayOfWeek firstDayOfWeek = DayOfWeek.MONDAY;
-        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(firstDayOfWeek));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
+    private BooleanExpression hasAlreadyVerifiedToday() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime startOfToday = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = today.withHour(23).withMinute(59).withSecond(59).withNano(999999999);
 
-        // MissionType.REPEAT 인 경우의 추가적인 날짜 범위 조건
-//        BooleanExpression isRepeatType = missionArchive.mission.type.eq(MissionType.REPEAT);
-        BooleanExpression dateInRange = missionState.createdDate.goe(startOfWeek.atStartOfDay())
-                .and(missionState.createdDate.loe(endOfWeek.atStartOfDay().plusDays(1).minusNanos(1)));
-
-        // 조건이 MissionType.REPEAT 인 경우에만 날짜 범위 조건 적용
-        return dateInRange.and(dateInRange);
+        return missionArchive.createdDate.between(startOfToday, endOfToday);
     }
 
 

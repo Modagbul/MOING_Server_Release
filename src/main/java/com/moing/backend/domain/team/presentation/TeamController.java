@@ -137,4 +137,16 @@ public class TeamController {
         return ResponseEntity.ok(SuccessResponse.create(GET_TEAM_COUNT_SUCCESS.getMessage(), this.getTeamUseCase.getTeamCount(user.getSocialId(),teamId)));
     }
 
+    @PostMapping(value = "/test", name = "테스트")
+    public void test() {
+        Thread thread1 = new Thread(() -> {
+            this.signInTeamUseCase.signInTeam("KAKAO@tester01", 1L);
+        });
+        Thread thread2 = new Thread(() -> {
+            this.signInTeamUseCase.signInTeam("KAKAO@tester01", 1L);
+        });
+        thread1.start();
+        thread2.start();
+    }
+
 }
