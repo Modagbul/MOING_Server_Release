@@ -23,13 +23,9 @@ public class TeamScoreGetUseCase {
         Long level = teamScore.getLevel();
         Long score = teamScore.getScore();
 
-        // 70 레벨 이상은 경험치 120 되어야 레벨업 가능. level을 각 레벨 별 필요한 경험치 수에 따르 퍼센트로 계산
-        if (level > 70) {
-            score = ( score / 120 ) * 100;
-        }
 
         return TeamScoreRes.builder()
-                .score(score)
+                .score(score%100)
                 .level(level)
                 .build();
 

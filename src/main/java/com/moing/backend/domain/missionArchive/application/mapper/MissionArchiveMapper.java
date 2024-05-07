@@ -29,6 +29,7 @@ public class MissionArchiveMapper {
                 .mission(mission)
                 .heartList(new ArrayList<>())
                 .contents(missionArchiveReq.getContents())
+                .commentNum(0L)
                 .build();
     }
 
