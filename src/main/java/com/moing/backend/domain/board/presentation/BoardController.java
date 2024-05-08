@@ -91,4 +91,5 @@ public class BoardController {
                                                                                @PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(GET_BOARD_ALL_SUCCESS.getMessage(), this.getBoardUseCase.getAllBoard(user.getSocialId(), teamId)));
     }
+
 }

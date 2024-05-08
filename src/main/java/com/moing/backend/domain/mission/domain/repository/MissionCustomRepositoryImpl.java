@@ -100,7 +100,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
 
         return
                 select(missionArchive.member.memberId)
-                        .from(missionArchive, mission)
+                        .from(missionArchive)
                         .where(
                                 missionArchive.mission.id.eq(missionId),
                                 (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange).and(hasAlreadyVerifiedToday))
@@ -118,7 +118,8 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                                         (missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange))
                                 )
                                 .groupBy(missionArchive.mission.number, missionArchive.count)
-                                .having(missionArchive.count.max().goe(missionArchive.mission.number))
+                                .having(
+                                        missionArchive.count.max().goe(missionArchive.mission.number))
                 .distinct();
 
     }
@@ -191,7 +192,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         missionArchive.status.coalesce(mission.status).stringValue(),
 
                         JPAExpressions
-                                .select(missionArchive.member.count().longValue())
+                                .select(missionArchive.member.count().stringValue())
                                 .from(missionArchive)
                                 .where(
                                         missionArchive.mission.id.eq(mission.id),
@@ -199,7 +200,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))
                                 ),
 
-                        mission.team.numOfMember.longValue()
+                        mission.team.numOfMember.stringValue()
                 ))
                 .from(mission)
                 .leftJoin(missionArchive)

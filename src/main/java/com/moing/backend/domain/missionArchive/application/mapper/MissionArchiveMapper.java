@@ -29,6 +29,7 @@ public class MissionArchiveMapper {
                 .mission(mission)
                 .heartList(new ArrayList<>())
                 .contents(missionArchiveReq.getContents())
+                .commentNum(0L)
                 .build();
     }
 
@@ -51,6 +52,7 @@ public class MissionArchiveMapper {
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
                         .count())
                 .contents(missionArchive.getContents())
+                .comments(missionArchive.getCommentNum())
                 .build();
     }
 

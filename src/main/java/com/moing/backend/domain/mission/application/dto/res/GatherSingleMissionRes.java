@@ -16,10 +16,10 @@ public class GatherSingleMissionRes {
     private String missionTitle;
     private String dueTo;
     private String status;
-    private Long done;
-    private Long total;
+    private String done;
+    private String total;
 
-    public GatherSingleMissionRes(Long missionId, Long teamId, String teamName, String missionTitle, String dueTo, String status, Long total) {
+    public GatherSingleMissionRes(Long missionId, Long teamId, String teamName, String missionTitle, String dueTo, String status, String total) {
         this.missionId = missionId;
         this.teamId = teamId;
         this.teamName = teamName;

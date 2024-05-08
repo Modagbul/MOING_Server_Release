@@ -1,9 +1,9 @@
 package com.moing.backend.domain.missionArchive.application.dto.res;
 
-import lombok.*;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -19,6 +19,7 @@ public class MissionArchiveRes {
     private String heartStatus;
     private Long hearts;
     private String contents;
+    private Long comments;
 
     public void updateCount(Long count) {
         this.count = count;

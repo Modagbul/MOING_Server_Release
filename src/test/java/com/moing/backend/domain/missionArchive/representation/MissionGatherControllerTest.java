@@ -43,8 +43,8 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .teamName("team name")
                 .missionTitle("mission title")
                 .status("WAIT/ONGOING/SKIP/COMPLETE")
-                .done(0L)
-                .total(5L)
+                .done("0")
+                .total("5")
                 .build());
 
         given(missionGatherBoardUseCase.getAllActiveSingleMissions(any())).willReturn(output);
@@ -152,8 +152,8 @@ public class MissionGatherControllerTest extends CommonControllerTest {
                 .teamName("team name")
                 .missionTitle("mission title")
                 .status("WAIT/ONGOING/SKIP/COMPLETE")
-                .done(0L)
-                .total(5L)
+                .done("0")
+                .total("5")
                 .build());
 
         given(missionGatherBoardUseCase.getTeamActiveSingleMissions(any(),any())).willReturn(output);

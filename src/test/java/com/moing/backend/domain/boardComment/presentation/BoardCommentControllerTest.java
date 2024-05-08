@@ -1,14 +1,14 @@
 package com.moing.backend.domain.boardComment.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.boardComment.application.dto.request.CreateBoardCommentRequest;
-import com.moing.backend.domain.boardComment.application.dto.response.CommentBlocks;
-import com.moing.backend.domain.boardComment.application.dto.response.CreateBoardCommentResponse;
-import com.moing.backend.domain.boardComment.application.dto.response.GetBoardCommentResponse;
 import com.moing.backend.domain.boardComment.application.service.CreateBoardCommentUseCase;
 import com.moing.backend.domain.boardComment.application.service.DeleteBoardCommentUseCase;
 import com.moing.backend.domain.boardComment.application.service.GetBoardCommentUseCase;
 import com.moing.backend.domain.boardComment.presentattion.BoardCommentController;
+import com.moing.backend.domain.comment.application.dto.request.CreateCommentRequest;
+import com.moing.backend.domain.comment.application.dto.response.CommentBlocks;
+import com.moing.backend.domain.comment.application.dto.response.CreateCommentResponse;
+import com.moing.backend.domain.comment.application.dto.response.GetCommentResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,14 +44,14 @@ public class BoardCommentControllerTest extends CommonControllerTest {
         //given
         Long teamId = 1L;
         Long boardId = 1L;
-        CreateBoardCommentRequest input = CreateBoardCommentRequest.builder()
+        CreateCommentRequest input = CreateCommentRequest.builder()
                 .content("게시글 내용")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
 
-        CreateBoardCommentResponse output = CreateBoardCommentResponse.builder()
-                .boardCommentId(1L)
+        CreateCommentResponse output = CreateCommentResponse.builder()
+                .commentId(1L)
                 .build();
 
         given(createBoardCommentUseCase.createBoardComment(any(), any(), any(), any())).willReturn(output);
@@ -83,7 +83,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("댓글을 생성했습니다"),
-                                        fieldWithPath("data.boardCommentId").description("생성한 boardCommentId")
+                                        fieldWithPath("data.commentId").description("생성한 boardCommentId")
                                 )
                         )
                 );
@@ -135,7 +135,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
         Long boardId = 1L;
 
         CommentBlocks commentBlock = CommentBlocks.builder()
-                .boardCommentId(1L)
+                .commentId(1L)
                 .content("댓글 내용")
                 .writerIsLeader(true)
                 .writerNickName("작성자 닉네임")
@@ -148,7 +148,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
 
         commentBlocks.add(commentBlock);
 
-        GetBoardCommentResponse output = new GetBoardCommentResponse(commentBlocks);
+        GetCommentResponse output = new GetCommentResponse(commentBlocks);
 
         given(getBoardCommentUseCase.getBoardCommentAll(any(), any(), any())).willReturn(output);
 
@@ -176,7 +176,7 @@ public class BoardCommentControllerTest extends CommonControllerTest {
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description("댓글 목록을 모두 조회했습니다."),
-                                        fieldWithPath("data.commentBlocks[].boardCommentId").description("댓글 아이디"),
+                                        fieldWithPath("data.commentBlocks[].commentId").description("댓글 아이디"),
                                         fieldWithPath("data.commentBlocks[].content").description("댓글 내용"),
                                         fieldWithPath("data.commentBlocks[].writerIsLeader").description("작성자 소모임장 여부"),
                                         fieldWithPath("data.commentBlocks[].writerNickName").description("작성자 닉네임"),

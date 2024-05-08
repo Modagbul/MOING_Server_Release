@@ -3,7 +3,6 @@ package com.moing.backend.domain.report.application.service;
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
 import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.board.domain.service.BoardGetService;
-import com.moing.backend.domain.boardComment.application.dto.request.CreateBoardCommentRequest;
 import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
 import com.moing.backend.domain.boardComment.domain.service.BoardCommentGetService;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
@@ -55,12 +54,10 @@ public class ReportCreateUseCase {
                     .build());
         }
         else if (reportType.equals(ReportType.COMMENT.name())) {
-            BoardComment boardComment = boardCommentGetService.getBoardComment(targetId);
+            BoardComment boardComment = boardCommentGetService.getComment(targetId);
             targetMemberNickName = boardComment.getTeamMember().getMember().getNickName();
+            boardComment.updateContent(REPORT_BOARD_MESSAGE);
 
-            boardComment.updateBoardComment(CreateBoardCommentRequest.builder()
-                            .content(REPORT_BOARD_MESSAGE)
-                            .build());
         } else {
 
             MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);

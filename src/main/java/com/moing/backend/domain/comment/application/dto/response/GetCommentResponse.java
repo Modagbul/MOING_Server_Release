@@ -1,14 +1,16 @@
-package com.moing.backend.domain.boardComment.application.dto.response;
+package com.moing.backend.domain.comment.application.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
 @Getter
-public class CreateBoardCommentResponse {
-    private Long boardCommentId;
+public class GetCommentResponse {
+    private List<CommentBlocks> commentBlocks;
 }
