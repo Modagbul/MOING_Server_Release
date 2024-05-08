@@ -128,13 +128,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
     @Override
     public Optional<List<Mission>> findMissionByDueTo() {
 
-        LocalDateTime now = LocalDateTime.now();
-
         return Optional.ofNullable(queryFactory
                 .selectFrom(mission)
                 .where(
-                        mission.dueTo.before(now),
                         mission.status.eq(MissionStatus.WAIT).or(mission.status.eq(MissionStatus.ONGOING)),
+                        mission.dueTo.before(LocalDateTime.now()),
                         mission.type.eq(MissionType.ONCE)
                 ).fetch());
     }

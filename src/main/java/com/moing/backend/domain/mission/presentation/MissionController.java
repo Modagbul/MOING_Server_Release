@@ -20,13 +20,10 @@ import static com.moing.backend.domain.mission.presentation.constant.MissionResp
 @RequestMapping("/api/team/{teamId}/missions")
 public class MissionController {
 
-
     private final MissionCreateUseCase missionCreateUseCase;
     private final MissionReadUseCase missionReadUseCase;
     private final MissionUpdateUseCase missionUpdateUseCase;
     private final MissionDeleteUseCase missionDeleteUseCase;
-
-//    private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
 
     /**
      * 미션 조회
@@ -38,8 +35,6 @@ public class MissionController {
     public ResponseEntity<SuccessResponse<MissionReadRes>> getMission(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId, @PathVariable("missionId") Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(READ_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getMission(user.getSocialId(),missionId)));
     }
-
-
 
     /**
      * 미션 생성
@@ -68,8 +63,8 @@ public class MissionController {
      * 작성자 : 정승연
      */
     @PutMapping("/{missionId}/end")
-    public ResponseEntity<SuccessResponse<MissionReadRes>> endMission(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId,@PathVariable Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(END_MISSION_SUCCESS.getMessage(), this.missionUpdateUseCase.updateMissionStatus(user.getSocialId(),missionId)));
+    public ResponseEntity<SuccessResponse<MissionReadRes>> terminateMission(@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId, @PathVariable Long missionId) {
+        return ResponseEntity.ok(SuccessResponse.create(END_MISSION_SUCCESS.getMessage(), this.missionUpdateUseCase.terminateMissionByUser(user.getSocialId(),missionId)));
     }
 
     /**
@@ -78,7 +73,7 @@ public class MissionController {
      * 작성자 : 정승연
      */
     @DeleteMapping("/{missionId}")
-    public ResponseEntity<SuccessResponse<Long>> deleteMission(@AuthenticationPrincipal User user,@PathVariable Long missionId) {
+    public ResponseEntity<SuccessResponse<Long>> deleteMission(@AuthenticationPrincipal User user,@PathVariable("teamId") Long teamId,@PathVariable Long missionId) {
         return ResponseEntity.ok(SuccessResponse.create(DELETE_MISSION_SUCCESS.getMessage(), this.missionDeleteUseCase.deleteMission(user.getSocialId(),missionId)));
     }
 
@@ -92,6 +87,7 @@ public class MissionController {
     public ResponseEntity<SuccessResponse<String>> recommendMission(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
         return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.getTeamCategory(teamId)));
     }
+
     /**
      * 미션 추천
      * [GET] {teamId}/missions/isLeader
@@ -103,10 +99,6 @@ public class MissionController {
         return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionCreateUseCase.getIsLeader(user.getSocialId(),teamId)));
     }
 
-//    @PostMapping("/remind")
-//    public ResponseEntity<SuccessResponse<Boolean>> remindAlarm(@AuthenticationPrincipal User user,@PathVariable Long teamId) {
-//        return ResponseEntity.ok(SuccessResponse.create(RECOMMEND_MISSION_SUCCESS.getMessage(), this.missionRemindAlarmUseCase.sendRepeatMissionRemind()));
-//    }
 
     /**
      * 미션 설명 확인 (미션 읽음 처리)
@@ -120,7 +112,6 @@ public class MissionController {
         return ResponseEntity.ok(SuccessResponse.create(CONFIRM_MISSION_SUCCESS.getMessage(), this.missionReadUseCase.confirmMission(user.getSocialId(), missionId, teamId)));
 
     }
-
 
 
 
