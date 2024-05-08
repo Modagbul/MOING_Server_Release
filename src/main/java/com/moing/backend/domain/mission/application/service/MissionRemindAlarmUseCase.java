@@ -12,7 +12,6 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSche
 import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
 import com.moing.backend.global.config.fcm.service.MultiMessageSender;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,7 +30,6 @@ public class MissionRemindAlarmUseCase {
 
     private final MissionArchiveScheduleQueryService missionArchiveScheduleQueryService;
     private final MissionQueryService missionQueryService;
-    private final ApplicationEventPublisher eventPublisher;
 
     private final MultiMessageSender multiMessageSender;
     private final SaveMultiAlarmHistoryUseCase saveMultiAlarmHistoryUseCase;
@@ -39,7 +37,7 @@ public class MissionRemindAlarmUseCase {
     String REMIND_NAME = "미션 리마인드";
 
 
-    public Boolean sendRemindMissionAlarm() {
+    public void sendRemindMissionAlarm() {
 
         Random random = new Random(System.currentTimeMillis());
         String title = getTitle(random.nextInt(4));
@@ -50,16 +48,12 @@ public class MissionRemindAlarmUseCase {
         Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(remainMissionPeople);
         Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(remainMissionPeople);
 
-//        eventPublisher.publishEvent(new MultiFcmEvent(title, message, pushMemberIdAndToken, memberIdAndTokens,
-//                "",REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
-
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
             multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
         }
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
             saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()),"",title,message,REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
         }
-        return true;
     }
 
 
@@ -137,7 +131,7 @@ public class MissionRemindAlarmUseCase {
 
     }
 
-    public Optional<List<MemberIdAndToken>> mapToMemberAndToken(List<Member> members) {
+    private Optional<List<MemberIdAndToken>> mapToMemberAndToken(List<Member> members) {
         return Optional.of(members.stream()
                 .map(member -> MemberIdAndToken.builder()
                         .fcmToken(member.getFcmToken())
@@ -145,7 +139,7 @@ public class MissionRemindAlarmUseCase {
                         .build())
                 .collect(Collectors.toList()));
     }
-    public Optional<List<MemberIdAndToken>> isPushMemberIdAndToken(List<Member> members) {
+    private Optional<List<MemberIdAndToken>> isPushMemberIdAndToken(List<Member> members) {
         return Optional.of(members.stream()
                 .map(member -> {
                     if (member.isRemindPush() && !member.isSignOut()) {
