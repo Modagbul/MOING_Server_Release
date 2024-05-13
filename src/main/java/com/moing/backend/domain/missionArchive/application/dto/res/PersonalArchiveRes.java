@@ -28,6 +28,6 @@ public class PersonalArchiveRes {
 
     @Nullable
     private String contents;
-
+    private Long comments;
 
 }
