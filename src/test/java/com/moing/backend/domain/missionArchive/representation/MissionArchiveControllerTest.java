@@ -325,6 +325,7 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                 .hearts(3)
                 .makerId(1L)
                 .contents("contents")
+                .comments(1L)
                 .build());
 
         given(missionArchiveReadUseCase.getPersonalArchive(any(),any())).willReturn(output);
@@ -365,10 +366,12 @@ public class MissionArchiveControllerTest extends CommonControllerTest {
                                         fieldWithPath("data[].heartStatus").description("미션 인증 좋아요 상태 "),
                                         fieldWithPath("data[].hearts").description("미션 인증 좋아요 수 "),
                                         fieldWithPath("data[].makerId").description("미션 인증한 사람 "),
-                                        fieldWithPath("data[].contents").description("미션 인증 문구")
+                                        fieldWithPath("data[].contents").description("미션 인증 문구"),
+                                        fieldWithPath("data[].comments").description("미션 인증 댓글 수")
 
 
-                                )
+
+                                        )
                         )
                 )
                 .andReturn();
