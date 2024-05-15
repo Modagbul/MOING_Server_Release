@@ -1,6 +1,8 @@
 package com.moing.backend.domain.team.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
+import com.moing.backend.domain.member.domain.constant.Gender;
+import com.moing.backend.domain.member.dto.response.UserProperty;
 import com.moing.backend.domain.team.application.dto.request.CreateTeamRequest;
 import com.moing.backend.domain.team.application.dto.request.UpdateTeamRequest;
 import com.moing.backend.domain.team.application.dto.response.*;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,10 +132,12 @@ public class TeamControllerTest extends CommonControllerTest {
         teamBlocks.add(teamBlock1);
         teamBlocks.add(teamBlock2);
 
+        UserProperty userProperty=new UserProperty(Gender.WOMAN,  LocalDate.of(2000, 3, 28));
         GetTeamResponse output = GetTeamResponse.builder()
                 .numOfTeam(1)
                 .memberNickName("유저 닉네임")
                 .teamBlocks(teamBlocks)
+                .userProperty(userProperty)
                 .build();
 
         given(getTeamUseCase.getTeam(any())).willReturn(output);
@@ -167,7 +172,9 @@ public class TeamControllerTest extends CommonControllerTest {
                                         fieldWithPath("data.teamBlocks[].category").description("소모임 카테고리"),
                                         fieldWithPath("data.teamBlocks[].startDate").description("소모임 시작일"),
                                         fieldWithPath("data.teamBlocks[].deletionTime").description("소모임 삭제 시간 (삭제 안했으면 null)"),
-                                        fieldWithPath("data.teamBlocks[].profileImgUrl").description("프로필 사진 url")
+                                        fieldWithPath("data.teamBlocks[].profileImgUrl").description("프로필 사진 url"),
+                                        fieldWithPath("data.userProperty.gender").description("유저 성별"),
+                                        fieldWithPath("data.userProperty.birthDate").description("유저 태어난 날")
                                 )
 
                         )
