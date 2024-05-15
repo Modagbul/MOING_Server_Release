@@ -26,7 +26,7 @@ public class TeamGetService {
 
     public GetTeamResponse getTeamByMember(Member member) {
         GetTeamResponse getTeamResponse = teamRepository.findTeamByMemberId(member.getMemberId());
-        getTeamResponse.updateMemberNickName(member.getNickName());
+        getTeamResponse.updateMemberInfo(member);
         return getTeamResponse;
     }
 
