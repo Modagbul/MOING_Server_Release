@@ -12,6 +12,8 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
+import com.moing.backend.domain.missionComment.domain.entity.MissionComment;
+import com.moing.backend.domain.missionComment.domain.service.MissionCommentGetService;
 import com.moing.backend.domain.report.application.mapper.ReportMapper;
 import com.moing.backend.domain.report.domain.entity.Report;
 import com.moing.backend.domain.report.domain.entity.constant.ReportType;
@@ -31,6 +33,7 @@ public class ReportCreateUseCase {
     private final BoardGetService boardGetService;
     private final MissionArchiveQueryService missionArchiveQueryService;
     private final BoardCommentGetService boardCommentGetService;
+    private final MissionCommentGetService missionCommentGetService;
 
     private final String REPORT_BOARD_TITLE ="신고 접수된 게시물입니다.";
     private final String REPORT_BOARD_MESSAGE ="신고 접수로 삭제된 게시물입니다.";
@@ -53,12 +56,17 @@ public class ReportCreateUseCase {
                     .isNotice(board.isNotice())
                     .build());
         }
-        else if (reportType.equals(ReportType.COMMENT.name())) {
+        else if (reportType.equals(ReportType.BCOMMENT.name())) {
             BoardComment boardComment = boardCommentGetService.getComment(targetId);
             targetMemberNickName = boardComment.getTeamMember().getMember().getNickName();
             boardComment.updateContent(REPORT_BOARD_MESSAGE);
 
-        } else {
+        } else if(reportType.equals(ReportType.MCOMMENT.name())){
+            MissionComment missionComment=missionCommentGetService.getComment(targetId);
+            targetMemberNickName=missionComment.getTeamMember().getMember().getNickName();
+            missionComment.updateContent(REPORT_BOARD_MESSAGE);
+        }
+        else {
 
             MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);
             Mission mission = missionArchive.getMission();
