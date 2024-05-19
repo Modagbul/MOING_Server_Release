@@ -8,9 +8,12 @@ import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.QMission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionStatus;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -211,9 +214,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository{
                         mission.status.eq(MissionStatus.ONGOING).or(mission.status.eq(MissionStatus.WAIT)),
                         mission.type.eq(MissionType.ONCE)
                 )
-                .orderBy(mission.dueTo.asc())
+                .orderBy(missionArchive.status.asc(),mission.dueTo.asc(),missionArchive.createdDate.desc())
                 .fetch());
     }
+
+
 
     public boolean findRepeatMissionsByTeamId(Long teamId) {
         return queryFactory
