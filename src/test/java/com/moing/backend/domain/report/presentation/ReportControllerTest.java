@@ -1,7 +1,6 @@
 package com.moing.backend.domain.report.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
-import com.moing.backend.domain.report.application.service.ReportCreateUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

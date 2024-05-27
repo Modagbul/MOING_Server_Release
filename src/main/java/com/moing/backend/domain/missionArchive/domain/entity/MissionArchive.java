@@ -70,4 +70,7 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
     }
 
 
+    public String getWriterNickName(){
+        return member.getNickName();
+    }
 }
