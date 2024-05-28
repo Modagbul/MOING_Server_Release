@@ -26,7 +26,7 @@ public class MissionArchiveReportStrategy implements ReportStrategy {
     public String processReport(Long targetId) {
         MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);
 
-        if (isCompletePhotoMission(missionArchive)) {
+        if (isCompletedPhotoArchive(missionArchive)) {
             missionArchive.updateArchive(REPORT_PHOTO.getMessage());
         } else {
             missionArchive.updateArchive(REPORT_MESSAGE.getMessage());
@@ -39,7 +39,7 @@ public class MissionArchiveReportStrategy implements ReportStrategy {
         return missionArchive.getWriterNickName();
     }
 
-    private Boolean isCompletePhotoMission(MissionArchive archive) {
+    private Boolean isCompletedPhotoArchive (MissionArchive archive) {
         return archive.getMission().getWay().equals(MissionWay.PHOTO) && archive.getStatus().equals(MissionArchiveStatus.COMPLETE);
     }
 }
