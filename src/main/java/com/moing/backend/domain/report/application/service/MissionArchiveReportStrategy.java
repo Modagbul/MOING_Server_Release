@@ -28,15 +28,10 @@ public class MissionArchiveReportStrategy implements ReportStrategy {
         Mission mission = missionArchive.getMission();
 
         if (mission.getWay().equals(MissionWay.PHOTO) && missionArchive.getStatus().equals(MissionArchiveStatus.COMPLETE)) {
-            missionArchive.updateArchive(MissionArchiveReq.builder()
-                    .archive(REPORT_PHOTO.getMessage())
-                    .status(missionArchive.getStatus().name())
-                    .build());
+            missionArchive.updateArchive(REPORT_PHOTO.getMessage());
+
         } else {
-            missionArchive.updateArchive(MissionArchiveReq.builder()
-                    .archive(REPORT_MESSAGE.getMessage())
-                    .status(missionArchive.getStatus().name())
-                    .build());
+            missionArchive.updateArchive(REPORT_MESSAGE.getMessage());
 
         }
 

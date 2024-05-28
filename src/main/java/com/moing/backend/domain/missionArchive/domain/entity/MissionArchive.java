@@ -57,6 +57,10 @@ public class MissionArchive extends BaseTimeEntity { // 1회 미션을 저장 �
         this.status = MissionArchiveStatus.valueOf(missionArchiveReq.getStatus());
     }
 
+    public void updateArchive(String archive) {
+        this.archive = archive;
+    }
+
     public void updateCount(Long count) {
         this.count = count;
     }
