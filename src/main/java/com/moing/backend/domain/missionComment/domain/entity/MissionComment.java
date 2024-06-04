@@ -45,4 +45,8 @@ public class MissionComment extends Comment {
         this.content=content;
         this.isLeader=isLeader;
     }
+
+    public String getWriterNickName(){
+        return teamMember.getMemberNickName();
+    }
 }

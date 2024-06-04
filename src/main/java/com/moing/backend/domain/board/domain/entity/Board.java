@@ -79,4 +79,8 @@ public class Board extends BaseTimeEntity {
     public void updateTeam(Team team) {
         this.team = team;
     }
+
+    public String getWriterNickName() {
+        return teamMember.getMemberNickName();
+    }
 }

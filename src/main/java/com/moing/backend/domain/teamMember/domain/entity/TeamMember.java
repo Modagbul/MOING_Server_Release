@@ -48,4 +48,8 @@ public class TeamMember extends BaseTimeEntity {
         this.isDeleted = true;
         team.deleteTeamMember();
     }
+
+    public String getMemberNickName(){
+        return member.getNickName();
+    }
 }

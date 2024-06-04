@@ -88,6 +88,7 @@ public class MissionArchiveMapper {
                         .count())
                 .makerId(missionArchive.getMember().getMemberId())
                 .contents(missionArchive.getContents())
+                .comments(missionArchive.getCommentNum())
                 .build();
     }
 

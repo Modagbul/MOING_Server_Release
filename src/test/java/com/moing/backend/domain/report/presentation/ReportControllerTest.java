@@ -2,10 +2,7 @@ package com.moing.backend.domain.report.presentation;
 
 import com.moing.backend.config.CommonControllerTest;
 import com.moing.backend.domain.report.application.service.ReportCreateUseCase;
-import com.moing.backend.domain.teamScore.application.dto.TeamScoreRes;
-import com.moing.backend.domain.teamScore.presentation.TeamScoreController;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -14,8 +11,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.moing.backend.domain.report.presentation.constant.ReportResponseMessage.CREATE_REPORT_SUCCESS;
-import static com.moing.backend.domain.teamScore.presentation.constant.TeamScoreResponseMessage.GET_TEAMSCORE_SUCCESS;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -59,7 +54,7 @@ public class ReportControllerTest extends CommonControllerTest {
                                 ),
 
                                 pathParameters(
-                                        parameterWithName("reportType").description("MISSION/BOARD/COMMENT"),
+                                        parameterWithName("reportType").description("MISSION/BOARD/BCOMMENT/MCOMMENT"),
                                         parameterWithName("targetId").description("신고할 board,missionArchive,comment 아이디")
                                 ),
 

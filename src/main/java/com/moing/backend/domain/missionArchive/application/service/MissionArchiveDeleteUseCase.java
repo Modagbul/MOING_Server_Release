@@ -12,6 +12,7 @@ import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDele
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoAccessMissionArchiveException;
+import com.moing.backend.domain.missionComment.domain.service.MissionCommentDeleteService;
 import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
@@ -31,6 +32,7 @@ public class MissionArchiveDeleteUseCase {
     private final MissionArchiveQueryService missionArchiveQueryService;
     private final MissionArchiveDeleteService missionArchiveDeleteService;
     private final MissionQueryService missionQueryService;
+    private final MissionCommentDeleteService missionCommentDeleteService;
 
     private final MemberGetService memberGetService;
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
@@ -61,6 +63,7 @@ public class MissionArchiveDeleteUseCase {
             updateUtils.deleteImgUrl(archive);
         }
 
+        missionCommentDeleteService.deleteAllCommentByMissionArchive(deleteArchive.getId());
         missionArchiveDeleteService.deleteMissionArchive(deleteArchive);
         teamScoreUpdateUseCase.gainScoreOfArchive(mission, ScoreStatus.MINUS);
 

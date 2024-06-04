@@ -371,7 +371,7 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(
                         missionArchive.member.memberId.eq(memberId),
                         missionArchive.mission.id.eq(missionId),
-                        missionArchive.lastModifiedDate.between(startOfToday, endOfToday), // createdDate와 오늘의 시작과 끝을 비교,
+                        missionArchive.createdDate.between(startOfToday, endOfToday), // createdDate와 오늘의 시작과 끝을 비교,
 
                         missionArchive.mission.type.eq(MissionType.REPEAT).and(dateInRange)
                                 .or(missionArchive.mission.type.eq(MissionType.ONCE))

@@ -15,4 +15,8 @@ public class MissionCommentDeleteService implements CommentDeleteService<Mission
     public void deleteComment(MissionComment comment) {
         missionCommentRepository.delete(comment);
     }
+
+    public void deleteAllCommentByMissionArchive(Long missionArchiveId) {
+        missionCommentRepository.deleteAllMissionCommentsByMissionArchiveId(missionArchiveId);
+    }
 }
