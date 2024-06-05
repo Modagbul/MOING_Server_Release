@@ -45,8 +45,13 @@ public class UpdateRemindAlarmUseCase {
 
         List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm();
 
-        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(allMemberOfPushAlarm);
-        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(allMemberOfPushAlarm);
+        // TODO : 500명 단위 배치처리
+
+        // FCM 제한으로 500명씩 나눠서 보내기 (0~498)
+        List<Member> firstMembers = allMemberOfPushAlarm.subList(0, 498);
+
+        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(firstMembers);
+        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(firstMembers);
 
         if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
             multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
@@ -54,8 +59,20 @@ public class UpdateRemindAlarmUseCase {
         if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
             saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
         }
-        return true;
 
+        // FCM 제한으로 500명씩 나눠서 보내기 (498~)
+        List<Member> remainMembers = allMemberOfPushAlarm.subList(499, allMemberOfPushAlarm.size());
+
+        Optional<List<MemberIdAndToken>> memberIdAndTokens2 = mapToMemberAndToken(remainMembers);
+        Optional<List<MemberIdAndToken>> pushMemberIdAndToken2 = isPushMemberIdAndToken(remainMembers);
+
+        if (pushMemberIdAndToken2.isPresent() && !pushMemberIdAndToken2.get().isEmpty()) {
+            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken2.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+        }
+        if (memberIdAndTokens2.isPresent() && !memberIdAndTokens2.get().isEmpty()) {
+            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens2.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
+        }
+        return true;
 
     }
 
