@@ -44,7 +44,7 @@ public class MissionScheduleUseCase {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
     }
 
-    @Scheduled(cron = "0 00 11 * * *")
+    @Scheduled(cron = "0 0 11 * * *")
     public void UpdateRemindAlarm() {
         updateRemindAlarmUseCase.sendUpdateAppPushAlarm();
     }
