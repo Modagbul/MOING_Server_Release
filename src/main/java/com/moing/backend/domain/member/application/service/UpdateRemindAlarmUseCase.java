@@ -41,7 +41,7 @@ public class UpdateRemindAlarmUseCase {
     public Boolean sendUpdateAppPushAlarm() {
 
         String title = "MOING 업데이트 소식";
-        String message = "이제 누구나 미션을 만들 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
+        String message = "이제 사진 인증에 설명을 추가할 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
 
         List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm();
 
