@@ -24,28 +24,31 @@ public class FireThrowAlarmUseCase {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission) {
+    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission, String message) {
 
-        Random random = new Random(System.currentTimeMillis());
-        int randomNum = random.nextInt(2);
+        int randomNum = new Random(System.currentTimeMillis()).nextInt(2);
 
-        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
-        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+        String title = message != null ? NEW_FIRE_THROW_TITLE_WITH_COMMENT.to(throwMember.getNickName())
+                : getRandomTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+        message = message != null ? message
+                : getRandomMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
         String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
 
         eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), AlarmType.FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
     }
 
-    public String getMessage(String pusher, String receiver, int num) {
+    public String getRandomMessage(String pusher, String receiver, int num) {
 
         switch (num) {
-            case 0: return pusher + "님이 " + receiver + NEW_FIRE_THROW_MESSAGE1.getMessage();
-            case 1: return receiver + "님!  " + pusher + NEW_FIRE_THROW_MESSAGE2.getMessage();
+            case 0:
+                return NEW_FIRE_THROW_MESSAGE1.fromTo(pusher, receiver);
+            case 1: return NEW_FIRE_THROW_MESSAGE2.toFrom(receiver, pusher);
+
         }
-        return pusher + "님이" + receiver + NEW_FIRE_THROW_MESSAGE1.getMessage();
+        return NEW_FIRE_THROW_MESSAGE1.fromTo(pusher, receiver);
     }
 
-    public String getTitle(String pusher, String receiver, int num) {
+    public String getRandomTitle(String pusher, String receiver, int num) {
 
         switch (num) {
             case 0:
