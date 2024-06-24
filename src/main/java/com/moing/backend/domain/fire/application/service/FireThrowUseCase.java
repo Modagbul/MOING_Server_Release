@@ -1,5 +1,6 @@
 package com.moing.backend.domain.fire.application.service;
 
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.mapper.FireMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,7 +35,7 @@ public class FireThrowUseCase {
     private final MissionQueryService missionQueryService;
     private final TeamGetService teamGetService;
 
-    public FireThrowRes createFireThrow(String userId, Long receiveMemberId, Long missionId, Long teamId) {
+    public FireThrowRes createFireThrow(String userId, Long receiveMemberId, Long missionId, Long teamId, FireThrowReq fireThrowReq) {
 
         Member throwMember = memberGetService.getMemberBySocialId(userId);
         Member receiveMember = memberGetService.getMemberByMemberId(receiveMemberId);
@@ -50,12 +52,15 @@ public class FireThrowUseCase {
             throw new NoAuthThrowFireException();
         }
 
-        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember, team, mission);
+        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember, team, mission, fireThrowReq.getMessage());
 
-        return FireMapper.mapToFireThrowRes(fireSaveService.save(Fire.builder()
+        Fire save = fireSaveService.save(Fire.builder()
                 .throwMemberId(throwMember.getMemberId())
                 .receiveMemberId(receiveMemberId)
-                .build()));
+                        .message(fireThrowReq.getMessage())
+                .build());
+
+        return FireMapper.mapToFireThrowRes(fireSaveService.save(save));
     }
 
     public List<FireReceiveRes> getFireReceiveList(String userId,Long teamId, Long missionId) {

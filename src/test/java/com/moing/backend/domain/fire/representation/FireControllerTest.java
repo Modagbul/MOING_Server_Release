@@ -1,10 +1,12 @@
 package com.moing.backend.domain.fire.representation;
 
 import com.moing.backend.config.CommonControllerTest;
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.service.FireThrowUseCase;
 import com.moing.backend.domain.fire.presentation.FireController;
+import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -89,11 +91,17 @@ public class FireControllerTest extends CommonControllerTest {
     public void 불_던지기() throws Exception {
         //given
 
+        FireThrowReq input = FireThrowReq.builder()
+                .message("message")
+                .build();
+
+        String body = objectMapper.writeValueAsString(input);
+
         FireThrowRes output = FireThrowRes.builder()
                 .receiveMemberId(1L)
                 .build();
 
-        given(fireThrowUseCase.createFireThrow(any(), any(), any(), any())).willReturn(output);
+        given(fireThrowUseCase.createFireThrow(any(), any(), any(), any(),any())).willReturn(output);
 
         Long teamId = 2L;
         Long missionId = 2L;
@@ -103,6 +111,7 @@ public class FireControllerTest extends CommonControllerTest {
                 post("/api/team/{teamId}/missions/{missionId}/fire/{receiveMemberId}",teamId,missionId,receiveMemberId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
         );
 
         //then
