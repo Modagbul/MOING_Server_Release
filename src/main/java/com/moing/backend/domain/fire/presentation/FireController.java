@@ -31,7 +31,7 @@ public class FireController {
 
     @PostMapping("/{receiveMemberId}")
     public ResponseEntity<SuccessResponse<FireThrowRes>> throwFire (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
-                                                                    @PathVariable("receiveMemberId") Long receiveMemberId, @PathVariable("missionId") Long missionId, @RequestBody FireThrowReq fireThrowReq) {
+                                                                    @PathVariable("receiveMemberId") Long receiveMemberId, @PathVariable("missionId") Long missionId, @RequestBody(required = false) FireThrowReq fireThrowReq) {
         return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(), receiveMemberId, missionId, teamId, fireThrowReq)));
     }
 

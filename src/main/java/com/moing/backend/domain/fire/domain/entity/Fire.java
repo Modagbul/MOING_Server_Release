@@ -25,7 +25,7 @@ public class Fire extends BaseTimeEntity {
 
     private Long receiveMemberId;
 
-    @Column(nullable = true, columnDefinition="TEXT", length = 100)
-    private String message;
+//    @Column(nullable = true, columnDefinition="TEXT", length = 100)
+//    private String message;
 
 }

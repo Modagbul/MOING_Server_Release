@@ -1,5 +1,6 @@
 package com.moing.backend.domain.fire.application.service;
 
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
@@ -24,13 +25,13 @@ public class FireThrowAlarmUseCase {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission, String message) {
+    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission, FireThrowReq fireThrowReq) {
 
         int randomNum = new Random(System.currentTimeMillis()).nextInt(2);
 
-        String title = message != null ? NEW_FIRE_THROW_TITLE_WITH_COMMENT.to(throwMember.getNickName())
+        String title = fireThrowReq != null ? NEW_FIRE_THROW_TITLE_WITH_COMMENT.to(throwMember.getNickName())
                 : getRandomTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
-        message = message != null ? message
+        String message = fireThrowReq != null ? fireThrowReq.getMessage()
                 : getRandomMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
         String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
 

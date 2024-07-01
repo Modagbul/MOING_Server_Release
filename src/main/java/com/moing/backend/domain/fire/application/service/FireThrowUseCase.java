@@ -52,12 +52,11 @@ public class FireThrowUseCase {
             throw new NoAuthThrowFireException();
         }
 
-        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember, team, mission, fireThrowReq.getMessage());
+        fireThrowAlarmUseCase.sendFireThrowAlarm(throwMember, receiveMember, team, mission, fireThrowReq);
 
         Fire save = fireSaveService.save(Fire.builder()
                 .throwMemberId(throwMember.getMemberId())
                 .receiveMemberId(receiveMemberId)
-                        .message(fireThrowReq.getMessage())
                 .build());
 
         return FireMapper.mapToFireThrowRes(fireSaveService.save(save));
