@@ -39,8 +39,6 @@ public class SendMissionArchiveCreateAlarmUseCase {
         String title = CREATOR_CREATE_MISSION_ARCHIVE.to(member.getNickName());
         String message = TEAM_AND_TITLE.teamAndTitle(team.getName(),mission.getTitle());
 
-        String type = mission.getType().toString();
-        String status = mission.getStatus().toString();
 
         Optional<List<NewUploadInfo>> newUploadInfos=teamMemberGetService.getNewUploadInfo(team.getTeamId(), member.getMemberId());
 
