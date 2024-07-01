@@ -15,7 +15,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Fire extends BaseTimeEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fire_id")
@@ -24,8 +23,5 @@ public class Fire extends BaseTimeEntity {
     private Long throwMemberId;
 
     private Long receiveMemberId;
-
-//    @Column(nullable = true, columnDefinition="TEXT", length = 100)
-//    private String message;
 
 }
