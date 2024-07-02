@@ -24,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -92,7 +91,7 @@ public class FireControllerTest extends CommonControllerTest {
         //given
 
         FireThrowReq input = FireThrowReq.builder()
-                .message("message")
+                .message("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
                 .build();
 
         String body = objectMapper.writeValueAsString(input);
@@ -122,12 +121,14 @@ public class FireControllerTest extends CommonControllerTest {
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
                                 ),
+                                requestFields(
+                                        fieldWithPath("message").description("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
+                                ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
                                         parameterWithName("missionId").description("미션 아이디"),
                                         parameterWithName("receiveMemberId").description("불 받을 사람 아이디")
                                 ),
-
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(THROW_FIRE_SUCCESS.getMessage()),
