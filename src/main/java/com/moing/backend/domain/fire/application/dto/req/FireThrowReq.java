@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 
 import javax.annotation.Nullable;
 
-
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor
 @Getter
 public class FireThrowReq {
 
-    @Nullable
     private String message;
+
+    @Builder
+    public FireThrowReq(String message) {
+        this.message = message;
+    }
 }
