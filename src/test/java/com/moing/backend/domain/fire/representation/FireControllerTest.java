@@ -121,13 +121,13 @@ public class FireControllerTest extends CommonControllerTest {
                                 requestHeaders(
                                         headerWithName("Authorization").description("접근 토큰")
                                 ),
-                                requestFields(
-                                        fieldWithPath("message").description("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
-                                ),
                                 pathParameters(
                                         parameterWithName("teamId").description("팀 아이디"),
                                         parameterWithName("missionId").description("미션 아이디"),
                                         parameterWithName("receiveMemberId").description("불 받을 사람 아이디")
+                                ),
+                                requestFields(
+                                        fieldWithPath("message").description("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
                                 ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
