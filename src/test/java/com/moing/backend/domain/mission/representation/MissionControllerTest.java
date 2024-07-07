@@ -9,19 +9,14 @@ import com.moing.backend.domain.mission.application.service.MissionCreateUseCase
 import com.moing.backend.domain.mission.application.service.MissionDeleteUseCase;
 import com.moing.backend.domain.mission.application.service.MissionReadUseCase;
 import com.moing.backend.domain.mission.application.service.MissionUpdateUseCase;
-import com.moing.backend.domain.mission.domain.repository.MissionRepository;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.presentation.MissionController;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.moing.backend.domain.mission.presentation.constant.MissionResponseMessage.CONFIRM_MISSION_SUCCESS;
@@ -35,7 +30,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(MissionController.class)
 public class MissionControllerTest extends CommonControllerTest {
@@ -366,7 +360,7 @@ public class MissionControllerTest extends CommonControllerTest {
                 .isLeader(Boolean.FALSE)
                 .build();
 
-        given(missionUpdateUseCase.updateMissionStatus(any(),any())).willReturn(output);
+        given(missionUpdateUseCase.terminateMissionByUser(any(),any())).willReturn(output);
 
         Long teamId = 2L;
         Long missionId = 1L;

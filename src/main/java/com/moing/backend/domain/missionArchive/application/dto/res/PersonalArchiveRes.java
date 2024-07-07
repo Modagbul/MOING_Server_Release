@@ -2,6 +2,8 @@ package com.moing.backend.domain.missionArchive.application.dto.res;
 
 import lombok.*;
 
+import javax.annotation.Nullable;
+
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -24,5 +26,8 @@ public class PersonalArchiveRes {
 
     private Long makerId;
 
+    @Nullable
+    private String contents;
+    private Long comments;
 
 }

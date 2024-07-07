@@ -10,13 +10,9 @@ import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiv
 import com.moing.backend.domain.missionArchive.application.dto.res.MissionArchiveRes;
 import com.moing.backend.domain.missionArchive.application.mapper.MissionArchiveMapper;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveDeleteService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
 import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveSaveService;
 import com.moing.backend.domain.missionArchive.exception.NoMoreMissionArchiveException;
-import com.moing.backend.domain.missionState.application.service.MissionStateUseCase;
-import com.moing.backend.domain.missionState.domain.service.MissionStateSaveService;
-import com.moing.backend.domain.missionHeart.domain.service.MissionHeartQueryService;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamScore.application.service.TeamScoreUpdateUseCase;
 import com.moing.backend.domain.teamScore.domain.entity.ScoreStatus;
@@ -36,9 +32,9 @@ public class MissionArchiveCreateUseCase {
     private final MissionQueryService missionQueryService;
     private final MemberGetService memberGetService;
 
-    private final MissionStateUseCase missionStateUseCase;
-
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
+
+    private final SendMissionArchiveCreateAlarmUseCase sendMissionArchiveCreateAlarmUseCase;
 
     public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
@@ -64,10 +60,7 @@ public class MissionArchiveCreateUseCase {
             }
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
-            missionStateUseCase.updateMissionState(member, mission, newArchive);
-
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
-
         }
 
         // 한번 미션일 경우
@@ -79,8 +72,6 @@ public class MissionArchiveCreateUseCase {
             }
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId)+1);
-            missionStateUseCase.updateMissionState(member, mission, newArchive);
-
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
 
             // 인증 후 n/n명 인증 성공 리턴값 업데이트
@@ -88,12 +79,15 @@ public class MissionArchiveCreateUseCase {
             missionArchiveRes.updateCount(doneSingleArchives);
 
         }
-        // TODO : 소모임원 3명 이상일 경우 보너스 점수
+        // 소모임원 3명 이상일 경우 보너스 점수
         if (mission.getTeam().getNumOfMember() > 2) {
             gainBonusScore(mission, newArchive);
         }
-        // TODO : 미션 인증 1회당 점수
+        // 미션 인증 1회당 점수
         teamScoreUpdateUseCase.gainScoreOfArchive(mission, ScoreStatus.PLUS);
+
+        // 미션 인증 시 다른 팀원에게 알림 전송
+        sendMissionArchiveCreateAlarmUseCase.sendNewMissionArchiveUploadAlarm(member,mission);
 
         return missionArchiveRes;
     }

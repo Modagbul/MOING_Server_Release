@@ -2,7 +2,6 @@ package com.moing.backend.domain.missionArchive.application.mapper;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.application.dto.res.FinishMissionBoardRes;
-import com.moing.backend.domain.mission.application.dto.res.RepeatMissionBoardRes;
 import com.moing.backend.domain.mission.application.dto.res.SingleMissionBoardRes;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
@@ -29,6 +28,8 @@ public class MissionArchiveMapper {
                 .member(member)
                 .mission(mission)
                 .heartList(new ArrayList<>())
+                .contents(missionArchiveReq.getContents())
+                .commentNum(0L)
                 .build();
     }
 
@@ -50,6 +51,8 @@ public class MissionArchiveMapper {
                         .filter(heart -> heart.getHeartStatus() == ( MissionHeartStatus.True))
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
                         .count())
+                .contents(missionArchive.getContents())
+                .comments(missionArchive.getCommentNum())
                 .build();
     }
 
@@ -84,6 +87,8 @@ public class MissionArchiveMapper {
                         .filter(heart -> heart.getMissionArchive().equals( missionArchive))// heartStatus가 true인 요소만 필터링
                         .count())
                 .makerId(missionArchive.getMember().getMemberId())
+                .contents(missionArchive.getContents())
+                .comments(missionArchive.getCommentNum())
                 .build();
     }
 
