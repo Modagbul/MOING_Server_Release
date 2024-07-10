@@ -28,12 +28,12 @@ import static com.moing.backend.global.config.fcm.constant.NewCommentUploadMessa
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class SendCommentAlarmUseCase {
+public class SendBoardCommentAlarmUseCase {
 
     private final ApplicationEventPublisher eventPublisher;
     private final BoardCommentGetService boardCommentGetService;
 
-    public void sendNewUploadAlarm(BaseBoardServiceResponse response, BoardComment comment) {
+    public void sendCommentAlarm(BaseBoardServiceResponse response, BoardComment comment) {
         Member member = response.getMember();
         Team team = response.getTeam();
         Board board = response.getBoard();
@@ -50,7 +50,7 @@ public class SendCommentAlarmUseCase {
         Member receiver = board.getTeamMember().getMember();
 
         if (checkBoardWriter(receiver, member, newUploadInfos)) {
-            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue(), receiver.isNewUploadPush()));
+            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.COMMENT, PagePath.NOTICE_PATH.getValue(), receiver.isCommentPush()));
         }
     }
 
@@ -58,7 +58,7 @@ public class SendCommentAlarmUseCase {
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
         Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
 
-        eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
+        eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.COMMENT, PagePath.NOTICE_PATH.getValue()));
     }
 
     private String createIdInfo(Long teamId, Long boardId) {

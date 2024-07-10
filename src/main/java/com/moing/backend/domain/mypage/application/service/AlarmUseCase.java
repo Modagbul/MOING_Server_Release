@@ -17,7 +17,7 @@ public class AlarmUseCase {
     @Transactional(readOnly = true)
     public GetAlarmResponse getAlarm(String socialId){
         Member member=memberGetService.getMemberBySocialId(socialId);
-        return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush());
+        return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush(), member.isCommentPush());
     }
 
     @Transactional
@@ -38,9 +38,11 @@ public class AlarmUseCase {
             case "isFirePush":
                 member.updateFirePush(push);
                 break;
+            case "isCommentPush":
+                member.updateCommentPush(push);
             default:
                 throw new AlarmInvalidException();
         }
-        return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush());
+        return new GetAlarmResponse(member.isNewUploadPush(),member.isRemindPush(), member.isFirePush(), member.isCommentPush());
     }
 }

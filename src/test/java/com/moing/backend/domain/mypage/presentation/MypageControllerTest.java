@@ -257,6 +257,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .isNewUploadPush(true)
                 .isFirePush(true)
                 .isRemindPush(true)
+                .isCommentPush(true)
                 .build();
 
         given(alarmUseCase.getAlarm(any())).willReturn(output);
@@ -282,7 +283,8 @@ public class MypageControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description("알람 정보를 조회했습니다"),
                                         fieldWithPath("data.newUploadPush").description("신규 공지 알림"),
                                         fieldWithPath("data.remindPush").description("미션 리마인드 알림"),
-                                        fieldWithPath("data.firePush").description("불 던지기 알림")
+                                        fieldWithPath("data.firePush").description("불 던지기 알림"),
+                                        fieldWithPath("data.commentPush").description("댓글 알림")
                                 )
                         )
                 );
@@ -295,6 +297,7 @@ public class MypageControllerTest extends CommonControllerTest {
                 .isNewUploadPush(true)
                 .isFirePush(true)
                 .isRemindPush(true)
+                .isCommentPush(true)
                 .build();
 
         given(alarmUseCase.updateAlarm(any(),any(),any())).willReturn(output);
@@ -326,7 +329,9 @@ public class MypageControllerTest extends CommonControllerTest {
                                         fieldWithPath("message").description("알람 정보를 수정했습니다"),
                                         fieldWithPath("data.newUploadPush").description("신규 공지 알림"),
                                         fieldWithPath("data.remindPush").description("미션 리마인드 알림"),
-                                        fieldWithPath("data.firePush").description("불 던지기 알림")
+                                        fieldWithPath("data.firePush").description("불 던지기 알림"),
+                                        fieldWithPath("data.commentPush").description("댓글 알림")
+
                                 )
                         )
                 );

@@ -69,7 +69,7 @@ public class MissionCommentCustomRepositoryImpl implements MissionCommentCustomR
         List<NewUploadInfo> result = queryFactory.select(Projections.constructor(NewUploadInfo.class,
                         missionComment.teamMember.member.fcmToken,
                         missionComment.teamMember.member.memberId,
-                        missionComment.teamMember.member.isNewUploadPush,
+                        missionComment.teamMember.member.isCommentPush,
                         missionComment.teamMember.member.isSignOut))
                 .distinct()
                 .from(missionComment)
