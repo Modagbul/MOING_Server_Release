@@ -21,7 +21,7 @@ public class CreateBoardCommentUseCase {
     private final BoardCommentSaveService boardCommentSaveService;
     private final BaseBoardService baseBoardService;
     private final CheckLeaderUseCase checkLeaderUseCase;
-    private final SendCommentAlarmUseCase sendCommentAlarmUseCase;
+    private final SendBoardCommentAlarmUseCase sendCommentAlarm;
     /**
      * 게시글 댓글 생성
      */
@@ -33,7 +33,7 @@ public class CreateBoardCommentUseCase {
         // 2. 게시글 댓글 개수 증가
         data.getBoard().incrComNum();
         // 3. 게시글 댓글 알림
-        sendCommentAlarmUseCase.sendNewUploadAlarm(data, boardComment);
+        sendCommentAlarm.sendCommentAlarm(data, boardComment);
         return new CreateCommentResponse(boardComment.getBoardCommentId());
     }
 }

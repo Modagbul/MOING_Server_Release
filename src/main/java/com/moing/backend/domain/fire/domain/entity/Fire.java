@@ -15,7 +15,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Fire extends BaseTimeEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fire_id")

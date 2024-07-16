@@ -8,5 +8,6 @@ public enum AlarmType {
     FIRE,
     REMIND,
     APPROVE_TEAM,
-    REJECT_TEAM
+    REJECT_TEAM,
+    COMMENT
 }
