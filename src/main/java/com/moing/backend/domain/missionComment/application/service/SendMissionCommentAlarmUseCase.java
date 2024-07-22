@@ -56,7 +56,7 @@ public class SendMissionCommentAlarmUseCase {
         }
     }
 
-    private void sendMissionCommentWriter(Mission mission, MissionArchive missionArchive/
+    private void sendMissionCommentWriter(Mission mission, MissionArchive missionArchive,
                                           String title, String body, Team team,
                                           Optional<List<NewUploadInfo>> newUploadInfos) {
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
