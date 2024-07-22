@@ -47,14 +47,12 @@ public class SendMissionCommentAlarmUseCase {
         sendMissionCommentWriter(mission, missionArchive, title, body, team, newUploadInfos);
         sendMissionWriter(missionArchive, mission, member, title, body, team, newUploadInfos);
     }
-
-
     private void sendMissionWriter(MissionArchive missionArchive, Mission mission,
                                    Member member, String title, String body, Team team,
                                    Optional<List<NewUploadInfo>> newUploadInfos) {
         Member receiver = missionArchive.getMember();
         if (checkMemberWriter(receiver, member, newUploadInfos)) {
-            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId()), team.getName(), AlarmType.COMMENT, PagePath.NOTICE_PATH.getValue(), receiver.isCommentPush()));
+            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId()), team.getName(), AlarmType.COMMENT, PagePath.MISSION_PATH.getValue(), receiver.isCommentPush()));
         }
     }
 
