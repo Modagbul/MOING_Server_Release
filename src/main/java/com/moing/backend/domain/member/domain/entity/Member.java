@@ -152,6 +152,7 @@ public class Member extends BaseTimeEntity {
         this.isNewUploadPush = allPush;
         this.isRemindPush = allPush;
         this.isFirePush = allPush;
+        this.isCommentPush=allPush;
     }
 
     public void updateFcmToken(String fcmToken) {
