@@ -1,7 +1,6 @@
 package com.moing.backend.domain.fire.application.service;
 
 import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
-import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Random;
 
+import static com.moing.backend.domain.history.domain.entity.AlarmType.FIRE;
 import static com.moing.backend.domain.history.domain.entity.PagePath.MISSION_PATH;
 import static com.moing.backend.global.config.fcm.constant.FireThrowMessage.*;
 
@@ -35,7 +35,7 @@ public class FireThrowAlarmUseCase {
                 : getRandomMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
         String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
 
-        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), AlarmType.FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
+        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
     }
 
     public String getRandomMessage(String pusher, String receiver, int num) {
@@ -65,6 +65,7 @@ public class FireThrowAlarmUseCase {
         jo.put("isRepeated", isRepeated);
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
+        jo.put("type", "FIRE");
         return jo.toJSONString();
     }
 

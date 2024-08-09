@@ -4,7 +4,6 @@ import com.moing.backend.domain.board.domain.entity.Board;
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
 import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
-import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.team.domain.entity.Team;
@@ -20,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.history.domain.entity.AlarmType.NEW_UPLOAD;
 import static com.moing.backend.global.config.fcm.constant.NewNoticeUploadMessage.NEW_NOTICE_UPLOAD_MESSAGE;
 
 @Service
@@ -41,7 +41,7 @@ public class SendBoardAlarmUseCase {
             Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
             Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
             // 알림 보내기
-            eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
+            eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), board.getBoardId()), team.getName(), NEW_UPLOAD, PagePath.NOTICE_PATH.getValue()));
         }
     }
 
@@ -49,6 +49,7 @@ public class SendBoardAlarmUseCase {
         JSONObject jo = new JSONObject();
         jo.put("teamId", teamId);
         jo.put("boardId", boardId);
+        jo.put("type", "NEW_UPLOAD_BOARD");
         return jo.toJSONString();
     }
 
