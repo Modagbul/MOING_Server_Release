@@ -3,7 +3,6 @@ package com.moing.backend.domain.mission.application.service;
 import com.moing.backend.domain.history.application.dto.response.MemberIdAndToken;
 import com.moing.backend.domain.history.application.dto.response.NewUploadInfo;
 import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
-import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
@@ -21,6 +20,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moing.backend.domain.history.domain.entity.AlarmType.NEW_UPLOAD;
 import static com.moing.backend.global.config.fcm.constant.NewMissionTitle.NEW_SINGLE_MISSION_COMING;
 
 @Service
@@ -43,7 +43,7 @@ public class SendMissionCreateAlarmUseCase {
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
         Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
         // 알림 보내기
-        eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId(),mission.getType(),mission.getStatus()), team.getName(), AlarmType.NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
+        eventPublisher.publishEvent(new MultiFcmEvent(title, message, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId(),mission.getType(),mission.getStatus()), team.getName(), NEW_UPLOAD, PagePath.MISSION_PATH.getValue()));
     }
 
     private String createIdInfo(Long teamId, Long missionId,MissionType type, MissionStatus status) {
@@ -52,6 +52,7 @@ public class SendMissionCreateAlarmUseCase {
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
         jo.put("status", status.name());
+        jo.put("type", "NEW_UPLOAD_MISSION");
         return jo.toJSONString();
     }
 }
