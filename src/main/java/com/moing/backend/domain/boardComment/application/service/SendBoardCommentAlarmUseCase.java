@@ -65,7 +65,7 @@ public class SendBoardCommentAlarmUseCase {
         JSONObject jo = new JSONObject();
         jo.put("teamId", teamId);
         jo.put("boardId", boardId);
-        jo.put("type", "COMMENT");
+        jo.put("type", "COMMENT_BOARD");
         return jo.toJSONString();
     }
 

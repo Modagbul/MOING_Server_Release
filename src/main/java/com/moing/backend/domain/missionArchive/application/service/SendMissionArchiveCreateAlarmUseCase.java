@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import static com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateMessage.CREATOR_CREATE_MISSION_ARCHIVE;
 import static com.moing.backend.domain.missionArchive.application.service.MissionArchiveCreateMessage.TEAM_AND_TITLE;
-import static com.moing.backend.global.config.fcm.constant.NewMissionTitle.NEW_SINGLE_MISSION_COMING;
 
 @Service
 @Transactional
@@ -54,6 +53,7 @@ public class SendMissionArchiveCreateAlarmUseCase {
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
         jo.put("status", status.name());
+        jo.put("type", "COMPLETE_MISSION");
         return jo.toJSONString();
     }
 }

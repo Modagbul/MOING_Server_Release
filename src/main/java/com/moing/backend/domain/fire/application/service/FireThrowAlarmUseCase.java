@@ -33,7 +33,7 @@ public class FireThrowAlarmUseCase {
                 : getRandomTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
         String message = fireThrowReq != null ? fireThrowReq.getMessage()
                 : getRandomMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
-        String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
+        String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId(), fireThrowReq == null);
 
         eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
     }
@@ -60,13 +60,19 @@ public class FireThrowAlarmUseCase {
         return NEW_FIRE_THROW_TITLE1.getMessage();
     }
 
-    private String createIdInfo(boolean isRepeated, Long teamId, Long missionId) {
+    private String createIdInfo(boolean isRepeated, Long teamId, Long missionId, boolean isMessageNull) {
         JSONObject jo = new JSONObject();
         jo.put("isRepeated", isRepeated);
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
-        jo.put("type", "FIRE");
+        jo.put("type", getType(isMessageNull));
         return jo.toJSONString();
+    }
+
+    private String getType(boolean isMessageNull){
+        if(isMessageNull)
+            return "FIRE_MESSAGE_NULL";
+        return "FIRE_MESSAGE_EXIST";
     }
 
 

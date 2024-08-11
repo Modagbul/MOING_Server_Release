@@ -85,6 +85,7 @@ public class SendMissionCommentAlarmUseCase {
         jo.put("missionArchiveId", missionArchiveId);
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
+        jo.put("type", "COMMENT_MISSION");
         return jo.toJSONString();
     }
 }
