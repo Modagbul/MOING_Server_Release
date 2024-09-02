@@ -7,6 +7,7 @@ import com.moing.backend.domain.history.domain.entity.AlarmType;
 import com.moing.backend.domain.history.domain.entity.PagePath;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
 import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
 import com.moing.backend.domain.missionComment.domain.entity.MissionComment;
 import com.moing.backend.domain.missionComment.domain.service.MissionCommentGetService;
@@ -52,7 +53,7 @@ public class SendMissionCommentAlarmUseCase {
                                    Optional<List<NewUploadInfo>> newUploadInfos) {
         Member receiver = missionArchive.getMember();
         if (checkMemberWriter(receiver, member, newUploadInfos)) {
-            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId()), team.getName(), AlarmType.COMMENT, PagePath.MISSION_PATH.getValue(), receiver.isCommentPush()));
+            eventPublisher.publishEvent(new SingleFcmEvent(receiver, title, body, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId(),mission.getType()), team.getName(), AlarmType.COMMENT, PagePath.MISSION_PATH.getValue(), receiver.isCommentPush()));
         }
     }
 
@@ -62,7 +63,7 @@ public class SendMissionCommentAlarmUseCase {
         Optional<List<MemberIdAndToken>> memberIdAndTokensByPush = AlarmHistoryMapper.getNewUploadPushInfo(newUploadInfos);
         Optional<List<MemberIdAndToken>> memberIdAndTokensBySave = AlarmHistoryMapper.getNewUploadSaveInfo(newUploadInfos);
 
-        eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId()), team.getName(), AlarmType.COMMENT, PagePath.MISSION_PATH.getValue()));
+        eventPublisher.publishEvent(new MultiFcmEvent(title, body, memberIdAndTokensByPush, memberIdAndTokensBySave, createIdInfo(team.getTeamId(), mission.getId(), missionArchive.getId(),mission.getType()), team.getName(), AlarmType.COMMENT, PagePath.MISSION_PATH.getValue()));
     }
 
 
@@ -80,12 +81,13 @@ public class SendMissionCommentAlarmUseCase {
     }
 
 
-    private String createIdInfo(Long teamId, Long missionId, Long missionArchiveId) {
+    private String createIdInfo(Long teamId, Long missionId, Long missionArchiveId, MissionType missionType) {
         JSONObject jo = new JSONObject();
         jo.put("missionArchiveId", missionArchiveId);
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
         jo.put("type", "COMMENT_MISSION");
+        jo.put("isRepeated", missionType.equals(MissionType.REPEAT));
         return jo.toJSONString();
     }
 }
