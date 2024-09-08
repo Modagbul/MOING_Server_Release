@@ -79,6 +79,10 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isFirePush;
 
+    @ColumnDefault("true")
+    @Column(nullable = false)
+    private boolean isCommentPush;
+
     private boolean isDeleted;
 
     private LocalDateTime lastSignInTime;
@@ -140,10 +144,15 @@ public class Member extends BaseTimeEntity {
         this.isFirePush = firePush;
     }
 
+    public void updateCommentPush(boolean commentPush){
+        this.isCommentPush=commentPush;
+    }
+
     public void updateAllPush(boolean allPush) {
         this.isNewUploadPush = allPush;
         this.isRemindPush = allPush;
         this.isFirePush = allPush;
+        this.isCommentPush=allPush;
     }
 
     public void updateFcmToken(String fcmToken) {

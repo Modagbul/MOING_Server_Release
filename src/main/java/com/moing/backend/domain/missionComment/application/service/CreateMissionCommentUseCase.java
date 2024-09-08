@@ -1,6 +1,5 @@
 package com.moing.backend.domain.missionComment.application.service;
 
-import com.moing.backend.domain.boardComment.application.service.SendCommentAlarmUseCase;
 import com.moing.backend.domain.comment.application.dto.request.CreateCommentRequest;
 import com.moing.backend.domain.comment.application.dto.response.CreateCommentResponse;
 import com.moing.backend.domain.missionComment.application.mapper.MissionCommentMapper;
@@ -22,7 +21,7 @@ public class CreateMissionCommentUseCase {
     private final MissionCommentSaveService missionCommentSaveService;
     private final BaseMissionService baseMissionService;
     private final CheckLeaderUseCase checkLeaderUseCase;
-    private final SendCommentAlarmUseCase sendCommentAlarmUseCase;
+    private final SendMissionCommentAlarmUseCase sendCommentAlarm;
     /**
      * 게시글 댓글 생성
      */
@@ -33,8 +32,8 @@ public class CreateMissionCommentUseCase {
         MissionComment missionComment = missionCommentSaveService.saveComment(MissionCommentMapper.toMissionComment(data.getTeamMember(), data.getMissionArchive(), createCommentRequest, isLeader));
         // 2. 미션 게시글 댓글 개수 증가
         data.getMissionArchive().incrComNum();
-//        // 3. 미션 게시글 댓글 알림
-//        sendCommentAlarmUseCase.sendNewUploadAlarm(data, missionComment);
+        // 3. 미션 게시글 댓글 알림
+        sendCommentAlarm.sendCommentAlarm(data, missionComment);
         return new CreateCommentResponse(missionComment.getMissionCommentId());
     }
 }

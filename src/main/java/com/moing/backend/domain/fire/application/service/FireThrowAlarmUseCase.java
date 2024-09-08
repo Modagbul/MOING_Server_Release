@@ -1,6 +1,6 @@
 package com.moing.backend.domain.fire.application.service;
 
-import com.moing.backend.domain.history.domain.entity.AlarmType;
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mission.domain.entity.Mission;
 import com.moing.backend.domain.mission.domain.entity.constant.MissionType;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Random;
 
+import static com.moing.backend.domain.history.domain.entity.AlarmType.FIRE;
 import static com.moing.backend.domain.history.domain.entity.PagePath.MISSION_PATH;
 import static com.moing.backend.global.config.fcm.constant.FireThrowMessage.*;
 
@@ -24,28 +25,31 @@ public class FireThrowAlarmUseCase {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission) {
+    public void sendFireThrowAlarm(Member throwMember, Member receiveMember, Team team, Mission mission, FireThrowReq fireThrowReq) {
 
-        Random random = new Random(System.currentTimeMillis());
-        int randomNum = random.nextInt(2);
+        int randomNum = new Random(System.currentTimeMillis()).nextInt(2);
 
-        String title = getTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
-        String message = getMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
-        String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId());
+        String title = fireThrowReq != null ? NEW_FIRE_THROW_TITLE_WITH_COMMENT.to(throwMember.getNickName())
+                : getRandomTitle(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+        String message = fireThrowReq != null ? fireThrowReq.getMessage()
+                : getRandomMessage(throwMember.getNickName(), receiveMember.getNickName(), randomNum);
+        String idInfo = createIdInfo(mission.getType() == MissionType.REPEAT, mission.getTeam().getTeamId(), mission.getId(), fireThrowReq == null);
 
-        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), AlarmType.FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
+        eventPublisher.publishEvent(new SingleFcmEvent(receiveMember, title, message, idInfo, team.getName(), FIRE, MISSION_PATH.getValue(), receiveMember.isFirePush()));
     }
 
-    public String getMessage(String pusher, String receiver, int num) {
+    public String getRandomMessage(String pusher, String receiver, int num) {
 
         switch (num) {
-            case 0: return pusher + "님이 " + receiver + NEW_FIRE_THROW_MESSAGE1.getMessage();
-            case 1: return receiver + "님!  " + pusher + NEW_FIRE_THROW_MESSAGE2.getMessage();
+            case 0:
+                return NEW_FIRE_THROW_MESSAGE1.fromTo(pusher, receiver);
+            case 1: return NEW_FIRE_THROW_MESSAGE2.toFrom(receiver, pusher);
+
         }
-        return pusher + "님이" + receiver + NEW_FIRE_THROW_MESSAGE1.getMessage();
+        return NEW_FIRE_THROW_MESSAGE1.fromTo(pusher, receiver);
     }
 
-    public String getTitle(String pusher, String receiver, int num) {
+    public String getRandomTitle(String pusher, String receiver, int num) {
 
         switch (num) {
             case 0:
@@ -56,12 +60,19 @@ public class FireThrowAlarmUseCase {
         return NEW_FIRE_THROW_TITLE1.getMessage();
     }
 
-    private String createIdInfo(boolean isRepeated, Long teamId, Long missionId) {
+    private String createIdInfo(boolean isRepeated, Long teamId, Long missionId, boolean isMessageNull) {
         JSONObject jo = new JSONObject();
         jo.put("isRepeated", isRepeated);
         jo.put("teamId", teamId);
         jo.put("missionId", missionId);
+        jo.put("type", getType(isMessageNull));
         return jo.toJSONString();
+    }
+
+    private String getType(boolean isMessageNull){
+        if(isMessageNull)
+            return "FIRE_MESSAGE_NULL";
+        return "FIRE_MESSAGE_EXIST";
     }
 
 

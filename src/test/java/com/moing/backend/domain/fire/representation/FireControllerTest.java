@@ -1,10 +1,12 @@
 package com.moing.backend.domain.fire.representation;
 
 import com.moing.backend.config.CommonControllerTest;
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.service.FireThrowUseCase;
 import com.moing.backend.domain.fire.presentation.FireController;
+import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
@@ -89,11 +90,17 @@ public class FireControllerTest extends CommonControllerTest {
     public void 불_던지기() throws Exception {
         //given
 
+        FireThrowReq input = FireThrowReq.builder()
+                .message("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
+                .build();
+
+        String body = objectMapper.writeValueAsString(input);
+
         FireThrowRes output = FireThrowRes.builder()
                 .receiveMemberId(1L)
                 .build();
 
-        given(fireThrowUseCase.createFireThrow(any(), any(), any(), any())).willReturn(output);
+        given(fireThrowUseCase.createFireThrow(any(), any(), any(), any(),any())).willReturn(output);
 
         Long teamId = 2L;
         Long missionId = 2L;
@@ -103,6 +110,7 @@ public class FireControllerTest extends CommonControllerTest {
                 post("/api/team/{teamId}/missions/{missionId}/fire/{receiveMemberId}",teamId,missionId,receiveMemberId)
                 .header("Authorization", "Bearer ACCESS_TOKEN")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
         );
 
         //then
@@ -118,7 +126,9 @@ public class FireControllerTest extends CommonControllerTest {
                                         parameterWithName("missionId").description("미션 아이디"),
                                         parameterWithName("receiveMemberId").description("불 받을 사람 아이디")
                                 ),
-
+                                requestFields(
+                                        fieldWithPath("message").description("불던지기 메시지. 메시지가 없는경우 DTO 자체를 전송하지 않음")
+                                ),
                                 responseFields(
                                         fieldWithPath("isSuccess").description("true"),
                                         fieldWithPath("message").description(THROW_FIRE_SUCCESS.getMessage()),

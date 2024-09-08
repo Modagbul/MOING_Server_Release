@@ -1,5 +1,6 @@
 package com.moing.backend.domain.fire.presentation;
 
+import com.moing.backend.domain.fire.application.dto.req.FireThrowReq;
 import com.moing.backend.domain.fire.application.dto.res.FireReceiveRes;
 import com.moing.backend.domain.fire.application.dto.res.FireThrowRes;
 import com.moing.backend.domain.fire.application.service.FireThrowUseCase;
@@ -30,8 +31,8 @@ public class FireController {
 
     @PostMapping("/{receiveMemberId}")
     public ResponseEntity<SuccessResponse<FireThrowRes>> throwFire (@AuthenticationPrincipal User user, @PathVariable("teamId") Long teamId,
-                                                                    @PathVariable("receiveMemberId") Long receiveMemberId, @PathVariable("missionId") Long missionId) {
-        return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(), receiveMemberId, missionId, teamId)));
+                                                                    @PathVariable("receiveMemberId") Long receiveMemberId, @PathVariable("missionId") Long missionId, @RequestBody(required = false) FireThrowReq fireThrowReq) {
+        return ResponseEntity.ok(SuccessResponse.create(THROW_FIRE_SUCCESS.getMessage(), this.fireThrowUseCase.createFireThrow(user.getSocialId(), receiveMemberId, missionId, teamId, fireThrowReq)));
     }
 
     /**
