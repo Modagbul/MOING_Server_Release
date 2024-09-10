@@ -1,5 +1,6 @@
 package com.moing.backend.domain.mission.application.service;
 
+import com.moing.backend.domain.member.application.service.UpdateRemindAlarmUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +22,7 @@ public class MissionScheduleUseCase {
 
     private final MissionRemindAlarmUseCase missionRemindAlarmUseCase;
     private final MissionUpdateUseCase missionUpdateUseCase;
+    private final UpdateRemindAlarmUseCase updateRemindAlarmUseCase;
 
     /**
      * 단일 미션 마감
@@ -41,4 +43,5 @@ public class MissionScheduleUseCase {
     public void MissionRemindAlarm() {
         missionRemindAlarmUseCase.sendRemindMissionAlarm();
     }
+
 }
