@@ -38,23 +38,29 @@ public class UpdateRemindAlarmUseCase {
     String REMIND_NAME = "미션 리마인드";
 
 
-    public Boolean sendUpdateAppPushAlarm() {
+    public void sendUpdateAppPushAlarm(String title, String message) {
 
-        String title = "MOING 업데이트 소식";
-        String message = "이제 누구나 미션을 만들 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
+//        String title = "MOING 업데이트 소식";
+//        String message = "이제 누구나 미션을 만들 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
 
-        List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm();
+        long count = memberGetService.getAllMemberOfPushAlarm(0L, Long.MAX_VALUE).size();
 
-        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(allMemberOfPushAlarm);
-        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(allMemberOfPushAlarm);
+        for (Long offset = 0L; offset < count; offset += 499) {
 
-        if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            Long limit = offset+499;
+
+            List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm(offset, limit);
+
+            Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(allMemberOfPushAlarm);
+            Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(allMemberOfPushAlarm);
+
+            if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
+                multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            }
+            if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
+                saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
+            }
         }
-        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
-            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
-        }
-        return true;
 
 
     }
