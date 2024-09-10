@@ -24,6 +24,8 @@ operation::alarm-history-controller-test/get_all_alarm_history[snippets='http-re
 | `REJECT_TEAM`
 | 소모임 반려
 
+| `COMMENT`
+| 댓글 생성 알림
 |===
 
 [[AlarmHistory-알림-단건-조회하기]]

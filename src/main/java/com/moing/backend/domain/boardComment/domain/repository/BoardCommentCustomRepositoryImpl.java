@@ -69,7 +69,7 @@ public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepos
         List<NewUploadInfo> result = queryFactory.select(Projections.constructor(NewUploadInfo.class,
                         boardComment.teamMember.member.fcmToken,
                         boardComment.teamMember.member.memberId,
-                        boardComment.teamMember.member.isNewUploadPush,
+                        boardComment.teamMember.member.isCommentPush,
                         boardComment.teamMember.member.isSignOut))
                 .distinct()
                 .from(boardComment)

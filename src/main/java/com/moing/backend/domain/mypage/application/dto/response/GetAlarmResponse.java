@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Builder
 @AllArgsConstructor
@@ -15,4 +14,5 @@ public class GetAlarmResponse {
     private boolean isNewUploadPush;
     private boolean isRemindPush;
     private boolean isFirePush;
+    private boolean isCommentPush;
 }

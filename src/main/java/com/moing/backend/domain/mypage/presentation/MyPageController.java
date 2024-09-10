@@ -107,7 +107,7 @@ public class MyPageController {
 
     /**
      * 알림정보 수정
-     * [POST] api/mypage/alarm?type=all || isNewUploadPush || isRemindPush || isFirePush && status= on || off
+     * [POST] api/mypage/alarm?type=all || isNewUploadPush || isRemindPush || isFirePush || isCommentPush && status= on || off
      */
     @PutMapping("/alarm")
     public ResponseEntity<SuccessResponse<GetAlarmResponse>> updateAlarm(@AuthenticationPrincipal User user,

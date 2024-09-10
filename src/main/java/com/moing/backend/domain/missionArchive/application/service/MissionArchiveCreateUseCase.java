@@ -34,6 +34,8 @@ public class MissionArchiveCreateUseCase {
 
     private final TeamScoreUpdateUseCase teamScoreUpdateUseCase;
 
+    private final SendMissionArchiveCreateAlarmUseCase sendMissionArchiveCreateAlarmUseCase;
+
     public MissionArchiveRes createArchive(String userSocialId, Long missionId, MissionArchiveReq missionReq) {
 
         Member member = memberGetService.getMemberBySocialId(userSocialId);
@@ -59,7 +61,6 @@ public class MissionArchiveCreateUseCase {
 
             newArchive.updateCount(missionArchiveQueryService.findMyDoneArchives(memberId, missionId) + 1);
             missionArchiveRes = MissionArchiveMapper.mapToMissionArchiveRes(missionArchiveSaveService.save(newArchive), memberId);
-
         }
 
         // 한번 미션일 경우
@@ -78,12 +79,15 @@ public class MissionArchiveCreateUseCase {
             missionArchiveRes.updateCount(doneSingleArchives);
 
         }
-        // TODO : 소모임원 3명 이상일 경우 보너스 점수
+        // 소모임원 3명 이상일 경우 보너스 점수
         if (mission.getTeam().getNumOfMember() > 2) {
             gainBonusScore(mission, newArchive);
         }
-        // TODO : 미션 인증 1회당 점수
+        // 미션 인증 1회당 점수
         teamScoreUpdateUseCase.gainScoreOfArchive(mission, ScoreStatus.PLUS);
+
+        // 미션 인증 시 다른 팀원에게 알림 전송
+        sendMissionArchiveCreateAlarmUseCase.sendNewMissionArchiveUploadAlarm(member,mission);
 
         return missionArchiveRes;
     }

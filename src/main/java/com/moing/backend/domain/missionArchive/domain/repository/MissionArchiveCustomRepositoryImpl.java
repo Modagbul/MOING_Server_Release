@@ -329,7 +329,8 @@ public class MissionArchiveCustomRepositoryImpl implements MissionArchiveCustomR
                 .where(missionArchive.mission.team.teamId.in(teamIds),
                         missionArchive.mission.way.eq(MissionWay.PHOTO),
                         missionArchive.status.eq(MissionArchiveStatus.COMPLETE),
-                        missionArchive.archive.ne("https://modagbul.s3.ap-northeast-2.amazonaws.com/reportImage.png"))
+                        missionArchive.archive.ne("https://modagbul.s3.ap-northeast-2.amazonaws.com/reportImage.png"),
+                        missionArchive.archive.ne("https://mo-ing.s3.ap-northeast-2.amazonaws.com/reportImage.png"))
                 .orderBy(missionArchive.createdDate.desc())
                 .limit(14)
                 .fetch();
