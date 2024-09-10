@@ -13,5 +13,6 @@ public interface MemberCustomRepository {
     Optional<Member> findNotDeletedByMemberId(Long id);
     Long getTodayNewMembers();
     Long getYesterdayNewMembers();
-    Optional<List<Member>> findAllMemberOnPushAlarm();
+
+    Optional<List<Member>> findAllMemberOnPushAlarm(Long offset, Long limit);
 }
