@@ -18,6 +18,7 @@ public class ExceptionHandler {
             case "UNAVAILABLE":
                 return new NotificationException("서비스를 사용할 수 없습니다: " + errorMessage);
             default:
+                e.printStackTrace();
                 return new NotificationException("메시지 전송에 실패했습니다: " + errorMessage);
         }
     }
