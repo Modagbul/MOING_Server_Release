@@ -33,7 +33,7 @@ public class MemberGetService {
     }
 
 
-    public List<Member> getAllMemberOfPushAlarm() {
-        return memberRepository.findAllMemberOnPushAlarm().orElseThrow(NotFoundRemindAlarmException::new);
+    public List<Member> getAllMemberOfPushAlarm(Long offset, Long limit) {
+        return memberRepository.findAllMemberOnPushAlarm(offset,limit).orElseThrow(NotFoundRemindAlarmException::new);
     }
 }

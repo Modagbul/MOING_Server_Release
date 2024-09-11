@@ -23,6 +23,7 @@ public class AlarmHistoryController {
 
     private final GetAlarmHistoryUseCase getAlarmHistoryUseCase;
     private final ReadAlarmHistoryUseCase readAlarmHistoryUseCase;
+
     /**
      * 알림 전체 조회
      * [GET] api/history/alarm
@@ -52,4 +53,6 @@ public class AlarmHistoryController {
     public ResponseEntity<SuccessResponse<GetAlarmCountResponse>> getUnreadAlarmCount(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(SuccessResponse.create(GET_UNREAD_ALARM_HISTORY.getMessage(), getAlarmHistoryUseCase.getUnreadAlarmCount(user.getSocialId())));
     }
+
+
 }

@@ -70,7 +70,8 @@ public class MultiMessageSender implements MessageSender<MultiRequest, MultiResp
                 .build();
 
         try {
-            BatchResponse response = firebaseMessaging.sendMulticast(message);
+//            BatchResponse response = firebaseMessaging.sendMulticast(message);
+            BatchResponse response = firebaseMessaging.sendEachForMulticast(message);
 
 
             List<String> failedTokens = new ArrayList<>();

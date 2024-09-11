@@ -38,41 +38,30 @@ public class UpdateRemindAlarmUseCase {
     String REMIND_NAME = "미션 리마인드";
 
 
-    public Boolean sendUpdateAppPushAlarm() {
+    public void sendUpdateAppPushAlarm(String title, String message) {
 
-        String title = "MOING 업데이트 소식";
-        String message = "이제 사진 인증에 설명을 추가할 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
+//        String title = "MOING 업데이트 소식";
+//        String message = "이제 누구나 미션을 만들 수 있어요. 지금 업데이트하고 다른 소식도 확인해보세요!";
 
-        List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm();
+        long count = memberGetService.getAllMemberOfPushAlarm(0L, Long.MAX_VALUE).size();
 
-        // TODO : 500명 단위 배치처리
+        for (Long offset = 0L; offset < count; offset += 499) {
 
-        // FCM 제한으로 500명씩 나눠서 보내기 (0~498)
-        List<Member> firstMembers = allMemberOfPushAlarm.subList(0, 498);
+            Long limit = offset+499;
 
-        Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(firstMembers);
-        Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(firstMembers);
+            List<Member> allMemberOfPushAlarm = memberGetService.getAllMemberOfPushAlarm(offset, limit);
 
-        if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
-            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            Optional<List<MemberIdAndToken>> memberIdAndTokens = mapToMemberAndToken(allMemberOfPushAlarm);
+            Optional<List<MemberIdAndToken>> pushMemberIdAndToken = isPushMemberIdAndToken(allMemberOfPushAlarm);
+
+            if (pushMemberIdAndToken.isPresent() && !pushMemberIdAndToken.get().isEmpty()) {
+                multiMessageSender.send(new MultiRequest(pushMemberIdAndToken.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
+            }
+            if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
+                saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
+            }
         }
-        if (memberIdAndTokens.isPresent() && !memberIdAndTokens.get().isEmpty()) {
-            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
-        }
 
-        // FCM 제한으로 500명씩 나눠서 보내기 (498~)
-        List<Member> remainMembers = allMemberOfPushAlarm.subList(499, allMemberOfPushAlarm.size());
-
-        Optional<List<MemberIdAndToken>> memberIdAndTokens2 = mapToMemberAndToken(remainMembers);
-        Optional<List<MemberIdAndToken>> pushMemberIdAndToken2 = isPushMemberIdAndToken(remainMembers);
-
-        if (pushMemberIdAndToken2.isPresent() && !pushMemberIdAndToken2.get().isEmpty()) {
-            multiMessageSender.send(new MultiRequest(pushMemberIdAndToken2.get(), title, message, "", REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue()));
-        }
-        if (memberIdAndTokens2.isPresent() && !memberIdAndTokens2.get().isEmpty()) {
-            saveMultiAlarmHistoryUseCase.saveAlarmHistories(AlarmHistoryMapper.getMemberIds(memberIdAndTokens2.get()), "", title, message, REMIND_NAME, AlarmType.REMIND, PagePath.MISSION_ALL_PTAH.getValue());
-        }
-        return true;
 
     }
 

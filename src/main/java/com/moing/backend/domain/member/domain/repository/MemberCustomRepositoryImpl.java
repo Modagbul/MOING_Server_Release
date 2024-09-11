@@ -88,7 +88,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public Optional<List<Member>> findAllMemberOnPushAlarm() {
+    public Optional<List<Member>> findAllMemberOnPushAlarm(Long offset, Long limit) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(member)
                         .where(
@@ -96,6 +96,8 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                                 member.isRemindPush.eq(true),
                                 member.isSignOut.eq(false)
                                 )
+                        .offset(offset)
+                        .limit(limit)
                         .fetch()
         );
     }
