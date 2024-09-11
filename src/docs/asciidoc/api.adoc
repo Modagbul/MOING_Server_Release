@@ -1,0 +1,41 @@
+= Moing API Doc
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 1
+:sectlinks:
+
+include::Overview.adoc[]
+
+include::Image-API.adoc[]
+
+include::Auth-API.adoc[]
+
+include::Mypage-API.adoc[]
+
+include::AlarmHistory-API.adoc[]
+
+include::Team-API.adoc[]
+
+include::Mission-API.adoc[]
+
+include::MissionArchive-API.adoc[]
+
+include::MissionArchiveComment_API.adoc[]
+
+include::MissionBoard-API.adoc[]
+
+include::MissionGatherBoard-API.adoc[]
+
+include::Fire-API.adoc[]
+
+include::Board-API.adoc[]
+
+include::BoardComment_API.adoc[]
+
+include::TeamScore-API.adoc[]
+
+include::Report-API.adoc[]
+
+include::Block-API.adoc[]

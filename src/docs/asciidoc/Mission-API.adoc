@@ -1,0 +1,47 @@
+
+
+[[Mission-API]]
+= Mission API
+
+[[Mission-생성]]
+== Mission 생성
+operation::mission-controller-test/미션_생성[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[Mission-조회]]
+== Mission 조회
+operation::mission-controller-test/미션_조회[snippets='http-request,path-parameters,http-response,response-fields']
+
+---
+
+[[Mission-수정]]
+== Mission 수정
+operation::mission-controller-test/미션_수정[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[Mission-삭제]]
+== Mission 삭제
+operation::mission-controller-test/미션_삭제[snippets='http-request,path-parameters,http-response,response-fields']
+
+---
+
+
+[[Mission-추천]]
+== Mission 추천
+operation::mission-controller-test/미션_추천[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+[[Mission-종료]]
+== Mission 종료
+operation::mission-controller-test/미션_종료[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+---
+
+
+[[Mission-설명-확인]]
+== Mission 설명 확인
+operation::mission-controller-test/미션_설명_확인[snippets='http-request,path-parameters,http-response,response-fields']
+

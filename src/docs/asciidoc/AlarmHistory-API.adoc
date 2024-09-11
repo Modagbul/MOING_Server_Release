@@ -1,0 +1,37 @@
+[[AlarmHistory-API]]
+= AlarmHistory API
+
+[[AlarmHistory-알림-모아보기]]
+== AlarmHistory 알림 모아보기
+operation::alarm-history-controller-test/get_all_alarm_history[snippets='http-request,http-response,response-fields']
+
+== Type Category
+|===
+| Category | Description
+
+| `NEW_UPLOAD`
+| 신규 업로드 알림
+
+| `FIRE`
+| 불던지기 알림
+
+| `REMIND`
+| 리마인드 알림
+
+| `APPROVE_TEAM`
+| 소모임 승인
+
+| `REJECT_TEAM`
+| 소모임 반려
+
+| `COMMENT`
+| 댓글 생성 알림
+|===
+
+[[AlarmHistory-알림-단건-조회하기]]
+== AlarmHistory 알림 단건 조회하기
+operation::alarm-history-controller-test/read_alarm_history[snippets='http-request,http-response,response-fields']
+
+[[AlarmHistory-안읽은-알림개수-조회하기]]
+== AlarmHistory 안읽은 알림 개수 조회하기
+operation::alarm-history-controller-test/get_alarm_count[snippets='http-request,http-response,response-fields']

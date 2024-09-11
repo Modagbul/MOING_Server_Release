@@ -1,0 +1,46 @@
+[[Mypage-API]]
+= Mypage API
+
+[[Mypage-로그아웃]]
+== Mypage 로그아웃
+operation::mypage-controller-test/sign_out[snippets='http-request,http-response,response-fields']
+
+---
+
+[[Mypage-회원탈퇴]]
+== Mypage 회원탈퇴
+operation::mypage-controller-test/withdraw[snippets='path-parameters,http-request,request-fields,http-response,response-fields']
+
+[[Mypage-전체-조회]]
+== Mypage 전체 조회
+operation::mypage-controller-test/get_mypage[snippets='http-request,http-response,response-fields']
+
+[[Mypage-프로필-조회]]
+== Mypage 프로필 조회
+operation::mypage-controller-test/get_profile[snippets='http-request,http-response,response-fields']
+IMPORTANT: Response Fields (profileImage, nickName, introduction)이 "undef" 인 경우는 사용자가 아직 입력을 안 한 경우임
+
+[[Mypage-프로필-수정]]
+== Mypage 프로필 수정
+operation::mypage-controller-test/update_profile[snippets='http-request,http-response,request-fields,response-fields']
+IMPORTANT: Request Fileds는 반드시 세 값이 모두 들어가야 하는 것이 아니고, 업데이트할 값만 입력해도 됨, 따라서 아래와 같은 예시 가능 +
+
+ PUT /api/mypage/profile HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer ACCESS_TOKEN
+Content-Length: 104
+Host: localhost:8080
+{
+"profileImage" : "PROFILE_IMAGE_URL"
+}
+
+
+[[Mypage-알람설정_조회]]
+== Mypage 알람설정 조회
+operation::mypage-controller-test/get_alarm[snippets='http-request,http-response,response-fields']
+
+
+[[Mypage-알람설정_수정]]
+== Mypage 알람설정 수정
+operation::mypage-controller-test/update_alarm[snippets='http-request,http-response,request-parameters,response-fields']
+

@@ -1,0 +1,49 @@
+[[Auth-API]]
+= Auth API
+
+[[Auth-Kako-소셜-로그인]]
+== Auth Kakao 소셜 로그인
+operation::auth-controller-test/kakao_소셜_로그인_회원가입_전[snippets='http-request,request-fields']
+operation::auth-controller-test/kakao_소셜_로그인_회원가입_전[snippets='http-response,response-fields']
+operation::auth-controller-test/kakao_소셜_로그인_회원가입_후[snippets='http-response,response-fields']
+
+---
+
+[[Auth-Apple-소셜-로그인]]
+== Auth Apple 소셜 로그인
+operation::auth-controller-test/apple_소셜_로그인_회원가입_전[snippets='http-request,request-fields']
+operation::auth-controller-test/apple_소셜_로그인_회원가입_전[snippets='http-response,response-fields']
+operation::auth-controller-test/apple_소셜_로그인_회원가입_후[snippets='http-response,response-fields']
+
+
+[[Auth-Google-소셜-로그인]]
+== Auth Google 소셜 로그인
+operation::auth-controller-test/google_소셜_로그인_회원가입_전[snippets='http-request,request-fields']
+operation::auth-controller-test/google_소셜_로그인_회원가입_전[snippets='http-response,response-fields']
+operation::auth-controller-test/google_소셜_로그인_회원가입_후[snippets='http-response,response-fields']
+
+
+[[Auth-회원가입]]
+== Auth 회원가입
+|===
+| 성별
+| `MAN`
+| `WOMAN`
+| `NEUTRALITY`
+|===
+operation::auth-controller-test/sign_up[snippets='http-request,request-fields,http-response,response-fields']
+
+
+[[Auth-토큰-재발급]]
+== Auth 토큰 재발급
+operation::auth-controller-test/reissue_token[snippets='http-request,http-response,response-fields']
+
+[[Auth-닉네임-검사]]
+== Auth 닉네임 중복검사 요청
+operation::auth-controller-test/check_nickname_중복o[snippets='http-request']
+
+== Auth 닉네임 중복인 경우
+operation::auth-controller-test/check_nickname_중복o[snippets='http-response,response-fields']
+
+== Auth 닉네임 중복이 아닌 경우
+operation::auth-controller-test/check_nickname_중복x[snippets='http-response,response-fields']

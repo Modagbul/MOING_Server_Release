@@ -1,0 +1,38 @@
+
+
+[[MissionGatherBoard-API]]
+= MissionGatherBoard API
+
+[[MissionBoard-미션-모아보기-단일]]
+== 미션_모아보기_단일_미션
+operation::mission-gather-controller-test/미션_모아보기_단일_미션[snippets='http-request,http-response,response-fields']
+---
+
+[[MissionBoard-미션-모아보기-반복]]
+== 미션_모아보기_반복_미션
+operation::mission-gather-controller-test/미션_모아보기_반복_미션[snippets='http-request,http-response,response-fields']
+
+---
+[[MissionBoard-팀별-미션-모아보기-단일]]
+== 팀별_미션_모아보기_단일_미션
+operation::mission-gather-controller-test/팀별_미션_모아보기_단일_미션[snippets='http-request,http-response,response-fields']
+---
+
+[[MissionBoard-팀별-미션-모아보기-반복]]
+== 팀별_미션_모아보기_반복_미션
+operation::mission-gather-controller-test/팀별_미션_모아보기_반복_미션[snippets='http-request,http-response,response-fields']
+
+---
+
+[[MissionBoard-미션-모아보기-팀별]]
+== 미션_모아보기_팀별
+operation::mission-gather-controller-test/미션_모아보기_팀별[snippets='http-request,http-response,response-fields']
+
+---
+
+
+[[MissionBoard-내가-속한-팀-조회]]
+== 내가_속한_팀_조회
+operation::mission-gather-controller-test/내가_속한_팀_조회[snippets='http-request,http-response,response-fields']
+
+---

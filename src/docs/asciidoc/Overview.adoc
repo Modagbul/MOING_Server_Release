@@ -1,0 +1,169 @@
+[[Overview-Response]]
+== ErrorCode
+
+
+=== Error Response DTO
+|===
+| isSuccess(Boolean) | timeStamp(LocalDateTime) | errorCode(String) | message(String)
+|===
+
+=== Common ErrorCode
+|===
+| ErrorCode | Scope | Description
+
+| `400`
+| 전체
+| 요청 형식 자체가 틀리거나 권한이 없음
+
+| `403`
+| 전체
+| 접근 권한이 존재하지 않음 (로그인 안한 경우)
+
+| `405`
+| 전체
+| HTTP 메서드가 리소스에서 허용되지 않음
+
+| `500`
+| 전체
+| 서버오류
+
+| `J0001`
+| 전체
+| 예상치 못한 오류
+
+| `J0002`
+| 전체
+| 잘못된 JWT 서명
+
+|`J0003`
+| 전체
+| 만료된 토큰
+
+| `J0004`
+| 전체
+| 지원되지 않는 토큰
+
+| `J0005`
+| 전체
+| 접근이 거부됨
+
+| `J0006`
+| 전체
+| 토큰이 잘못됨
+
+| `J0007`
+| 전체
+| 추가 정보 입력 (닉네임) 안함
+
+| `J0008`
+| 재발급 시
+| 유효하지 않은 refresh Token
+|===
+
+=== User / Auth ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `U0001`
+| 전체
+| 해당 유저 존재하지 않음
+
+|`AU0001`
+| 로그인할 때
+| 이미 다른 소셜 플랫폼으로 가입함
+
+| `AU0002`
+| 로그인할 때
+| 입력 토큰이 유효하지 않음
+
+| `AU0003`
+| 로그인할 때
+| appId가 일치하지 않음 (유효하지 않음)
+
+| `AU0004`
+| 회원가입할 때
+| 닉네임이 중복됨
+|===
+
+=== Team ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `T0001`
+| API PATH에 teamId가 있을 때
+| teamId가 유효하지 않음 (존재하지 않거나, 해당 유저가 그 팀에 속해있지 않거나)
+
+| `T0002`
+| 소모임을 수정, 삭제하려고 할 때
+| 소모임장이 아님 (권한 없음)
+
+| `T0003`
+| 소모임을 가입할 때
+| 소모임을 이미 탈퇴함
+
+| `T0004`
+| 소모임을 가입할 때
+| 소모임을 이미 가입함
+
+| `T0005`
+| 소모임을 가입할 때
+| 소모임이 삭제됨
+
+|===
+
+=== MyPage ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `MP0001`
+| 알람을 수정할 때
+| 알람 입력값이 유효하지 않음
+
+| `MP0002`
+| 회원 탈퇴할 때
+| 탈퇴되지 않은 소모임이 있음
+|===
+
+=== Board ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `B0001`
+| API PATH에 boardId가 있을 때
+| boardId가 유효하지 않음 (존재하지 않음)
+
+| `B0002`
+| 게시글을 수정, 삭제하려고 할 때
+| 작성자가 아님 (권한 없음)
+|===
+
+=== BoardComment ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `BC0001`
+| API PATH에 boardId가 있을 때
+| boardId가 유효하지 않음 (존재하지 않음)
+
+| `BC0002`
+| 게시글을 수정, 삭제하려고 할 때
+| 작성자가 아님 (권한 없음)
+|===
+
+
+
+=== Mission ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `M0001`
+| 미션 생성할 때
+| 소모임장이 아님
+
+| `M0002`
+| API PATH에 missionId가 있을 때
+| missionId가 유효하지 않음
+|===
+
+=== MissionArchive ErrorCode
+|===
+| ErrorCode | Scope | Description
+| `MA0001`
+| 미션 인증물 조회할 때
+| 미션 missionId 또는 teamId가 유효하지 않음
+|===
+

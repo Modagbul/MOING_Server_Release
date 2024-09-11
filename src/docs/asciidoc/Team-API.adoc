@@ -1,0 +1,66 @@
+[[Team-API]]
+= Team API
+
+[[Team-소모임-개설]]
+== Team 소모임 개설
+operation::team-controller-test/create_team[snippets='http-request,request-fields,http-response,response-fields']
+
+== Team Category
+|===
+| Category | Description
+
+| `SPORTS`
+| 스포츠/운동
+
+| `HABIT`
+| 생활습관 개선
+
+| `TEST`
+| 시험/취업준비
+
+| `STUDY`
+| 스터디/공부
+
+| `READING`
+| 독서
+
+| `ETC`
+| 그외 자기계발
+|===
+
+
+[[Team-소모임-가입]]
+== Team 소모임 가입
+operation::team-controller-test/sign-in_team[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-조회]]
+== Team 소모임 조회
+operation::team-controller-test/get_team[snippets='http-request,http-response,response-fields']
+
+[[Team-목표보드-조회]]
+== Team 목표보드_소모임 단건_조회
+operation::team-controller-test/get_team_detail[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-수정]]
+== Team 소모임 수정
+operation::team-controller-test/update_team[snippets='http-request,path-parameters,http-response,request-fields,response-fields']
+
+[[Team-소모임-수정전-조회]]
+== Team 소모임 수정 전 조회
+operation::team-controller-test/get_current_status[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-삭제전-조회]]
+== Team 소모임 삭제 전 조회
+operation::team-controller-test/review_team[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-강제종료]]
+== Team 소모임 강제종료
+operation::team-controller-test/disband_team[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-탈퇴]]
+== Team 소모임원 강제종료
+operation::team-controller-test/withdraw_team[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[Team-소모임-개수_이름-조회]]
+== Team 소모임 개수 이름 조회
+operation::team-controller-test/get_team_count[snippets='http-request,path-parameters,http-response,response-fields']
