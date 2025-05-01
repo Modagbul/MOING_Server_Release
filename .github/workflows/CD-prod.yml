@@ -104,19 +104,19 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_SERVER_HOST_PROD }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY_PROD }}
-          source: "./.deploy/deploy_prod.sh"
-          target: "/home/ec2-user/"
+          source: "./deploy_prod.sh"
+          target: "/home/ubuntu/"
 
       # 배포 스크립트 실행
       - name: Deploy on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_SERVER_HOST_PROD }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY_PROD }}
           envs: GITHUB_SHA
           script: |
-            chmod +x /home/ec2-user/deploy_prod.sh
-            /home/ec2-user/deploy_prod.sh
+            chmod +x /home/ubuntu/deploy_prod.sh
+            /home/ubuntu/deploy_prod.sh
